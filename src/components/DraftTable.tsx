@@ -1,8 +1,15 @@
-import { For } from "solid-js";
+import { Accessor, For } from "solid-js";
 import { useDraft } from "../context/DraftContext";
+import { Role } from "../lib/models/Role";
 import { RoleIcon } from "./icons/roles/RoleIcon";
 
-export default function DraftTable() {
+export default function DraftTable({
+    search,
+    roleFilter,
+}: {
+    search: Accessor<string>;
+    roleFilter: Accessor<Role | undefined>;
+}) {
     const {
         allySuggestions,
         opponentSuggestions,
@@ -24,23 +31,57 @@ export default function DraftTable() {
         pickChampion(selection.team, selection.index, key);
     }
 
+    const filteredSuggestions = () => {
+        let filtered = suggestions();
+        if (!dataset()) {
+            return filtered;
+        }
+
+        if (search()) {
+            const str = search()
+                .replaceAll(/[^a-zA-Z0-9]/g, "")
+                .toLowerCase();
+            filtered = filtered.filter((s) =>
+                dataset()!
+                    [s.championKey].name.replaceAll(/[^a-zA-Z0-9]/g, "")
+                    .toLowerCase()
+                    .includes(str)
+            );
+        }
+
+        if (roleFilter()) {
+            filtered = filtered.filter((s) => s.role === roleFilter());
+        }
+
+        return filtered;
+    };
+
     return (
         <table class="min-w-full divide-y divide-neutral-700 ">
             <thead class="bg-[#101010]">
                 <tr>
-                    <th scope="col" class="py-3 px-4 text-left font-normal">
+                    <th
+                        scope="col"
+                        class="py-3 px-4 text-left font-normal uppercase"
+                    >
                         Role
                     </th>
-                    <th scope="col" class="py-3 px-4 text-left font-normal">
+                    <th
+                        scope="col"
+                        class="py-3 px-4 text-left font-normal uppercase"
+                    >
                         Name
                     </th>
-                    <th scope="col" class="py-3 px-4 text-left font-normal">
+                    <th
+                        scope="col"
+                        class="py-3 px-4 text-left font-normal uppercase"
+                    >
                         Winrate
                     </th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-neutral-800 bg-primary">
-                <For each={suggestions()}>
+                <For each={filteredSuggestions()}>
                     {(suggestion) => (
                         <tr
                             onclick={() => makePick(suggestion.championKey)}

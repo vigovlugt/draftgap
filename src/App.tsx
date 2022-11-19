@@ -1,10 +1,16 @@
-import { batch, Component, createEffect, Show } from "solid-js";
+import { batch, Component, createEffect, createSignal, Show } from "solid-js";
 import DraftTable from "./components/DraftTable";
+import { RoleFilter } from "./components/RoleFilter";
+import { Search } from "./components/Search";
 import { TeamSidebar } from "./components/TeamSidebar";
 import { DraftProvider, useDraft } from "./context/DraftContext";
+import { Role } from "./lib/models/Role";
 
 const App: Component = () => {
     const { dataset, pickChampion, allyTeamData } = useDraft()!;
+
+    const [search, setSearch] = createSignal("");
+    const [roleFilter, setRoleFilter] = createSignal<Role>();
 
     return (
         <div class="h-screen flex flex-col">
@@ -29,7 +35,24 @@ const App: Component = () => {
                             </div>
                         }
                     >
-                        {() => <DraftTable />}
+                        {() => (
+                            <>
+                                <div class="mb-4 flex space-x-4">
+                                    <Search
+                                        search={search}
+                                        setSearch={setSearch}
+                                    />
+                                    <RoleFilter
+                                        roleFilter={roleFilter}
+                                        setRoleFilter={setRoleFilter}
+                                    />
+                                </div>
+                                <DraftTable
+                                    search={search}
+                                    roleFilter={roleFilter}
+                                />
+                            </>
+                        )}
                     </Show>
                 </div>
 
