@@ -24,6 +24,8 @@
         "vitest": "^0.25.1"
     },
     "dependencies": {
+        "solid-headless": "^0.13.0",
+        "solid-heroicons": "^3.1.1",
         "solid-js": "^1.5.1",
         "undici": "^5.12.0"
     }

@@ -8,8 +8,8 @@ const App: Component = () => {
 
     return (
         <div class="h-screen flex flex-col">
-            <header class="bg-primary p-2 py-0 border-b-2 border-neutral-700">
-                <h1 class="text-6xl">DRAFTGAP</h1>
+            <header class="bg-primary p-2 py-0 border-b-2 border-neutral-700 flex">
+                <h1 class="text-6xl mr-2">DRAFTGAP</h1>
             </header>
             <main
                 class="h-full grid text-3xl overflow-hidden"

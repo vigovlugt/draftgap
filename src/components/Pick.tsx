@@ -2,6 +2,7 @@ import { createDeferred, onCleanup, Show } from "solid-js";
 import { useDraft } from "../context/DraftContext";
 import clickOutside from "../directives/click-outside";
 import { RoleIcon } from "./icons/roles/RoleIcon";
+import { PickOptions } from "./PickOptions";
 
 interface IProps {
     team: "ally" | "opponent";
@@ -14,7 +15,6 @@ export function Pick({ team, idx }: IProps) {
         opponentTeam,
         allyTeamData,
         opponentTeamData,
-        pickChampion,
         selection,
         select,
     } = useDraft()!;
@@ -52,13 +52,12 @@ export function Pick({ team, idx }: IProps) {
                 {() => (
                     <>
                         <div
-                            class="absolute top-0 bottom-0 left-0 h-full"
+                            class="absolute top-0 bottom-0 left-0 h-full w-full"
                             style={{
                                 "background-image": `linear-gradient(to bottom, rgba(25, 25, 25, 0.8) 0%, rgba(0, 0, 0, 0) 50%, rgba(25, 25, 25, 0.8) 100%),
-                                url(https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/${
+                                url(https://ddragon.leagueoflegends.com/cdn/img/champion/centered/${
                                     champion()!.id
                                 }_0.jpg)`,
-                                "aspect-ratio": "1 / 1",
                                 "background-size": "cover",
                             }}
                         ></div>
@@ -95,6 +94,8 @@ export function Pick({ team, idx }: IProps) {
                     </>
                 )}
             </Show>
+
+            <PickOptions team={team} index={idx} />
         </div>
     );
 }

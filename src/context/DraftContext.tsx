@@ -140,7 +140,7 @@ export function createDraftContext() {
     const pickChampion = (
         team: "ally" | "opponent",
         index: number,
-        championKey: string
+        championKey: string | undefined
     ) => {
         if (team === "ally") {
             setAllyTeam(index, "championKey", championKey);

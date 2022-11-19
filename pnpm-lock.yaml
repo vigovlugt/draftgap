@@ -6,6 +6,8 @@ specifiers:
   esbuild: ^0.15.13
   esbuild-register: ^3.3.3
   postcss: ^8.4.18
+  solid-headless: ^0.13.0
+  solid-heroicons: ^3.1.1
   solid-js: ^1.5.1
   tailwindcss: ^3.2.2
   typescript: ^4.8.2
@@ -15,6 +17,8 @@ specifiers:
   vitest: ^0.25.1
 
 dependencies:
+  solid-headless: 0.13.0_solid-js@1.5.1
+  solid-heroicons: 3.1.1_solid-js@1.5.1
   solid-js: 1.5.1
   undici: 5.12.0
 
@@ -24,7 +28,7 @@ devDependencies:
   esbuild: 0.15.13
   esbuild-register: 3.3.3_esbuild@0.15.13
   postcss: 8.4.18
-  tailwindcss: 3.2.2
+  tailwindcss: 3.2.2_postcss@8.4.18
   typescript: 4.8.2
   vite: 3.0.9
   vite-plugin-solid: 2.3.0_solid-js@1.5.1+vite@3.0.9
@@ -1491,6 +1495,24 @@ packages:
     hasBin: true
     dev: true
 
+  /solid-headless/0.13.0_solid-js@1.5.1:
+    resolution: {integrity: sha512-N118iPl7W5lyug4K+4c0cwM8YR2yEVJ/3H4wq6tVijATHfXfLnB1ACFI5GGHSXlwu70PUzaGSKwcVqLlloUMyA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      solid-js: ^1.2
+    dependencies:
+      solid-js: 1.5.1
+      solid-use: 0.5.0_solid-js@1.5.1
+    dev: false
+
+  /solid-heroicons/3.1.1_solid-js@1.5.1:
+    resolution: {integrity: sha512-wfU/SqxqxWxInvfFlKJfCBPnJ94Zq1GQFiFL3M0KwZzT81lSF5yIC4HA/Czp3DYrn+dUumjO0qdrx8Ab3cy2sA==}
+    peerDependencies:
+      solid-js: '>= ^1.2.5'
+    dependencies:
+      solid-js: 1.5.1
+    dev: false
+
   /solid-js/1.5.1:
     resolution: {integrity: sha512-Y6aKystIxnrB0quV5nhqNuJV+l2Fk3/PQy1mMya/bzxlGiMHAym7v1NaqEgqDIvctbkxOi5dBj0ER/ewrH060g==}
     dependencies:
@@ -1506,6 +1528,15 @@ packages:
       '@babel/types': 7.18.8
       solid-js: 1.5.1
     dev: true
+
+  /solid-use/0.5.0_solid-js@1.5.1:
+    resolution: {integrity: sha512-z1AaS99SL3gNP70K4+XIVKGXDRI56m3Q6Q4X63bfgw0kaN6cwT4SAyFZAmIRjHcvf5rOMRQfNgUV4YVDha+LcQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      solid-js: ^1.2
+    dependencies:
+      solid-js: 1.5.1
+    dev: false
 
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
@@ -1540,10 +1571,12 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /tailwindcss/3.2.2:
+  /tailwindcss/3.2.2_postcss@8.4.18:
     resolution: {integrity: sha512-c2GtSdqg+harR4QeoTmex0Ngfg8IIHNeLQH5yr2B9uZbZR1Xt1rYbjWOWTcj3YLTZhrmZnPowoQDbSRFyZHQ5Q==}
     engines: {node: '>=12.13.0'}
     hasBin: true
+    peerDependencies:
+      postcss: ^8.0.9
     dependencies:
       arg: 5.0.2
       chokidar: 3.5.3
