@@ -36,9 +36,9 @@ export function Pick({ team, idx }: IProps) {
 
     return (
         <div
-            class="flex-1 relative cursor-pointer border-t-2 border-neutral-700"
+            class="flex-1 relative cursor-pointer border-t-2 border-neutral-700 hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
             classList={{
-                "bg-neutral-700": isSelected(),
+                "!bg-neutral-700": isSelected(),
             }}
             onClick={() => select(team, idx)}
         >

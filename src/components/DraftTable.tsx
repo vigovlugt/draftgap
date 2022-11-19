@@ -44,7 +44,7 @@ export default function DraftTable() {
                     {(suggestion) => (
                         <tr
                             onclick={() => makePick(suggestion.championKey)}
-                            class="cursor-pointer"
+                            class="cursor-pointer hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
                         >
                             <td class="whitespace-nowrap py-3 px-4 font-medium">
                                 <RoleIcon role={suggestion.role} class="h-8" />
