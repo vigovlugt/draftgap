@@ -24,17 +24,18 @@ export async function getChampionDataFromLolalytics(
         throw new Error("No data available for this champion and patch");
     }
 
-    const roles = Object.entries(championData.nav.lanes)
-        .filter(([, value]) => value !== championData.header.lane)
-        .map(([key, _]) => key) as Role[];
+    const remainingRoles = ROLES.filter(
+        (role) => role !== championData.header.lane
+    );
 
-    const rolePromises = roles.map((role) =>
+    const rolePromises = remainingRoles.map((role) =>
         Promise.all([
             getLolalyticsChampion(version, champion.key, role),
             getLolalyticsChampion2(version, champion.key, role),
         ])
     );
-    const roleData = await Promise.all(rolePromises);
+    let roleData = await Promise.all(rolePromises);
+    roleData = [[championData, champion2Data], ...roleData];
 
     const model: ChampionData = {
         ...champion,
@@ -68,28 +69,24 @@ export async function getChampionDataFromLolalytics(
                         })
                     ) as Record<Role, Record<string, ChampionMatchupData>>,
                     synergy: Object.fromEntries(
-                        ROLES.filter((r) => r !== championData.header.lane).map(
-                            (role) => {
-                                const data = champion2Data[`team_${role}`]!;
+                        ROLES.filter((r) => r !== role).map((synergyRole) => {
+                            const data = champion2Data[`team_${synergyRole}`]!;
 
-                                return [
-                                    role,
-                                    Object.fromEntries(
-                                        data.map((d) => {
-                                            const synergy: ChampionSynergyData =
-                                                {
-                                                    championKey:
-                                                        d[0].toString(),
-                                                    games: d[1],
-                                                    wins: d[2],
-                                                };
+                            return [
+                                synergyRole,
+                                Object.fromEntries(
+                                    data.map((d) => {
+                                        const synergy: ChampionSynergyData = {
+                                            championKey: d[0].toString(),
+                                            games: d[1],
+                                            wins: d[2],
+                                        };
 
-                                            return [d[0], synergy];
-                                        })
-                                    ),
-                                ];
-                            }
-                        )
+                                        return [d[0], synergy];
+                                    })
+                                ),
+                            ];
+                        })
                     ) as Record<Role, Record<string, ChampionSynergyData>>,
                     damageProfile: championData.header.damage,
                 };
@@ -101,3 +98,41 @@ export async function getChampionDataFromLolalytics(
 
     return model;
 }
+
+/*
+Matchup stats are vs champions of every rank, not just the rank of the player
+We try to fix this by getting the data of the matchup for the other champion
+And then use the average of the two.
+*/
+// export function distributeMatchupWinrates(
+//     dataset: Record<string, ChampionData>
+// ) {
+//     for (const championKey of Object.keys(dataset)) {
+//         const champion = dataset[championKey];
+//         for (const role of Object.keys(champion.statsByRole)) {
+//             const roleStats = champion.statsByRole[role as Role];
+
+//             for (const matchupRole of Object.keys(roleStats.matchup)) {
+//                 const matchup = roleStats.matchup[matchupRole as Role];
+//                 for (const matchupChampion of Object.keys(matchup)) {
+//                     const matchupChampionStats = matchup[matchupChampion];
+
+//                     const reverseMatchupStats =
+//                         dataset[matchupChampion].statsByRole[
+//                             matchupRole as Role
+//                         ].matchup[role as Role][championKey];
+
+//                     if (!reverseMatchupStats) continue;
+
+//                     matchupChampionStats.games =
+//                         (matchupChampionStats.games +
+//                             reverseMatchupStats.games) /
+//                         2;
+//                     matchupChampionStats.wins =
+//                         (matchupChampionStats.wins + reverseMatchupStats.wins) /
+//                         2;
+//                 }
+//             }
+//         }
+//     }
+// }

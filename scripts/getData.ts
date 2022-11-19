@@ -1,16 +1,22 @@
 import * as fs from "fs/promises";
-import { getChampionDataFromLolalytics } from "../src/lib/data/lolalytics";
+import {
+    // distributeMatchupWinrates,
+    getChampionDataFromLolalytics,
+} from "../src/lib/data/lolalytics";
 import { getVersions, getChampions } from "../src/lib/data/riot";
 import { ChampionData } from "../src/lib/models/ChampionData";
 
 const BATCH_SIZE = 10;
 
 async function main() {
-    const [currentVersion, ..._] = await getVersions();
+    let currentVersion = (await getVersions())[1];
+    console.log("Patch:", currentVersion);
+
     const champions = await getChampions(currentVersion);
 
-    const championMap: Record<string, ChampionData> = {};
+    currentVersion = "30";
 
+    const dataset: Record<string, ChampionData> = {};
     for (let i = 0; i < champions.length; i += BATCH_SIZE) {
         console.log(
             `Processing batch ${i / BATCH_SIZE} of ${Math.ceil(
@@ -32,13 +38,15 @@ async function main() {
             .map((result) => result.value);
 
         for (const champion of championData) {
-            championMap[champion.key] = champion;
+            dataset[champion.key] = champion;
         }
     }
 
+    // distributeMatchupWinrates(dataset);
+
     await fs.writeFile(
         `./public/data/datasets/${currentVersion}.json`,
-        JSON.stringify(championMap)
+        JSON.stringify(dataset)
     );
 }
 

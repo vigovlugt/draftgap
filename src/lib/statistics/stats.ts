@@ -1,8 +1,12 @@
 export function calculateWilsonCI(
     wins: number,
     games: number,
-    confidence: 0.95 | 0.99 | 0.999
+    confidence: 0.95 | 0.99 | 0.999 | 0
 ) {
+    if (confidence === 0) {
+        return [wins / games, wins / games];
+    }
+
     const z = getZ(confidence);
     const p = wins / games;
     const n = games;

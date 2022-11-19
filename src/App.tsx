@@ -6,22 +6,9 @@ import { DraftProvider, useDraft } from "./context/DraftContext";
 const App: Component = () => {
     const { dataset, pickChampion, allyTeamData } = useDraft()!;
 
-    createEffect(() => {
-        console.log("Ally team data", allyTeamData());
-
-        if (!dataset()) return;
-    });
-
-    setTimeout(() => {
-        batch(() => {
-            pickChampion("ally", "96");
-            pickChampion("ally", "117");
-        });
-    }, 1000);
-
     return (
         <div class="h-screen flex flex-col">
-            <header class="bg-primary p-2 py-0">
+            <header class="bg-primary p-2 py-0 border-b-2 border-neutral-700">
                 <h1 class="text-6xl">DRAFTGAP</h1>
             </header>
             <main

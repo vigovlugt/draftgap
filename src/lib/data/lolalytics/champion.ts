@@ -230,7 +230,7 @@ export async function getLolalyticsChampion(
     patch = patch.split(".").slice(0, 2).join(".");
 
     const res = await fetch(
-        `https://axe.lolalytics.com/mega/?ep=champion&p=d&v=1&patch=12.21&cid=${championKey}&lane=${lane}&tier=platinum_plus&queue=420&region=all`
+        `https://axe.lolalytics.com/mega/?ep=champion&p=d&v=1&patch=${patch}&cid=${championKey}&lane=${lane}&tier=platinum_plus&queue=420&region=all`
     );
 
     const json = (await res.json()) as LolalyticsChampionResponse;
