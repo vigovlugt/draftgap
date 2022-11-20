@@ -3,15 +3,15 @@ import { useDraft } from "../context/DraftContext";
 import { Role } from "../lib/models/Role";
 import { DraftTableRow } from "./DraftTableRow";
 
-export default function DraftTable({
-    search,
-    roleFilter,
-}: {
-    search: Accessor<string>;
-    roleFilter: Accessor<Role | undefined>;
-}) {
-    const { allySuggestions, opponentSuggestions, dataset, selection } =
-        useDraft()!;
+export default function DraftTable() {
+    const {
+        allySuggestions,
+        opponentSuggestions,
+        dataset,
+        selection,
+        search,
+        roleFilter,
+    } = useDraft()!;
 
     const suggestions = () =>
         selection.team === "opponent"
@@ -30,7 +30,10 @@ export default function DraftTable({
                 .toLowerCase();
             filtered = filtered.filter((s) =>
                 dataset()!
-                    [s.championKey].name.replaceAll(/[^a-zA-Z0-9]/g, "")
+                    .championData[s.championKey].name.replaceAll(
+                        /[^a-zA-Z0-9]/g,
+                        ""
+                    )
                     .toLowerCase()
                     .includes(str)
             );
@@ -49,19 +52,19 @@ export default function DraftTable({
                 <tr>
                     <th
                         scope="col"
-                        class="py-3 px-4 text-left font-normal uppercase"
+                        class="pl-4 py-3 px-2 text-left font-normal uppercase"
                     >
                         Role
                     </th>
                     <th
                         scope="col"
-                        class="py-3 px-4 text-left font-normal uppercase"
+                        class="py-3 px-2 text-left font-normal uppercase w-full"
                     >
-                        Name
+                        Champion
                     </th>
                     <th
                         scope="col"
-                        class="py-3 px-4 text-left font-normal uppercase"
+                        class="pr-4 py-3 px-2 text-left font-normal uppercase w-full"
                     >
                         Winrate
                     </th>

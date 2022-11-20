@@ -13,7 +13,7 @@ export function getTeamDamageDistribution(
     };
 
     for (const [role, championKey] of team.entries()) {
-        const champion = dataset[championKey];
+        const champion = dataset.championData[championKey];
         const championRoleData = champion.statsByRole[role];
 
         damageDistribution.magic += championRoleData.damageProfile.magic;

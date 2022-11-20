@@ -8,7 +8,7 @@ export function Button(
     return (
         <button
             type="button"
-            class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+            class="text-2xl relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 py-1 font-medium hover:bg-neutral-800 focus:z-10 rounded-md"
         >
             {props.children}
         </button>

@@ -1,14 +1,11 @@
 import { Icon } from "solid-heroicons";
 import { magnifyingGlass } from "solid-heroicons/outline";
 import { Accessor, onCleanup, Setter } from "solid-js";
+import { useDraft } from "../context/DraftContext";
 
-export function Search({
-    search,
-    setSearch,
-}: {
-    search: Accessor<string>;
-    setSearch: Setter<string>;
-}) {
+export function Search() {
+    const { search, setSearch } = useDraft();
+
     let inputEl: HTMLInputElement | undefined = undefined;
     const onControlF = (e: KeyboardEvent) => {
         if (e.ctrlKey && e.key === "f") {

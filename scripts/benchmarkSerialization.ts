@@ -6,8 +6,8 @@ import {
 import { ChampionRoleData } from "../src/lib/models/ChampionRoleData";
 import {
     Dataset,
-    deserializeDataset,
-    serializeDataset,
+    getDeserializedDataset,
+    getSerializedDataset,
 } from "../src/lib/models/Dataset";
 import {
     serialize,
@@ -260,12 +260,12 @@ async function main() {
     const jsonBuffer = Buffer.from(jsonData);
     const jsonLength = jsonBuffer.byteLength;
 
-    const binary = serializeDataset(data);
+    const binary = getSerializedDataset(data);
 
     const binaryData = Buffer.from(binary);
     const binaryLength = binaryData.byteLength;
 
-    const deserialized = deserializeDataset(binary);
+    const deserialized = getDeserializedDataset(binary);
     const deserializedData = JSON.stringify(deserialized, null, 2);
 
     console.log(`JSON length: ${jsonLength}`);

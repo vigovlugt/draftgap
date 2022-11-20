@@ -1,14 +1,11 @@
 import { Accessor, For, Setter } from "solid-js";
+import { useDraft } from "../context/DraftContext";
 import { Role, ROLES } from "../lib/models/Role";
 import { RoleIcon } from "./icons/roles/RoleIcon";
 
-export function RoleFilter({
-    roleFilter,
-    setRoleFilter,
-}: {
-    roleFilter: Accessor<Role | undefined>;
-    setRoleFilter: Setter<Role | undefined>;
-}) {
+export function RoleFilter() {
+    const { roleFilter, setRoleFilter } = useDraft();
+
     return (
         <span class="isolate inline-flex rounded-md shadow-sm">
             <For each={ROLES}>

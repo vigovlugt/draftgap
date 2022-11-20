@@ -15,7 +15,8 @@ export interface Suggestion {
 export function getSuggestions(
     championDataset: Dataset,
     team: Map<Role, string>,
-    enemy: Map<Role, string>
+    enemy: Map<Role, string>,
+    config: AnalyzeDraftConfig
 ) {
     const remainingRoles = ROLES.filter((role) => !team.has(role));
     const enemyChampions = new Set(enemy.values());
@@ -23,11 +24,11 @@ export function getSuggestions(
 
     const suggestions: Suggestion[] = [];
 
-    for (const championKey of Object.keys(championDataset)) {
+    for (const championKey of Object.keys(championDataset.championData)) {
         if (enemyChampions.has(championKey) || allyChampions.has(championKey))
             continue;
 
-        const champion = championDataset[championKey];
+        const champion = championDataset.championData[championKey];
 
         for (const role of remainingRoles) {
             if (team.has(role)) continue;
@@ -37,7 +38,8 @@ export function getSuggestions(
             // Check if all champions in the enemy team have a matchup against the champion
             const championHasMatchups = [...enemy.entries()].every(
                 ([enemyRole, enemyChampionKey]) => {
-                    const enemyChampion = championDataset[enemyChampionKey];
+                    const enemyChampion =
+                        championDataset.championData[enemyChampionKey];
                     const enemyChampionRoleData =
                         enemyChampion.statsByRole[enemyRole];
                     return (
@@ -53,7 +55,8 @@ export function getSuggestions(
             // Check if all champions in the team have a synergy with the champion
             const teamHasSynergy = [...team.entries()].every(
                 ([allyRole, allyChampionKey]) => {
-                    const allyChampion = championDataset[allyChampionKey];
+                    const allyChampion =
+                        championDataset.championData[allyChampionKey];
                     const allyChampionRoleData =
                         allyChampion.statsByRole[allyRole];
 
@@ -68,7 +71,12 @@ export function getSuggestions(
             if (!teamHasSynergy) continue;
 
             team.set(role, championKey);
-            const draftResult = analyzeDraft(championDataset, team, enemy);
+            const draftResult = analyzeDraft(
+                championDataset,
+                team,
+                enemy,
+                config
+            );
             team.delete(role);
 
             suggestions.push({
@@ -95,13 +103,22 @@ export type DraftResult = {
     winrate: number;
 };
 
+export interface AnalyzeDraftConfig {
+    ignoreChampionWinrates: boolean;
+}
+
 export function analyzeDraft(
     championDataset: Dataset,
     team: Map<Role, string>,
-    enemy: Map<Role, string>
+    enemy: Map<Role, string>,
+    config: AnalyzeDraftConfig
 ): DraftResult {
-    const allyChampionRating = analyzeChampions(championDataset, team);
-    const enemyChampionRating = analyzeChampions(championDataset, enemy);
+    const allyChampionRating = !config.ignoreChampionWinrates
+        ? analyzeChampions(championDataset, team)
+        : { totalRating: 0, winrate: 0, championResults: [] };
+    const enemyChampionRating = !config.ignoreChampionWinrates
+        ? analyzeChampions(championDataset, enemy)
+        : { totalRating: 0, winrate: 0, championResults: [] };
 
     const allyDuoRating = analyzeDuos(championDataset, team);
     const enemyDuoRating = analyzeDuos(championDataset, enemy);
@@ -147,7 +164,7 @@ export function analyzeChampions(
     let totalRating = 0;
 
     for (const [role, championKey] of team) {
-        const championData = championDataset[championKey];
+        const championData = championDataset.championData[championKey];
         const roleData = championData.statsByRole[role];
 
         const winrate = calculateWilsonCI(
@@ -193,9 +210,10 @@ export function analyzeDuos(
         for (let j = i + 1; j < teamEntries.length; j++) {
             const [role, championKey] = teamEntries[i];
             const [role2, championKey2] = teamEntries[j];
-            const roleStats = championDataset[championKey].statsByRole[role];
+            const roleStats =
+                championDataset.championData[championKey].statsByRole[role];
             const champion2RoleStats =
-                championDataset[championKey2].statsByRole[role2];
+                championDataset.championData[championKey2].statsByRole[role2];
             const duoStats = roleStats.synergy[role2][championKey2];
             const chapmion2DuoStats =
                 champion2RoleStats.synergy[role][championKey];
@@ -251,7 +269,7 @@ export type AnalyzeMatchupResult = {
 };
 
 export function analyzeMatchup(
-    championDataset: Dataset,
+    dataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>
 ): AnalyzeMatchupResult {
@@ -261,11 +279,11 @@ export function analyzeMatchup(
     for (const [allyRole, allyChampionKey] of team) {
         for (const [enemyRole, enemyChampionKey] of enemy) {
             const roleStats =
-                championDataset[allyChampionKey].statsByRole[allyRole];
+                dataset.championData[allyChampionKey].statsByRole[allyRole];
             const matchupStats = roleStats.matchup[enemyRole][enemyChampionKey];
 
             const enemyRoleStats =
-                championDataset[enemyChampionKey].statsByRole[enemyRole];
+                dataset.championData[enemyChampionKey].statsByRole[enemyRole];
             const enemyMatchupStats =
                 enemyRoleStats.matchup[allyRole][allyChampionKey];
 

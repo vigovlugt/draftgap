@@ -1,16 +1,16 @@
 import {
-    Accessor,
     createContext,
     createMemo,
     createResource,
+    createSignal,
     JSXElement,
-    Resource,
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
-import { Dataset, deserializeDataset } from "../lib/models/Dataset";
+import { Dataset, getDeserializedDataset } from "../lib/models/Dataset";
 import { PickData } from "../lib/models/PickData";
+import { Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
 import predictRoles, { getTeamComps } from "../lib/role/role-predictor";
 import { analyzeDraft, getSuggestions } from "../lib/suggestions/suggestions";
@@ -53,7 +53,7 @@ const fetchBinDataset = async () => {
     console.timeEnd("arrayBuffer");
 
     console.time("deserialize");
-    const deserialized = deserializeDataset(arrayBuffer);
+    const deserialized = getDeserializedDataset(arrayBuffer);
     console.timeEnd("deserialize");
 
     console.timeEnd("all");
@@ -79,6 +79,13 @@ export function createDraftContext() {
         { championKey: undefined },
     ]);
 
+    const [search, setSearch] = createSignal("");
+    const [roleFilter, setRoleFilter] = createSignal<Role>();
+
+    const [config, setConfig] = createStore({
+        ignoreChampionWinrates: false,
+    });
+
     function getTeamCompsForTeam(team: Team) {
         if (!dataset()) return [];
 
@@ -87,7 +94,7 @@ export function createDraftContext() {
         const championData = picks
             .map((pick) => pick.championKey)
             .filter((champion): champion is string => champion !== undefined)
-            .map((key) => dataset()![key]);
+            .map((key) => dataset()!.championData[key]);
         return getTeamComps(championData);
     }
 
@@ -102,7 +109,10 @@ export function createDraftContext() {
         return analyzeDraft(
             dataset()!,
             allyTeamComps()[0][0],
-            opponentTeamComps()[0][0]
+            opponentTeamComps()[0][0],
+            {
+                ignoreChampionWinrates: config.ignoreChampionWinrates,
+            }
         );
     });
     const opponentDraftResult = createMemo(() => {
@@ -110,7 +120,10 @@ export function createDraftContext() {
         return analyzeDraft(
             dataset()!,
             opponentTeamComps()[0][0],
-            allyTeamComps()[0][0]
+            allyTeamComps()[0][0],
+            {
+                ignoreChampionWinrates: config.ignoreChampionWinrates,
+            }
         );
     });
 
@@ -134,7 +147,7 @@ export function createDraftContext() {
 
         for (const { championKey } of picks) {
             if (!championKey) continue;
-            const championData = dataset()![championKey];
+            const championData = dataset()!.championData[championKey];
             const probabilityByRole = roles.get(championKey)!;
             teamData.set(championKey, {
                 ...championData,
@@ -154,7 +167,9 @@ export function createDraftContext() {
         const allyTeamComp = allyTeamComps()[0][0] ?? new Map();
         const enemyTeamComp = opponentTeamComps()[0][0] ?? new Map();
 
-        return getSuggestions(dataset()!, allyTeamComp, enemyTeamComp);
+        return getSuggestions(dataset()!, allyTeamComp, enemyTeamComp, {
+            ignoreChampionWinrates: config.ignoreChampionWinrates,
+        });
     });
 
     const opponentSuggestions = createMemo(() => {
@@ -163,8 +178,16 @@ export function createDraftContext() {
         const allyTeamComp = allyTeamComps()[0][0] ?? new Map();
         const enemyTeamComp = opponentTeamComps()[0][0] ?? new Map();
 
-        return getSuggestions(dataset()!, enemyTeamComp, allyTeamComp);
+        return getSuggestions(dataset()!, enemyTeamComp, allyTeamComp, {
+            ignoreChampionWinrates: config.ignoreChampionWinrates,
+        });
     });
+
+    function getNextPick(team: Team) {
+        const picks = team === "ally" ? allyTeam : opponentTeam;
+
+        return picks.findIndex((pick) => pick.championKey === undefined);
+    }
 
     const pickChampion = (
         team: "ally" | "opponent",
@@ -177,11 +200,25 @@ export function createDraftContext() {
             setOpponentTeam(index, "championKey", championKey);
         }
 
-        select(undefined, 0);
+        let nextIndex = getNextPick(team);
+        if (nextIndex === -1) {
+            const otherTeam = team === "ally" ? "opponent" : "ally";
+            nextIndex = getNextPick(otherTeam);
+            if (nextIndex !== -1) {
+                select(otherTeam, nextIndex);
+            } else {
+                select(undefined, 0);
+            }
+        } else {
+            select(team, nextIndex);
+        }
+
+        setSearch("");
+        setRoleFilter(undefined);
     };
 
     const [selection, setSelection] = createStore<Selection>({
-        team: undefined,
+        team: "ally",
         index: 0,
     });
 
@@ -209,6 +246,12 @@ export function createDraftContext() {
         pickChampion,
         selection,
         select,
+        search,
+        roleFilter,
+        setSearch,
+        setRoleFilter,
+        config,
+        setConfig,
     };
 }
 

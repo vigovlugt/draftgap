@@ -2,7 +2,7 @@ import * as fs from "fs/promises";
 import { getChampionDataFromLolalytics } from "../src/lib/data/lolalytics";
 import { getVersions, getChampions } from "../src/lib/data/riot";
 import { ChampionData } from "../src/lib/models/ChampionData";
-import { Dataset, serializeDataset } from "../src/lib/models/Dataset";
+import { Dataset, getSerializedDataset } from "../src/lib/models/Dataset";
 
 const BATCH_SIZE = 10;
 
@@ -12,9 +12,13 @@ async function main() {
 
     const champions = await getChampions(currentVersion);
 
+    const dataset: Dataset = {
+        version: currentVersion,
+        championData: {},
+    };
+
     currentVersion = "30";
 
-    const dataset: Dataset = {};
     for (let i = 0; i < champions.length; i += BATCH_SIZE) {
         console.log(
             `Processing batch ${i / BATCH_SIZE} of ${Math.ceil(
@@ -36,7 +40,7 @@ async function main() {
             .map((result) => result.value);
 
         for (const champion of championData) {
-            dataset[champion.key] = champion;
+            dataset.championData[champion.key] = champion;
         }
     }
 
@@ -49,7 +53,7 @@ async function main() {
 
     await fs.writeFile(
         `./public/data/datasets/${currentVersion}.bin`,
-        Buffer.from(serializeDataset(dataset))
+        Buffer.from(getSerializedDataset(dataset))
     );
 }
 

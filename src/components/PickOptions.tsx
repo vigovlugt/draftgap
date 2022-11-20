@@ -8,6 +8,7 @@ import {
 } from "solid-headless";
 import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/outline";
+import { trash } from "solid-heroicons/solid-mini";
 import { useDraft } from "../context/DraftContext";
 import { Team } from "../lib/models/Team";
 
@@ -42,12 +43,13 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
                                 <Menu class="overflow-hidden w-64 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 flex flex-col space-y-1 p-2">
                                     <MenuItem
                                         as="button"
-                                        class="text-2xl uppercase p-1 px-2 text-left rounded-lg hover:bg-neutral-700 focus:outline-none"
+                                        class="text-2xl uppercase p-1 px-2 text-left rounded-lg hover:bg-neutral-700 focus:outline-none flex items-center space-x-2"
                                         onClick={() =>
                                             pickChampion(team, index, undefined)
                                         }
                                     >
-                                        RESET
+                                        <Icon path={trash} class="w-[20px]" />
+                                        <span>RESET</span>
                                     </MenuItem>
                                 </Menu>
                             </PopoverPanel>
