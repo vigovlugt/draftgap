@@ -8,7 +8,8 @@
         "build": "vite build",
         "serve": "vite preview",
         "test": "vitest",
-        "get:data": "node -r esbuild-register scripts/getData.ts"
+        "get:data": "node -r esbuild-register scripts/getData.ts",
+        "benchmark": "node -r esbuild-register scripts/benchmarkSerialization.ts"
     },
     "license": "MIT",
     "devDependencies": {

@@ -5,6 +5,11 @@ import {
 } from "../src/lib/data/lolalytics";
 import { getVersions, getChampions } from "../src/lib/data/riot";
 import { ChampionData } from "../src/lib/models/ChampionData";
+import {
+    Dataset,
+    deserializeDataset,
+    serializeDataset,
+} from "../src/lib/models/Dataset";
 
 const BATCH_SIZE = 10;
 
@@ -16,7 +21,7 @@ async function main() {
 
     currentVersion = "30";
 
-    const dataset: Record<string, ChampionData> = {};
+    const dataset: Dataset = {};
     for (let i = 0; i < champions.length; i += BATCH_SIZE) {
         console.log(
             `Processing batch ${i / BATCH_SIZE} of ${Math.ceil(
@@ -47,6 +52,16 @@ async function main() {
     await fs.writeFile(
         `./public/data/datasets/${currentVersion}.json`,
         JSON.stringify(dataset)
+    );
+
+    await fs.writeFile(
+        `./public/data/datasets/${currentVersion}.bin`,
+        Buffer.from(serializeDataset(dataset))
+    );
+
+    await fs.writeFile(
+        `./public/data/datasets/${currentVersion}-2.json`,
+        JSON.stringify(deserializeDataset(serializeDataset(dataset)))
     );
 }
 

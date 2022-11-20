@@ -1,8 +1,9 @@
 import { ChampionData } from "../models/ChampionData";
+import { Dataset } from "../models/Dataset";
 import { Role } from "../models/Role";
 
 export function getTeamDamageDistribution(
-    dataset: Record<string, ChampionData>,
+    dataset: Dataset,
     team: Map<Role, string>
 ) {
     const damageDistribution = {

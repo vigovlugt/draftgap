@@ -1,4 +1,5 @@
 import { ChampionData } from "../models/ChampionData";
+import { Dataset } from "../models/Dataset";
 import { Role, ROLES } from "../models/Role";
 import {
     getMatchupWinrate,
@@ -16,7 +17,7 @@ export interface Suggestion {
 }
 
 export function getSuggestions(
-    championDataset: Record<string, ChampionData>,
+    championDataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>
 ) {
@@ -99,7 +100,7 @@ export type DraftResult = {
 };
 
 export function analyzeDraft(
-    championDataset: Record<string, ChampionData>,
+    championDataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>
 ): DraftResult {
@@ -143,7 +144,7 @@ export type AnalyzeChampionResult = {
 };
 
 export function analyzeChampions(
-    championDataset: Record<string, ChampionData>,
+    championDataset: Dataset,
     team: Map<Role, string>
 ): AnalyzeChampionResult {
     const championResults: ChampionResult[] = [];
@@ -184,7 +185,7 @@ export type AnalyzeDuoResult = {
 };
 
 export function analyzeDuos(
-    championDataset: Record<string, ChampionData>,
+    championDataset: Dataset,
     team: Map<Role, string>
 ): AnalyzeDuoResult {
     const teamEntries = Array.from(team.entries());
@@ -254,7 +255,7 @@ export type AnalyzeMatchupResult = {
 };
 
 export function analyzeMatchup(
-    championDataset: Record<string, ChampionData>,
+    championDataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>
 ): AnalyzeMatchupResult {

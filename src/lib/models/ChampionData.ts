@@ -1,3 +1,18 @@
+import {
+    serializeString,
+    serializeObject,
+    deserializeString,
+    deserializeObject,
+    DeserializationContext,
+    SerializationContext,
+    serializeVarUint,
+    deserializeVarUint,
+} from "../serialization/serialization";
+import {
+    ChampionRoleData,
+    deserializeChampionRoleData,
+    serializeChampionRoleData,
+} from "./ChampionRoleData";
 import { Role } from "./Role";
 
 export interface ChampionData {
@@ -7,28 +22,37 @@ export interface ChampionData {
     statsByRole: Record<Role, ChampionRoleData>;
 }
 
-export interface ChampionRoleData {
-    games: number;
-    wins: number;
-    matchup: Record<Role, Record<string, ChampionMatchupData>>;
-    synergy: Record<Role, Record<string, ChampionSynergyData>>;
-    damageProfile: ChampionDamageData;
+export function serializeChampionData(
+    ctx: SerializationContext,
+    championData: ChampionData
+) {
+    serializeString(ctx, championData.id);
+    serializeVarUint(ctx, Number(championData.key));
+    serializeString(ctx, championData.name);
+    serializeObject(
+        ctx,
+        serializeString,
+        serializeChampionRoleData,
+        championData.statsByRole
+    );
 }
 
-export interface ChampionMatchupData {
-    championKey: string;
-    games: number;
-    wins: number;
-}
+export function deserializeChampionData(
+    ctx: DeserializationContext
+): ChampionData {
+    const id = deserializeString(ctx);
+    const key = deserializeVarUint(ctx).toString();
+    const name = deserializeString(ctx);
+    const statsByRole = deserializeObject(
+        ctx,
+        deserializeString,
+        deserializeChampionRoleData
+    );
 
-export interface ChampionSynergyData {
-    championKey: string;
-    games: number;
-    wins: number;
-}
-
-export interface ChampionDamageData {
-    magic: number;
-    physical: number;
-    true: number;
+    return {
+        id,
+        key,
+        name,
+        statsByRole,
+    };
 }

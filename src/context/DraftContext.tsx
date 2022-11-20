@@ -9,9 +9,8 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
-import { ChampionData } from "../lib/models/ChampionData";
+import { Dataset, deserializeDataset } from "../lib/models/Dataset";
 import { PickData } from "../lib/models/PickData";
-import { Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
 import predictRoles, { getTeamComps } from "../lib/role/role-predictor";
 import { analyzeDraft, getSuggestions } from "../lib/suggestions/suggestions";
@@ -28,12 +27,42 @@ type Selection = {
 };
 
 const fetchDataset = async () => {
+    console.time("all");
+
+    console.time("fetch");
     const response = await fetch("data/datasets/30.json");
-    return (await response.json()) as Record<string, ChampionData>;
+    console.timeEnd("fetch");
+
+    console.time("json");
+    const json = await response.json();
+    console.timeEnd("json");
+
+    console.timeEnd("all");
+
+    return json as Dataset;
+};
+
+const fetchBinDataset = async () => {
+    console.time("all");
+    console.time("fetch");
+    const response = await fetch("data/datasets/30.bin");
+    console.timeEnd("fetch");
+
+    console.time("arrayBuffer");
+    const arrayBuffer = await response.arrayBuffer();
+    console.timeEnd("arrayBuffer");
+
+    console.time("deserialize");
+    const deserialized = deserializeDataset(arrayBuffer);
+    console.timeEnd("deserialize");
+
+    console.timeEnd("all");
+
+    return deserialized;
 };
 
 export function createDraftContext() {
-    const [dataset] = createResource(fetchDataset);
+    const [dataset] = createResource(fetchBinDataset);
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
         { championKey: undefined },

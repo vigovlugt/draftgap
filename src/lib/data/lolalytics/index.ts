@@ -1,12 +1,10 @@
-import {
-    ChampionData,
-    ChampionMatchupData,
-    ChampionRoleData,
-    ChampionSynergyData,
-} from "../../models/ChampionData";
+import { ChampionData } from "../../models/ChampionData";
+import { ChampionSynergyData } from "../../models/ChampionSynergyData";
+import { ChampionMatchupData } from "../../models/ChampionMatchupData";
 import { Role, ROLES } from "../../models/Role";
 import { getLolalyticsChampion } from "./champion";
 import { getLolalyticsChampion2 } from "./champion2";
+import { ChampionRoleData } from "../../models/ChampionRoleData";
 
 const MIN_ROLE_PLAY_RATE = 10;
 
@@ -105,7 +103,7 @@ We try to fix this by getting the data of the matchup for the other champion
 And then use the average of the two.
 */
 // export function distributeMatchupWinrates(
-//     dataset: Record<string, ChampionData>
+//     dataset: Dataset
 // ) {
 //     for (const championKey of Object.keys(dataset)) {
 //         const champion = dataset[championKey];
