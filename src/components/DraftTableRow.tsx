@@ -34,7 +34,7 @@ export function DraftTableRow({ suggestion }: Props) {
                 <RoleIcon role={suggestion.role} class="h-8" />
             </td>
             <td class="whitespace-nowrap py-3 px-4 font-medium">
-                {dataset()![suggestion.championKey].name.toUpperCase()}{" "}
+                {dataset()![suggestion.championKey].name.toUpperCase()}
             </td>
             <td class="whitespace-nowrap py-3 px-4 font-medium">
                 {parseFloat((suggestion.draftResult.winrate * 100).toFixed(2))}

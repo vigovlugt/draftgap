@@ -36,7 +36,7 @@ export default function DraftTable({
             );
         }
 
-        if (roleFilter()) {
+        if (roleFilter() !== undefined) {
             filtered = filtered.filter((s) => s.role === roleFilter());
         }
 
