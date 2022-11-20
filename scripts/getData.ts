@@ -1,15 +1,8 @@
 import * as fs from "fs/promises";
-import {
-    // distributeMatchupWinrates,
-    getChampionDataFromLolalytics,
-} from "../src/lib/data/lolalytics";
+import { getChampionDataFromLolalytics } from "../src/lib/data/lolalytics";
 import { getVersions, getChampions } from "../src/lib/data/riot";
 import { ChampionData } from "../src/lib/models/ChampionData";
-import {
-    Dataset,
-    deserializeDataset,
-    serializeDataset,
-} from "../src/lib/models/Dataset";
+import { Dataset, serializeDataset } from "../src/lib/models/Dataset";
 
 const BATCH_SIZE = 10;
 
@@ -57,11 +50,6 @@ async function main() {
     await fs.writeFile(
         `./public/data/datasets/${currentVersion}.bin`,
         Buffer.from(serializeDataset(dataset))
-    );
-
-    await fs.writeFile(
-        `./public/data/datasets/${currentVersion}-2.json`,
-        JSON.stringify(deserializeDataset(serializeDataset(dataset)))
     );
 }
 

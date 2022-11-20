@@ -31,7 +31,7 @@ export function TeamSidebar({ team }: IProps) {
                     : "0"}
             </div>
             <For each={[0, 1, 2, 3, 4]}>
-                {(idx) => <Pick team={team} idx={idx} />}
+                {(index) => <Pick team={team} index={index} />}
             </For>
         </div>
     );

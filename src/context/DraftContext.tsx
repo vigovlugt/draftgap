@@ -176,6 +176,8 @@ export function createDraftContext() {
         } else {
             setOpponentTeam(index, "championKey", championKey);
         }
+
+        select(undefined, 0);
     };
 
     const [selection, setSelection] = createStore<Selection>({

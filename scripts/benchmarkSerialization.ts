@@ -1,9 +1,14 @@
+import { write, writeFileSync } from "fs";
 import {
     ChampionMatchupData,
     serializeChampionMatchupData,
 } from "../src/lib/models/ChampionMatchupData";
 import { ChampionRoleData } from "../src/lib/models/ChampionRoleData";
-import { Dataset, serializeDataset } from "../src/lib/models/Dataset";
+import {
+    Dataset,
+    deserializeDataset,
+    serializeDataset,
+} from "../src/lib/models/Dataset";
 import {
     serialize,
     serializeString,
@@ -15,11 +20,11 @@ const data = {
         key: "1",
         name: "Annie",
         statsByRole: {
-            middle: {
+            2: {
                 games: 44493,
                 wins: 23047,
                 matchup: {
-                    top: {
+                    0: {
                         "2": { championKey: "2", games: 564, wins: 267 },
                         "3": { championKey: "3", games: 17, wins: 13 },
                         "4": { championKey: "4", games: 5, wins: 3 },
@@ -176,7 +181,7 @@ const data = {
                         "895": { championKey: "895", games: 12, wins: 6 },
                         "897": { championKey: "897", games: 1502, wins: 859 },
                     },
-                    jungle: {
+                    1: {
                         "2": { championKey: "2", games: 186, wins: 94 },
                         "3": { championKey: "3", games: 1, wins: 0 },
                         "4": { championKey: "4", games: 2, wins: 2 },
@@ -229,16 +234,16 @@ const data = {
                         "75": { championKey: "75", games: 47, wins: 24 },
                         "76": { championKey: "76", games: 698, wins: 363 },
                     },
-                    mid: {},
-                    support: {},
-                    bottom: {},
+                    2: {},
+                    4: {},
+                    3: {},
                 },
                 synergy: {
-                    top: {},
-                    jungle: {},
-                    mid: {},
-                    support: {},
-                    bottom: {},
+                    0: {},
+                    1: {},
+                    2: {},
+                    3: {},
+                    4: {},
                 },
                 damageProfile: {
                     true: 0,
@@ -251,7 +256,7 @@ const data = {
 } as unknown as Dataset;
 
 async function main() {
-    const jsonData = JSON.stringify(data);
+    const jsonData = JSON.stringify(data, null, 2);
     const jsonBuffer = Buffer.from(jsonData);
     const jsonLength = jsonBuffer.byteLength;
 
@@ -260,8 +265,12 @@ async function main() {
     const binaryData = Buffer.from(binary);
     const binaryLength = binaryData.byteLength;
 
+    const deserialized = deserializeDataset(binary);
+    const deserializedData = JSON.stringify(deserialized, null, 2);
+
     console.log(`JSON length: ${jsonLength}`);
     console.log(`Binary length: ${binaryLength}`);
+    console.log(`Deserialized length: ${deserializedData.length}`);
     console.log(
         `Binary is ${Math.round((binaryLength / jsonLength) * 100)}% of JSON`
     );

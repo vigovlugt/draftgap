@@ -12,19 +12,19 @@ export function RoleIcon(
 ) {
     return (
         <Switch>
-            <Match when={props.role === "bottom"}>
+            <Match when={props.role === Role.Bottom}>
                 <BottomIcon {...props} />
             </Match>
-            <Match when={props.role === "top"}>
+            <Match when={props.role === Role.Top}>
                 <TopIcon {...props} />
             </Match>
-            <Match when={props.role === "middle"}>
+            <Match when={props.role === Role.Middle}>
                 <MidIcon {...props} />
             </Match>
-            <Match when={props.role === "jungle"}>
+            <Match when={props.role === Role.Jungle}>
                 <JungleIcon {...props} />
             </Match>
-            <Match when={props.role === "support"}>
+            <Match when={props.role === Role.Support}>
                 <SupportIcon {...props} />
             </Match>
         </Switch>

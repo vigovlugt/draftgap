@@ -117,7 +117,7 @@ export function deserializeString(ctx: DeserializationContext): string {
     return string;
 }
 
-export function serializeObject<TKey extends string, TValue>(
+export function serializeObject<TKey extends string | number | symbol, TValue>(
     ctx: SerializationContext,
     keySerializer: Serializer<TKey>,
     valueSerializer: Serializer<TValue>,
@@ -134,7 +134,10 @@ export function serializeObject<TKey extends string, TValue>(
     return size;
 }
 
-export function deserializeObject<TKey extends string, TValue>(
+export function deserializeObject<
+    TKey extends string | number | symbol,
+    TValue
+>(
     ctx: DeserializationContext,
     keyDeserializer: Deserializer<TKey>,
     valueDeserializer: Deserializer<TValue>
@@ -152,7 +155,10 @@ export function deserializeObject<TKey extends string, TValue>(
     return object;
 }
 
-export function createObjectSerializer<TKey extends string, TValue>(
+export function createObjectSerializer<
+    TKey extends string | number | symbol,
+    TValue
+>(
     keySerializer: Serializer<TKey>,
     valueSerializer: Serializer<TValue>
 ): Serializer<Record<TKey, TValue>> {
@@ -160,7 +166,10 @@ export function createObjectSerializer<TKey extends string, TValue>(
         serializeObject(ctx, keySerializer, valueSerializer, value);
 }
 
-export function createObjectDeserializer<TKey extends string, TValue>(
+export function createObjectDeserializer<
+    TKey extends string | number | symbol,
+    TValue
+>(
     keyDeserializer: Deserializer<TKey>,
     valueDeserializer: Deserializer<TValue>
 ): Deserializer<Record<TKey, TValue>> {

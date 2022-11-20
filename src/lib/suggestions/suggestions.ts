@@ -1,11 +1,7 @@
 import { ChampionData } from "../models/ChampionData";
 import { Dataset } from "../models/Dataset";
 import { Role, ROLES } from "../models/Role";
-import {
-    getMatchupWinrate,
-    winrateToRating,
-    ratingToWinrate,
-} from "../rating/ratings";
+import { winrateToRating, ratingToWinrate } from "../rating/ratings";
 import { calculateWilsonCI } from "../statistics/stats";
 
 const WINRATE_CONFIDENCE = 0;

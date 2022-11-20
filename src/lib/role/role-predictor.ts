@@ -1,4 +1,4 @@
-import { ChampionData, ChampionRoleData } from "../models/ChampionData";
+import { ChampionData } from "../models/ChampionData";
 import { Role, ROLES } from "../models/Role";
 
 export function getTeamComps(champions: ChampionData[]) {
@@ -18,16 +18,15 @@ function getTeamCompsRecursive(
     const champion = champions[0];
     const remainingChampions = champions.slice(1);
 
-    const totalGames = ROLES.reduce(
+    const totalGames = ROLES.reduce<number>(
         (a, b) => a + champion.statsByRole[b].games,
         0
     );
 
     const combinations = [];
-    for (const [role, roleData] of Object.entries(champion.statsByRole) as [
-        Role,
-        ChampionRoleData
-    ][]) {
+    for (const entry of Object.entries(champion.statsByRole)) {
+        const role = Number(entry[0]) as Role;
+        const roleData = entry[1];
         if (partialTeamComp.has(role)) {
             continue;
         }

@@ -31,7 +31,7 @@ export function serializeChampionData(
     serializeString(ctx, championData.name);
     serializeObject(
         ctx,
-        serializeString,
+        (ctx, value) => serializeVarUint(ctx, Number(value)),
         serializeChampionRoleData,
         championData.statsByRole
     );
@@ -45,7 +45,7 @@ export function deserializeChampionData(
     const name = deserializeString(ctx);
     const statsByRole = deserializeObject(
         ctx,
-        deserializeString,
+        (ctx) => deserializeVarUint(ctx) as Role,
         deserializeChampionRoleData
     );
 

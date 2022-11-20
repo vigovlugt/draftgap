@@ -1,3 +1,4 @@
+import { createDroppable } from "@thisbeyond/solid-dnd";
 import { createDeferred, onCleanup, Show } from "solid-js";
 import { useDraft } from "../context/DraftContext";
 import clickOutside from "../directives/click-outside";
@@ -6,10 +7,10 @@ import { PickOptions } from "./PickOptions";
 
 interface IProps {
     team: "ally" | "opponent";
-    idx: number;
+    index: number;
 }
 
-export function Pick({ team, idx }: IProps) {
+export function Pick({ team, index }: IProps) {
     const {
         allyTeam,
         opponentTeam,
@@ -18,13 +19,18 @@ export function Pick({ team, idx }: IProps) {
         selection,
         select,
     } = useDraft()!;
+    const droppable = createDroppable(team + ":" + index, {
+        team,
+        index: index,
+    });
 
     const picks = team === "ally" ? allyTeam : opponentTeam;
     const championData = team === "ally" ? allyTeamData : opponentTeamData;
 
-    const pick = picks[idx];
+    const pick = picks[index];
 
-    const isSelected = () => selection.team === team && selection.index === idx;
+    const isSelected = () =>
+        selection.team === team && selection.index === index;
 
     const champion = () => {
         if (!pick.championKey) {
@@ -36,15 +42,16 @@ export function Pick({ team, idx }: IProps) {
 
     return (
         <div
+            use:droppable
             class="flex-1 relative cursor-pointer border-t-2 border-neutral-700 hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
             classList={{
                 "!bg-neutral-700": isSelected(),
             }}
-            onClick={() => select(team, idx)}
+            onClick={() => select(team, index)}
         >
             <Show when={!champion()}>
                 <span class="absolute top-0 left-2 uppercase">
-                    PICK {idx + 1}
+                    PICK {index + 1}
                 </span>
             </Show>
 
@@ -95,7 +102,7 @@ export function Pick({ team, idx }: IProps) {
                 )}
             </Show>
 
-            <PickOptions team={team} index={idx} />
+            <PickOptions team={team} index={index} />
         </div>
     );
 }

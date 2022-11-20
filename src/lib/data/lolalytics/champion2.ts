@@ -1,4 +1,5 @@
 import { fetch } from "undici";
+import { LolalyticsRole } from ".";
 import { Role } from "../../models/Role";
 
 export interface LolalyticsChampion2Response {
@@ -52,7 +53,7 @@ interface Skills {
 export async function getLolalyticsChampion2(
     patch: string,
     championKey: string,
-    lane: Role | "default" = "default"
+    lane: LolalyticsRole | "default" = "default"
 ) {
     // convert patch from 12.21.1 to 12.21
     patch = patch.split(".").slice(0, 2).join(".");

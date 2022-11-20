@@ -2,11 +2,9 @@ import {
     SerializationContext,
     serializeVarUint,
     serializeObject,
-    serializeString,
     DeserializationContext,
     deserializeVarUint,
     deserializeObject,
-    deserializeString,
 } from "../serialization/serialization";
 import {
     ChampionDamageProfile,
@@ -41,11 +39,11 @@ export function serializeChampionRoleData(
     serializeVarUint(ctx, championRoleData.wins);
     serializeObject(
         ctx,
-        serializeString,
+        (ctx, value) => serializeVarUint(ctx, Number(value)),
         (ctx, value) => {
             return serializeObject(
                 ctx,
-                serializeString,
+                (ctx, value) => serializeVarUint(ctx, Number(value)),
                 serializeChampionMatchupData,
                 value
             );
@@ -54,11 +52,11 @@ export function serializeChampionRoleData(
     );
     serializeObject(
         ctx,
-        serializeString,
+        (ctx, value) => serializeVarUint(ctx, Number(value)),
         (ctx, value) => {
             return serializeObject(
                 ctx,
-                serializeString,
+                (ctx, value) => serializeVarUint(ctx, Number(value)),
                 serializeChampionSynergyData,
                 value
             );
@@ -74,21 +72,29 @@ export function deserializeChampionRoleData(
     const games = deserializeVarUint(ctx);
     const wins = deserializeVarUint(ctx);
 
-    const matchup = deserializeObject(ctx, deserializeString, (ctx) => {
-        return deserializeObject(
-            ctx,
-            deserializeString,
-            deserializeChampionMatchupData
-        );
-    });
+    const matchup = deserializeObject(
+        ctx,
+        (ctx) => deserializeVarUint(ctx) as Role,
+        (ctx) => {
+            return deserializeObject(
+                ctx,
+                (ctx) => deserializeVarUint(ctx),
+                deserializeChampionMatchupData
+            );
+        }
+    );
 
-    const synergy = deserializeObject(ctx, deserializeString, (ctx) => {
-        return deserializeObject(
-            ctx,
-            deserializeString,
-            deserializeChampionSynergyData
-        );
-    });
+    const synergy = deserializeObject(
+        ctx,
+        (ctx) => deserializeVarUint(ctx) as Role,
+        (ctx) => {
+            return deserializeObject(
+                ctx,
+                (ctx) => deserializeVarUint(ctx),
+                deserializeChampionSynergyData
+            );
+        }
+    );
 
     const damageProfile = deserializeChampionDamageProfile(ctx);
 

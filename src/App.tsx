@@ -1,4 +1,13 @@
-import { batch, Component, createEffect, createSignal, Show } from "solid-js";
+import { useDragDropContext } from "@thisbeyond/solid-dnd";
+import {
+    batch,
+    Component,
+    createEffect,
+    createSignal,
+    onCleanup,
+    Show,
+} from "solid-js";
+import { useDnd } from "./components/composables/use-dnd";
 import DraftTable from "./components/DraftTable";
 import { RoleFilter } from "./components/RoleFilter";
 import { Search } from "./components/Search";
@@ -7,7 +16,8 @@ import { DraftProvider, useDraft } from "./context/DraftContext";
 import { Role } from "./lib/models/Role";
 
 const App: Component = () => {
-    const { dataset, pickChampion, allyTeamData } = useDraft()!;
+    const { dataset } = useDraft();
+    useDnd();
 
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
@@ -26,7 +36,7 @@ const App: Component = () => {
             >
                 <TeamSidebar team="ally" />
 
-                <div class="p-4 bg-black flex-1 overflow-auto">
+                <div class="p-4 bg-black flex-1 overflow-auto overflow-x-hidden">
                     <Show
                         when={dataset()}
                         fallback={

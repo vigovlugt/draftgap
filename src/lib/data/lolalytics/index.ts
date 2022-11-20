@@ -1,12 +1,21 @@
 import { ChampionData } from "../../models/ChampionData";
 import { ChampionSynergyData } from "../../models/ChampionSynergyData";
 import { ChampionMatchupData } from "../../models/ChampionMatchupData";
-import { Role, ROLES } from "../../models/Role";
+import { getRoleFromString, Role, ROLES } from "../../models/Role";
 import { getLolalyticsChampion } from "./champion";
 import { getLolalyticsChampion2 } from "./champion2";
 import { ChampionRoleData } from "../../models/ChampionRoleData";
 
 const MIN_ROLE_PLAY_RATE = 10;
+
+const LOLALYTICS_ROLES = [
+    "top",
+    "jungle",
+    "middle",
+    "bottom",
+    "support",
+] as const;
+export type LolalyticsRole = typeof LOLALYTICS_ROLES[number];
 
 export async function getChampionDataFromLolalytics(
     version: string,
@@ -22,7 +31,7 @@ export async function getChampionDataFromLolalytics(
         throw new Error("No data available for this champion and patch");
     }
 
-    const remainingRoles = ROLES.filter(
+    const remainingRoles = LOLALYTICS_ROLES.filter(
         (role) => role !== championData.header.lane
     );
 
@@ -39,7 +48,7 @@ export async function getChampionDataFromLolalytics(
         ...champion,
         statsByRole: Object.fromEntries(
             roleData.map(([championData, champion2Data]) => {
-                const role = championData.header.lane as Role;
+                const role = championData.header.lane as LolalyticsRole;
 
                 const championRoleData: ChampionRoleData = {
                     games: championData.header.n,
@@ -47,11 +56,11 @@ export async function getChampionDataFromLolalytics(
                         (championData.header.n * championData.header.wr) / 100
                     ),
                     matchup: Object.fromEntries(
-                        ROLES.map((role) => {
+                        LOLALYTICS_ROLES.map((role) => {
                             const data = championData[`enemy_${role}`];
 
                             return [
-                                role,
+                                getRoleFromString(role),
                                 Object.fromEntries(
                                     data.map((d) => {
                                         const matchup: ChampionMatchupData = {
@@ -67,29 +76,34 @@ export async function getChampionDataFromLolalytics(
                         })
                     ) as Record<Role, Record<string, ChampionMatchupData>>,
                     synergy: Object.fromEntries(
-                        ROLES.filter((r) => r !== role).map((synergyRole) => {
-                            const data = champion2Data[`team_${synergyRole}`]!;
+                        LOLALYTICS_ROLES.filter((r) => r !== role).map(
+                            (synergyRole) => {
+                                const data =
+                                    champion2Data[`team_${synergyRole}`]!;
 
-                            return [
-                                synergyRole,
-                                Object.fromEntries(
-                                    data.map((d) => {
-                                        const synergy: ChampionSynergyData = {
-                                            championKey: d[0].toString(),
-                                            games: d[1],
-                                            wins: d[2],
-                                        };
+                                return [
+                                    getRoleFromString(synergyRole),
+                                    Object.fromEntries(
+                                        data.map((d) => {
+                                            const synergy: ChampionSynergyData =
+                                                {
+                                                    championKey:
+                                                        d[0].toString(),
+                                                    games: d[1],
+                                                    wins: d[2],
+                                                };
 
-                                        return [d[0], synergy];
-                                    })
-                                ),
-                            ];
-                        })
+                                            return [d[0], synergy];
+                                        })
+                                    ),
+                                ];
+                            }
+                        )
                     ) as Record<Role, Record<string, ChampionSynergyData>>,
                     damageProfile: championData.header.damage,
                 };
 
-                return [role, championRoleData];
+                return [getRoleFromString(role), championRoleData];
             })
         ) as Record<Role, ChampionRoleData>,
     };
