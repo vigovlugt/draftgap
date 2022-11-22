@@ -17,20 +17,25 @@ export function DraftTableRow({ suggestion }: Props) {
         }
     );
 
-    function makePick(key: string) {
+    function pick() {
         if (!selection.team) {
             return;
         }
 
-        pickChampion(selection.team, selection.index, key);
+        pickChampion(
+            selection.team,
+            selection.index,
+            suggestion.championKey,
+            suggestion.role
+        );
     }
 
     return (
         <tr
             // @ts-ignore
             use:draggable
-            onClick={() => makePick(suggestion.championKey)}
-            class="cursor-grab hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
+            onClick={() => pick()}
+            class="cursor-pointer hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
         >
             <td class="whitespace-nowrap py-3 px-2 pl-4 font-medium">
                 <RoleIcon role={suggestion.role} class="h-8" />

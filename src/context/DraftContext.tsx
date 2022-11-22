@@ -17,6 +17,7 @@ import { analyzeDraft, getSuggestions } from "../lib/suggestions/suggestions";
 
 type TeamPick = {
     championKey: string | undefined;
+    role: Role | undefined;
 };
 
 type TeamPicks = [TeamPick, TeamPick, TeamPick, TeamPick, TeamPick];
@@ -65,18 +66,18 @@ export function createDraftContext() {
     const [dataset] = createResource(fetchBinDataset);
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
-        { championKey: undefined },
-        { championKey: undefined },
-        { championKey: undefined },
-        { championKey: undefined },
-        { championKey: undefined },
+        { championKey: undefined, role: undefined },
+        { championKey: undefined, role: undefined },
+        { championKey: undefined, role: undefined },
+        { championKey: undefined, role: undefined },
+        { championKey: undefined, role: undefined },
     ]);
     const [opponentTeam, setOpponentTeam] = createStore<TeamPicks>([
-        { championKey: undefined },
-        { championKey: undefined },
-        { championKey: undefined },
-        { championKey: undefined },
-        { championKey: undefined },
+        { championKey: undefined, role: undefined },
+        { championKey: undefined, role: undefined },
+        { championKey: undefined, role: undefined },
+        { championKey: undefined, role: undefined },
+        { championKey: undefined, role: undefined },
     ]);
 
     const [search, setSearch] = createSignal("");
@@ -92,9 +93,11 @@ export function createDraftContext() {
         const picks = team === "ally" ? allyTeam : opponentTeam;
 
         const championData = picks
-            .map((pick) => pick.championKey)
-            .filter((champion): champion is string => champion !== undefined)
-            .map((key) => dataset()!.championData[key]);
+            .filter((pick) => pick.championKey)
+            .map((pick) => ({
+                ...dataset()!.championData[pick.championKey!],
+                role: pick.role,
+            }));
         return getTeamComps(championData);
     }
 
@@ -129,11 +132,13 @@ export function createDraftContext() {
 
     const allyDamageDistribution = createMemo(() => {
         if (!dataset()) return undefined;
+        if (!allyTeamComps().length) return undefined;
         return getTeamDamageDistribution(dataset()!, allyTeamComps()[0][0]);
     });
 
     const opponentDamageDistribution = createMemo(() => {
         if (!dataset()) return undefined;
+        if (!opponentTeamComps().length) return undefined;
         return getTeamDamageDistribution(dataset()!, opponentTeamComps()[0][0]);
     });
 
@@ -192,12 +197,15 @@ export function createDraftContext() {
     const pickChampion = (
         team: "ally" | "opponent",
         index: number,
-        championKey: string | undefined
+        championKey: string | undefined,
+        role: Role | undefined
     ) => {
         if (team === "ally") {
             setAllyTeam(index, "championKey", championKey);
+            setAllyTeam(index, "role", role);
         } else {
             setOpponentTeam(index, "championKey", championKey);
+            setOpponentTeam(index, "role", role);
         }
 
         let nextIndex = getNextPick(team);
@@ -225,6 +233,8 @@ export function createDraftContext() {
     const select = (team: Team | undefined, index: number) => {
         setSelection("team", team);
         setSelection("index", index);
+        setSearch("");
+        setRoleFilter(undefined);
     };
 
     return {

@@ -18,7 +18,7 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
     return (
         <div class="absolute right-0 top-0">
             <Popover defaultOpen={false} class="relative">
-                {({ isOpen }) => (
+                {({ isOpen, setState }) => (
                     <>
                         <PopoverButton
                             classList={{
@@ -44,9 +44,15 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
                                     <MenuItem
                                         as="button"
                                         class="text-2xl uppercase p-1 px-2 text-left rounded-lg hover:bg-neutral-700 focus:outline-none flex items-center space-x-2"
-                                        onClick={() =>
-                                            pickChampion(team, index, undefined)
-                                        }
+                                        onClick={() => {
+                                            pickChampion(
+                                                team,
+                                                index,
+                                                undefined,
+                                                undefined
+                                            );
+                                            setState(false);
+                                        }}
                                     >
                                         <Icon path={trash} class="w-[20px]" />
                                         <span>RESET</span>

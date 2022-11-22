@@ -1,10 +1,17 @@
 import { ChampionData } from "../models/ChampionData";
 import { Role, ROLES } from "../models/Role";
 
-export function getTeamComps(champions: ChampionData[]) {
-    return getTeamCompsRecursive([new Map(), 1], champions).sort(
-        ([_, a], [__, b]) => b - a
+export function getTeamComps(champions: (ChampionData & { role?: Role })[]) {
+    const existingTeam = new Map(
+        champions
+            .filter((c) => c.role !== undefined)
+            .map((c) => [c.role!, c.key])
     );
+
+    return getTeamCompsRecursive(
+        [existingTeam, 1],
+        champions.filter((c) => c.role === undefined)
+    ).sort(([_, a], [__, b]) => b - a);
 }
 
 function getTeamCompsRecursive(

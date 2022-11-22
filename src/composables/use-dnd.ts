@@ -33,8 +33,6 @@ export function useDnd() {
             return;
         }
 
-        console.log(pos(), droppable.layout);
-
         if (
             pos().x < droppable.layout.x ||
             pos().x > droppable.layout.x + droppable.layout.width ||
@@ -44,6 +42,8 @@ export function useDnd() {
             return;
         }
 
-        pickChampion(team, index, suggestion.championKey);
+        console.log(suggestion);
+
+        pickChampion(team, index, suggestion.championKey, suggestion.role);
     });
 }
