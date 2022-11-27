@@ -1,23 +1,29 @@
 import { Button } from "solid-headless";
 import { Icon } from "solid-heroicons";
-import { Component, createSignal, Show } from "solid-js";
+import { Component, createSignal, Match, Show, Switch } from "solid-js";
 import { useDnd } from "./composables/use-dnd";
-import DraftTable from "./components/DraftTable";
-import { RoleFilter } from "./components/RoleFilter";
-import { Search } from "./components/Search";
-import { TeamSelector } from "./components/TeamSelector";
-import { TeamSidebar } from "./components/TeamSidebar";
+import DraftTable from "./components/draft/DraftTable";
+import { RoleFilter } from "./components/draft/RoleFilter";
+import { Search } from "./components/draft/Search";
+import { TeamSelector } from "./components/draft/TeamSelector";
+import { TeamSidebar } from "./components/draft/TeamSidebar";
 import { useDraft } from "./context/DraftContext";
 import { cog_6Tooth } from "solid-heroicons/solid";
 import SettingsModal from "./components/SettingsModal";
 import { useTitle } from "./composables/use-title";
+import ResultScreen from "./components/resultscreen/ResultScreen";
 
 const App: Component = () => {
-    const { dataset } = useDraft();
+    const { dataset, allyTeam, opponentTeam } = useDraft();
     useDnd();
     useTitle();
 
     const [showSettings, setShowSettings] = createSignal(false);
+
+    const draftFinished = () =>
+        [...allyTeam, ...opponentTeam].every(
+            (s) => s.championKey !== undefined
+        );
 
     return (
         <div class="h-screen flex flex-col">
@@ -43,26 +49,25 @@ const App: Component = () => {
             >
                 <TeamSidebar team="ally" />
 
-                <div class="p-4 bg-black flex-1 overflow-auto overflow-x-hidden">
-                    <Show
-                        when={dataset()}
-                        fallback={
+                <div class="p-4 bg-[#080808] flex-1 overflow-auto overflow-x-hidden">
+                    <Switch>
+                        <Match when={!dataset()}>
                             <div class="flex justify-center items-center h-full">
                                 Loading
                             </div>
-                        }
-                    >
-                        {() => (
-                            <>
-                                <div class="mb-4 flex space-x-4">
-                                    <Search />
-                                    <TeamSelector />
-                                    <RoleFilter />
-                                </div>
-                                <DraftTable />
-                            </>
-                        )}
-                    </Show>
+                        </Match>
+                        <Match when={draftFinished()}>
+                            <ResultScreen />
+                        </Match>
+                        <Match when={true}>
+                            <div class="mb-4 flex space-x-4">
+                                <Search />
+                                <TeamSelector />
+                                <RoleFilter />
+                            </div>
+                            <DraftTable />
+                        </Match>
+                    </Switch>
                 </div>
 
                 <TeamSidebar team="opponent" />

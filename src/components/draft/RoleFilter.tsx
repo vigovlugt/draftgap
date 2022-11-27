@@ -1,7 +1,7 @@
 import { Accessor, For, Setter } from "solid-js";
-import { useDraft } from "../context/DraftContext";
-import { Role, ROLES } from "../lib/models/Role";
-import { RoleIcon } from "./icons/roles/RoleIcon";
+import { useDraft } from "../../context/DraftContext";
+import { Role, ROLES } from "../../lib/models/Role";
+import { RoleIcon } from "../icons/roles/RoleIcon";
 
 export function RoleFilter() {
     const { roleFilter, setRoleFilter } = useDraft();

@@ -9,8 +9,8 @@ import {
 import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/outline";
 import { trash } from "solid-heroicons/solid-mini";
-import { useDraft } from "../context/DraftContext";
-import { Team } from "../lib/models/Team";
+import { useDraft } from "../../context/DraftContext";
+import { Team } from "../../lib/models/Team";
 
 export function PickOptions({ team, index }: { team: Team; index: number }) {
     const { pickChampion } = useDraft();

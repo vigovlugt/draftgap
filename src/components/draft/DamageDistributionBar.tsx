@@ -1,6 +1,6 @@
 import { createEffect, Show } from "solid-js";
-import { useDraft } from "../context/DraftContext";
-import { Team } from "../lib/models/Team";
+import { useDraft } from "../../context/DraftContext";
+import { Team } from "../../lib/models/Team";
 
 export function DamageDistributionBar({ team }: { team: Team }) {
     const { allyDamageDistribution, opponentDamageDistribution } = useDraft();

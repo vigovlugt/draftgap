@@ -93,11 +93,11 @@ export function getSuggestions(
 }
 
 export type DraftResult = {
-    allyChampionRating: AnalyzeChampionResult;
-    enemyChampionRating: AnalyzeChampionResult;
-    allyDuoRating: AnalyzeDuoResult;
-    enemyDuoRating: AnalyzeDuoResult;
-    matchupRating: AnalyzeMatchupResult;
+    allyChampionRating: AnalyzeChampionsResult;
+    enemyChampionRating: AnalyzeChampionsResult;
+    allyDuoRating: AnalyzeDuosResult;
+    enemyDuoRating: AnalyzeDuosResult;
+    matchupRating: AnalyzeMatchupsResult;
 
     totalRating: number;
     winrate: number;
@@ -122,7 +122,7 @@ export function analyzeDraft(
 
     const allyDuoRating = analyzeDuos(championDataset, team);
     const enemyDuoRating = analyzeDuos(championDataset, enemy);
-    const matchupRating = analyzeMatchup(championDataset, team, enemy);
+    const matchupRating = analyzeMatchups(championDataset, team, enemy);
 
     const totalRating =
         allyChampionRating.totalRating +
@@ -144,23 +144,23 @@ export function analyzeDraft(
     };
 }
 
-type ChampionResult = {
+export type AnalyzeChampionResult = {
     role: Role;
     championKey: string;
     winrate: number;
     rating: number;
 };
 
-export type AnalyzeChampionResult = {
-    championResults: ChampionResult[];
+export type AnalyzeChampionsResult = {
+    championResults: AnalyzeChampionResult[];
     totalRating: number;
 };
 
 export function analyzeChampions(
     championDataset: Dataset,
     team: Map<Role, string>
-): AnalyzeChampionResult {
-    const championResults: ChampionResult[] = [];
+): AnalyzeChampionsResult {
+    const championResults: AnalyzeChampionResult[] = [];
     let totalRating = 0;
 
     for (const [role, championKey] of team) {
@@ -183,7 +183,7 @@ export function analyzeChampions(
     };
 }
 
-type DuoResult = {
+export type AnalyzeDuoResult = {
     roleA: Role;
     championKeyA: string;
     roleB: Role;
@@ -192,18 +192,18 @@ type DuoResult = {
     rating: number;
 };
 
-export type AnalyzeDuoResult = {
-    duoResults: DuoResult[];
+export type AnalyzeDuosResult = {
+    duoResults: AnalyzeDuoResult[];
     totalRating: number;
 };
 
 export function analyzeDuos(
     championDataset: Dataset,
     team: Map<Role, string>
-): AnalyzeDuoResult {
+): AnalyzeDuosResult {
     const teamEntries = Array.from(team.entries());
 
-    const duoResults: DuoResult[] = [];
+    const duoResults: AnalyzeDuoResult[] = [];
     let totalRating = 0;
 
     for (let i = 0; i < teamEntries.length; i++) {
@@ -254,7 +254,7 @@ export function analyzeDuos(
     };
 }
 
-type MatchupResult = {
+export type AnalyzeMatchupResult = {
     roleA: Role;
     championKeyA: string;
     roleB: Role;
@@ -263,17 +263,17 @@ type MatchupResult = {
     rating: number;
 };
 
-export type AnalyzeMatchupResult = {
-    matchupResults: MatchupResult[];
+export type AnalyzeMatchupsResult = {
+    matchupResults: AnalyzeMatchupResult[];
     totalRating: number;
 };
 
-export function analyzeMatchup(
+export function analyzeMatchups(
     dataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>
-): AnalyzeMatchupResult {
-    const matchupResults: MatchupResult[] = [];
+): AnalyzeMatchupsResult {
+    const matchupResults: AnalyzeMatchupResult[] = [];
     let totalRating = 0;
 
     for (const [allyRole, allyChampionKey] of team) {

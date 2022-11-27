@@ -1,11 +1,11 @@
 import { createDroppable } from "@thisbeyond/solid-dnd";
 import { Icon } from "solid-heroicons";
 import { Show } from "solid-js";
-import { useDraft } from "../context/DraftContext";
-import { RoleIcon } from "./icons/roles/RoleIcon";
+import { useDraft } from "../../context/DraftContext";
+import { RoleIcon } from "../icons/roles/RoleIcon";
 import { PickOptions } from "./PickOptions";
 import { lockOpen, lockClosed } from "solid-heroicons/solid-mini";
-import { Role } from "../lib/models/Role";
+import { Role } from "../../lib/models/Role";
 
 interface IProps {
     team: "ally" | "opponent";
@@ -44,7 +44,12 @@ export function Pick({ team, index }: IProps) {
     };
 
     function setRole(role: Role | undefined) {
-        pickChampion(team, index, pick.championKey, role);
+        pickChampion(
+            team,
+            index,
+            pick.championKey,
+            team === "ally" ? role : undefined
+        );
     }
 
     return (

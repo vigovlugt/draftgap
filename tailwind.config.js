@@ -9,6 +9,8 @@ module.exports = {
                 tertiary: "#FFD700",
                 background: "#eeeeee",
                 text: "#f4f4f4",
+                ally: "#3b82f6",
+                opponent: "#ef4444",
             },
         },
     },
