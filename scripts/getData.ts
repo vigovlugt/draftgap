@@ -1,8 +1,11 @@
-import * as fs from "fs/promises";
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import { getChampionDataFromLolalytics } from "../src/lib/data/lolalytics";
 import { getVersions, getChampions } from "../src/lib/data/riot";
+import { storeDataset } from "../src/lib/data/storage/storage";
 import { ChampionData } from "../src/lib/models/ChampionData";
-import { Dataset, getSerializedDataset } from "../src/lib/models/Dataset";
+import { Dataset } from "../src/lib/models/Dataset";
 
 const BATCH_SIZE = 10;
 
@@ -44,17 +47,7 @@ async function main() {
         }
     }
 
-    // distributeMatchupWinrates(dataset);
-
-    await fs.writeFile(
-        `./public/data/datasets/${currentVersion}.json`,
-        JSON.stringify(dataset)
-    );
-
-    await fs.writeFile(
-        `./public/data/datasets/${currentVersion}.bin`,
-        Buffer.from(getSerializedDataset(dataset))
-    );
+    await storeDataset(dataset);
 }
 
 main();
