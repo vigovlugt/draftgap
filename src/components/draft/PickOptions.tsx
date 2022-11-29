@@ -8,12 +8,19 @@ import {
 } from "solid-headless";
 import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/outline";
-import { trash } from "solid-heroicons/solid-mini";
+import { arrowTopRightOnSquare, trash, user } from "solid-heroicons/solid-mini";
 import { useDraft } from "../../context/DraftContext";
 import { Team } from "../../lib/models/Team";
 
 export function PickOptions({ team, index }: { team: Team; index: number }) {
-    const { pickChampion } = useDraft();
+    const { pickChampion, allyTeam, opponentTeam, dataset } = useDraft();
+
+    const teamPicks = () => (team === "ally" ? allyTeam : opponentTeam);
+
+    const champion = () =>
+        teamPicks()[index].championKey
+            ? dataset()?.championData[teamPicks()[index].championKey!]
+            : undefined;
 
     return (
         <div class="absolute right-0 top-0">
@@ -40,10 +47,10 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
                                 unmount={false}
                                 class="absolute z-10 px-4 mt-3 transform -translate-x-1/2 left-1/2 sm:px-0 lg:max-w-3xl"
                             >
-                                <Menu class="overflow-hidden w-64 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 flex flex-col space-y-1 p-2">
+                                <Menu class="overflow-hidden w-64 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 flex flex-col space-y-1 py-1">
                                     <MenuItem
                                         as="button"
-                                        class="text-2xl uppercase p-1 px-2 text-left rounded-lg hover:bg-neutral-700 focus:outline-none flex items-center space-x-2"
+                                        class="text-2xl uppercase p-1 px-2 pr-3 text-left hover:bg-neutral-700 focus:outline-none flex items-center space-x-2"
                                         onClick={() => {
                                             pickChampion(
                                                 team,
@@ -54,8 +61,37 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
                                             setState(false);
                                         }}
                                     >
-                                        <Icon path={trash} class="w-[20px]" />
+                                        <Icon
+                                            path={trash}
+                                            class="w-[20px] mx-1"
+                                        />
                                         <span>RESET</span>
+                                    </MenuItem>
+                                    <MenuItem
+                                        as="a"
+                                        disabled={!champion()}
+                                        href={
+                                            champion()
+                                                ? `https://lolalytics.com/lol/${champion()!.id.toLowerCase()}/build/`
+                                                : undefined
+                                        }
+                                        onClick={() => setState(false)}
+                                        target="_blank"
+                                        class="text-2xl uppercase p-1 px-2 pr-3 text-left focus:outline-none flex items-center space-x-2"
+                                        classList={{
+                                            "opacity-50 cursor-default":
+                                                !champion(),
+                                            "hover:bg-neutral-700":
+                                                !!champion(),
+                                        }}
+                                    >
+                                        <Icon
+                                            path={user}
+                                            class="w-[20px] mx-1"
+                                        />
+                                        <span>
+                                            {champion()?.name} Lolalytics
+                                        </span>
                                     </MenuItem>
                                 </Menu>
                             </PopoverPanel>
