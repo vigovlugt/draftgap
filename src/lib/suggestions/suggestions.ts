@@ -6,6 +6,8 @@ import { calculateWilsonCI } from "../statistics/stats";
 
 const WINRATE_CONFIDENCE = 0;
 
+const PRIOR_GAMES = 1000;
+
 export interface Suggestion {
     championKey: string;
     role: Role;
@@ -13,7 +15,7 @@ export interface Suggestion {
 }
 
 export function getSuggestions(
-    championDataset: Dataset,
+    dataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>,
     config: AnalyzeDraftConfig
@@ -24,59 +26,16 @@ export function getSuggestions(
 
     const suggestions: Suggestion[] = [];
 
-    for (const championKey of Object.keys(championDataset.championData)) {
+    for (const championKey of Object.keys(dataset.championData)) {
         if (enemyChampions.has(championKey) || allyChampions.has(championKey))
             continue;
 
-        const champion = championDataset.championData[championKey];
-
         for (const role of remainingRoles) {
             if (team.has(role)) continue;
-
-            const championRoleData = champion.statsByRole[role];
-
-            // Check if all champions in the enemy team have a matchup against the champion
-            const championHasMatchups = [...enemy.entries()].every(
-                ([enemyRole, enemyChampionKey]) => {
-                    const enemyChampion =
-                        championDataset.championData[enemyChampionKey];
-                    const enemyChampionRoleData =
-                        enemyChampion.statsByRole[enemyRole];
-                    return (
-                        (championRoleData.matchup[enemyRole]?.[enemyChampionKey]
-                            ?.games ?? 0) > 1000 &&
-                        (enemyChampionRoleData.matchup[role]?.[championKey]
-                            ?.games ?? 0) > 1000
-                    );
-                }
-            );
-            if (!championHasMatchups) continue;
-
-            // Check if all champions in the team have a synergy with the champion
-            const teamHasSynergy = [...team.entries()].every(
-                ([allyRole, allyChampionKey]) => {
-                    const allyChampion =
-                        championDataset.championData[allyChampionKey];
-                    const allyChampionRoleData =
-                        allyChampion.statsByRole[allyRole];
-
-                    return (
-                        (allyChampionRoleData.synergy[role]?.[championKey]
-                            ?.games ?? 0) > 1000 &&
-                        (championRoleData.synergy[allyRole]?.[allyChampionKey]
-                            ?.games ?? 0) > 1000
-                    );
-                }
-            );
-            if (!teamHasSynergy) continue;
+            if (getStats(dataset, championKey, role).games < 1000) continue;
 
             team.set(role, championKey);
-            const draftResult = analyzeDraft(
-                championDataset,
-                team,
-                enemy,
-                config
-            );
+            const draftResult = analyzeDraft(dataset, team, enemy, config);
             team.delete(role);
 
             suggestions.push({
@@ -190,6 +149,18 @@ export type AnalyzeDuoResult = {
     championKeyB: string;
     winrate: number;
     rating: number;
+    priorStats: {
+        wins: number;
+        games: number;
+        winrate: number;
+        rating: number;
+    };
+    posteriorStats: {
+        wins: number;
+        games: number;
+        winrate: number;
+        rating: number;
+    };
 };
 
 export type AnalyzeDuosResult = {
@@ -198,7 +169,7 @@ export type AnalyzeDuosResult = {
 };
 
 export function analyzeDuos(
-    championDataset: Dataset,
+    dataset: Dataset,
     team: Map<Role, string>
 ): AnalyzeDuosResult {
     const teamEntries = Array.from(team.entries());
@@ -210,30 +181,46 @@ export function analyzeDuos(
         for (let j = i + 1; j < teamEntries.length; j++) {
             const [role, championKey] = teamEntries[i];
             const [role2, championKey2] = teamEntries[j];
-            const roleStats =
-                championDataset.championData[championKey].statsByRole[role];
-            const champion2RoleStats =
-                championDataset.championData[championKey2].statsByRole[role2];
-            const duoStats = roleStats.synergy[role2][championKey2];
-            const chapmion2DuoStats =
-                champion2RoleStats.synergy[role][championKey];
-
-            const wins = (duoStats.wins + chapmion2DuoStats.wins) / 2;
-            const games = (duoStats.games + chapmion2DuoStats.games) / 2;
-            const winrate = calculateWilsonCI(
-                wins,
-                games,
-                WINRATE_CONFIDENCE
-            )[0];
-
+            const roleStats = getStats(dataset, championKey, role);
+            const champion2RoleStats = getStats(dataset, championKey2, role2);
             const expectedRating =
                 winrateToRating(roleStats.wins / roleStats.games) +
                 winrateToRating(
                     champion2RoleStats.wins / champion2RoleStats.games
                 );
 
-            const actualRating = winrateToRating(winrate);
+            const duoStats = getStats(
+                dataset,
+                championKey,
+                role,
+                "duo",
+                role2,
+                championKey2
+            );
+            const champion2DuoStats = getStats(
+                dataset,
+                championKey2,
+                role2,
+                "duo",
+                role,
+                championKey
+            );
+            const combinedStats = divideStats(
+                addStats(duoStats, champion2DuoStats),
+                2
+            );
 
+            const stats = addStats(
+                combinedStats,
+                // Scale prior stats by winrate of expected rating, as we expect the duo to have a similar winrate to the expected rating
+                {
+                    wins: PRIOR_GAMES * ratingToWinrate(expectedRating),
+                    games: PRIOR_GAMES,
+                }
+            );
+            const winrate = stats.wins / stats.games;
+
+            const actualRating = winrateToRating(winrate);
             const rating = actualRating - expectedRating;
 
             duoResults.push({
@@ -243,6 +230,18 @@ export function analyzeDuos(
                 championKeyB: championKey2,
                 winrate,
                 rating,
+                priorStats: {
+                    ...combinedStats,
+                    winrate: combinedStats.wins / combinedStats.games,
+                    rating: winrateToRating(
+                        combinedStats.wins / combinedStats.games
+                    ),
+                },
+                posteriorStats: {
+                    ...stats,
+                    winrate: stats.wins / stats.games,
+                    rating: winrateToRating(stats.wins / stats.games),
+                },
             });
             totalRating += rating;
         }
@@ -278,31 +277,48 @@ export function analyzeMatchups(
 
     for (const [allyRole, allyChampionKey] of team) {
         for (const [enemyRole, enemyChampionKey] of enemy) {
-            const roleStats =
-                dataset.championData[allyChampionKey].statsByRole[allyRole];
-            const matchupStats = roleStats.matchup[enemyRole][enemyChampionKey];
-
-            const enemyRoleStats =
-                dataset.championData[enemyChampionKey].statsByRole[enemyRole];
-            const enemyMatchupStats =
-                enemyRoleStats.matchup[allyRole][allyChampionKey];
-
-            const enemyLosses =
-                enemyMatchupStats.games - enemyMatchupStats.wins;
-            const wins = (matchupStats.wins + enemyLosses) / 2;
-            const games = (matchupStats.games + enemyMatchupStats.games) / 2;
-
-            const winrate = calculateWilsonCI(
-                wins,
-                games,
-                WINRATE_CONFIDENCE
-            )[0];
-            const actualRating = winrateToRating(winrate);
-
+            const roleStats = getStats(dataset, allyChampionKey, allyRole);
+            const enemyRoleStats = getStats(
+                dataset,
+                enemyChampionKey,
+                enemyRole
+            );
             const expectedRating =
                 winrateToRating(roleStats.wins / roleStats.games) -
                 winrateToRating(enemyRoleStats.wins / enemyRoleStats.games);
 
+            const matchupStats = getStats(
+                dataset,
+                allyChampionKey,
+                allyRole,
+                "matchup",
+                enemyRole,
+                enemyChampionKey
+            );
+            const enemyMatchupStats = getStats(
+                dataset,
+                enemyChampionKey,
+                enemyRole,
+                "matchup",
+                allyRole,
+                allyChampionKey
+            );
+
+            const enemyLosses =
+                enemyMatchupStats.games - enemyMatchupStats.wins;
+            const stats = addStats(
+                {
+                    wins: (matchupStats.wins + enemyLosses) / 2,
+                    games: (matchupStats.games + enemyMatchupStats.games) / 2,
+                },
+                {
+                    wins: PRIOR_GAMES * ratingToWinrate(expectedRating),
+                    games: PRIOR_GAMES,
+                }
+            );
+            const winrate = stats.wins / stats.games;
+
+            const actualRating = winrateToRating(winrate);
             const rating = actualRating - expectedRating;
 
             matchupResults.push({
@@ -321,4 +337,85 @@ export function analyzeMatchups(
         matchupResults,
         totalRating,
     };
+}
+
+function addStats(
+    stats: { wins: number; games: number },
+    stats2: { wins: number; games: number }
+) {
+    return {
+        wins: stats.wins + stats2.wins,
+        games: stats.games + stats2.games,
+    };
+}
+
+function divideStats(stats: { wins: number; games: number }, number: number) {
+    return {
+        wins: stats.wins / number,
+        games: stats.games / number,
+    };
+}
+
+function getStats(
+    dataset: Dataset,
+    championKey: string,
+    role: Role
+): { wins: number; games: number };
+function getStats(
+    dataset: Dataset,
+    championKey: string,
+    role: Role,
+    type: "duo",
+    role2: Role,
+    championKey2: string
+): { wins: number; games: number };
+function getStats(
+    dataset: Dataset,
+    championKey: string,
+    role: Role,
+    type: "matchup",
+    role2: Role,
+    championKey2: string
+): { wins: number; games: number };
+function getStats(
+    dataset: Dataset,
+    championKey: string,
+    role: Role,
+    type?: "matchup" | "duo",
+    matchupDuoRole?: Role,
+    matchupDuoChampionKey?: string
+) {
+    if (!type) {
+        return (
+            dataset.championData[championKey].statsByRole[role] ?? {
+                wins: 0,
+                games: 0,
+            }
+        );
+    }
+
+    if (type === "matchup") {
+        matchupDuoRole = matchupDuoRole!;
+        matchupDuoChampionKey = matchupDuoChampionKey!;
+        return (
+            dataset.championData[championKey].statsByRole[role]?.matchup[
+                matchupDuoRole
+            ][matchupDuoChampionKey] ?? {
+                wins: 0,
+                games: 0,
+            }
+        );
+    } else {
+        matchupDuoRole = matchupDuoRole!;
+        matchupDuoChampionKey = matchupDuoChampionKey!;
+
+        return (
+            dataset.championData[championKey].statsByRole[role].synergy[
+                matchupDuoRole
+            ][matchupDuoChampionKey] ?? {
+                wins: 0,
+                games: 0,
+            }
+        );
+    }
 }
