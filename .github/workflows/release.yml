@@ -42,7 +42,7 @@ jobs:
 
             - name: Install app dependencies
               # Remove `&& yarn build` if you build your frontend in `beforeBuildCommand`
-              run: pnpm # Change this to npm, yarn or pnpm.
+              run: pnpm install # Change this to npm, yarn or pnpm.
 
             - name: Build the app
               uses: tauri-apps/tauri-action@v0
