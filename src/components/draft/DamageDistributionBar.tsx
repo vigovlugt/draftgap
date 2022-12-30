@@ -21,7 +21,15 @@ export function DamageDistributionBar({ team }: { team: Team }) {
     const truePercentage = () => damageDistribution()!.true / totalDamage();
 
     return (
-        <Show when={damageDistribution()}>
+        <Show
+            when={
+                damageDistribution() &&
+                damageDistribution()!.magic +
+                    damageDistribution()!.physical +
+                    damageDistribution()!.true >
+                    0
+            }
+        >
             <div class="flex h-1 absolute right-0 left-0 top-0 w-full">
                 <div
                     class="bg-red-500 transition-all duration-500"
