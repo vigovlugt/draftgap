@@ -1,7 +1,7 @@
 import { Button } from "solid-headless";
 import { Icon } from "solid-heroicons";
-import { Component, createSignal, Match, Show, Switch } from "solid-js";
-import { useDnd } from "./composables/use-dnd";
+import { Component, createSignal, Match, onCleanup, Switch } from "solid-js";
+import { useDnd } from "./hooks/use-dnd";
 import DraftTable from "./components/draft/DraftTable";
 import { RoleFilter } from "./components/draft/RoleFilter";
 import { Search } from "./components/draft/Search";
@@ -10,13 +10,19 @@ import { TeamSidebar } from "./components/draft/TeamSidebar";
 import { useDraft } from "./context/DraftContext";
 import { cog_6Tooth } from "solid-heroicons/solid";
 import SettingsModal from "./components/SettingsModal";
-import { useTitle } from "./composables/use-title";
+import { useTitle } from "./hooks/use-title";
 import ResultScreen from "./components/resultscreen/ResultScreen";
+import { LolClientStatusBadge } from "./components/LolClientStatusBadge";
+import { useLolClient } from "./context/LolClientContext";
 
 const App: Component = () => {
     const { dataset, allyTeam, opponentTeam } = useDraft();
+    const { startLolClientIntegration } = useLolClient();
     useDnd();
     useTitle();
+
+    const stopLolClientIntegration = startLolClientIntegration();
+    onCleanup(stopLolClientIntegration);
 
     const [showSettings, setShowSettings] = createSignal(false);
 
@@ -33,12 +39,15 @@ const App: Component = () => {
             ></SettingsModal>
             <header class="bg-primary p-2 py-0 border-b-2 border-neutral-700 flex justify-between">
                 <h1 class="text-6xl mr-2">DRAFTGAP</h1>
-                <Button
-                    onClick={() => setShowSettings(!showSettings())}
-                    class="mr-[10px]"
-                >
-                    <Icon path={cog_6Tooth} class="w-[24px]" />
-                </Button>
+                <div class="flex items-center gap-4">
+                    <LolClientStatusBadge />
+                    <Button
+                        onClick={() => setShowSettings(!showSettings())}
+                        class="mr-[10px]"
+                    >
+                        <Icon path={cog_6Tooth} class="w-[24px]" />
+                    </Button>
+                </div>
             </header>
             <main
                 class="h-full grid text-3xl overflow-hidden"

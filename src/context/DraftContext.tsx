@@ -65,6 +65,8 @@ const fetchBinDataset = async () => {
 };
 
 export function createDraftContext() {
+    const isDesktop = (window as any).__TAURI__ !== undefined;
+
     const [dataset] = createResource(fetchBinDataset);
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
@@ -200,7 +202,9 @@ export function createDraftContext() {
         team: "ally" | "opponent",
         index: number,
         championKey: string | undefined,
-        role: Role | undefined
+        role: Role | undefined,
+        updateSelection = true,
+        resetFilters = true
     ) => {
         if (team === "ally") {
             setAllyTeam(index, "championKey", championKey);
@@ -210,21 +214,25 @@ export function createDraftContext() {
             setOpponentTeam(index, "role", role);
         }
 
-        let nextIndex = getNextPick(team);
-        if (nextIndex === -1) {
-            const otherTeam = team === "ally" ? "opponent" : "ally";
-            nextIndex = getNextPick(otherTeam);
-            if (nextIndex !== -1) {
-                select(otherTeam, nextIndex);
+        if (updateSelection) {
+            let nextIndex = getNextPick(team);
+            if (nextIndex === -1) {
+                const otherTeam = team === "ally" ? "opponent" : "ally";
+                nextIndex = getNextPick(otherTeam);
+                if (nextIndex !== -1) {
+                    select(otherTeam, nextIndex);
+                } else {
+                    select(undefined, 0);
+                }
             } else {
-                select(undefined, 0);
+                select(team, nextIndex);
             }
-        } else {
-            select(team, nextIndex);
         }
 
-        setSearch("");
-        setRoleFilter(undefined);
+        if (resetFilters) {
+            setSearch("");
+            setRoleFilter(undefined);
+        }
     };
 
     const [selection, setSelection] = createStore<Selection>({
@@ -240,6 +248,7 @@ export function createDraftContext() {
     };
 
     return {
+        isDesktop,
         dataset,
         allyTeam,
         opponentTeam,
