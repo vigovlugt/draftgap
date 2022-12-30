@@ -22,11 +22,6 @@ export function Pick({ team, index }: IProps) {
         select,
         pickChampion,
     } = useDraft();
-    const droppable = createDroppable(team + ":" + index, {
-        team,
-        index: index,
-    });
-
     const picks = team === "ally" ? allyTeam : opponentTeam;
     const championData = team === "ally" ? allyTeamData : opponentTeamData;
 
@@ -44,18 +39,11 @@ export function Pick({ team, index }: IProps) {
     };
 
     function setRole(role: Role | undefined) {
-        pickChampion(
-            team,
-            index,
-            pick.championKey,
-            team === "ally" ? role : undefined
-        );
+        pickChampion(team, index, pick.championKey, role);
     }
 
     return (
         <div
-            // @ts-ignore
-            use:droppable
             class="flex-1 relative cursor-pointer border-t-2 border-neutral-700 hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
             classList={{
                 "!bg-neutral-700": isSelected(),
