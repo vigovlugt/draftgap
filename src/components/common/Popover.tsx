@@ -50,14 +50,7 @@ export const Popover: Component<Props> = (props: Props) => {
                         >
                             {props.children}
                         </PopoverButton>
-                        <Transition
-                            show={isOpen()}
-                            class="transition duration-150"
-                            enterFrom="opacity-0 -translate-y-1"
-                            enterTo="opacity-100 translate-y-0"
-                            leaveFrom="opacity-100 translate-y-0"
-                            leaveTo="opacity-0 -translate-y-1 "
-                        >
+                        <Show when={isOpen()}>
                             <PopoverPanel
                                 unmount={false}
                                 class="absolute z-10 px-4 transform -translate-x-1/2 left-1/2 sm:px-0 lg:max-w-3xl"
@@ -101,7 +94,7 @@ export const Popover: Component<Props> = (props: Props) => {
                                     ))}
                                 </Menu>
                             </PopoverPanel>
-                        </Transition>
+                        </Show>
                     </>
                 )}
             </PopoverComponent>
