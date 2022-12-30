@@ -9,20 +9,16 @@ export const LolClientStatusBadge: Component = () => {
     const { clientState } = useLolClient();
 
     const stateClass = () =>
-        ((
-            {
-                [ClientState.NotFound]: "bg-red-100 text-red-800",
-                [ClientState.MainMenu]: "bg-neutral-100 text-neutral-800",
-                [ClientState.InChampSelect]: "bg-blue-100 text-blue-800",
-            } as Record<ClientState, string>
-        )[clientState()]);
+        clientState() == ClientState.NotFound
+            ? "bg-neutral-800 text-neutral-100"
+            : "bg-neutral-100 text-neutral-800";
 
     const stateName = () =>
         ((
             {
-                [ClientState.NotFound]: "Not connected",
+                [ClientState.NotFound]: "Not Connected",
                 [ClientState.MainMenu]: "Connected",
-                [ClientState.InChampSelect]: "Champ select",
+                [ClientState.InChampSelect]: "Champ Select",
             } as Record<ClientState, string>
         )[clientState()]);
 
