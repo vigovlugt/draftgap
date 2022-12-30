@@ -2,6 +2,7 @@ import { createEffect, For } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { DamageDistributionBar } from "./DamageDistributionBar";
 import { Pick } from "./Pick";
+import { TeamOptions } from "./TeamOptions";
 
 interface IProps {
     team: "ally" | "opponent";
@@ -33,6 +34,7 @@ export function TeamSidebar({ team }: IProps) {
             <For each={[0, 1, 2, 3, 4]}>
                 {(index) => <Pick team={team} index={index} />}
             </For>
+            <TeamOptions team={team} />
         </div>
     );
 }

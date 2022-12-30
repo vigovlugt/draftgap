@@ -1,4 +1,5 @@
 import {
+    batch,
     createContext,
     createMemo,
     createResource,
@@ -206,33 +207,54 @@ export function createDraftContext() {
         updateSelection = true,
         resetFilters = true
     ) => {
-        if (team === "ally") {
-            setAllyTeam(index, "championKey", championKey);
-            setAllyTeam(index, "role", role);
-        } else {
-            setOpponentTeam(index, "championKey", championKey);
-            setOpponentTeam(index, "role", role);
-        }
-
-        if (updateSelection) {
-            let nextIndex = getNextPick(team);
-            if (nextIndex === -1) {
-                const otherTeam = team === "ally" ? "opponent" : "ally";
-                nextIndex = getNextPick(otherTeam);
-                if (nextIndex !== -1) {
-                    select(otherTeam, nextIndex);
-                } else {
-                    select(undefined, 0);
-                }
+        batch(() => {
+            if (team === "ally") {
+                setAllyTeam(index, "championKey", championKey);
+                setAllyTeam(index, "role", role);
             } else {
-                select(team, nextIndex);
+                setOpponentTeam(index, "championKey", championKey);
+                setOpponentTeam(index, "role", role);
             }
-        }
 
-        if (resetFilters) {
-            setSearch("");
-            setRoleFilter(undefined);
-        }
+            if (updateSelection) {
+                let nextIndex = getNextPick(team);
+                if (nextIndex === -1) {
+                    const otherTeam = team === "ally" ? "opponent" : "ally";
+                    nextIndex = getNextPick(otherTeam);
+                    if (nextIndex !== -1) {
+                        select(otherTeam, nextIndex);
+                    } else {
+                        select(undefined, 0);
+                    }
+                } else {
+                    select(team, nextIndex);
+                }
+            }
+
+            if (resetFilters) {
+                setSearch("");
+                setRoleFilter(undefined);
+            }
+        });
+    };
+
+    const resetChampion = (team: "ally" | "opponent", index: number) => {
+        pickChampion(team, index, undefined, undefined, false, false);
+    };
+
+    const resetTeam = (team: "ally" | "opponent") => {
+        batch(() => {
+            for (let i = 0; i < 5; i++) {
+                resetChampion(team, i);
+            }
+        });
+    };
+
+    const resetAll = () => {
+        batch(() => {
+            resetTeam("ally");
+            resetTeam("opponent");
+        });
     };
 
     const [selection, setSelection] = createStore<Selection>({
@@ -265,6 +287,9 @@ export function createDraftContext() {
         allySuggestions,
         opponentSuggestions,
         pickChampion,
+        resetChampion,
+        resetTeam,
+        resetAll,
         selection,
         select,
         search,

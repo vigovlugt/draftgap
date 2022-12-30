@@ -8,7 +8,7 @@ import { ChampionRoleData } from "../../models/ChampionRoleData";
 
 const MIN_ROLE_PLAY_RATE = 10;
 
-const LOLALYTICS_ROLES = [
+export const LOLALYTICS_ROLES = [
     "top",
     "jungle",
     "middle",
