@@ -58,7 +58,7 @@ const App: Component = () => {
             >
                 <TeamSidebar team="ally" />
 
-                <div class="p-4 bg-[#101010] flex-1 overflow-auto overflow-x-hidden">
+                <div class="p-4 xl:px-8 bg-[#101010] flex-1 overflow-auto overflow-x-hidden h-full flex flex-col">
                     <Switch>
                         <Match when={!dataset()}>
                             <div class="flex justify-center items-center h-full">

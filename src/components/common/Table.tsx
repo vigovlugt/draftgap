@@ -12,9 +12,12 @@ export function Table<T>({
     ...props
 }: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
     return (
-        <div {...props} class={`rounded-md overflow-x-auto ${props.class}`}>
-            <table class="min-w-full divide-y divide-neutral-700 ">
-                <thead class="bg-[#141414]">
+        <div
+            {...props}
+            class={`rounded-md overflow-x-auto overflow-y-auto max-h-full ${props.class}`}
+        >
+            <table class="min-w-full divide-y divide-neutral-700">
+                <thead class="bg-[#141414] sticky top-0 z-10">
                     <For each={table.getHeaderGroups()}>
                         {(headerGroup) => (
                             <tr>

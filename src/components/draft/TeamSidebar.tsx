@@ -25,7 +25,7 @@ export function TeamSidebar({ team }: IProps) {
     return (
         <div class="bg-primary flex flex-col h-full relative">
             <DamageDistributionBar team={team} />
-            <div class="flex-1 flex justify-center items-center text-5xl bg-[#101010]">
+            <div class="flex-1 flex justify-center items-center text-5xl bg-[#141414]">
                 {team.toUpperCase()} -{" "}
                 {winrate()
                     ? parseFloat((winrate()! * 100).toFixed(2)).toString()
