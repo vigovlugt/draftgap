@@ -7,7 +7,7 @@
         "distDir": "../dist"
     },
     "package": {
-        "productName": "draftgap",
+        "productName": "DraftGap",
         "version": "0.1.0"
     },
     "tauri": {
