@@ -101,10 +101,6 @@ export const createLolClientContext = () => {
             .flat()
             .find((a) => a.type === "pick" && !a.completed);
 
-        const getIndex = (cellId: number) => {
-            return cellId >= 5 ? cellId - 5 : cellId;
-        };
-
         const getRole = (role: string) => {
             return {
                 top: Role.Top,
@@ -154,7 +150,11 @@ export const createLolClientContext = () => {
                 const index = nextPickTeamSelection.findIndex(
                     (s) => s.cellId === nextPick.actorCellId
                 );
-                select(nextPick.isAllyAction ? "ally" : "opponent", index);
+                select(
+                    nextPick.isAllyAction ? "ally" : "opponent",
+                    index,
+                    false
+                );
             }
 
             setChampSelectSession(session);

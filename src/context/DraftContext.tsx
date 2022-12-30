@@ -262,11 +262,17 @@ export function createDraftContext() {
         index: 0,
     });
 
-    const select = (team: Team | undefined, index: number) => {
+    const select = (
+        team: Team | undefined,
+        index: number,
+        resetFilters = true
+    ) => {
         setSelection("team", team);
         setSelection("index", index);
-        setSearch("");
-        setRoleFilter(undefined);
+        if (resetFilters) {
+            setSearch("");
+            setRoleFilter(undefined);
+        }
     };
 
     return {
