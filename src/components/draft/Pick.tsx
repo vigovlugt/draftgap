@@ -76,7 +76,9 @@ export function Pick({ team, index }: IProps) {
                             style={{
                                 "background-image": `linear-gradient(to bottom, rgba(25, 25, 25, 0.8) 0%, rgba(0, 0, 0, 0) 50%, rgba(25, 25, 25, 0.8) 100%),
                                 url(https://ddragon.leagueoflegends.com/cdn/img/champion/centered/${
-                                    champion()!.id
+                                    champion()!.id === "Fiddlesticks"
+                                        ? "FiddleSticks"
+                                        : champion()!.id
                                 }_0.jpg)`,
                                 "background-position": "top center",
                                 "background-size": "cover",
