@@ -1,6 +1,6 @@
 {
     "name": "draftgap",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "",
     "scripts": {
         "start": "vite",
@@ -8,8 +8,9 @@
         "build": "vite build",
         "serve": "vite preview",
         "test": "vitest",
-        "get:data": "node -r esbuild-register scripts/getData.ts",
-        "benchmark": "node -r esbuild-register scripts/benchmarkSerialization.ts"
+        "update:data": "node -r esbuild-register scripts/updateData.ts",
+        "benchmark": "node -r esbuild-register scripts/benchmarkSerialization.ts",
+        "bump:version": "node -r esbuild-register scripts/bumpVersion.ts"
     },
     "license": "MIT",
     "devDependencies": {

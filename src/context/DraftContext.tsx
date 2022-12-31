@@ -48,7 +48,7 @@ const fetchBinDataset = async () => {
     console.time("all");
     console.time("fetch");
     const response = await fetch(
-        "https://bucket.draftgap.com/datasets/12.22.1.bin"
+        "https://bucket.draftgap.com/datasets/latest.bin"
     );
     console.timeEnd("fetch");
 

@@ -7,7 +7,8 @@ export async function storeDataset(dataset: Dataset) {
 
     const params = {
         Bucket: process.env.S3_BUCKET || "draftgap",
-        Key: `datasets/${dataset.version}.bin`,
+        Key: `datasets/latest.bin`,
+        // Key: `datasets/${dataset.version}.bin`,
         Body: new Uint8Array(serialized),
     };
     const command = new PutObjectCommand(params);

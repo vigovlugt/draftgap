@@ -10,7 +10,7 @@ import { Dataset } from "../src/lib/models/Dataset";
 const BATCH_SIZE = 10;
 
 async function main() {
-    let currentVersion = (await getVersions())[1];
+    let currentVersion = (await getVersions())[0];
     console.log("Patch:", currentVersion);
 
     const champions = await getChampions(currentVersion);
@@ -19,8 +19,6 @@ async function main() {
         version: currentVersion,
         championData: {},
     };
-
-    currentVersion = "30";
 
     for (let i = 0; i < champions.length; i += BATCH_SIZE) {
         console.log(
@@ -31,8 +29,9 @@ async function main() {
         const batch = champions.slice(i, i + BATCH_SIZE);
         const championData = (
             await Promise.allSettled(
-                batch.map((champion) =>
-                    getChampionDataFromLolalytics(currentVersion, champion)
+                batch.map(
+                    (champion) => getChampionDataFromLolalytics("30", champion)
+                    //getChampionDataFromLolalytics(currentVersion, champion)
                 )
             )
         )
