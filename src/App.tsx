@@ -1,7 +1,6 @@
 import { Button } from "solid-headless";
 import { Icon } from "solid-heroicons";
 import { Component, createSignal, Match, onCleanup, Switch } from "solid-js";
-import { useDnd } from "./hooks/use-dnd";
 import DraftTable from "./components/draft/DraftTable";
 import { RoleFilter } from "./components/draft/RoleFilter";
 import { Search } from "./components/draft/Search";
@@ -18,7 +17,6 @@ import { useLolClient } from "./context/LolClientContext";
 const App: Component = () => {
     const { dataset, allyTeam, opponentTeam } = useDraft();
     const { startLolClientIntegration } = useLolClient();
-    useDnd();
     useTitle();
 
     const stopLolClientIntegration = startLolClientIntegration();
