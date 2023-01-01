@@ -3,7 +3,7 @@
     windows_subsystem = "windows"
 )]
 
-use std::env;
+use std::{env, os::windows::process::CommandExt};
 
 use reqwest::{Certificate, Client};
 use serde::Serialize;
@@ -68,6 +68,7 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
         std::process::Command::new("cmd")
             .arg("/C")
             .arg(command)
+            .creation_flags(0x08000000) // CREATE_NO_WINDOW
             .output()
             .map_err(|_| "Could not run command")?
     };
