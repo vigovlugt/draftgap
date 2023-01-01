@@ -57,4 +57,29 @@ jobs:
                   releaseDraft: false
                   prerelease: false
 
-    # publish:
+    publish:
+        runs-on: ubuntu-20.04
+        needs: [release]
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+              
+            - name: Install PNPM
+              run: npm install -g pnpm
+              
+            - name: Sync node version and setup cache
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "lts/*"
+                  cache: "pnpm" # Set this to npm, yarn or pnpm.
+          
+            - name: Install app dependencies
+              run: pnpm install
+          
+            - name: Update tauri-update gist
+              run: pnpm publish:tauri-update
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GIST_ID: "5d549f4fdd602eb22542ef55e7c881ec"
+                  REPOSITORY_OWNER: vigovlugt
+                  REPOSITORY_NAME: draftgap
