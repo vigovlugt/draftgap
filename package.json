@@ -11,7 +11,8 @@
         "update:data": "node -r esbuild-register scripts/updateData.ts",
         "benchmark": "node -r esbuild-register scripts/benchmarkSerialization.ts",
         "bump:version": "node -r esbuild-register scripts/bumpVersion.ts",
-        "datagap": "node -r esbuild-register src/lib/datagap/index.ts"
+        "datagap": "node -r esbuild-register src/lib/datagap/index.ts",
+        "publish:tauri-update": "node -r esbuild-register scripts/publishTauriUpdate.ts"
     },
     "license": "MIT",
     "devDependencies": {
@@ -30,6 +31,7 @@
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.218.0",
+        "@octokit/rest": "^19.0.5",
         "@prisma/client": "^4.8.0",
         "@tanstack/solid-table": "^8.7.0",
         "@tauri-apps/api": "^1.2.0",
