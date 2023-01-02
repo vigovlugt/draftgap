@@ -13,6 +13,7 @@ import { useTitle } from "./hooks/use-title";
 import ResultScreen from "./components/resultscreen/ResultScreen";
 import { LolClientStatusBadge } from "./components/LolClientStatusBadge";
 import { useLolClient } from "./context/LolClientContext";
+import { UpdateModal } from "./components/UpdateModal";
 
 const App: Component = () => {
     const { dataset, allyTeam, opponentTeam } = useDraft();
@@ -35,6 +36,7 @@ const App: Component = () => {
                 isOpen={showSettings}
                 setIsOpen={setShowSettings}
             ></SettingsModal>
+            <UpdateModal />
             <header class="bg-primary p-2 py-0 border-b-2 border-neutral-700 flex justify-between">
                 <h1 class="text-6xl mr-2">DRAFTGAP</h1>
                 <div class="flex items-center gap-4">
