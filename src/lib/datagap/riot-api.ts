@@ -1,5 +1,7 @@
 import { LolApi } from "twisted";
-import { RegionGroups } from "twisted/dist/constants";
+import { Queues, RegionGroups, Regions } from "twisted/dist/constants";
+import { subDays } from "date-fns";
+import { PrismaClient } from "@prisma/client";
 
 const COUNT = 100;
 
@@ -13,13 +15,16 @@ export async function getAllMatches(
 
     let i = 0;
 
+    const endDate = new Date();
+    const startDate = subDays(endDate, 30);
+
     while (true) {
         const res = await api.MatchV5.list(puuid, regionGroup, {
             queue: queue,
             count: COUNT,
             start: i * COUNT,
-            startTime: new Date("2022-01-01").getTime() / 1000,
-            endTime: new Date("2022-11-16").getTime() / 1000,
+            startTime: Math.round(startDate.valueOf() / 1000),
+            endTime: Math.round(endDate.valueOf() / 1000),
         });
         i++;
 
@@ -33,8 +38,23 @@ export async function getAllMatches(
 
 export async function getMatch(
     api: LolApi,
+    client: PrismaClient,
     matchId: string,
     regionGroup = RegionGroups.EUROPE
 ) {
+    if (await client.match.findFirst({ where: { id: matchId } })) return null;
+
     return (await api.MatchV5.get(matchId, regionGroup)).response;
+}
+
+export async function getSoloDuoRank(
+    api: LolApi,
+    puuid: string,
+    region = Regions.EU_WEST
+) {
+    const res = await api.League.bySummoner(puuid, region);
+    const soloDuo = res.response.find(
+        (r) => r.queueType === Queues.RANKED_SOLO_5x5
+    );
+    return soloDuo;
 }

@@ -17,7 +17,7 @@ export function Table<T>({
             class={`rounded-md overflow-x-auto overflow-y-auto max-h-full ${props.class}`}
         >
             <table class="min-w-full divide-y divide-neutral-700">
-                <thead class="bg-[#141414] sticky top-0 z-10">
+                <thead class="bg-neutral-900 sticky top-0 z-10">
                     <For each={table.getHeaderGroups()}>
                         {(headerGroup) => (
                             <tr>
@@ -92,7 +92,7 @@ export function Table<T>({
                         .flatMap((g) => g.headers)
                         .some((h) => h.column.columnDef.footer)}
                 >
-                    <tfoot class="bg-[#141414]">
+                    <tfoot class="bg-neutral-900">
                         <For each={table.getFooterGroups()}>
                             {(footerGroup) => (
                                 <tr>

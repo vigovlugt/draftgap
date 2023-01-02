@@ -12,7 +12,9 @@ datasource db {
 
 model Summoner {
   puuid        String        @id
+  summonerId   String        @unique
   scrapedAt    DateTime?
+  rank         String?
   participants Participant[]
 
   @@index([scrapedAt], name: "scrapedAt")
@@ -25,7 +27,7 @@ model Match {
   patch    String
   queueId  Int
   duration Int
-  blueWin  Boolean?
+  blueWin  Boolean
 
   participants Participant[]
 }

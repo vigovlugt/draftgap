@@ -172,7 +172,7 @@ export function analyzeDuos(
     dataset: Dataset,
     team: Map<Role, string>
 ): AnalyzeDuosResult {
-    const teamEntries = Array.from(team.entries());
+    const teamEntries = Array.from(team.entries()).sort((a, b) => a[0] - b[0]);
 
     const duoResults: AnalyzeDuoResult[] = [];
     let totalRating = 0;

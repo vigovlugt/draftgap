@@ -20,53 +20,76 @@ export async function storeMatches(
     matches: MatchV5DTOs.MatchDto[]
 ) {
     for (const match of matches) {
-        await db.match.create({
-            data: {
-                id: match.metadata.matchId,
-                createdAt: new Date(match.info.gameCreation),
-                duration: match.info.gameDuration,
-                queueId: match.info.queueId,
-                patch: match.info.gameVersion.split(".").slice(0, 2).join("."),
-                participants: {
-                    create: match.info.participants.map((participant) => ({
-                        summoner: {
-                            connectOrCreate: {
-                                where: {
-                                    puuid: participant.puuid,
-                                },
-                                create: {
-                                    puuid: participant.puuid,
+        try {
+            await db.match.create({
+                data: {
+                    id: match.metadata.matchId,
+                    createdAt: new Date(match.info.gameCreation),
+                    duration: match.info.gameDuration,
+                    queueId: match.info.queueId,
+                    patch: match.info.gameVersion
+                        .split(".")
+                        .slice(0, 2)
+                        .join("."),
+                    blueWin: match.info.teams.find((t) => t.teamId === 100)!
+                        .win,
+                    participants: {
+                        create: match.info.participants.map((participant) => ({
+                            summoner: {
+                                connectOrCreate: {
+                                    where: {
+                                        puuid: participant.puuid,
+                                    },
+                                    create: {
+                                        puuid: participant.puuid,
+                                        summonerId: participant.summonerId,
+                                    },
                                 },
                             },
-                        },
-                        championKey: participant.championId,
-                        teamPosition: teamPositionToInt(
-                            participant.teamPosition
-                        ),
+                            championKey: participant.championId,
+                            teamPosition: teamPositionToInt(
+                                participant.teamPosition
+                            ),
 
-                        blueTeam: participant.teamId === 100,
-                        kills: participant.kills,
-                        deaths: participant.deaths,
-                        assists: participant.assists,
+                            blueTeam: participant.teamId === 100,
+                            kills: participant.kills,
+                            deaths: participant.deaths,
+                            assists: participant.assists,
 
-                        physicalDamageDealtToChampions:
-                            participant.physicalDamageDealtToChampions,
-                        magicDamageDealtToChampions:
-                            participant.magicDamageDealtToChampions,
-                        trueDamageDealtToChampions:
-                            participant.trueDamageDealtToChampions,
+                            physicalDamageDealtToChampions:
+                                participant.physicalDamageDealtToChampions,
+                            magicDamageDealtToChampions:
+                                participant.magicDamageDealtToChampions,
+                            trueDamageDealtToChampions:
+                                participant.trueDamageDealtToChampions,
 
-                        physicalDamageTaken: participant.physicalDamageTaken,
-                        magicDamageTaken: participant.magicDamageTaken,
-                        trueDamageTaken: participant.trueDamageTaken,
+                            physicalDamageTaken:
+                                participant.physicalDamageTaken,
+                            magicDamageTaken: participant.magicDamageTaken,
+                            trueDamageTaken: participant.trueDamageTaken,
 
-                        goldEarned: participant.goldEarned,
-                        totalMinionsKilled: participant.totalMinionsKilled,
-                    })),
+                            goldEarned: participant.goldEarned,
+                            totalMinionsKilled: participant.totalMinionsKilled,
+                        })),
+                    },
                 },
-            },
-        });
+            });
+        } catch (e) {
+            console.error("Error creating match");
+            console.error(e);
+        }
     }
+}
+
+export async function setSummonerRank(
+    db: PrismaClient,
+    puuid: string,
+    rank: string
+) {
+    await db.summoner.update({
+        where: { puuid },
+        data: { rank },
+    });
 }
 
 export async function setSummonerScraped(db: PrismaClient, puuid: string) {

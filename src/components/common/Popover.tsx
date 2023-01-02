@@ -53,9 +53,9 @@ export const Popover: Component<Props> = (props: Props) => {
                         <Show when={isOpen()}>
                             <PopoverPanel
                                 unmount={false}
-                                class="absolute z-10 px-4 transform -translate-x-1/2 left-1/2 sm:px-0 lg:max-w-3xl"
+                                class="absolute z-100 px-4 transform -translate-x-1/2 left-1/2 sm:px-0 lg:max-w-3xl"
                             >
-                                <Menu class="overflow-hidden w-64 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 flex flex-col cursor-default">
+                                <Menu class="overflow-hidden w-64 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 flex flex-col cursor-default z-100">
                                     {props.items.map((item) => (
                                         <MenuItem
                                             as={

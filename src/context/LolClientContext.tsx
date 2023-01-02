@@ -67,7 +67,7 @@ export const ClientState = {
 export type ClientState = typeof ClientState[keyof typeof ClientState];
 
 export const createLolClientContext = () => {
-    const { isDesktop, pickChampion, select } = useDraft();
+    const { isDesktop, pickChampion, select, resetAll } = useDraft();
 
     const [clientState, setClientState] = createSignal<ClientState>(
         ClientState.NotFound
@@ -173,8 +173,12 @@ export const createLolClientContext = () => {
                     setClientState(ClientState.MainMenu);
                 } else {
                     batch(() => {
-                        updateChampSelectSession(session);
+                        if (clientState() !== ClientState.InChampSelect) {
+                            resetAll();
+                        }
+
                         setClientState(ClientState.InChampSelect);
+                        updateChampSelectSession(session);
                     });
                 }
             } catch (e) {

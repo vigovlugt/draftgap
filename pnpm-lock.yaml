@@ -10,6 +10,7 @@ specifiers:
   '@thisbeyond/solid-dnd': ^0.7.3
   '@types/node': ^18.11.9
   autoprefixer: ^10.4.13
+  date-fns: ^2.29.3
   dotenv: ^16.0.3
   esbuild: ^0.15.13
   esbuild-register: ^3.3.3
@@ -33,6 +34,7 @@ dependencies:
   '@tanstack/solid-table': 8.7.4_solid-js@1.6.6
   '@tauri-apps/api': 1.2.0
   '@thisbeyond/solid-dnd': 0.7.3_solid-js@1.6.6
+  date-fns: 2.29.3
   dotenv: 16.0.3
   solid-headless: 0.13.0_solid-js@1.6.6
   solid-heroicons: 3.1.1_solid-js@1.6.6
@@ -1905,6 +1907,11 @@ packages:
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
+
+  /date-fns/2.29.3:
+    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
+    engines: {node: '>=0.11'}
+    dev: false
 
   /debug/4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}

@@ -6,25 +6,32 @@ import {
 import { Accessor, JSX } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { Role } from "../../lib/models/Role";
+import { Team } from "../../lib/models/Team";
 import { ratingToWinrate } from "../../lib/rating/ratings";
-import { AnalyzeMatchupResult } from "../../lib/suggestions/suggestions";
+import {
+    AnalyzeDuoResult,
+    AnalyzeMatchupResult,
+} from "../../lib/suggestions/suggestions";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
 import { Table } from "../common/Table";
 import { WinnerCell } from "../common/WinnerCell";
 
 interface Props {
-    showAll: Accessor<boolean>;
+    team: Team;
 }
 
-export function MatchupResultTable({
-    showAll,
+export function DuoResultTable({
+    team,
     ...props
 }: Props & JSX.HTMLAttributes<HTMLDivElement>) {
-    const { allyDraftResult } = useDraft();
+    const { allyDraftResult, opponentDraftResult } = useDraft();
 
-    const columns: ColumnDef<AnalyzeMatchupResult>[] = [
+    const draftResult = team === "ally" ? allyDraftResult : opponentDraftResult;
+
+    const columns: ColumnDef<AnalyzeDuoResult>[] = [
         {
+            id: "roleA",
             header: "Role",
             accessorFn: (result) => result.roleA,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
@@ -34,7 +41,8 @@ export function MatchupResultTable({
             },
         },
         {
-            header: "Ally",
+            id: "championA",
+            header: "Champion",
             accessorFn: (result) => result.championKeyA,
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
@@ -45,57 +53,52 @@ export function MatchupResultTable({
             },
         },
         {
-            header: "Winrate",
-            accessorFn: (result) =>
-                parseFloat((ratingToWinrate(result.rating) * 100).toFixed(2)),
-            footer: (info) => parseFloat((allyWinrate() * 100).toFixed(2)),
+            id: "roleB",
+            header: "Role",
+            accessorFn: (result) => result.roleB,
+            cell: (info) => <RoleCell role={info.getValue<Role>()} />,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
         },
         {
-            header: "Winner",
-            accessorFn: (result) => result.rating > 0,
-            cell: (info) => <WinnerCell winner={info.getValue<boolean>()} />,
-            footer: () => (
-                <WinnerCell winner={allyWinrate() > opponentWinrate()} />
-            ),
-            meta: {
-                headerClass: "text-center",
-            },
-        },
-        {
-            header: "Opponent",
+            id: "championB",
+            header: "Champion",
             accessorFn: (result) => result.championKeyB,
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
             ),
-            footer: () => parseFloat((opponentWinrate() * 100).toFixed(2)),
+            meta: {
+                headerClass: "w-1",
+                footerClass: "w-1",
+            },
         },
         {
-            id: "opponent-winrate",
             header: "Winrate",
-            accessorFn: (result) =>
-                parseFloat((ratingToWinrate(-result.rating) * 100).toFixed(2)),
+            accessorFn: (duo) =>
+                parseFloat((ratingToWinrate(duo.rating) * 100).toFixed(2)),
+            footer: (info) => parseFloat((winrate() * 100).toFixed(2)),
+            meta: {
+                headerClass: "w-1",
+                footerClass: "w-1",
+            },
         },
     ];
 
-    const allyWinrate = () =>
-        ratingToWinrate(allyDraftResult()?.matchupRating?.totalRating ?? 0);
-    const opponentWinrate = () =>
-        ratingToWinrate(-(allyDraftResult()?.matchupRating?.totalRating ?? 0));
+    const winrate = () =>
+        ratingToWinrate(draftResult()?.allyDuoRating?.totalRating ?? 0);
 
     const table = createSolidTable({
         get data() {
-            let data = allyDraftResult()?.matchupRating?.matchupResults;
+            let data = draftResult()?.allyDuoRating?.duoResults;
             if (!data) {
                 return [];
             }
 
-            if (!showAll()) {
-                data = data.filter((m) => m.roleA === m.roleB);
-            }
+            // if (!showAll()) {
+            //     data = data.filter((m) => m.roleA === m.roleB);
+            // }
 
             return data.sort((a, b) => a.roleA - b.roleA || a.roleB - b.roleB);
         },
