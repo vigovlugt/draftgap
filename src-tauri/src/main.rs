@@ -50,29 +50,21 @@ struct LcuData {
 
 #[tauri::command]
 fn get_league_lcu_data() -> Result<LcuData, String> {
-    let os = env::consts::OS;
-    let is_mac = os == "macos";
-    let command = if is_mac {
-        "ps x -o args | grep 'LeagueClientUx'"
-    } else {
-        "WMIC PROCESS WHERE name='LeagueClientUx.exe' GET commandline"
-    };
+    #[cfg(not(target_os = "windows"))]
+    let output = std::process::Command::new("sh")
+        .arg("-c")
+        .arg("ps x -o args | grep 'LeagueClientUx'")
+        .output()
+        .map_err(|_| "Could not run command")?;
 
-    let output = if is_mac {
-        std::process::Command::new("sh")
-            .arg("-c")
-            .arg(command)
-            .output()
-            .map_err(|_| "Could not run command")?
-    } else {
-        #[cfg(target_os = "windows")]
-        std::process::Command::new("cmd")
-            .arg("/C")
-            .arg(command)
-            .creation_flags(0x08000000) // CREATE_NO_WINDOW
-            .output()
-            .map_err(|_| "Could not run command")?
-    };
+    #[cfg(target_os = "windows")]
+    let output = std::process::Command::new("cmd")
+        .arg("/C")
+        .arg("WMIC PROCESS WHERE name='LeagueClientUx.exe' GET commandline")
+        .creation_flags(0x08000000) // CREATE_NO_WINDOW
+        .output()
+        .map_err(|_| "Could not run command")?;
+
     let output_str = std::str::from_utf8(&output.stdout).map_err(|_| "Could not parse output")?;
 
     let port_regex = "--app-port=([0-9]+)";
