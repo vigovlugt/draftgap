@@ -2,7 +2,7 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
-
+#[cfg(target_os = "windows")]
 use std::{env, os::windows::process::CommandExt};
 
 use reqwest::{Certificate, Client};
@@ -65,6 +65,7 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
             .output()
             .map_err(|_| "Could not run command")?
     } else {
+        #[cfg(target_os = "windows")]
         std::process::Command::new("cmd")
             .arg("/C")
             .arg(command)
