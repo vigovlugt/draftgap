@@ -60,6 +60,7 @@ jobs:
     publish:
         runs-on: ubuntu-20.04
         needs: [release]
+        permissions: write-all
         steps:
             - name: Checkout repository
               uses: actions/checkout@v3
