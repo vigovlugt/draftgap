@@ -10,6 +10,11 @@ export async function main() {
         throw new Error("GITHUB_TOKEN is not set");
     }
 
+    const GIST_TOKEN = process.env.GIST_TOKEN;
+    if (!GIST_TOKEN) {
+        throw new Error("GIST_TOKEN is not set");
+    }
+
     const GIST_ID = process.env.GIST_ID;
     if (!GIST_ID) {
         throw new Error("GIST_ID is not set");
@@ -75,8 +80,13 @@ export async function main() {
     };
 
     const json = JSON.stringify(tauriUpdaterJson, null, 4);
+    console.log("Updating tauri update json");
+    console.log(json);
 
-    await octokit.gists.update({
+    const gistOctokit = new Octokit({
+        auth: GIST_TOKEN,
+    });
+    await gistOctokit.gists.update({
         gist_id: GIST_ID,
         files: {
             "draftgap-tauri-update.json": {
@@ -84,6 +94,8 @@ export async function main() {
             },
         },
     });
+
+    console.log("Updated tauri update json");
 }
 
 main();
