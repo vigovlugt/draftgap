@@ -29,7 +29,16 @@ export async function storeMatches(
                 patch: match.info.gameVersion.split(".").slice(0, 2).join("."),
                 participants: {
                     create: match.info.participants.map((participant) => ({
-                        id: participant.puuid,
+                        summoner: {
+                            connectOrCreate: {
+                                where: {
+                                    puuid: participant.puuid,
+                                },
+                                create: {
+                                    puuid: participant.puuid,
+                                },
+                            },
+                        },
                         championKey: participant.championId,
                         teamPosition: teamPositionToInt(
                             participant.teamPosition
@@ -58,4 +67,11 @@ export async function storeMatches(
             },
         });
     }
+}
+
+export async function setSummonerScraped(db: PrismaClient, puuid: string) {
+    await db.summoner.update({
+        where: { puuid },
+        data: { scrapedAt: new Date() },
+    });
 }

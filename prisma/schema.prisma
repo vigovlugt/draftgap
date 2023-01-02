@@ -31,10 +31,10 @@ model Match {
 }
 
 model Participant {
-  id String @id
+  id Int @id @default(autoincrement())
 
   puuid    String
-  summoner Summoner? @relation(fields: [puuid], references: [puuid])
+  summoner Summoner @relation(fields: [puuid], references: [puuid])
 
   match   Match  @relation(fields: [matchId], references: [id])
   matchId String @map("gameId")
