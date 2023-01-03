@@ -16,4 +16,5 @@
 @font-face {
   font-family: 'Akkordeon DEMO';
   src:  url('/fonts/AkkordeonDEMO.woff2') format('woff2');
+  font-display: swap;
 }
