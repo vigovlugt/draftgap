@@ -76,6 +76,16 @@ export const FAQModal: Component<Props> = ({ isOpen, setIsOpen }) => {
                 is updated every 24 hours.
             </p>
 
+            <h2 class="text-4xl uppercase">How does the risk level work?</h2>
+            <p class="font-body tracking-normal mb-4">
+                The risk level is a measure of how much to trust small sample
+                sizes in the data. The higher the risk level, the more it will
+                recommend duos/matchups that have a small sample size, and thus
+                could be inaccurate. On the other hand, it will also recommend
+                more niche duos/counters that are not seen often, but could be
+                very strong.
+            </p>
+
             <p class="font-body tracking-normal font-bold">
                 If you have any other questions, feedback, bug reports or
                 feature requests, feel free to send an email to:{" "}

@@ -1,3 +1,5 @@
+import { Icon } from "solid-heroicons";
+import { questionMarkCircle } from "solid-heroicons/solid-mini";
 import { Accessor, Setter } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import {
@@ -11,9 +13,14 @@ import { Toggle } from "../common/Toggle";
 interface Props {
     isOpen: Accessor<boolean>;
     setIsOpen: Setter<boolean>;
+    setFAQOpen: Setter<boolean>;
 }
 
-export default function SettingsModal({ isOpen, setIsOpen }: Props) {
+export default function SettingsModal({
+    isOpen,
+    setIsOpen,
+    setFAQOpen,
+}: Props) {
     const { config, setConfig } = useDraft();
 
     const riskLevelOptions: ButtonGroupOption<RiskLevel>[] = RiskLevel.map(
@@ -40,7 +47,15 @@ export default function SettingsModal({ isOpen, setIsOpen }: Props) {
                     }
                 />
             </div>
-            <span class="text-2xl uppercase mt-2 block">Risk level</span>
+            <div class="flex items-center mt-2 gap-1">
+                <span class="text-2xl uppercase block">Risk level </span>
+                <button onClick={() => setFAQOpen(true)}>
+                    <Icon
+                        path={questionMarkCircle}
+                        class="w-5 inline text-neutral-400"
+                    />
+                </button>
+            </div>
             <ButtonGroup
                 options={riskLevelOptions}
                 selected={() => config().riskLevel}

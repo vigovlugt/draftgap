@@ -78,6 +78,7 @@ const App: Component = () => {
             <SettingsModal
                 isOpen={showSettings}
                 setIsOpen={setShowSettings}
+                setFAQOpen={setShowFAQ}
             ></SettingsModal>
             <UpdateModal />
             <FAQModal isOpen={showFAQ} setIsOpen={setShowFAQ} />
