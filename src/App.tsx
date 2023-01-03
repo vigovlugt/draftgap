@@ -16,7 +16,6 @@ import { TeamSidebar } from "./components/draft/TeamSidebar";
 import { useDraft } from "./context/DraftContext";
 import { cog_6Tooth } from "solid-heroicons/solid";
 import SettingsModal from "./components/modals/SettingsModal";
-import { useTitle } from "./hooks/use-title";
 import ResultScreen from "./components/resultscreen/ResultScreen";
 import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
 import { useLolClient } from "./context/LolClientContext";
@@ -29,7 +28,6 @@ import { Badge } from "./components/common/Badge";
 const App: Component = () => {
     const { dataset, allyTeam, opponentTeam } = useDraft();
     const { startLolClientIntegration } = useLolClient();
-    useTitle();
 
     const stopLolClientIntegration = startLolClientIntegration();
     onCleanup(stopLolClientIntegration);
