@@ -18,6 +18,7 @@ export function ChampionIcon({
                 }/img/champion/${dataset()!.championData[championKey].id}.png`}
                 loading="lazy"
                 class="scale-110 h-9 w-9"
+                alt={dataset()!.championData[championKey].name}
             ></img>
         </div>
     );
