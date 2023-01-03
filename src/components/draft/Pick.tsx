@@ -103,7 +103,7 @@ export function Pick({ team, index }: IProps) {
                                         <div class="text-md">
                                             <RoleIcon
                                                 role={role}
-                                                class="h-10"
+                                                class="h-8 lg:h-10"
                                                 classList={{
                                                     "opacity-50":
                                                         teamCompRole() !== role,

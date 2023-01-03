@@ -33,7 +33,7 @@ export type PopoverItem = LinkItem | ButtonItem;
 type Props = {
     children: JSX.Element;
     items: PopoverItem[];
-    buttonClass: string;
+    buttonClass?: string;
 };
 
 export const Popover: Component<Props> = (props: Props) => {

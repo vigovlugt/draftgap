@@ -3,11 +3,11 @@ import { useDraft } from "../../context/DraftContext";
 import { Role, ROLES } from "../../lib/models/Role";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 
-export function RoleFilter() {
+export function RoleFilter({ className }: { className?: string }) {
     const { roleFilter, setRoleFilter } = useDraft();
 
     return (
-        <span class="isolate inline-flex rounded-md shadow-sm">
+        <span class={`isolate inline-flex rounded-md shadow-sm ${className}`}>
             <For each={ROLES}>
                 {(role, i) => (
                     <button

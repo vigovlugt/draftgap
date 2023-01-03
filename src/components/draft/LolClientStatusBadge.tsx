@@ -1,6 +1,7 @@
 import { Component } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { ClientState, useLolClient } from "../../context/LolClientContext";
+import { Badge } from "../common/Badge";
 
 type Props = {
     setShowDownloadModal: (show: boolean) => void;
@@ -12,20 +13,17 @@ export const LolClientStatusBadge: Component<Props> = ({
     const { isDesktop } = useDraft();
     if (!isDesktop)
         return (
-            <button
+            <Badge
+                as="button"
                 onClick={() => setShowDownloadModal(true)}
-                class={`uppercase inline-flex items-center rounded-full px-3 py-0.5 text-xl font-medium bg-neutral-100 text-neutral-800`}
+                theme="primary"
+                class="hidden md:block"
             >
                 Get the desktop app
-            </button>
+            </Badge>
         );
 
     const { clientState } = useLolClient();
-
-    const stateClass = () =>
-        clientState() == ClientState.NotFound
-            ? "bg-neutral-800 text-neutral-100"
-            : "bg-neutral-100 text-neutral-800";
 
     const stateName = () =>
         ((
@@ -37,10 +35,12 @@ export const LolClientStatusBadge: Component<Props> = ({
         )[clientState()]);
 
     return (
-        <span
-            class={`uppercase inline-flex items-center rounded-full px-3 py-0.5 text-xl font-medium ${stateClass()}`}
+        <Badge
+            theme={
+                clientState() == ClientState.NotFound ? "secondary" : "primary"
+            }
         >
             {stateName()}
-        </span>
+        </Badge>
     );
 };
