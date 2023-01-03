@@ -1,4 +1,4 @@
-import { Match, Switch } from "solid-js";
+import { Component, Match, Switch } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { Role } from "../../../lib/models/Role";
 import BottomIcon from "./BottomIcon";
@@ -7,26 +7,28 @@ import MidIcon from "./MidIcon";
 import TopIcon from "./TopIcon";
 import SupportIcon from "./SupportIcon";
 
-export function RoleIcon(
-    props: JSX.SvgSVGAttributes<SVGSVGElement> & { role: Role }
-) {
+type Props = Omit<JSX.SvgSVGAttributes<SVGSVGElement>, "role"> & {
+    role: Role;
+};
+
+export const RoleIcon: Component<Props> = ({ role, ...props }) => {
     return (
         <Switch>
-            <Match when={props.role === Role.Bottom}>
+            <Match when={role === Role.Bottom}>
                 <BottomIcon {...props} />
             </Match>
-            <Match when={props.role === Role.Top}>
+            <Match when={role === Role.Top}>
                 <TopIcon {...props} />
             </Match>
-            <Match when={props.role === Role.Middle}>
+            <Match when={role === Role.Middle}>
                 <MidIcon {...props} />
             </Match>
-            <Match when={props.role === Role.Jungle}>
+            <Match when={role === Role.Jungle}>
                 <JungleIcon {...props} />
             </Match>
-            <Match when={props.role === Role.Support}>
+            <Match when={role === Role.Support}>
                 <SupportIcon {...props} />
             </Match>
         </Switch>
     );
-}
+};

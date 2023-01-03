@@ -12,6 +12,9 @@ module.exports = {
                 ally: "#3b82f6",
                 opponent: "#ef4444",
             },
+            fontFamily: {
+                body: ["system-ui", "sans-serif"],
+            },
         },
     },
     plugins: [],

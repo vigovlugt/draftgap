@@ -17,7 +17,7 @@ export function Table<T>({
             class={`rounded-md overflow-x-auto overflow-y-auto max-h-full ${props.class}`}
         >
             <table class="min-w-full divide-y divide-neutral-700">
-                <thead class="bg-neutral-900 sticky top-0 z-10">
+                <thead class="bg-neutral-900 sticky top-0 z-[1]">
                     <For each={table.getHeaderGroups()}>
                         {(headerGroup) => (
                             <tr>
@@ -59,8 +59,19 @@ export function Table<T>({
                     <For each={table.getRowModel().rows}>
                         {(row) => (
                             <tr
-                                class="cursor-pointer hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
+                                class="transition-colors duration-150 ease-in-out"
+                                classList={{
+                                    "cursor-pointer hover:bg-neutral-800":
+                                        Boolean(onClickRow),
+                                }}
                                 onClick={() => onClickRow?.(row)}
+                                tabindex={onClickRow ? 0 : undefined}
+                                onSubmit={() => onClickRow?.(row)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        onClickRow?.(row);
+                                    }
+                                }}
                             >
                                 <For each={row.getVisibleCells()}>
                                     {(cell, i) => (

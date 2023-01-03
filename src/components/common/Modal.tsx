@@ -15,12 +15,26 @@ interface Props {
     setIsOpen: Setter<boolean>;
     children: JSX.Element;
     title: JSX.Element;
+    size?: "sm" | "md" | "lg" | "xl";
 }
 
-export default function Modal({ isOpen, setIsOpen, title, children }: Props) {
+export default function Modal({
+    isOpen,
+    setIsOpen,
+    title,
+    children,
+    size = "md",
+}: Props) {
     function close() {
         setIsOpen(false);
     }
+
+    const maxWClass = {
+        sm: "max-w-sm",
+        md: "max-w-md",
+        lg: "max-w-lg",
+        xl: "max-w-xl",
+    }[size];
 
     return (
         <>
@@ -38,7 +52,14 @@ export default function Modal({ isOpen, setIsOpen, title, children }: Props) {
                     </TransitionChild>
 
                     <div class="fixed inset-0 overflow-y-auto">
-                        <div class="flex min-h-full items-center justify-center p-4 text-center">
+                        <div
+                            class="flex min-h-full items-center justify-center p-4 text-center"
+                            onClick={(e) => {
+                                if (e.target !== e.currentTarget) return;
+
+                                setIsOpen(false);
+                            }}
+                        >
                             <TransitionChild
                                 enter="ease-out duration-300"
                                 enterFrom="opacity-0 scale-95"
@@ -47,7 +68,9 @@ export default function Modal({ isOpen, setIsOpen, title, children }: Props) {
                                 leaveFrom="opacity-100 scale-100"
                                 leaveTo="opacity-0 scale-95"
                             >
-                                <DialogPanel class="w-full max-w-md transform overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all">
+                                <DialogPanel
+                                    class={`w-full transform overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all ${maxWClass}`}
+                                >
                                     <div class="flex justify-between mb-4">
                                         <DialogTitle
                                             as="h3"

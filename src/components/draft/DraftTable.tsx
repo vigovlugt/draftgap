@@ -7,7 +7,6 @@ import {
 import { useDraft } from "../../context/DraftContext";
 import { Role } from "../../lib/models/Role";
 import { Suggestion } from "../../lib/suggestions/suggestions";
-import { RoleIcon } from "../icons/roles/RoleIcon";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";

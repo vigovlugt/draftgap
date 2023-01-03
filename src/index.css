@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 @layer base {
-body {
-  font-family: 'Akkordeon DEMO', sans-serif;
-  @apply bg-neutral-900 text-text tracking-wider;
-}
+  body {
+    font-family: 'Akkordeon DEMO', sans-serif;
+    @apply bg-neutral-900 text-text tracking-widest;
+  }
 }
 
 :root {

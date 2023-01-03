@@ -1,8 +1,7 @@
 import { Accessor, Setter } from "solid-js";
-import { useDraft } from "../context/DraftContext";
-import { Button } from "./common/Button";
-import Modal from "./common/Modal";
-import { Toggle } from "./common/Toggle";
+import { useDraft } from "../../context/DraftContext";
+import Modal from "../common/Modal";
+import { Toggle } from "../common/Toggle";
 
 interface Props {
     isOpen: Accessor<boolean>;
@@ -12,7 +11,6 @@ interface Props {
 export default function SettingsModal({ isOpen, setIsOpen }: Props) {
     const { config, setConfig } = useDraft();
 
-    const close = () => setIsOpen(false);
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Settings">
             <div class="flex space-x-16 items-center justify-between">

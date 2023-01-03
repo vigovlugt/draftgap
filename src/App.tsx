@@ -8,12 +8,15 @@ import { TeamSelector } from "./components/draft/TeamSelector";
 import { TeamSidebar } from "./components/draft/TeamSidebar";
 import { useDraft } from "./context/DraftContext";
 import { cog_6Tooth } from "solid-heroicons/solid";
-import SettingsModal from "./components/SettingsModal";
+import SettingsModal from "./components/modals/SettingsModal";
 import { useTitle } from "./hooks/use-title";
 import ResultScreen from "./components/resultscreen/ResultScreen";
-import { LolClientStatusBadge } from "./components/LolClientStatusBadge";
+import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
 import { useLolClient } from "./context/LolClientContext";
-import { UpdateModal } from "./components/UpdateModal";
+import { UpdateModal } from "./components/Modals/UpdateModal";
+import { OptionsPopover } from "./components/OptionsPopover";
+import { FAQModal } from "./components/modals/FAQModal";
+import { DownloadAppModal } from "./components/modals/DownloadAppModal";
 
 const App: Component = () => {
     const { dataset, allyTeam, opponentTeam } = useDraft();
@@ -24,6 +27,8 @@ const App: Component = () => {
     onCleanup(stopLolClientIntegration);
 
     const [showSettings, setShowSettings] = createSignal(false);
+    const [showFAQ, setShowFAQ] = createSignal(false);
+    const [showDownloadModal, setShowDownloadModal] = createSignal(false);
 
     const draftFinished = () =>
         [...allyTeam, ...opponentTeam].every(
@@ -37,16 +42,24 @@ const App: Component = () => {
                 setIsOpen={setShowSettings}
             ></SettingsModal>
             <UpdateModal />
-            <header class="bg-primary p-2 py-0 border-b-2 border-neutral-700 flex justify-between">
-                <h1 class="text-6xl mr-2">DRAFTGAP</h1>
+            <FAQModal isOpen={showFAQ} setIsOpen={setShowFAQ} />
+            <DownloadAppModal
+                isOpen={showDownloadModal}
+                setIsOpen={setShowDownloadModal}
+            />
+            <header class="bg-primary px-1 py-0 border-b-2 border-neutral-700 flex justify-between">
+                <h1 class="text-6xl mr-2 ml-1">DRAFTGAP</h1>
                 <div class="flex items-center gap-4">
-                    <LolClientStatusBadge />
-                    <Button
-                        onClick={() => setShowSettings(!showSettings())}
-                        class="mr-[10px]"
-                    >
-                        <Icon path={cog_6Tooth} class="w-[24px]" />
+                    <LolClientStatusBadge
+                        setShowDownloadModal={setShowDownloadModal}
+                    />
+                    <Button onClick={() => setShowSettings(!showSettings())}>
+                        <Icon path={cog_6Tooth} class="w-7 -mr-2" />
                     </Button>
+                    <OptionsPopover
+                        setShowSettings={setShowSettings}
+                        setShowFAQ={setShowFAQ}
+                    />
                 </div>
             </header>
             <main

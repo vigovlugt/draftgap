@@ -1,6 +1,6 @@
 import { Icon } from "solid-heroicons";
 import { magnifyingGlass } from "solid-heroicons/outline";
-import { Accessor, onCleanup, Setter } from "solid-js";
+import { Accessor, onCleanup, onMount, Setter } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 
 export function Search() {
@@ -17,6 +17,25 @@ export function Search() {
 
     onCleanup(() => {
         window.removeEventListener("keydown", onControlF);
+    });
+
+    onMount(() => {
+        if (!inputEl) return;
+
+        const onTabOrEnter = (e: KeyboardEvent) => {
+            if (e.key === "Tab" || e.key === "Enter") {
+                e.preventDefault();
+                const firstTableRow = document.querySelector("table tbody tr");
+                if (firstTableRow) {
+                    (firstTableRow as HTMLElement).focus();
+                }
+            }
+        };
+
+        inputEl.addEventListener("keydown", onTabOrEnter);
+        onCleanup(() => {
+            inputEl!.removeEventListener("keydown", onTabOrEnter);
+        });
     });
 
     return (

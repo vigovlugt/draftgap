@@ -21,11 +21,19 @@ export function Pick({ team, index }: IProps) {
         selection,
         select,
         pickChampion,
+        allyTeamComps,
+        opponentTeamComps,
     } = useDraft();
     const picks = team === "ally" ? allyTeam : opponentTeam;
     const championData = team === "ally" ? allyTeamData : opponentTeamData;
+    const teamComp = () =>
+        team === "ally" ? allyTeamComps()[0] : opponentTeamComps()[0];
 
     const pick = picks[index];
+    const teamCompRole = () =>
+        [...teamComp()[0]?.entries()].find(
+            (e) => e[1] === pick.championKey
+        )?.[0];
 
     const isSelected = () =>
         selection.team === team && selection.index === index;
@@ -44,14 +52,14 @@ export function Pick({ team, index }: IProps) {
 
     return (
         <div
-            class="flex-1 relative cursor-pointer border-t-2 border-neutral-700 hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
+            class="flex-1 relative cursor-pointer border-t-2 border-neutral-700 hover:bg-neutral-800 transition-colors duration-150 ease-in-out overflow-hidden"
             classList={{
                 "!bg-neutral-700": isSelected(),
             }}
             onClick={() => select(team, index)}
         >
             <Show when={!champion()}>
-                <span class="absolute top-0 left-2 uppercase">
+                <span class="absolute top-1 left-2 uppercase">
                     PICK {index + 1}
                 </span>
             </Show>
@@ -77,15 +85,13 @@ export function Pick({ team, index }: IProps) {
                             {champion()!.name}
                         </span>
 
-                        <div class="absolute bottom-0 right-2 flex space-x-2">
+                        <div class="absolute bottom-0 left-0 right-0 flex justify-end overflow-x-auto pt-1 overflow-y-hidden">
                             {[...champion()!.probabilityByRole.entries()]
-                                .filter(([_, prob]) => prob > 0.05)
-                                .sort(
-                                    ([_, probA], [__, probB]) => probB - probA
-                                )
+                                .filter(([, prob]) => prob > 0.05)
+                                .sort(([, probA], [, probB]) => probB - probA)
                                 .map(([role, probability], i) => (
                                     <div
-                                        class="flex flex-col items-center relative group"
+                                        class="flex flex-col items-center relative group mx-[0.4rem]"
                                         onclick={() =>
                                             setRole(
                                                 pick.role === undefined
@@ -99,14 +105,16 @@ export function Pick({ team, index }: IProps) {
                                                 role={role}
                                                 class="h-10"
                                                 classList={{
-                                                    "opacity-50": i > 0,
+                                                    "opacity-50":
+                                                        teamCompRole() !== role,
                                                 }}
                                             />
                                         </div>
                                         <div
                                             class="text-md"
                                             classList={{
-                                                "opacity-75": i > 0,
+                                                "opacity-75":
+                                                    teamCompRole() !== role,
                                             }}
                                         >
                                             {parseFloat(

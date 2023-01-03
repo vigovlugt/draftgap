@@ -1,13 +1,13 @@
 import { Component, createSignal, onMount } from "solid-js";
-import Modal from "./common/Modal";
+import Modal from "../common/Modal";
 import {
     checkUpdate,
     installUpdate,
     UpdateResult,
 } from "@tauri-apps/api/updater";
 import { relaunch } from "@tauri-apps/api/process";
-import { Button } from "./common/Button";
-import { useDraft } from "../context/DraftContext";
+import { Button } from "../common/Button";
+import { useDraft } from "../../context/DraftContext";
 
 export const UpdateModal: Component = () => {
     const { isDesktop } = useDraft();
@@ -28,6 +28,7 @@ export const UpdateModal: Component = () => {
     });
 
     const update = async () => {
+        setIsOpen(false);
         // display dialog
         await installUpdate();
         // install complete, restart the app

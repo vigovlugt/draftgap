@@ -1,10 +1,24 @@
 import { Component } from "solid-js";
-import { useDraft } from "../context/DraftContext";
-import { ClientState, useLolClient } from "../context/LolClientContext";
+import { useDraft } from "../../context/DraftContext";
+import { ClientState, useLolClient } from "../../context/LolClientContext";
 
-export const LolClientStatusBadge: Component = () => {
+type Props = {
+    setShowDownloadModal: (show: boolean) => void;
+};
+
+export const LolClientStatusBadge: Component<Props> = ({
+    setShowDownloadModal,
+}) => {
     const { isDesktop } = useDraft();
-    if (!isDesktop) return <></>;
+    if (!isDesktop)
+        return (
+            <button
+                onClick={() => setShowDownloadModal(true)}
+                class={`uppercase inline-flex items-center rounded-full px-3 py-0.5 text-xl font-medium bg-neutral-100 text-neutral-800`}
+            >
+                Get the desktop app
+            </button>
+        );
 
     const { clientState } = useLolClient();
 
