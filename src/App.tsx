@@ -20,7 +20,7 @@ import { useTitle } from "./hooks/use-title";
 import ResultScreen from "./components/resultscreen/ResultScreen";
 import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
 import { useLolClient } from "./context/LolClientContext";
-import { UpdateModal } from "./components/Modals/UpdateModal";
+import { UpdateModal } from "./components/modals/UpdateModal";
 import { OptionsPopover } from "./components/OptionsPopover";
 import { FAQModal } from "./components/modals/FAQModal";
 import { DownloadAppModal } from "./components/modals/DownloadAppModal";
