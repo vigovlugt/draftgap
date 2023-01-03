@@ -14,7 +14,12 @@ import { PickData } from "../lib/models/PickData";
 import { Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
 import predictRoles, { getTeamComps } from "../lib/role/role-predictor";
-import { analyzeDraft, getSuggestions } from "../lib/suggestions/suggestions";
+import {
+    analyzeDraft,
+    AnalyzeDraftConfig,
+    getSuggestions,
+} from "../lib/suggestions/suggestions";
+import { createStoredSignal } from "../utils/signals";
 
 type TeamPick = {
     championKey: string | undefined;
@@ -88,9 +93,13 @@ export function createDraftContext() {
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
 
-    const [config, setConfig] = createStore({
-        ignoreChampionWinrates: false,
-    });
+    const [config, setConfig] = createStoredSignal<AnalyzeDraftConfig>(
+        "draftgap-config",
+        {
+            ignoreChampionWinrates: false,
+            riskLevel: "medium",
+        }
+    );
 
     function getTeamCompsForTeam(team: Team) {
         if (!dataset()) return [];
@@ -118,9 +127,7 @@ export function createDraftContext() {
             dataset()!,
             allyTeamComps()[0][0],
             opponentTeamComps()[0][0],
-            {
-                ignoreChampionWinrates: config.ignoreChampionWinrates,
-            }
+            config()
         );
     });
     const opponentDraftResult = createMemo(() => {
@@ -129,9 +136,7 @@ export function createDraftContext() {
             dataset()!,
             opponentTeamComps()[0][0],
             allyTeamComps()[0][0],
-            {
-                ignoreChampionWinrates: config.ignoreChampionWinrates,
-            }
+            config()
         );
     });
 
@@ -177,9 +182,12 @@ export function createDraftContext() {
         const allyTeamComp = allyTeamComps()[0][0] ?? new Map();
         const enemyTeamComp = opponentTeamComps()[0][0] ?? new Map();
 
-        return getSuggestions(dataset()!, allyTeamComp, enemyTeamComp, {
-            ignoreChampionWinrates: config.ignoreChampionWinrates,
-        });
+        return getSuggestions(
+            dataset()!,
+            allyTeamComp,
+            enemyTeamComp,
+            config()
+        );
     });
 
     const opponentSuggestions = createMemo(() => {
@@ -188,9 +196,12 @@ export function createDraftContext() {
         const allyTeamComp = allyTeamComps()[0][0] ?? new Map();
         const enemyTeamComp = opponentTeamComps()[0][0] ?? new Map();
 
-        return getSuggestions(dataset()!, enemyTeamComp, allyTeamComp, {
-            ignoreChampionWinrates: config.ignoreChampionWinrates,
-        });
+        return getSuggestions(
+            dataset()!,
+            enemyTeamComp,
+            allyTeamComp,
+            config()
+        );
     });
 
     function getNextPick(team: Team) {

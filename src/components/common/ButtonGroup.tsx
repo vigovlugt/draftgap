@@ -1,10 +1,12 @@
-import { Accessor, For, JSX, Setter } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
-import { Role, ROLES } from "../../lib/models/Role";
-import { RoleIcon } from "../icons/roles/RoleIcon";
+import { Accessor, For, JSX } from "solid-js";
+
+export type ButtonGroupOption<T> = {
+    label: JSX.Element;
+    value: T;
+};
 
 interface Props<T> {
-    options: { label: JSX.Element; value: T }[];
+    options: ButtonGroupOption<T>[];
     selected: Accessor<T>;
     onChange: (value: T) => void;
 }
@@ -14,7 +16,7 @@ export function ButtonGroup<T>({
     selected,
     onChange,
     ...props
-}: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
+}: Props<T> & Omit<JSX.HTMLAttributes<HTMLDivElement>, "onChange">) {
     return (
         <div
             {...props}
@@ -24,7 +26,7 @@ export function ButtonGroup<T>({
                 {(option, i) => (
                     <button
                         type="button"
-                        class="text-2xl leading-3 relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 font-medium hover:bg-neutral-800 focus:z-10 py-3"
+                        class="uppercase text-2xl leading-3 relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 font-medium hover:bg-neutral-800 focus:z-10 py-3"
                         classList={{
                             "rounded-r-md": i() === options.length - 1,
                             "rounded-l-md": i() === 0,

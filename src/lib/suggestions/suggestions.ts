@@ -1,4 +1,3 @@
-import { ChampionData } from "../models/ChampionData";
 import { Dataset } from "../models/Dataset";
 import { Role, ROLES } from "../models/Role";
 import { winrateToRating, ratingToWinrate } from "../rating/ratings";
@@ -6,7 +5,8 @@ import { calculateWilsonCI } from "../statistics/stats";
 
 const WINRATE_CONFIDENCE = 0;
 
-const PRIOR_GAMES = 1000;
+const PRIOR_GAMES = 250;
+const MIN_ROLE_GAMES = 1000;
 
 export interface Suggestion {
     championKey: string;
@@ -32,7 +32,8 @@ export function getSuggestions(
 
         for (const role of remainingRoles) {
             if (team.has(role)) continue;
-            if (getStats(dataset, championKey, role).games < 1000) continue;
+            if (getStats(dataset, championKey, role).games < MIN_ROLE_GAMES)
+                continue;
 
             team.set(role, championKey);
             const draftResult = analyzeDraft(dataset, team, enemy, config);
@@ -62,8 +63,32 @@ export type DraftResult = {
     winrate: number;
 };
 
+export const RiskLevel = [
+    "very-low",
+    "low",
+    "medium",
+    "high",
+    "very-high",
+] as const;
+export type RiskLevel = typeof RiskLevel[number];
+export const displayNameByRiskLevel: Record<RiskLevel, string> = {
+    "very-low": "Very Low",
+    low: "Low",
+    medium: "Medium",
+    high: "High",
+    "very-high": "Very High",
+};
+export const priorGamesByRiskLevel: Record<RiskLevel, number> = {
+    "very-low": 1000,
+    low: 500,
+    medium: 250,
+    high: 100,
+    "very-high": 50,
+};
+
 export interface AnalyzeDraftConfig {
     ignoreChampionWinrates: boolean;
+    riskLevel: RiskLevel;
 }
 
 export function analyzeDraft(
@@ -78,10 +103,16 @@ export function analyzeDraft(
     const enemyChampionRating = !config.ignoreChampionWinrates
         ? analyzeChampions(championDataset, enemy)
         : { totalRating: 0, winrate: 0, championResults: [] };
+    const priorGames = priorGamesByRiskLevel[config.riskLevel];
 
-    const allyDuoRating = analyzeDuos(championDataset, team);
-    const enemyDuoRating = analyzeDuos(championDataset, enemy);
-    const matchupRating = analyzeMatchups(championDataset, team, enemy);
+    const allyDuoRating = analyzeDuos(championDataset, team, priorGames);
+    const enemyDuoRating = analyzeDuos(championDataset, enemy, priorGames);
+    const matchupRating = analyzeMatchups(
+        championDataset,
+        team,
+        enemy,
+        priorGames
+    );
 
     const totalRating =
         allyChampionRating.totalRating +
@@ -170,7 +201,8 @@ export type AnalyzeDuosResult = {
 
 export function analyzeDuos(
     dataset: Dataset,
-    team: Map<Role, string>
+    team: Map<Role, string>,
+    priorGames: number
 ): AnalyzeDuosResult {
     const teamEntries = Array.from(team.entries()).sort((a, b) => a[0] - b[0]);
 
@@ -214,8 +246,8 @@ export function analyzeDuos(
                 combinedStats,
                 // Scale prior stats by winrate of expected rating, as we expect the duo to have a similar winrate to the expected rating
                 {
-                    wins: PRIOR_GAMES * ratingToWinrate(expectedRating),
-                    games: PRIOR_GAMES,
+                    wins: priorGames * ratingToWinrate(expectedRating),
+                    games: priorGames,
                 }
             );
             const winrate = stats.wins / stats.games;
@@ -270,7 +302,8 @@ export type AnalyzeMatchupsResult = {
 export function analyzeMatchups(
     dataset: Dataset,
     team: Map<Role, string>,
-    enemy: Map<Role, string>
+    enemy: Map<Role, string>,
+    priorGames: number
 ): AnalyzeMatchupsResult {
     const matchupResults: AnalyzeMatchupResult[] = [];
     let totalRating = 0;
@@ -312,8 +345,8 @@ export function analyzeMatchups(
                     games: (matchupStats.games + enemyMatchupStats.games) / 2,
                 },
                 {
-                    wins: PRIOR_GAMES * ratingToWinrate(expectedRating),
-                    games: PRIOR_GAMES,
+                    wins: priorGames * ratingToWinrate(expectedRating),
+                    games: priorGames,
                 }
             );
             const winrate = stats.wins / stats.games;

@@ -112,7 +112,9 @@ export const DownloadAppModal: Component<Props> = ({ isOpen, setIsOpen }) => {
             </div>
             <p class="font-body tracking-normal">
                 DraftGap has a desktop app, which enables seamless integration
-                with the League client. Let DraftGap do the work for you.
+                with the League client. DraftGap will automatically detect when
+                a champion has been picked in the client, and will update the
+                draft accordingly. Let DraftGap do the work for you.
             </p>
             <p class="font-body tracking-normal mt-3 text-neutral-400">
                 You may get a 'Windows protected your PC' warning, but you can
