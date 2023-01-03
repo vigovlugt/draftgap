@@ -4,6 +4,7 @@ import {
     cog_6Tooth,
     envelope,
     globeAlt,
+    heart,
     questionMarkCircle,
 } from "solid-heroicons/solid-mini";
 import { Component, createSignal } from "solid-js";
@@ -42,6 +43,11 @@ export const OptionsPopover: Component<Props> = ({
             content: "LeagueOfItems",
             icon: globeAlt,
             href: "https://leagueofitems.com",
+        },
+        {
+            content: "Donate",
+            icon: heart,
+            href: "https://www.buymeacoffee.com/vigovlugt",
         },
     ];
     return (

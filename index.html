@@ -10,6 +10,21 @@
             href="/src/assets/favicon.ico"
         />
         <title>DraftGap</title>
+
+        <!-- Google tag (gtag.js) -->
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-V10P8X3LPB"
+        ></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", window.__TAURI__ ? "G-967XTGK665" : "G-V10P8X3LPB");
+        </script>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
