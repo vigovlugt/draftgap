@@ -7,13 +7,14 @@ import {
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { getChampSelectSession } from "../api/lcu-api";
+import { getChampSelectSession, getCurrentSummoner } from "../api/lcu-api";
 import { Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
 import {
     LolChampSelectChampSelectAction,
     LolChampSelectChampSelectPlayerSelection,
     LolChampSelectChampSelectSession,
+    LolSummonerSummoner,
 } from "../types/Lcu";
 import { useDraft } from "./DraftContext";
 
@@ -76,6 +77,29 @@ export const createLolClientContext = () => {
         createStore<LolChampSelectChampSelectSession>(
             createChampSelectSession()
         );
+    const [hasCurrentSummoner, setHasCurrentSummoner] = createSignal(false);
+    const [currentSummoner, setCurrentSummoner] =
+        createStore<LolSummonerSummoner>({
+            displayName: "",
+            internalName: "",
+            percentCompleteForNextLevel: 0,
+            profileIconId: 0,
+            puuid: "",
+            rerollPoints: {
+                currentPoints: 0,
+                maxRolls: 0,
+                numberOfRolls: 0,
+                pointsCostToRoll: 0,
+                pointsToReroll: 0,
+            },
+            summonerId: 0,
+            summonerLevel: 0,
+            xpSinceLastLevel: 0,
+            xpUntilNextLevel: 0,
+            accountId: "",
+            nameChangeFlag: false,
+            privacy: "",
+        });
 
     const updateChampSelectSession = (
         session: LolChampSelectChampSelectSession
@@ -128,7 +152,10 @@ export const createLolClientContext = () => {
             const role = selection.assignedPosition
                 ? getRole(selection.assignedPosition)
                 : undefined;
-            pickChampion(team, index, championId, role, false, false);
+            const resetFilters =
+                hasCurrentSummoner() &&
+                currentSummoner.summonerId === selection.summonerId;
+            pickChampion(team, index, championId, role, false, resetFilters);
         };
 
         batch(() => {
@@ -167,6 +194,15 @@ export const createLolClientContext = () => {
         let timeout: NodeJS.Timeout | undefined;
         const update = async () => {
             try {
+                if (!hasCurrentSummoner()) {
+                    const summoner = await getCurrentSummoner();
+                    if (summoner) {
+                        console.log("Summoner:", summoner);
+                        setCurrentSummoner(summoner);
+                        setHasCurrentSummoner(true);
+                    }
+                }
+
                 const session = await getChampSelectSession();
                 console.log("Session:", session);
                 if (session == null) {

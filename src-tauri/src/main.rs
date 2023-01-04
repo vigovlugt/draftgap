@@ -7,6 +7,7 @@ use std::{env, os::windows::process::CommandExt};
 
 use reqwest::{Certificate, Client};
 use serde::Serialize;
+use serde_json::Value;
 use tauri::async_runtime::Mutex;
 
 const RIOT_GAMES_CERTIFICATE: &str = "-----BEGIN CERTIFICATE-----
@@ -98,9 +99,9 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
     return Ok(lcu_data);
 }
 
-#[tauri::command]
-async fn get_champ_select_session(
-    state: tauri::State<'_, AppState>,
+async fn get_lcu_response(
+    state: &tauri::State<'_, AppState>,
+    path: &str,
 ) -> Result<serde_json::Value, String> {
     let mut lcu_data_mutex = state.lcu_data.lock().await;
 
@@ -113,10 +114,7 @@ async fn get_champ_select_session(
 
     let res = state
         .client
-        .get(format!(
-            "https://127.0.0.1:{}/lol-champ-select/v1/session",
-            lcu_data.port
-        ))
+        .get(format!("https://127.0.0.1:{}/{}", lcu_data.port, path))
         .basic_auth(lcu_data.username.clone(), Some(lcu_data.password.clone()))
         .send()
         .await;
@@ -143,6 +141,18 @@ async fn get_champ_select_session(
     return Ok(json);
 }
 
+#[tauri::command]
+async fn get_champ_select_session(
+    state: tauri::State<'_, AppState>,
+) -> Result<serde_json::Value, String> {
+    return get_lcu_response(&state, "lol-champ-select/v1/session").await;
+}
+
+#[tauri::command]
+async fn get_current_summoner(state: tauri::State<'_, AppState>) -> Result<Value, String> {
+    return get_lcu_response(&state, "lol-summoner/v1/current-summoner").await;
+}
+
 fn main() {
     let client = Client::builder()
         .add_root_certificate(Certificate::from_pem(RIOT_GAMES_CERTIFICATE.as_bytes()).unwrap())
@@ -156,7 +166,10 @@ fn main() {
 
     tauri::Builder::default()
         .manage(state)
-        .invoke_handler(tauri::generate_handler![get_champ_select_session])
+        .invoke_handler(tauri::generate_handler![
+            get_champ_select_session,
+            get_current_summoner
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

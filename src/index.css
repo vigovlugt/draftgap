@@ -7,6 +7,10 @@
     font-family: 'Akkordeon DEMO', sans-serif;
     @apply bg-neutral-900 text-text tracking-widest;
   }
+
+  html, body {
+    scroll-behavior: smooth;
+  }
 }
 
 :root {

@@ -60,6 +60,10 @@ export type LolChampSelectChampSelectPlayerSelection = {
     championId: number;
     championPickIntent: number;
     entitledFeatureType: string;
+    nameVisibilityType: string;
+    obfuscatedPuuid: string;
+    obfuscatedSummonerId: number;
+    puuid: string;
     selectedSkinId: number;
     spell1Id: number;
     spell2Id: number;
@@ -88,4 +92,30 @@ export type LolChampSelectChampSelectTradeContract = {
         | "DECLINED"
         | "CANCELLED"
         | "ACCEPTED";
+};
+
+// lol-summoner/v1/current-summoner
+
+export type LolSummonerSummoner = {
+    accountId: string;
+    displayName: string;
+    internalName: string;
+    nameChangeFlag: boolean;
+    percentCompleteForNextLevel: number;
+    privacy: string;
+    profileIconId: number;
+    puuid: string;
+    rerollPoints: LolSummonerRerollPoints;
+    summonerId: number;
+    summonerLevel: number;
+    xpSinceLastLevel: number;
+    xpUntilNextLevel: number;
+};
+
+export type LolSummonerRerollPoints = {
+    currentPoints: number;
+    maxRolls: number;
+    numberOfRolls: number;
+    pointsCostToRoll: number;
+    pointsToReroll: number;
 };

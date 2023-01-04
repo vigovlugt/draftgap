@@ -46,12 +46,12 @@ const Svg = () => {
             class="w-1/2 my-4"
         >
             <path
-                fill="#ffffff"
+                fill="#f4f4f4"
                 d="M684 19H424v-6H306v6H44a18 18 0 0 0-17 17v357a18 18 0 0 0 17 17h640a18 18 0 0 0 17-17V36a18 18 0 0 0-17-17Z"
             />
             <path d="M498 404H50V50l448 354z" opacity=".1" />
             <path
-                fill="#ffffff"
+                fill="#f4f4f4"
                 d="M651 93h-30V63h30Zm-29-1h27V64h-27ZM719 397h-61v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0 0 1v4h-14v-4a1 1 0 0 0 0-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1H277a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0 0 1v4h-14v-4a1 1 0 0 0 0-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1H98a1 1 0 0 0-1 1v4H84v-4a1 1 0 0 0-1-1H62a1 1 0 0 0-1 1v4H21a21 21 0 0 0-21 21v10a21 21 0 0 0 21 21h698a21 21 0 0 0 21-21v-10a21 21 0 0 0-21-21ZM163 355a76 76 0 1 1 76-76 76 76 0 0 1-76 76Zm0-150a74 74 0 1 0 74 74 74 74 0 0 0-74-74Z"
             />
             <path fill="#101010" d="M50 50h628v354H50z" />
@@ -120,7 +120,7 @@ export const DownloadAppModal: Component<Props> = ({ isOpen, setIsOpen }) => {
                 You may get a 'Windows protected your PC' warning, but you can
                 safely ignore it by clicking 'More info' and then 'Run anyway'.
             </p>
-            <div class="flex justify-between mt-4 gap-4">
+            <div class="flex justify-between mt-4 gap-6">
                 <a
                     href={windowsDownloadUrl()}
                     class="uppercase justify-center text-2xl relative inline-flex items-center border px-4 py-1 font-medium focus:z-10 rounded-md text-neutral-300 border-neutral-700 bg-primary hover:bg-neutral-800 w-full text-center"

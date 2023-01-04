@@ -12,6 +12,14 @@ export type Role = typeof ROLES[number];
 
 export const ROLES = [0, 1, 2, 3, 4] as const;
 
+export const displayNameByRole = {
+    [Role.Top]: "Top",
+    [Role.Jungle]: "Jungle",
+    [Role.Middle]: "Middle",
+    [Role.Bottom]: "Bottom",
+    [Role.Support]: "Support",
+};
+
 export function getRoleFromString(role: LolalyticsRole): Role {
     switch (role) {
         case "top":

@@ -48,7 +48,9 @@ export function MatchupResultTable({
             header: "Winrate",
             accessorFn: (result) =>
                 parseFloat((ratingToWinrate(result.rating) * 100).toFixed(2)),
-            footer: (info) => parseFloat((allyWinrate() * 100).toFixed(2)),
+            footer: (info) => (
+                <span>{parseFloat((allyWinrate() * 100).toFixed(2))}</span>
+            ),
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
@@ -71,7 +73,9 @@ export function MatchupResultTable({
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
             ),
-            footer: () => parseFloat((opponentWinrate() * 100).toFixed(2)),
+            footer: () => (
+                <span>{parseFloat((opponentWinrate() * 100).toFixed(2))}</span>
+            ),
         },
         {
             id: "opponent-winrate",

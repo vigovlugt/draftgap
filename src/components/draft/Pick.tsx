@@ -76,7 +76,7 @@ export function Pick({ team, index }: IProps) {
                                         ? "FiddleSticks"
                                         : champion()!.id
                                 }_0.jpg)`,
-                                "background-position": "top center",
+                                "background-position": "center 15%",
                                 "background-size": "cover",
                             }}
                         ></div>

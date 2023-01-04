@@ -11,7 +11,7 @@ export function TeamOptions({ team }: { team: Team }) {
     const items = (): PopoverItem[] => [
         {
             icon: trash,
-            content: "Reset",
+            content: "Reset team",
             onClick: () => {
                 resetTeam(team);
             },

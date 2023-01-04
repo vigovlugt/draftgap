@@ -78,7 +78,9 @@ export function DuoResultTable({
             header: "Winrate",
             accessorFn: (duo) =>
                 parseFloat((ratingToWinrate(duo.rating) * 100).toFixed(2)),
-            footer: (info) => parseFloat((winrate() * 100).toFixed(2)),
+            footer: (info) => (
+                <span>{parseFloat((winrate() * 100).toFixed(2))}</span>
+            ),
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",

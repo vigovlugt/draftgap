@@ -45,7 +45,12 @@ const App: Component = () => {
 
     const MainView = () => {
         return (
-            <div class="p-4 xl:px-8 bg-[#101010] flex-1 overflow-auto overflow-x-hidden h-full flex flex-col">
+            <div
+                class="p-4 xl:px-8 bg-[#101010] flex-1 overflow-auto overflow-x-hidden h-full flex flex-col"
+                style={{
+                    "scroll-behavior": "smooth",
+                }}
+            >
                 <Switch>
                     <Match when={!dataset()}>
                         <div class="flex justify-center items-center h-full">
@@ -116,7 +121,7 @@ const App: Component = () => {
 
             {/* Mobile main */}
             <main
-                class="h-full text-xl overflow-hidden lg:hidden"
+                class="h-full text-2xl overflow-hidden lg:hidden"
                 style={{
                     "grid-template-columns": "1fr 3fr 1fr",
                     "grid-template-rows": "100%",

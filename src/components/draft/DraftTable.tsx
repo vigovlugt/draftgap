@@ -5,7 +5,7 @@ import {
     Row,
 } from "@tanstack/solid-table";
 import { useDraft } from "../../context/DraftContext";
-import { Role } from "../../lib/models/Role";
+import { displayNameByRole, Role } from "../../lib/models/Role";
 import { Suggestion } from "../../lib/suggestions/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
@@ -95,7 +95,7 @@ export default function DraftTable() {
             selection.team,
             selection.index,
             row.original.championKey,
-            selection.team === "ally" ? row.original.role : undefined
+            row.original.role
         );
     }
 

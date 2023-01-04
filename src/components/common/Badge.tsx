@@ -23,7 +23,7 @@ export const Badge: Component<Props> = (props) => {
     return (
         <Dynamic
             {...props}
-            component={props.as}
+            component={props.as ?? "span"}
             class={`uppercase inline-flex justify-center items-center rounded-full px-3 py-0.5 text-xl font-medium ${themeClass()} ${
                 props.class
             }`}
