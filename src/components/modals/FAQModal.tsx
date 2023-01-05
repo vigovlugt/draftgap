@@ -76,7 +76,9 @@ export const FAQModal: Component<Props> = ({ isOpen, setIsOpen }) => {
                 is updated every 24 hours.
             </p>
 
-            <h2 class="text-2xl uppercase">How does the risk level work?</h2>
+            <h2 class="text-2xl uppercase" id="faq-risk-level">
+                How does the risk level work?
+            </h2>
             <p class="font-body mb-4">
                 The risk level is a measure of how much to trust small sample
                 sizes in the data. The higher the risk level, the more it will

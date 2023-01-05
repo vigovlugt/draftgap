@@ -49,7 +49,18 @@ export default function SettingsModal({
             </div>
             <div class="flex items-center mt-2 mb-1 gap-1">
                 <span class="text-lg uppercase block">Risk level</span>
-                <button onClick={() => setFAQOpen(true)}>
+                <button
+                    onClick={() => {
+                        setFAQOpen(true);
+                        setTimeout(() => {
+                            document
+                                .getElementById("faq-risk-level")!
+                                .scrollIntoView({
+                                    behavior: "smooth",
+                                });
+                        }, 300);
+                    }}
+                >
                     <Icon
                         path={questionMarkCircle}
                         class="w-5 inline text-neutral-400 -mt-1"
