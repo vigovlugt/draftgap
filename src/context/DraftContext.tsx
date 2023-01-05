@@ -222,9 +222,11 @@ export function createDraftContext() {
             if (team === "ally") {
                 setAllyTeam(index, "championKey", championKey);
                 setAllyTeam(index, "role", role);
+                setTab("ally");
             } else {
                 setOpponentTeam(index, "championKey", championKey);
                 setOpponentTeam(index, "role", role);
+                setTab("opponent");
             }
 
             if (updateSelection) {
@@ -284,7 +286,18 @@ export function createDraftContext() {
             setSearch("");
             setRoleFilter(undefined);
         }
+
+        if (draftFinished()) {
+            setTab("draft");
+        }
     };
+
+    const draftFinished = () =>
+        [...allyTeam, ...opponentTeam].every(
+            (s) => s.championKey !== undefined
+        );
+
+    const [tab, setTab] = createSignal<"ally" | "opponent" | "draft">("ally");
 
     return {
         isDesktop,
@@ -315,6 +328,9 @@ export function createDraftContext() {
         setRoleFilter,
         config,
         setConfig,
+        tab,
+        setTab,
+        draftFinished,
     };
 }
 

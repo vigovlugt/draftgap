@@ -18,7 +18,6 @@ import { formatPercentage, formatRating } from "../../utils/rating";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
 import { Table } from "../common/Table";
-import { WinnerCell } from "../common/WinnerCell";
 
 interface Props {
     team: Team;
@@ -95,7 +94,7 @@ export function DuoResultTable({
             header: "Winrate",
             accessorFn: (duo) => duo.rating,
             cell: (info) => <>{formatRating(info.getValue<number>())}</>,
-            footer: (info) => <span>{formatPercentage(rating() ?? 0)}</span>,
+            footer: (info) => <span>{formatRating(rating() ?? 0)}</span>,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",

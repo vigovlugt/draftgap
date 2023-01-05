@@ -2,6 +2,7 @@ import { Button } from "solid-headless";
 import { Icon } from "solid-heroicons";
 import {
     Component,
+    createEffect,
     createSignal,
     For,
     Match,
@@ -26,7 +27,7 @@ import { DownloadAppModal } from "./components/modals/DownloadAppModal";
 import { Badge } from "./components/common/Badge";
 
 const App: Component = () => {
-    const { dataset, allyTeam, opponentTeam } = useDraft();
+    const { dataset, tab, setTab, draftFinished } = useDraft();
     const { startLolClientIntegration } = useLolClient();
 
     const stopLolClientIntegration = startLolClientIntegration();
@@ -35,13 +36,6 @@ const App: Component = () => {
     const [showSettings, setShowSettings] = createSignal(false);
     const [showFAQ, setShowFAQ] = createSignal(false);
     const [showDownloadModal, setShowDownloadModal] = createSignal(false);
-
-    const [tab, setTab] = createSignal<"ally" | "opponent" | "draft">("ally");
-
-    const draftFinished = () =>
-        [...allyTeam, ...opponentTeam].every(
-            (s) => s.championKey !== undefined
-        );
 
     const MainView = () => {
         return (

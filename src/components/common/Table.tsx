@@ -14,7 +14,7 @@ export function Table<T>({
     return (
         <div
             {...props}
-            class={`rounded-md overflow-x-auto overflow-y-auto max-h-full ${props.class}`}
+            class={`rounded-md overflow-auto max-h-full max-w-full ${props.class}`}
         >
             <table class="min-w-full divide-y divide-neutral-700 text-lg md:text-xl lg:text-2xl">
                 <thead class="bg-neutral-900 sticky top-0 z-[1]">
