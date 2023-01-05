@@ -1,5 +1,6 @@
 import { createEffect, For } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
+import { formatRating } from "../../utils/rating";
 import { DamageDistributionBar } from "./DamageDistributionBar";
 import { Pick } from "./Pick";
 import { TeamOptions } from "./TeamOptions";
@@ -12,10 +13,10 @@ export function TeamSidebar({ team }: IProps) {
     const { dataset, allyDraftResult, opponentDraftResult, allySuggestions } =
         useDraft();
 
-    const winrate = () =>
+    const rating = () =>
         team === "ally"
-            ? allyDraftResult()?.winrate
-            : opponentDraftResult()?.winrate;
+            ? allyDraftResult()?.totalRating
+            : opponentDraftResult()?.totalRating;
 
     createEffect(() => {
         console.log("draftresults", allyDraftResult(), opponentDraftResult());
@@ -25,11 +26,9 @@ export function TeamSidebar({ team }: IProps) {
     return (
         <div class="bg-primary flex flex-col h-full relative">
             <DamageDistributionBar team={team} />
-            <div class="flex-1 flex justify-center items-center text-5xl bg-[#141414]">
+            <div class="flex-1 flex justify-center items-center text-[2.5rem] bg-[#141414]">
                 {team.toUpperCase()} -{" "}
-                {winrate()
-                    ? parseFloat((winrate()! * 100).toFixed(2)).toString()
-                    : "0"}
+                {rating() ? formatRating(rating()!) : "0"}
             </div>
             <For each={[0, 1, 2, 3, 4]}>
                 {(index) => <Pick team={team} index={index} />}

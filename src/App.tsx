@@ -90,7 +90,9 @@ const App: Component = () => {
                 setIsOpen={setShowDownloadModal}
             />
             <header class="bg-primary px-1 py-0 border-b-2 border-neutral-700 flex justify-between">
-                <h1 class="text-6xl mr-2 ml-1">DRAFTGAP</h1>
+                <h1 class="text-5xl mr-2 ml-1 mt-1 mb-[0.4rem] font-semibold tracking-wide">
+                    DRAFTGAP
+                </h1>
                 <div class="flex items-center gap-4">
                     <LolClientStatusBadge
                         setShowDownloadModal={setShowDownloadModal}
@@ -106,7 +108,7 @@ const App: Component = () => {
             </header>
             {/* Desktop main */}
             <main
-                class="h-full lg:grid text-3xl overflow-hidden hidden"
+                class="h-full lg:grid overflow-hidden hidden"
                 style={{
                     "grid-template-columns": "1fr 3fr 1fr",
                     "grid-template-rows": "100%",
@@ -121,7 +123,7 @@ const App: Component = () => {
 
             {/* Mobile main */}
             <main
-                class="h-full text-2xl overflow-hidden lg:hidden"
+                class="h-full text-xl overflow-hidden lg:hidden"
                 style={{
                     "grid-template-columns": "1fr 3fr 1fr",
                     "grid-template-rows": "100%",

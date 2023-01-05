@@ -4,6 +4,16 @@ export function formatRating(rating: number): string {
     return formatPercentage(ratingToWinrate(rating));
 }
 
-export function formatPercentage(percentage: number): string {
-    return parseFloat((percentage * 100).toFixed(2)).toString();
+export function formatPercentage(
+    percentage: number,
+    maxDecimals = 2,
+    useMinDecimals = false
+): string {
+    const p = (percentage * 100).toFixed(maxDecimals).toString();
+
+    if (useMinDecimals) {
+        return parseFloat(p).toString();
+    }
+
+    return p;
 }

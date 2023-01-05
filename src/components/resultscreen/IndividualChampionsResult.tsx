@@ -13,6 +13,7 @@ import { Table } from "../common/Table";
 import { RoleCell } from "../common/RoleCell";
 import { ratingToWinrate } from "../../lib/rating/ratings";
 import { Team } from "../../lib/models/Team";
+import { formatRating } from "../../utils/rating";
 
 interface Props {
     team: Team;
@@ -46,18 +47,16 @@ export function IndividualChampionsResult({
         },
         {
             header: "Winrate",
-            accessorFn: (result) =>
-                parseFloat((result.winrate * 100).toFixed(2)),
+            accessorFn: (result) => formatRating(result.rating),
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
-            footer: () => parseFloat((allyWinrate() * 100).toFixed(2)),
+            footer: () => formatRating(allyRating() ?? 0),
         },
     ];
 
-    const allyWinrate = () =>
-        ratingToWinrate(draftResult()?.allyChampionRating.totalRating ?? 0);
+    const allyRating = () => draftResult()?.allyChampionRating.totalRating;
 
     const table = createSolidTable({
         get data(): AnalyzeChampionResult[] {

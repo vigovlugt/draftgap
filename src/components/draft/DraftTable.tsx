@@ -10,6 +10,7 @@ import { Suggestion } from "../../lib/suggestions/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
+import { formatRating } from "../../utils/rating";
 
 export default function DraftTable() {
     const {
@@ -74,7 +75,7 @@ export default function DraftTable() {
         {
             header: "Winrate",
             accessorFn: (suggestion) =>
-                parseFloat((suggestion.draftResult.winrate * 100).toFixed(2)),
+                formatRating(suggestion.draftResult.totalRating),
         },
     ];
 

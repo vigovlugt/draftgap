@@ -20,7 +20,7 @@ export function TeamSelector() {
                 {(team, i) => (
                     <button
                         type="button"
-                        class="text-2xl relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 py-1 font-medium hover:bg-neutral-800 uppercase"
+                        class="text-lg relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 py-1 font-medium hover:bg-neutral-800 uppercase"
                         classList={{
                             "rounded-r-md": i() === TEAMS.length - 1,
                             "rounded-l-md": i() === 0,

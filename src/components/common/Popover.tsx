@@ -66,7 +66,7 @@ export const Popover: Component<Props> = (props: Props) => {
                                         // @ts-ignore
                                         href={(item as LinkItem).href}
                                         target="_blank"
-                                        class="text-2xl uppercase p-2 text-left focus:outline-none flex items-center space-x-2 transition-colors duration-150 ease-in-out tracking-wider"
+                                        class="text-lg uppercase p-2 text-left focus:outline-none flex items-center space-x-2 transition-colors duration-150 ease-in-out"
                                         classList={{
                                             "hover:bg-neutral-700":
                                                 !item.disabled,

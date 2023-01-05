@@ -1,6 +1,7 @@
 import { Icon } from "solid-heroicons";
 import { arrowLeft, arrowRight } from "solid-heroicons/solid-mini";
 import { Show } from "solid-js";
+import { formatPercentage } from "../../utils/rating";
 
 interface Props {
     winner: boolean;
@@ -21,7 +22,7 @@ export function WinnerCell({ winner, winrate }: Props) {
             />
             <Show when={winrate}>
                 <span class="-bottom-7 absolute text-base text-neutral-500">
-                    {parseFloat((winrate! * 100).toFixed(2))}
+                    {formatPercentage(winrate!)}
                 </span>
             </Show>
         </div>

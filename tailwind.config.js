@@ -13,7 +13,9 @@ module.exports = {
                 opponent: "#ef4444",
             },
             fontFamily: {
+                header: ["'Oswald'", "sans-serif"],
                 body: [
+                    "'Montserrat'",
                     "-apple-system",
                     "BlinkMacSystemFont",
                     "Segoe UI",

@@ -8,6 +8,7 @@ import { useDraft } from "../../context/DraftContext";
 import { Role } from "../../lib/models/Role";
 import { ratingToWinrate } from "../../lib/rating/ratings";
 import { AnalyzeMatchupResult } from "../../lib/suggestions/suggestions";
+import { formatRating } from "../../utils/rating";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
 import { Table } from "../common/Table";
@@ -46,11 +47,8 @@ export function MatchupResultTable({
         },
         {
             header: "Winrate",
-            accessorFn: (result) =>
-                parseFloat((ratingToWinrate(result.rating) * 100).toFixed(2)),
-            footer: (info) => (
-                <span>{parseFloat((allyWinrate() * 100).toFixed(2))}</span>
-            ),
+            accessorFn: (result) => formatRating(result.rating),
+            footer: (info) => <span>{formatRating(allyRating() ?? 0)}</span>,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
@@ -61,7 +59,7 @@ export function MatchupResultTable({
             accessorFn: (result) => result.rating > 0,
             cell: (info) => <WinnerCell winner={info.getValue<boolean>()} />,
             footer: () => (
-                <WinnerCell winner={allyWinrate() > opponentWinrate()} />
+                <WinnerCell winner={allyRating() > opponentRating()} />
             ),
             meta: {
                 headerClass: "text-center",
@@ -73,22 +71,18 @@ export function MatchupResultTable({
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
             ),
-            footer: () => (
-                <span>{parseFloat((opponentWinrate() * 100).toFixed(2))}</span>
-            ),
+            footer: () => <span>{formatRating(opponentRating())}</span>,
         },
         {
             id: "opponent-winrate",
             header: "Winrate",
-            accessorFn: (result) =>
-                parseFloat((ratingToWinrate(-result.rating) * 100).toFixed(2)),
+            accessorFn: (result) => formatRating(-result.rating),
         },
     ];
 
-    const allyWinrate = () =>
-        ratingToWinrate(allyDraftResult()?.matchupRating?.totalRating ?? 0);
-    const opponentWinrate = () =>
-        ratingToWinrate(-(allyDraftResult()?.matchupRating?.totalRating ?? 0));
+    const allyRating = () => allyDraftResult()?.matchupRating?.totalRating ?? 0;
+    const opponentRating = () =>
+        -(allyDraftResult()?.matchupRating?.totalRating ?? 0);
 
     const table = createSolidTable({
         get data() {

@@ -33,7 +33,7 @@ export default function SettingsModal({
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Settings">
             <div class="flex space-x-16 items-center justify-between">
-                <span class="text-2xl uppercase">
+                <span class="text-lg uppercase">
                     Ignore indivdual champion winrates
                 </span>
                 <Toggle
@@ -47,12 +47,12 @@ export default function SettingsModal({
                     }
                 />
             </div>
-            <div class="flex items-center mt-2 gap-1">
-                <span class="text-2xl uppercase block">Risk level </span>
+            <div class="flex items-center mt-2 mb-1 gap-1">
+                <span class="text-lg uppercase block">Risk level</span>
                 <button onClick={() => setFAQOpen(true)}>
                     <Icon
                         path={questionMarkCircle}
-                        class="w-5 inline text-neutral-400"
+                        class="w-5 inline text-neutral-400 -mt-1"
                     />
                 </button>
             </div>

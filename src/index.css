@@ -4,8 +4,7 @@
 
 @layer base {
   body {
-    font-family: 'Akkordeon DEMO', sans-serif;
-    @apply bg-neutral-900 text-text tracking-widest;
+    @apply bg-neutral-900 text-text font-header;
   }
 
   html, body {
@@ -18,7 +17,13 @@
 }
 
 @font-face {
-  font-family: 'Akkordeon DEMO';
-  src:  url('/fonts/AkkordeonDEMO.woff2') format('woff2');
+  font-family: 'Oswald';
+  src:  url('/fonts/Oswald-VariableFont_wght.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src:  url('/fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
   font-display: swap;
 }

@@ -9,6 +9,7 @@ import { JSX } from "solid-js/jsx-runtime";
 import { useDraft } from "../../context/DraftContext";
 import { Team } from "../../lib/models/Team";
 import { ratingToWinrate } from "../../lib/rating/ratings";
+import { formatRating } from "../../utils/rating";
 
 const SummaryCard = (props: {
     title: string;
@@ -26,7 +27,7 @@ const SummaryCard = (props: {
 
     return (
         <a
-            class="px-4 py-5 flex gap-4 items-center text-left tracking-wider"
+            class="px-4 py-5 flex gap-4 items-center text-left"
             href={props.href}
         >
             <div
@@ -35,14 +36,12 @@ const SummaryCard = (props: {
                 <Icon path={props.icon} class="w-6" />
             </div>
             <div>
-                <div class="text-2xl text-neutral-400 uppercase">
+                <div class="text-lg text-neutral-400 uppercase">
                     {props.title}
                 </div>
                 <div class="flex items-baseline justify-between md:block lg:flex -mt-1">
-                    <div class="flex items-baseline text-4xl">
-                        {parseFloat(
-                            (ratingToWinrate(props.rating) * 100).toFixed(2)
-                        )}
+                    <div class="flex items-baseline text-3xl">
+                        {formatRating(props.rating)}
                     </div>
                 </div>
             </div>
@@ -61,7 +60,7 @@ export const SummaryCards = (
     return (
         <div
             {...props}
-            class={`grid divide-neutral-700 overflow-hidden rounded-lg bg-[#191919] shadow grid-cols-2 md:grid-cols-4 md:divide-x mb-4 ${props.class}`}
+            class={`grid divide-neutral-700 overflow-hidden rounded-lg bg-[#191919] shadow grid-cols-2 md:grid-cols-4 md:divide-x ${props.class}`}
         >
             <SummaryCard
                 team={props.team}
@@ -87,7 +86,7 @@ export const SummaryCards = (
             <SummaryCard
                 team={props.team}
                 icon={presentationChartLine}
-                title="Result"
+                title="Rating"
                 rating={draftResult().totalRating}
             />
         </div>

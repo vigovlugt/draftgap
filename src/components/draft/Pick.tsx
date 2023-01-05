@@ -6,6 +6,7 @@ import { RoleIcon } from "../icons/roles/RoleIcon";
 import { PickOptions } from "./PickOptions";
 import { lockOpen, lockClosed } from "solid-heroicons/solid-mini";
 import { Role } from "../../lib/models/Role";
+import { formatPercentage } from "../../utils/rating";
 
 interface IProps {
     team: "ally" | "opponent";
@@ -117,9 +118,7 @@ export function Pick({ team, index }: IProps) {
                                                     teamCompRole() !== role,
                                             }}
                                         >
-                                            {parseFloat(
-                                                (probability * 100).toFixed(2)
-                                            )}
+                                            {formatPercentage(probability, 1)}
                                         </div>
                                         <Icon
                                             path={

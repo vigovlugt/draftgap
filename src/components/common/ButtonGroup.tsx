@@ -26,7 +26,7 @@ export function ButtonGroup<T>({
                 {(option, i) => (
                     <button
                         type="button"
-                        class="uppercase text-2xl leading-3 relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 font-medium hover:bg-neutral-800 focus:z-10 py-3"
+                        class="uppercase leading-3 relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 font-medium hover:bg-neutral-800 focus:z-10 py-3"
                         classList={{
                             "rounded-r-md": i() === options.length - 1,
                             "rounded-l-md": i() === 0,

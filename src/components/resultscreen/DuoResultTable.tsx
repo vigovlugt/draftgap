@@ -12,6 +12,7 @@ import {
     AnalyzeDuoResult,
     AnalyzeMatchupResult,
 } from "../../lib/suggestions/suggestions";
+import { formatPercentage, formatRating } from "../../utils/rating";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
 import { Table } from "../common/Table";
@@ -76,11 +77,8 @@ export function DuoResultTable({
         },
         {
             header: "Winrate",
-            accessorFn: (duo) =>
-                parseFloat((ratingToWinrate(duo.rating) * 100).toFixed(2)),
-            footer: (info) => (
-                <span>{parseFloat((winrate() * 100).toFixed(2))}</span>
-            ),
+            accessorFn: (duo) => formatRating(duo.rating),
+            footer: (info) => <span>{formatPercentage(rating() ?? 0)}</span>,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
@@ -88,8 +86,7 @@ export function DuoResultTable({
         },
     ];
 
-    const winrate = () =>
-        ratingToWinrate(draftResult()?.allyDuoRating?.totalRating ?? 0);
+    const rating = () => draftResult()?.allyDuoRating?.totalRating;
 
     const table = createSolidTable({
         get data() {

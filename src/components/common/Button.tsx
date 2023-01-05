@@ -15,7 +15,7 @@ export function Button(
     return (
         <button
             type="button"
-            class="uppercase text-2xl relative inline-flex items-center border px-4 py-1 font-medium focus:z-10 rounded-md"
+            class="uppercase text-xl relative inline-flex items-center border px-4 py-1 font-medium focus:z-10 rounded-md"
             classList={{
                 [themeClasses[props.theme]]: true,
             }}
