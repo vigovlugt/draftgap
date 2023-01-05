@@ -123,7 +123,7 @@ const App: Component = () => {
 
             {/* Mobile main */}
             <main
-                class="h-full text-xl overflow-hidden lg:hidden"
+                class="h-full overflow-hidden lg:hidden"
                 style={{
                     "grid-template-columns": "1fr 3fr 1fr",
                     "grid-template-rows": "100%",

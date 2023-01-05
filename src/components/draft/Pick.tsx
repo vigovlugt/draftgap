@@ -60,7 +60,7 @@ export function Pick({ team, index }: IProps) {
             onClick={() => select(team, index)}
         >
             <Show when={!champion()}>
-                <span class="absolute top-1 left-2 uppercase">
+                <span class="absolute top-1 left-2 uppercase text-2xl">
                     PICK {index + 1}
                 </span>
             </Show>
@@ -82,7 +82,7 @@ export function Pick({ team, index }: IProps) {
                             }}
                         ></div>
 
-                        <span class="absolute top-0 left-2 uppercase">
+                        <span class="absolute top-0 left-2 uppercase text-2xl">
                             {champion()!.name}
                         </span>
 
