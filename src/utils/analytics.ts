@@ -16,7 +16,7 @@ export function setupAnalytics() {
     gtag("js", new Date());
     gtag("config", tag);
 
-    setTimeout(() => {
+    setInterval(() => {
         gtag("event", "heartbeat", {
             event_category: "heartbeat",
             non_interaction: true,
