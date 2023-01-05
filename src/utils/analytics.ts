@@ -19,6 +19,7 @@ export function setupAnalytics() {
     setTimeout(() => {
         gtag("event", "heartbeat", {
             event_category: "heartbeat",
+            non_interaction: true,
         });
     }, 1000 * 15);
 }
