@@ -86,7 +86,7 @@ export const SummaryCards = (
             <SummaryCard
                 team={props.team}
                 icon={presentationChartLine}
-                title="Rating"
+                title="Winrate"
                 rating={draftResult().totalRating}
             />
         </div>

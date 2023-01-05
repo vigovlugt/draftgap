@@ -2,8 +2,10 @@ import {
     ColumnDef,
     createSolidTable,
     getCoreRowModel,
+    getSortedRowModel,
+    SortingState,
 } from "@tanstack/solid-table";
-import { Accessor, JSX } from "solid-js";
+import { Accessor, createSignal, JSX } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { Role } from "../../lib/models/Role";
 import { ratingToWinrate } from "../../lib/rating/ratings";
@@ -22,7 +24,7 @@ export function MatchupResultTable({
     showAll,
     ...props
 }: Props & JSX.HTMLAttributes<HTMLDivElement>) {
-    const { allyDraftResult } = useDraft();
+    const { allyDraftResult, dataset } = useDraft();
 
     const columns: ColumnDef<AnalyzeMatchupResult>[] = [
         {
@@ -33,6 +35,7 @@ export function MatchupResultTable({
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
+            sortDescFirst: false,
         },
         {
             header: "Ally",
@@ -44,10 +47,17 @@ export function MatchupResultTable({
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
+            sortingFn: (a, b, id) =>
+                dataset()!.championData[
+                    a.getValue<string>(id)
+                ].name.localeCompare(
+                    dataset()!.championData[b.getValue<string>(id)].name
+                ),
         },
         {
             header: "Winrate",
-            accessorFn: (result) => formatRating(result.rating),
+            accessorFn: (result) => result.rating,
+            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
             footer: (info) => <span>{formatRating(allyRating() ?? 0)}</span>,
             meta: {
                 headerClass: "w-1",
@@ -66,17 +76,37 @@ export function MatchupResultTable({
             },
         },
         {
+            id: "opponent-role",
+            header: "Role",
+            accessorFn: (result) => result.roleB,
+            cell: (info) => <RoleCell role={info.getValue<Role>()} />,
+            meta: {
+                headerClass: "w-1",
+                footerClass: "w-1",
+            },
+            sortDescFirst: false,
+        },
+        {
             header: "Opponent",
             accessorFn: (result) => result.championKeyB,
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
             ),
             footer: () => <span>{formatRating(opponentRating())}</span>,
+            sortingFn: (a, b, id) =>
+                dataset()!.championData[
+                    a.getValue<string>(id)
+                ].name.localeCompare(
+                    dataset()!.championData[b.getValue<string>(id)].name
+                ),
         },
         {
             id: "opponent-winrate",
             header: "Winrate",
-            accessorFn: (result) => formatRating(-result.rating),
+            accessorFn: (result) => -result.rating,
+            cell: (info) => (
+                <span>{formatRating(info.getValue<number>())}</span>
+            ),
         },
     ];
 
@@ -84,6 +114,7 @@ export function MatchupResultTable({
     const opponentRating = () =>
         -(allyDraftResult()?.matchupRating?.totalRating ?? 0);
 
+    const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({
         get data() {
             let data = allyDraftResult()?.matchupRating?.matchupResults;
@@ -98,7 +129,14 @@ export function MatchupResultTable({
             return data.sort((a, b) => a.roleA - b.roleA || a.roleB - b.roleB);
         },
         columns,
+        state: {
+            get sorting() {
+                return sorting();
+            },
+        },
+        onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
     });
 
     return <Table table={table} {...props} />;

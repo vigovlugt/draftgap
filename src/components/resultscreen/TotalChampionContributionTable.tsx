@@ -2,8 +2,10 @@ import {
     ColumnDef,
     createSolidTable,
     getCoreRowModel,
+    getSortedRowModel,
+    SortingState,
 } from "@tanstack/solid-table";
-import { Component, splitProps } from "solid-js";
+import { Component, createSignal, splitProps } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { useDraft } from "../../context/DraftContext";
 import { Role } from "../../lib/models/Role";
@@ -33,7 +35,7 @@ type ChampionContribution = {
 
 export const TotalChampionContributionTable: Component<Props> = (props) => {
     const [local, other] = splitProps(props, ["team"]);
-    const { allyDraftResult, opponentDraftResult } = useDraft();
+    const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
 
     const draftResult = () =>
         props.team === "ally" ? allyDraftResult() : opponentDraftResult();
@@ -47,6 +49,7 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
+            sortDescFirst: true,
         },
         {
             id: "champion",
@@ -55,6 +58,12 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
             ),
+            sortingFn: (a, b, id) =>
+                dataset()!.championData[
+                    a.getValue<string>(id)
+                ].name.localeCompare(
+                    dataset()!.championData[b.getValue<string>(id)].name
+                ),
         },
         {
             header: "Base",
@@ -117,6 +126,7 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
         },
     ];
 
+    const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({
         get data(): ChampionContribution[] {
             if (!draftResult()) return [];
@@ -195,7 +205,14 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
             return contributions;
         },
         columns,
+        state: {
+            get sorting() {
+                return sorting();
+            },
+        },
+        onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
     });
 
     return <Table table={table} {...other} />;

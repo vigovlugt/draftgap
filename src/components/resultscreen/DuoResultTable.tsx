@@ -2,8 +2,10 @@ import {
     ColumnDef,
     createSolidTable,
     getCoreRowModel,
+    getSortedRowModel,
+    SortingState,
 } from "@tanstack/solid-table";
-import { Accessor, JSX } from "solid-js";
+import { Accessor, createSignal, JSX } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { Role } from "../../lib/models/Role";
 import { Team } from "../../lib/models/Team";
@@ -26,7 +28,7 @@ export function DuoResultTable({
     team,
     ...props
 }: Props & JSX.HTMLAttributes<HTMLDivElement>) {
-    const { allyDraftResult, opponentDraftResult } = useDraft();
+    const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
 
     const draftResult = team === "ally" ? allyDraftResult : opponentDraftResult;
 
@@ -40,6 +42,7 @@ export function DuoResultTable({
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
+            sortDescFirst: false,
         },
         {
             id: "championA",
@@ -52,6 +55,12 @@ export function DuoResultTable({
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
+            sortingFn: (a, b, id) =>
+                dataset()!.championData[
+                    a.getValue<string>(id)
+                ].name.localeCompare(
+                    dataset()!.championData[b.getValue<string>(id)].name
+                ),
         },
         {
             id: "roleB",
@@ -62,6 +71,7 @@ export function DuoResultTable({
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
+            sortDescFirst: false,
         },
         {
             id: "championB",
@@ -74,10 +84,17 @@ export function DuoResultTable({
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
+            sortingFn: (a, b, id) =>
+                dataset()!.championData[
+                    a.getValue<string>(id)
+                ].name.localeCompare(
+                    dataset()!.championData[b.getValue<string>(id)].name
+                ),
         },
         {
             header: "Winrate",
-            accessorFn: (duo) => formatRating(duo.rating),
+            accessorFn: (duo) => duo.rating,
+            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
             footer: (info) => <span>{formatPercentage(rating() ?? 0)}</span>,
             meta: {
                 headerClass: "w-1",
@@ -88,6 +105,7 @@ export function DuoResultTable({
 
     const rating = () => draftResult()?.allyDuoRating?.totalRating;
 
+    const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({
         get data() {
             let data = draftResult()?.allyDuoRating?.duoResults;
@@ -102,7 +120,14 @@ export function DuoResultTable({
             return data.sort((a, b) => a.roleA - b.roleA || a.roleB - b.roleB);
         },
         columns,
+        state: {
+            get sorting() {
+                return sorting();
+            },
+        },
+        onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
     });
 
     return <Table table={table} {...props} />;

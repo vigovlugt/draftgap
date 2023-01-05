@@ -2,6 +2,8 @@ import {
     ColumnDef,
     createSolidTable,
     getCoreRowModel,
+    getSortedRowModel,
+    SortingState,
 } from "@tanstack/solid-table";
 import { Icon } from "solid-heroicons";
 import { JSX } from "solid-js/jsx-runtime";
@@ -14,6 +16,7 @@ import { RoleCell } from "../common/RoleCell";
 import { ratingToWinrate } from "../../lib/rating/ratings";
 import { Team } from "../../lib/models/Team";
 import { formatRating } from "../../utils/rating";
+import { createSignal } from "solid-js";
 
 interface Props {
     team: Team;
@@ -23,7 +26,7 @@ export function IndividualChampionsResult({
     team,
     ...props
 }: Props & JSX.HTMLAttributes<HTMLDivElement>) {
-    const { allyDraftResult, opponentDraftResult } = useDraft();
+    const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
 
     const draftResult = team === "ally" ? allyDraftResult : opponentDraftResult;
 
@@ -36,6 +39,7 @@ export function IndividualChampionsResult({
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
+            sortDescFirst: false,
         },
         {
             id: "champion",
@@ -44,10 +48,17 @@ export function IndividualChampionsResult({
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
             ),
+            sortingFn: (a, b, id) =>
+                dataset()!.championData[
+                    a.getValue<string>(id)
+                ].name.localeCompare(
+                    dataset()!.championData[b.getValue<string>(id)].name
+                ),
         },
         {
             header: "Winrate",
-            accessorFn: (result) => formatRating(result.rating),
+            accessorFn: (result) => result.rating,
+            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
@@ -58,6 +69,7 @@ export function IndividualChampionsResult({
 
     const allyRating = () => draftResult()?.allyChampionRating.totalRating;
 
+    const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({
         get data(): AnalyzeChampionResult[] {
             const championResults =
@@ -67,7 +79,14 @@ export function IndividualChampionsResult({
             return championResults;
         },
         columns,
+        state: {
+            get sorting() {
+                return sorting();
+            },
+        },
+        onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
     });
 
     return <Table table={table} {...props} />;

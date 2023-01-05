@@ -25,7 +25,7 @@ export function Table<T>({
                                     {(header, i) => (
                                         <th
                                             scope="col"
-                                            class="py-3 px-2 text-left font-normal uppercase w-full"
+                                            class="py-3 px-2 text-left font-normal uppercase w-full whitespace-nowrap"
                                             classList={{
                                                 "pl-4": i() === 0,
                                                 "pr-4":
@@ -39,7 +39,10 @@ export function Table<T>({
                                                     header.column.columnDef
                                                         .meta as any
                                                 )?.headerClass,
+                                                "cursor-pointer":
+                                                    header.column.getCanSort(),
                                             }}
+                                            onClick={header.column.getToggleSortingHandler()}
                                         >
                                             {header.isPlaceholder
                                                 ? null
@@ -48,6 +51,12 @@ export function Table<T>({
                                                           .header,
                                                       header.getContext()
                                                   )}
+                                            {{
+                                                asc: " ▲",
+                                                desc: " ▼",
+                                            }[
+                                                header.column.getIsSorted() as string
+                                            ] ?? null}
                                         </th>
                                     )}
                                 </For>

@@ -2,7 +2,9 @@ import {
     ColumnDef,
     createSolidTable,
     getCoreRowModel,
+    getSortedRowModel,
     Row,
+    SortingState,
 } from "@tanstack/solid-table";
 import { useDraft } from "../../context/DraftContext";
 import { displayNameByRole, Role } from "../../lib/models/Role";
@@ -11,6 +13,7 @@ import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
 import { formatRating } from "../../utils/rating";
+import { createSignal } from "solid-js";
 
 export default function DraftTable() {
     const {
@@ -64,6 +67,7 @@ export default function DraftTable() {
             meta: {
                 headerClass: "w-1",
             },
+            sortDescFirst: false,
         },
         {
             header: "Champion",
@@ -71,20 +75,34 @@ export default function DraftTable() {
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
             ),
+            sortingFn: (a, b, id) =>
+                dataset()!.championData[
+                    a.getValue<string>(id)
+                ].name.localeCompare(
+                    dataset()!.championData[b.getValue<string>(id)].name
+                ),
         },
         {
             header: "Winrate",
-            accessorFn: (suggestion) =>
-                formatRating(suggestion.draftResult.totalRating),
+            accessorFn: (suggestion) => suggestion.draftResult.totalRating,
+            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
         },
     ];
 
+    const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({
         get data() {
             return filteredSuggestions();
         },
         columns,
+        state: {
+            get sorting() {
+                return sorting();
+            },
+        },
+        onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
     });
 
     function pick(row: Row<Suggestion>) {
