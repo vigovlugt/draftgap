@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@aws-sdk/client-s3': ^3.218.0
   '@octokit/rest': ^19.0.5
+  '@popperjs/core': ^2.11.6
   '@prisma/client': ^4.8.0
   '@tanstack/solid-table': ^8.7.0
   '@tauri-apps/api': ^1.2.0
@@ -19,6 +20,7 @@ specifiers:
   solid-headless: ^0.13.0
   solid-heroicons: ^3.1.1
   solid-js: ^1.5.1
+  solid-popper: ^0.2.1
   tailwindcss: ^3.2.2
   twisted: ^1.52.0
   typescript: ^4.8.2
@@ -30,6 +32,7 @@ specifiers:
 dependencies:
   '@aws-sdk/client-s3': 3.241.0
   '@octokit/rest': 19.0.5
+  '@popperjs/core': 2.11.6
   '@prisma/client': 4.8.0_prisma@4.8.0
   '@tanstack/solid-table': 8.7.4_solid-js@1.6.6
   '@tauri-apps/api': 1.2.0
@@ -39,6 +42,7 @@ dependencies:
   solid-headless: 0.13.0_solid-js@1.6.6
   solid-heroicons: 3.1.1_solid-js@1.6.6
   solid-js: 1.6.6
+  solid-popper: 0.2.1_7x6xhrysa4e3bpq6qnm7kut2y4
   twisted: 1.52.0
   undici: 5.14.0
 
@@ -1530,6 +1534,10 @@ packages:
       '@octokit/openapi-types': 14.0.0
     dev: false
 
+  /@popperjs/core/2.11.6:
+    resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
+    dev: false
+
   /@prisma/client/4.8.0_prisma@4.8.0:
     resolution: {integrity: sha512-Y1riB0p2W52kh3zgssP/YAhln3RjBFcJy3uwEiyjmU+TQYh6QTZDRFBo3JtBWuq2FyMOl1Rye8jxzUP+n0l5Cg==}
     engines: {node: '>=14.17'}
@@ -2643,6 +2651,17 @@ packages:
     resolution: {integrity: sha512-5x33mEbPI8QLuywvFjQP4krjWDr8xiYFgZx9KCBH7b0ZzypQCHaUubob7bK6i+1u6nhaAqhWtvXS587Kb8DShA==}
     dependencies:
       csstype: 3.1.1
+
+  /solid-popper/0.2.1_7x6xhrysa4e3bpq6qnm7kut2y4:
+    resolution: {integrity: sha512-SRsEbsOPy4yGr6BE7xHlrbHtPRf/t/DHLoJWbxXkmbjxqFAFwUbGAE616B+5OKc1cJeF3UprRDfbQdW5y7o5Ag==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@popperjs/core': ^2.10.2
+      solid-js: ^1.2.0
+    dependencies:
+      '@popperjs/core': 2.11.6
+      solid-js: 1.6.6
+    dev: false
 
   /solid-refresh/0.4.1_solid-js@1.6.6:
     resolution: {integrity: sha512-v3tD/OXQcUyXLrWjPW1dXZyeWwP7/+GQNs8YTL09GBq+5FguA6IejJWUvJDrLIA4M0ho9/5zK2e9n+uy+4488g==}

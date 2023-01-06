@@ -56,7 +56,10 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
             header: "Champion",
             accessorFn: (result) => result.championKey,
             cell: (info) => (
-                <ChampionCell championKey={info.getValue<string>()} />
+                <ChampionCell
+                    championKey={info.getValue<string>()}
+                    nameMaxLength={6}
+                />
             ),
             sortingFn: (a, b, id) =>
                 dataset()!.championData[

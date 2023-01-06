@@ -10,6 +10,8 @@ import { useDraft } from "../../context/DraftContext";
 import { Team } from "../../lib/models/Team";
 import { ratingToWinrate } from "../../lib/rating/ratings";
 import { formatRating } from "../../utils/rating";
+import { tooltip } from "../../directives/tooltip";
+tooltip;
 
 const SummaryCard = (props: {
     title: string;
@@ -21,6 +23,7 @@ const SummaryCard = (props: {
     };
     team: Team;
     href?: string;
+    tooltip: JSX.Element;
 }) => {
     const colorClasses = () =>
         props.team === "ally" ? "bg-[#3c82f6]" : "bg-[#ef4444]";
@@ -29,6 +32,11 @@ const SummaryCard = (props: {
         <a
             class="px-4 py-5 flex gap-4 items-center text-left"
             href={props.href}
+            // @ts-ignore
+            use:tooltip={{
+                content: props.tooltip,
+                placement: "top",
+            }}
         >
             <div
                 class={`rounded-full h-[48px] w-[48px] flex items-center justify-center ${colorClasses()}`}
@@ -57,6 +65,8 @@ export const SummaryCards = (
     const draftResult = () =>
         props.team === "ally" ? allyDraftResult()! : opponentDraftResult()!;
 
+    const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
     return (
         <div
             {...props}
@@ -68,6 +78,12 @@ export const SummaryCards = (
                 title="Champions"
                 rating={draftResult().allyChampionRating.totalRating}
                 href="#champions-result"
+                tooltip={
+                    <>
+                        {capitalize(props.team)} estimated winrate when only
+                        taking into account {props.team} champions
+                    </>
+                }
             />
             <SummaryCard
                 team={props.team}
@@ -75,6 +91,12 @@ export const SummaryCards = (
                 title="Matchups"
                 rating={draftResult().matchupRating.totalRating}
                 href="#matchup-result"
+                tooltip={
+                    <>
+                        {capitalize(props.team)} estimated winrate when only
+                        taking into account matchups between the two teams
+                    </>
+                }
             />
             <SummaryCard
                 team={props.team}
@@ -82,12 +104,26 @@ export const SummaryCards = (
                 title="Duos"
                 rating={draftResult().allyDuoRating.totalRating}
                 href="#duo-result"
+                tooltip={
+                    <>
+                        {capitalize(props.team)} estimated winrate when only
+                        taking into account {props.team} duos
+                    </>
+                }
             />
             <SummaryCard
                 team={props.team}
                 icon={presentationChartLine}
                 title="Winrate"
                 rating={draftResult().totalRating}
+                href="#total-result"
+                tooltip={
+                    <>
+                        {capitalize(props.team)} estimated winrate, taking into
+                        account all factors: ally champions and duos, as well as
+                        opponent champions and duos and all matchups
+                    </>
+                }
             />
         </div>
     );

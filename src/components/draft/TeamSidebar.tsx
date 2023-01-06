@@ -6,6 +6,9 @@ import { CountUp } from "../CountUp";
 import { DamageDistributionBar } from "./DamageDistributionBar";
 import { Pick } from "./Pick";
 import { TeamOptions } from "./TeamOptions";
+import { tooltip } from "../../directives/tooltip";
+import { capitalize } from "../../utils/strings";
+tooltip;
 
 interface IProps {
     team: "ally" | "opponent";
@@ -28,13 +31,21 @@ export function TeamSidebar({ team }: IProps) {
     return (
         <div class="bg-primary flex flex-col h-full relative">
             <DamageDistributionBar team={team} />
-            <div class="flex-1 flex justify-center items-center text-[2.5rem] bg-[#141414]">
-                {team.toUpperCase()} -{" "}
-                <CountUp
-                    value={rating() ? ratingToWinrate(rating()!) : 0.5}
-                    formatFn={(value) => (value * 100).toFixed(2)}
-                    class="ml-3"
-                />
+            <div class="flex-1 flex justify-center items-center bg-[#141414]">
+                <span
+                    class="text-[2.5rem]"
+                    // @ts-ignore
+                    use:tooltip={{
+                        content: <>{capitalize(team)} estimated winrate</>,
+                        placement: "top",
+                    }}
+                >
+                    {team.toUpperCase()} -{" "}
+                    <CountUp
+                        value={rating() ? ratingToWinrate(rating()!) : 0.5}
+                        formatFn={(value) => (value * 100).toFixed(2)}
+                    />
+                </span>
             </div>
             <For each={[0, 1, 2, 3, 4]}>
                 {(index) => <Pick team={team} index={index} />}

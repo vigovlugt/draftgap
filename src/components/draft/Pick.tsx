@@ -7,6 +7,8 @@ import { PickOptions } from "./PickOptions";
 import { lockOpen, lockClosed } from "solid-heroicons/solid-mini";
 import { Role } from "../../lib/models/Role";
 import { formatPercentage } from "../../utils/rating";
+import { tooltip } from "../../directives/tooltip";
+tooltip;
 
 interface IProps {
     team: "ally" | "opponent";
@@ -77,7 +79,7 @@ export function Pick({ team, index }: IProps) {
                                         ? "FiddleSticks"
                                         : champion()!.id
                                 }_0.jpg)`,
-                                "background-position": "center 15%",
+                                "background-position": "center 20%",
                                 "background-size": "cover",
                             }}
                         ></div>
@@ -86,7 +88,12 @@ export function Pick({ team, index }: IProps) {
                             {champion()!.name}
                         </span>
 
-                        <div class="absolute bottom-0 left-0 right-0 flex justify-end overflow-x-auto pt-1 overflow-y-hidden">
+                        <div
+                            class="absolute bottom-0 left-0 right-0 flex justify-end overflow-x-auto pt-1 overflow-y-hidden"
+                            classList={{
+                                "bottom-1": pick.role !== undefined,
+                            }}
+                        >
                             {[...champion()!.probabilityByRole.entries()]
                                 .filter(([, prob]) => prob > 0.05)
                                 .sort(([, probA], [, probB]) => probB - probA)
@@ -100,6 +107,17 @@ export function Pick({ team, index }: IProps) {
                                                     : undefined
                                             )
                                         }
+                                        // @ts-ignore
+                                        use:tooltip={{
+                                            content: (
+                                                <>
+                                                    {pick.role !== undefined
+                                                        ? "The champion is locked in this position, to choose an other position, click to unlock"
+                                                        : "Click to lock the champion in this position, the current estimated position is highlighted"}
+                                                </>
+                                            ),
+                                            placement: "top",
+                                        }}
                                     >
                                         <div class="text-md">
                                             <RoleIcon
@@ -111,15 +129,32 @@ export function Pick({ team, index }: IProps) {
                                                 }}
                                             />
                                         </div>
-                                        <div
-                                            class="text-md"
-                                            classList={{
-                                                "opacity-75":
-                                                    teamCompRole() !== role,
-                                            }}
-                                        >
-                                            {formatPercentage(probability, 1)}
-                                        </div>
+                                        <Show when={pick.role === undefined}>
+                                            <div
+                                                class="text-md"
+                                                classList={{
+                                                    "opacity-75":
+                                                        teamCompRole() !== role,
+                                                }}
+                                                // @ts-ignore
+                                                use:tooltip={{
+                                                    content: (
+                                                        <>
+                                                            The probability of
+                                                            this champion being
+                                                            played in this
+                                                            position
+                                                        </>
+                                                    ),
+                                                    placement: "top",
+                                                }}
+                                            >
+                                                {formatPercentage(
+                                                    probability,
+                                                    1
+                                                )}
+                                            </div>
+                                        </Show>
                                         <Icon
                                             path={
                                                 pick.role === undefined

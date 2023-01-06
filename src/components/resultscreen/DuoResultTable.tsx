@@ -48,7 +48,10 @@ export function DuoResultTable({
             header: "Champion",
             accessorFn: (result) => result.championKeyA,
             cell: (info) => (
-                <ChampionCell championKey={info.getValue<string>()} />
+                <ChampionCell
+                    championKey={info.getValue<string>()}
+                    nameMaxLength={6}
+                />
             ),
             meta: {
                 headerClass: "w-1",
@@ -77,7 +80,10 @@ export function DuoResultTable({
             header: "Champion",
             accessorFn: (result) => result.championKeyB,
             cell: (info) => (
-                <ChampionCell championKey={info.getValue<string>()} />
+                <ChampionCell
+                    championKey={info.getValue<string>()}
+                    nameMaxLength={6}
+                />
             ),
             meta: {
                 headerClass: "w-1",

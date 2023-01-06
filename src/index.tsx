@@ -6,16 +6,19 @@ import App from "./App";
 import { DraftProvider } from "./context/DraftContext";
 import { LolClientProvider } from "./context/LolClientContext";
 import { setupAnalytics } from "./utils/analytics";
+import { TooltipProvider } from "./context/TooltipContext";
 
 setupAnalytics();
 
 render(
     () => (
-        <DraftProvider>
-            <LolClientProvider>
-                <App />
-            </LolClientProvider>
-        </DraftProvider>
+        <TooltipProvider>
+            <DraftProvider>
+                <LolClientProvider>
+                    <App />
+                </LolClientProvider>
+            </DraftProvider>
+        </TooltipProvider>
     ),
     document.getElementById("root") as HTMLElement
 );

@@ -17,17 +17,26 @@ type Props = {
 export const CountUp: Component<Props> = (props) => {
     const [local, other] = splitProps(props, ["value", "formatFn"]);
     const [currentValue, setCurrentValue] = createSignal(props.value);
+    const [currentReqAnimFrame, setCurrentReqAnimFrame] = createSignal<
+        number | null
+    >(null);
 
     onMount(() => {
         createEffect(
             on(
                 () => props.value,
                 () => {
+                    if (currentReqAnimFrame() !== null) {
+                        cancelAnimationFrame(currentReqAnimFrame()!);
+                    }
+
                     let previousTime = performance.now();
 
                     const targetValue = props.value;
 
                     const update = () => {
+                        setCurrentReqAnimFrame(null);
+
                         const diff = targetValue - currentValue();
                         if (Math.abs(diff) < 0.0001) {
                             setCurrentValue(targetValue);
@@ -37,7 +46,10 @@ export const CountUp: Component<Props> = (props) => {
                         const currentTime = performance.now();
                         const deltaTime = (currentTime - previousTime) / 1000;
 
-                        let change = (diff * deltaTime) / 20;
+                        const changeSign = diff > 0 ? 1 : -1;
+                        const absoluteChange =
+                            Math.abs(diff * deltaTime) ** 1.6;
+                        let change = absoluteChange * changeSign;
                         if (Math.abs(change) > Math.abs(diff)) {
                             change = diff;
                         }
@@ -45,7 +57,8 @@ export const CountUp: Component<Props> = (props) => {
                         const newValue = currentValue() + change;
                         setCurrentValue(newValue);
 
-                        requestAnimationFrame(update);
+                        let req = requestAnimationFrame(update);
+                        setCurrentReqAnimFrame(req);
                     };
 
                     update();
