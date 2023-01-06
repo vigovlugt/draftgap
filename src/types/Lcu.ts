@@ -119,3 +119,34 @@ export type LolSummonerRerollPoints = {
     pointsCostToRoll: number;
     pointsToReroll: number;
 };
+
+// lol-champ-select/v1/all-grid-champions
+
+export type LolChampSelectGridChampion = {
+    disabled: boolean;
+    freeToPlay: boolean;
+    freeToPlayForQueue: boolean;
+    freeToPlayReward: boolean;
+    id: number;
+    masteryChestGranted: boolean;
+    masteryLevel: number;
+    masteryPoints: number;
+    name: string;
+    owned: boolean;
+    positionsFavorited: string[];
+    rented: boolean;
+    roles: string[];
+    selectionStatus: {
+        banIntended: boolean;
+        banIntededByMe: boolean;
+        isBanned: boolean;
+        pickIntented: boolean;
+        pickIntentedByMe: boolean;
+        pickIntentedPosition: number;
+        pickedByOtherOrBanned: boolean;
+        selectedByMe: boolean;
+    };
+    squarePortraitPath: string;
+};
+
+export type LolChampSelectGridChampions = LolChampSelectGridChampion[];

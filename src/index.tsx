@@ -7,6 +7,7 @@ import { DraftProvider } from "./context/DraftContext";
 import { LolClientProvider } from "./context/LolClientContext";
 import { setupAnalytics } from "./utils/analytics";
 import { TooltipProvider } from "./context/TooltipContext";
+import { Toaster } from "solid-toast";
 
 setupAnalytics();
 
@@ -16,6 +17,12 @@ render(
             <DraftProvider>
                 <LolClientProvider>
                     <App />
+                    <Toaster
+                        position="bottom-right"
+                        toastOptions={{
+                            duration: Infinity,
+                        }}
+                    />
                 </LolClientProvider>
             </DraftProvider>
         </TooltipProvider>

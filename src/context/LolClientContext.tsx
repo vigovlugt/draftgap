@@ -7,8 +7,12 @@ import {
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { getChampSelectSession, getCurrentSummoner } from "../api/lcu-api";
-import { Role } from "../lib/models/Role";
+import {
+    getChampSelectSession,
+    getCurrentSummoner,
+    getGridChampions,
+} from "../api/lcu-api";
+import { getRoleFromString, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
 import {
     LolChampSelectChampSelectAction,
@@ -16,6 +20,10 @@ import {
     LolChampSelectChampSelectSession,
     LolSummonerSummoner,
 } from "../types/Lcu";
+import {
+    createImportFavouritePicksSuccessToast,
+    createImportFavouritePicksToast,
+} from "../utils/toast";
 import { useDraft } from "./DraftContext";
 
 const createChampSelectSession = (): LolChampSelectChampSelectSession => ({
@@ -68,7 +76,14 @@ export const ClientState = {
 export type ClientState = typeof ClientState[keyof typeof ClientState];
 
 export const createLolClientContext = () => {
-    const { isDesktop, pickChampion, select, resetAll } = useDraft();
+    const {
+        isDesktop,
+        pickChampion,
+        select,
+        resetAll,
+        isFavourite,
+        toggleFavourite,
+    } = useDraft();
 
     const [clientState, setClientState] = createSignal<ClientState>(
         ClientState.NotFound
@@ -188,6 +203,38 @@ export const createLolClientContext = () => {
         });
     };
 
+    const checkImportFavourites = async () => {
+        const gridChampions = await getGridChampions();
+        console.log("Grid champions:", gridChampions);
+        if (!gridChampions) {
+            console.error("Failed to get grid champions");
+            return;
+        }
+
+        const favouritePicks = gridChampions?.flatMap((c) =>
+            c.positionsFavorited.map((p) => ({
+                championKey: c.id.toString(),
+                role: getRoleFromString(p as any),
+            }))
+        );
+
+        const nonFavouritePicks = favouritePicks.filter(
+            (f) => !isFavourite(f.championKey, f.role)
+        );
+
+        if (favouritePicks.every((f) => isFavourite(f.championKey, f.role))) {
+            return;
+        }
+
+        createImportFavouritePicksToast(() => {
+            for (const nonFavourite of nonFavouritePicks) {
+                toggleFavourite(nonFavourite.championKey, nonFavourite.role);
+            }
+
+            createImportFavouritePicksSuccessToast(nonFavouritePicks.length);
+        });
+    };
+
     const startLolClientIntegration = () => {
         if (!isDesktop) return () => {};
 
@@ -210,6 +257,7 @@ export const createLolClientContext = () => {
                 } else {
                     batch(() => {
                         if (clientState() !== ClientState.InChampSelect) {
+                            checkImportFavourites();
                             resetAll();
                         }
 

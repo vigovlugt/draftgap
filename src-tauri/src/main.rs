@@ -153,6 +153,11 @@ async fn get_current_summoner(state: tauri::State<'_, AppState>) -> Result<Value
     return get_lcu_response(&state, "lol-summoner/v1/current-summoner").await;
 }
 
+#[tauri::command]
+async fn get_grid_champions(state: tauri::State<'_, AppState>) -> Result<Value, String> {
+    return get_lcu_response(&state, "lol-champ-select/v1/all-grid-champions").await;
+}
+
 fn main() {
     let client = Client::builder()
         .add_root_certificate(Certificate::from_pem(RIOT_GAMES_CERTIFICATE.as_bytes()).unwrap())
@@ -168,7 +173,8 @@ fn main() {
         .manage(state)
         .invoke_handler(tauri::generate_handler![
             get_champ_select_session,
-            get_current_summoner
+            get_current_summoner,
+            get_grid_champions
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

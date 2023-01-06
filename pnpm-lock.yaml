@@ -21,6 +21,7 @@ specifiers:
   solid-heroicons: ^3.1.1
   solid-js: ^1.5.1
   solid-popper: ^0.2.1
+  solid-toast: ^0.4.0
   tailwindcss: ^3.2.2
   twisted: ^1.52.0
   typescript: ^4.8.2
@@ -43,6 +44,7 @@ dependencies:
   solid-heroicons: 3.1.1_solid-js@1.6.6
   solid-js: 1.6.6
   solid-popper: 0.2.1_7x6xhrysa4e3bpq6qnm7kut2y4
+  solid-toast: 0.4.0_solid-js@1.6.6
   twisted: 1.52.0
   undici: 5.14.0
 
@@ -2673,6 +2675,14 @@ packages:
       '@babel/types': 7.20.7
       solid-js: 1.6.6
     dev: true
+
+  /solid-toast/0.4.0_solid-js@1.6.6:
+    resolution: {integrity: sha512-ciJbj+n+7KbUN6wfwZsW7lqFESLoQ9sXMG4uJWuHrIw2f0GxX3/wLSKs0Q1YwdTZZRxyRJ1Nwc2eBVcJvs91+g==}
+    peerDependencies:
+      solid-js: ^1.5.4
+    dependencies:
+      solid-js: 1.6.6
+    dev: false
 
   /solid-use/0.5.0_solid-js@1.6.6:
     resolution: {integrity: sha512-z1AaS99SL3gNP70K4+XIVKGXDRI56m3Q6Q4X63bfgw0kaN6cwT4SAyFZAmIRjHcvf5rOMRQfNgUV4YVDha+LcQ==}

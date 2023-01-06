@@ -43,6 +43,7 @@
         "solid-heroicons": "^3.1.1",
         "solid-js": "^1.5.1",
         "solid-popper": "^0.2.1",
+        "solid-toast": "^0.4.0",
         "twisted": "^1.52.0",
         "undici": "^5.12.0"
     }
