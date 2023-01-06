@@ -1,4 +1,5 @@
 import {
+    CellContext,
     ColumnDef,
     createSolidTable,
     getCoreRowModel,
@@ -7,13 +8,16 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { useDraft } from "../../context/DraftContext";
-import { displayNameByRole, Role } from "../../lib/models/Role";
+import { Role } from "../../lib/models/Role";
 import { Suggestion } from "../../lib/suggestions/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
 import { formatRating } from "../../utils/rating";
-import { createSignal } from "solid-js";
+import { createSignal, Show } from "solid-js";
+import { Icon } from "solid-heroicons";
+import { star } from "solid-heroicons/solid";
+import { star as starOutline } from "solid-heroicons/outline";
 
 export default function DraftTable() {
     const {
@@ -24,6 +28,10 @@ export default function DraftTable() {
         search,
         roleFilter,
         pickChampion,
+        favouriteFilter,
+        setFavouriteFilter,
+        isFavourite: isFavorite,
+        toggleFavorite,
     } = useDraft();
 
     const suggestions = () =>
@@ -56,10 +64,72 @@ export default function DraftTable() {
             filtered = filtered.filter((s) => s.role === roleFilter());
         }
 
+        if (favouriteFilter()) {
+            filtered = filtered.filter((s) =>
+                isFavorite(s.championKey, s.role)
+            );
+        }
+
         return filtered;
     };
 
     const columns: ColumnDef<Suggestion>[] = [
+        {
+            id: "favorite",
+            header: () => (
+                <button
+                    class="inline-flex group"
+                    onClick={() => setFavouriteFilter(!favouriteFilter())}
+                >
+                    <Icon
+                        path={star}
+                        class="w-6 inline group-hover:opacity-80 transition duration-200 ease-out"
+                        classList={{
+                            "opacity-50": !favouriteFilter(),
+                            "!opacity-100": favouriteFilter(),
+                        }}
+                    />
+                </button>
+            ),
+            accessorFn: (suggestion) => suggestion,
+            cell: (info) => (
+                <div class="flex items-center justify-center">
+                    <Show
+                        when={isFavorite(
+                            info.row.original.championKey,
+                            info.row.original.role
+                        )}
+                        fallback={
+                            <Icon
+                                path={starOutline}
+                                class="w-6 opacity-0 group-hover/row:opacity-50 transition duration-200 ease-out group-hover/cell:!opacity-80"
+                            />
+                        }
+                    >
+                        <Icon
+                            path={star}
+                            class="w-6 opacity-50 group-hover/cell:opacity-80 transition duration-200 ease-out"
+                        />
+                    </Show>
+                </div>
+            ),
+
+            meta: {
+                headerClass: "w-1",
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<Suggestion, unknown>
+                ) => {
+                    console.log(e);
+                    e.stopPropagation();
+                    toggleFavorite(
+                        info.row.original.championKey,
+                        info.row.original.role
+                    );
+                },
+            },
+            enableSorting: false,
+        },
         {
             header: "Role",
             accessorFn: (suggestion) => suggestion.role,

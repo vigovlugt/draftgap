@@ -47,8 +47,8 @@ const App: Component = () => {
             >
                 <Switch>
                     <Match when={!dataset()}>
-                        <div class="flex justify-center items-center h-full">
-                            Loading
+                        <div class="flex justify-center items-center h-full text-4xl">
+                            Loading...
                         </div>
                     </Match>
                     <Match when={draftFinished()}>

@@ -7,7 +7,7 @@ import {
     JSXElement,
     useContext,
 } from "solid-js";
-import { createStore } from "solid-js/store";
+import { createStore, produce } from "solid-js/store";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
 import { Dataset, getDeserializedDataset } from "../lib/models/Dataset";
 import { PickData } from "../lib/models/PickData";
@@ -32,6 +32,8 @@ type Selection = {
     team: Team | undefined;
     index: number;
 };
+
+type FavouritePick = `${string}:${Role}`;
 
 const fetchDataset = async () => {
     console.time("all");
@@ -92,7 +94,7 @@ export function createDraftContext() {
 
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
-
+    const [favouriteFilter, setFavouriteFilter] = createSignal(false);
     const [config, setConfig] = createStoredSignal<AnalyzeDraftConfig>(
         "draftgap-config",
         {
@@ -247,6 +249,7 @@ export function createDraftContext() {
             if (resetFilters) {
                 setSearch("");
                 setRoleFilter(undefined);
+                setFavouriteFilter(false);
             }
         });
     };
@@ -285,6 +288,7 @@ export function createDraftContext() {
         if (resetFilters) {
             setSearch("");
             setRoleFilter(undefined);
+            setFavouriteFilter(false);
         }
 
         if (draftFinished()) {
@@ -298,6 +302,37 @@ export function createDraftContext() {
         );
 
     const [tab, setTab] = createSignal<"ally" | "opponent" | "draft">("ally");
+
+    const [favouritePicks, setFavouritePicks] = createStoredSignal<
+        Set<FavouritePick>
+    >(
+        "draftgap-favourite-picks",
+        new Set(),
+        {
+            equals: false,
+        },
+        undefined,
+        (value) => JSON.stringify([...value]),
+        (value) => new Set(JSON.parse(value))
+    );
+
+    const toggleFavorite = (championKey: string, role: Role) => {
+        const favouritePick: FavouritePick = `${championKey}:${role}`;
+
+        if (favouritePicks().has(favouritePick)) {
+            favouritePicks().delete(favouritePick);
+        } else {
+            favouritePicks().add(favouritePick);
+        }
+
+        setFavouritePicks(favouritePicks());
+    };
+
+    const isFavourite = (championKey: string, role: Role) => {
+        const favouritePick: FavouritePick = `${championKey}:${role}`;
+
+        return favouritePicks().has(favouritePick);
+    };
 
     return {
         isDesktop,
@@ -324,6 +359,8 @@ export function createDraftContext() {
         select,
         search,
         roleFilter,
+        favouriteFilter,
+        setFavouriteFilter,
         setSearch,
         setRoleFilter,
         config,
@@ -331,6 +368,8 @@ export function createDraftContext() {
         tab,
         setTab,
         draftFinished,
+        isFavourite,
+        toggleFavorite,
     };
 }
 

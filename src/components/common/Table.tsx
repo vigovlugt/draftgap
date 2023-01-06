@@ -68,7 +68,7 @@ export function Table<T>({
                     <For each={table.getRowModel().rows}>
                         {(row) => (
                             <tr
-                                class="transition-colors duration-150 ease-in-out"
+                                class="transition duration-200 ease-out group/row"
                                 classList={{
                                     "cursor-pointer hover:bg-neutral-800":
                                         Boolean(onClickRow),
@@ -85,7 +85,7 @@ export function Table<T>({
                                 <For each={row.getVisibleCells()}>
                                     {(cell, i) => (
                                         <td
-                                            class="whitespace-nowrap py-3 px-2"
+                                            class="whitespace-nowrap py-3 px-2 group/cell"
                                             classList={{
                                                 "pl-4": i() === 0,
                                                 "pr-4":
@@ -94,6 +94,15 @@ export function Table<T>({
                                                         .length -
                                                         1,
                                             }}
+                                            onClick={(e) =>
+                                                (
+                                                    cell.column.columnDef
+                                                        .meta as any
+                                                )?.onClickCell?.(
+                                                    e,
+                                                    cell.getContext()
+                                                )
+                                            }
                                         >
                                             {flexRender(
                                                 cell.column.columnDef.cell,
