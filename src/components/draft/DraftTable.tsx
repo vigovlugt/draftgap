@@ -30,8 +30,8 @@ export default function DraftTable() {
         pickChampion,
         favouriteFilter,
         setFavouriteFilter,
-        isFavourite: isFavorite,
-        toggleFavorite,
+        isFavourite,
+        toggleFavourite,
     } = useDraft();
 
     const suggestions = () =>
@@ -66,7 +66,7 @@ export default function DraftTable() {
 
         if (favouriteFilter()) {
             filtered = filtered.filter((s) =>
-                isFavorite(s.championKey, s.role)
+                isFavourite(s.championKey, s.role)
             );
         }
 
@@ -75,7 +75,7 @@ export default function DraftTable() {
 
     const columns: ColumnDef<Suggestion>[] = [
         {
-            id: "favorite",
+            id: "favourite",
             header: () => (
                 <button
                     class="inline-flex group"
@@ -95,7 +95,7 @@ export default function DraftTable() {
             cell: (info) => (
                 <div class="flex items-center justify-center">
                     <Show
-                        when={isFavorite(
+                        when={isFavourite(
                             info.row.original.championKey,
                             info.row.original.role
                         )}
@@ -122,7 +122,7 @@ export default function DraftTable() {
                 ) => {
                     console.log(e);
                     e.stopPropagation();
-                    toggleFavorite(
+                    toggleFavourite(
                         info.row.original.championKey,
                         info.row.original.role
                     );

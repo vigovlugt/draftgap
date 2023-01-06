@@ -316,7 +316,7 @@ export function createDraftContext() {
         (value) => new Set(JSON.parse(value))
     );
 
-    const toggleFavorite = (championKey: string, role: Role) => {
+    const toggleFavourite = (championKey: string, role: Role) => {
         const favouritePick: FavouritePick = `${championKey}:${role}`;
 
         if (favouritePicks().has(favouritePick)) {
@@ -369,7 +369,7 @@ export function createDraftContext() {
         setTab,
         draftFinished,
         isFavourite,
-        toggleFavorite,
+        toggleFavourite,
     };
 }
 
