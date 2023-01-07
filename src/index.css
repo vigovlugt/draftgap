@@ -3,63 +3,66 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-neutral-900 text-text font-header;
-  }
+    body {
+        @apply bg-neutral-900 text-text font-header;
+    }
 
-  html, body {
-    scroll-behavior: smooth;
-  }
+    html,
+    body {
+        scroll-behavior: smooth;
+    }
 }
 
 :root {
-  color-scheme: dark;
+    color-scheme: dark;
 }
 
 @font-face {
-  font-family: 'Oswald';
-  src:  url('/fonts/Oswald-VariableFont_wght.ttf') format('truetype');
-  font-display: swap;
+    font-family: "Oswald";
+    src: url("/fonts/Oswald-VariableFont_wght.ttf") format("truetype");
+    font-display: swap;
 }
 
 @font-face {
-  font-family: 'Montserrat';
-  src:  url('/fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
-  font-display: swap;
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat-VariableFont_wght.ttf") format("truetype");
+    font-display: swap;
 }
 
 /* Popper */
 #arrow,
 #arrow::before {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: inherit;
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
 }
 
 #arrow {
-  visibility: hidden;
+    visibility: hidden;
 }
 
 #arrow::before {
-  visibility: visible;
-  content: '';
-  transform: rotate(45deg);
-  background-color: #262626;
+    visibility: visible;
+    content: "";
+    transform: rotate(45deg);
+    background-color: #262626;
+    border-bottom: rgba(255, 255, 255, 0.2) solid 1px;
+    border-right: rgba(255, 255, 255, 0.2) solid 1px;
 }
 
-#tooltip[data-popper-placement^='top'] #arrow {
-  bottom: -4px;
+#tooltip[data-popper-placement^="top"] #arrow {
+    bottom: -4px;
 }
 
-#tooltip[data-popper-placement^='bottom'] #arrow {
-  top: -4px;
+#tooltip[data-popper-placement^="bottom"] #arrow {
+    top: -4px;
 }
 
-#tooltip[data-popper-placement^='left'] #arrow {
-  right: -4px;
+#tooltip[data-popper-placement^="left"] #arrow {
+    right: -4px;
 }
 
-#tooltip[data-popper-placement^='right'] #arrow {
-  left: -4px;
+#tooltip[data-popper-placement^="right"] #arrow {
+    left: -4px;
 }

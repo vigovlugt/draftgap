@@ -5,6 +5,7 @@ import { useTooltip } from "../context/TooltipContext";
 type HelpPopoverParams = {
     content: JSX.Element;
     placement?: Placement;
+    delay?: number;
 };
 
 export function tooltip(
@@ -18,19 +19,24 @@ export function tooltip(
         setPopoverVisible,
     } = useTooltip();
 
+    let timeout: NodeJS.Timeout | undefined;
+
     const onHover = (e: MouseEvent) => {
         const target = e.target as HTMLElement;
 
-        const { content, placement } = accessor();
+        const { content, placement, delay } = accessor();
 
-        setPopoverContent(content);
-        setPopoverPlacement(placement ?? "auto");
-        setPopoverTarget(target);
-        setPopoverVisible(true);
+        timeout = setTimeout(() => {
+            setPopoverContent(content);
+            setPopoverPlacement(placement ?? "auto");
+            setPopoverTarget(target);
+            setPopoverVisible(true);
+        }, delay ?? 300);
     };
 
     const onHoverLeave = (e: MouseEvent) => {
         setPopoverVisible(false);
+        clearTimeout(timeout);
     };
 
     onMount(() => {

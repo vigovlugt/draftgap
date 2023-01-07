@@ -18,6 +18,10 @@ export const createImportFavouritePicksToast = (onSubmit: () => void) => {
     ));
 };
 
+setTimeout(() => {
+    createImportFavouritePicksToast(() => {});
+}, 100);
+
 export const createImportFavouritePicksSuccessToast = (amount: number) => {
     return toast.custom(
         (t) => (
