@@ -83,6 +83,8 @@ export const createLolClientContext = () => {
         resetAll,
         isFavourite,
         toggleFavourite,
+        allyTeam,
+        opponentTeam,
     } = useDraft();
 
     const [clientState, setClientState] = createSignal<ClientState>(
@@ -157,13 +159,22 @@ export const createLolClientContext = () => {
         ) => {
             // In blind we do not know the enemy championId
             if (!selection.championId) {
-                return;
+                return false;
             }
             if (!completedCellIds.has(selection.cellId)) {
-                return;
+                return false;
             }
 
             const championId = String(selection.championId);
+
+            const teamPicks = team ? allyTeam : opponentTeam;
+            if (
+                teamPicks[index] &&
+                teamPicks[index].championKey === championId
+            ) {
+                return false;
+            }
+
             const role = selection.assignedPosition
                 ? getRole(selection.assignedPosition)
                 : undefined;
@@ -171,21 +182,24 @@ export const createLolClientContext = () => {
                 hasCurrentSummoner() &&
                 currentSummoner.summonerId === selection.summonerId;
             pickChampion(team, index, championId, role, false, resetFilters);
+
+            return true;
         };
 
         batch(() => {
+            let draftChanged = false;
             for (const [selection, i] of session.myTeam.map(
                 (s, i) => [s, i] as const
             )) {
-                processSelection(selection, "ally", i);
+                draftChanged ||= processSelection(selection, "ally", i);
             }
             for (const [selection, i] of session.theirTeam.map(
                 (s, i) => [s, i] as const
             )) {
-                processSelection(selection, "opponent", i);
+                draftChanged ||= processSelection(selection, "opponent", i);
             }
 
-            if (nextPick) {
+            if (nextPick && draftChanged) {
                 const nextPickTeamSelection = nextPick.isAllyAction
                     ? session.myTeam
                     : session.theirTeam;
