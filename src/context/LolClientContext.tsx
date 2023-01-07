@@ -119,7 +119,8 @@ export const createLolClientContext = () => {
         });
 
     const updateChampSelectSession = (
-        session: LolChampSelectChampSelectSession
+        session: LolChampSelectChampSelectSession,
+        firstTime = false
     ) => {
         const getCompletedCellIds = (
             actions: LolChampSelectChampSelectAction[]
@@ -187,7 +188,7 @@ export const createLolClientContext = () => {
         };
 
         batch(() => {
-            let draftChanged = false;
+            let draftChanged = firstTime;
             for (const [selection, i] of session.myTeam.map(
                 (s, i) => [s, i] as const
             )) {
@@ -198,8 +199,6 @@ export const createLolClientContext = () => {
             )) {
                 draftChanged ||= processSelection(selection, "opponent", i);
             }
-
-            console.log(draftChanged);
 
             if (nextPick && draftChanged) {
                 const nextPickTeamSelection = nextPick.isAllyAction
@@ -274,8 +273,11 @@ export const createLolClientContext = () => {
                             resetAll();
                         }
 
+                        updateChampSelectSession(
+                            session,
+                            clientState() !== ClientState.InChampSelect
+                        );
                         setClientState(ClientState.InChampSelect);
-                        updateChampSelectSession(session);
                     });
                 }
             } catch (e) {
