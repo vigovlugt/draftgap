@@ -19,7 +19,7 @@ export function TeamOptions({ team }: { team: Team }) {
     ];
 
     return (
-        <div class="absolute right-0 top-0">
+        <div class="absolute right-1 top-0">
             <DropdownMenu items={items()}>
                 <Icon path={ellipsisVertical} class="h-7"></Icon>
             </DropdownMenu>

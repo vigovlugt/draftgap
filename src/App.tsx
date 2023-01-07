@@ -65,7 +65,7 @@ const App: Component = () => {
                             </div>
                         </div>
                         <div class="flex justify-end mb-4 gap-4 lg:hidden">
-                            <RoleFilter />
+                            <RoleFilter className="w-full" />
                             <FilterMenu />
                         </div>
                         <DraftTable />
@@ -76,7 +76,12 @@ const App: Component = () => {
     };
 
     return (
-        <div class="h-screen flex flex-col">
+        <div
+            class="h-screen flex flex-col"
+            style={{
+                height: "calc(var(--vh, 1vh) * 100)",
+            }}
+        >
             <SettingsModal
                 isOpen={showSettings}
                 setIsOpen={setShowSettings}
@@ -89,7 +94,7 @@ const App: Component = () => {
                 setIsOpen={setShowDownloadModal}
             />
             <header class="bg-primary px-1 py-0 border-b-2 border-neutral-700 flex justify-between">
-                <h1 class="text-5xl mr-2 ml-1 mt-1 mb-[0.4rem] font-semibold tracking-wide">
+                <h1 class="text-4xl sm:text-5xl mr-2 ml-1 mt-1 mb-[0.4rem] font-semibold tracking-wide">
                     DRAFTGAP
                 </h1>
                 <div class="flex items-center gap-4">

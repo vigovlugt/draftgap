@@ -8,7 +8,9 @@ import { LolClientProvider } from "./context/LolClientContext";
 import { setupAnalytics } from "./utils/analytics";
 import { TooltipProvider } from "./context/TooltipContext";
 import { Toaster } from "solid-toast";
+import { setupMobileVH } from "./utils/mobile";
 
+setupMobileVH();
 setupAnalytics();
 
 render(
