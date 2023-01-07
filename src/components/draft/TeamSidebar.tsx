@@ -1,13 +1,13 @@
 import { createEffect, For } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { ratingToWinrate } from "../../lib/rating/ratings";
-import { formatRating } from "../../utils/rating";
 import { CountUp } from "../CountUp";
 import { DamageDistributionBar } from "./DamageDistributionBar";
 import { Pick } from "./Pick";
 import { TeamOptions } from "./TeamOptions";
 import { tooltip } from "../../directives/tooltip";
 import { capitalize } from "../../utils/strings";
+import { getRatingClass } from "../../utils/rating";
 tooltip;
 
 interface IProps {
@@ -44,6 +44,9 @@ export function TeamSidebar({ team }: IProps) {
                     <CountUp
                         value={rating() ? ratingToWinrate(rating()!) : 0.5}
                         formatFn={(value) => (value * 100).toFixed(2)}
+                        class={`${getRatingClass(
+                            rating() ?? 0
+                        )} transition-colors duration-500`}
                     />
                 </span>
             </div>

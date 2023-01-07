@@ -1,3 +1,5 @@
+const colors = require("tailwindcss/colors");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: ["./src/**/*.{js,jsx,ts,tsx}"],
@@ -11,6 +13,14 @@ module.exports = {
                 text: "#f4f4f4",
                 ally: "#3b82f6",
                 opponent: "#ef4444",
+                winrate: {
+                    shiggo: "#ff4e50",
+                    meh: "#fcb1b2",
+                    okay: colors.neutral[50],
+                    good: "#7ea4f4",
+                    great: "#3273fa",
+                    volxd: "#ff9b00",
+                },
             },
             fontFamily: {
                 header: ["'Oswald'", "sans-serif"],

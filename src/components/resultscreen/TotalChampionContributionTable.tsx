@@ -15,8 +15,8 @@ import {
     AnalyzeDuoResult,
     AnalyzeMatchupResult,
 } from "../../lib/suggestions/suggestions";
-import { formatRating } from "../../utils/rating";
 import ChampionCell from "../common/ChampionCell";
+import { RatingText } from "../common/RatingText";
 import { RoleCell } from "../common/RoleCell";
 import { Table } from "../common/Table";
 
@@ -71,13 +71,11 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
         {
             header: "Base",
             accessorFn: (result) => result.baseRating,
-            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
+            cell: (info) => <RatingText rating={info.getValue<number>()} />,
             footer: () => (
-                <>
-                    {formatRating(
-                        draftResult()!.allyChampionRating.totalRating
-                    )}
-                </>
+                <RatingText
+                    rating={draftResult()!.allyChampionRating.totalRating}
+                />
             ),
             meta: {
                 headerClass: "w-1",
@@ -87,9 +85,9 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
         {
             header: "Matchup",
             accessorFn: (result) => result.matchupRating,
-            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
+            cell: (info) => <RatingText rating={info.getValue<number>()} />,
             footer: () => (
-                <>{formatRating(draftResult()!.matchupRating.totalRating)}</>
+                <RatingText rating={draftResult()!.matchupRating.totalRating} />
             ),
             meta: {
                 headerClass: "w-1",
@@ -99,9 +97,9 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
         {
             header: "Duo",
             accessorFn: (result) => result.duoRating,
-            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
+            cell: (info) => <RatingText rating={info.getValue<number>()} />,
             footer: () => (
-                <>{formatRating(draftResult()!.allyDuoRating.totalRating)}</>
+                <RatingText rating={draftResult()!.allyDuoRating.totalRating} />
             ),
             meta: {
                 headerClass: "w-1",
@@ -111,16 +109,14 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
         {
             header: "Total",
             accessorFn: (result) => result.totalRating,
-            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
+            cell: (info) => <RatingText rating={info.getValue<number>()} />,
             footer: (info) => (
-                <>
-                    {formatRating(
-                        table
-                            .getRowModel()
-                            .flatRows.map((r) => r.original.totalRating)
-                            .reduce((a, b) => a + b, 0)
-                    )}
-                </>
+                <RatingText
+                    rating={table
+                        .getRowModel()
+                        .flatRows.map((r) => r.original.totalRating)
+                        .reduce((a, b) => a + b, 0)}
+                />
             ),
             meta: {
                 headerClass: "w-1",

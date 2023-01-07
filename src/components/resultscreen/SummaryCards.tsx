@@ -8,9 +8,8 @@ import {
 import { JSX } from "solid-js/jsx-runtime";
 import { useDraft } from "../../context/DraftContext";
 import { Team } from "../../lib/models/Team";
-import { ratingToWinrate } from "../../lib/rating/ratings";
-import { formatRating } from "../../utils/rating";
 import { tooltip } from "../../directives/tooltip";
+import { RatingText } from "../common/RatingText";
 tooltip;
 
 const SummaryCard = (props: {
@@ -49,7 +48,7 @@ const SummaryCard = (props: {
                 </div>
                 <div class="flex items-baseline justify-between md:block lg:flex -mt-1">
                     <div class="flex items-baseline text-3xl">
-                        {formatRating(props.rating)}
+                        <RatingText rating={props.rating} />
                     </div>
                 </div>
             </div>

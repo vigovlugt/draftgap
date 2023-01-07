@@ -5,17 +5,13 @@ import {
     getSortedRowModel,
     SortingState,
 } from "@tanstack/solid-table";
-import { Accessor, createSignal, JSX } from "solid-js";
+import { createSignal, JSX } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { Role } from "../../lib/models/Role";
 import { Team } from "../../lib/models/Team";
-import { ratingToWinrate } from "../../lib/rating/ratings";
-import {
-    AnalyzeDuoResult,
-    AnalyzeMatchupResult,
-} from "../../lib/suggestions/suggestions";
-import { formatPercentage, formatRating } from "../../utils/rating";
+import { AnalyzeDuoResult } from "../../lib/suggestions/suggestions";
 import ChampionCell from "../common/ChampionCell";
+import { RatingText } from "../common/RatingText";
 import { RoleCell } from "../common/RoleCell";
 import { Table } from "../common/Table";
 
@@ -99,8 +95,8 @@ export function DuoResultTable({
         {
             header: "Winrate",
             accessorFn: (duo) => duo.rating,
-            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
-            footer: (info) => <span>{formatRating(rating() ?? 0)}</span>,
+            cell: (info) => <RatingText rating={info.getValue<number>()} />,
+            footer: (info) => <RatingText rating={rating() ?? 0} />,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",

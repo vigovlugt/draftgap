@@ -8,10 +8,9 @@ import {
 import { Accessor, createSignal, JSX } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { Role } from "../../lib/models/Role";
-import { ratingToWinrate } from "../../lib/rating/ratings";
 import { AnalyzeMatchupResult } from "../../lib/suggestions/suggestions";
-import { formatRating } from "../../utils/rating";
 import ChampionCell from "../common/ChampionCell";
+import { RatingText } from "../common/RatingText";
 import { RoleCell } from "../common/RoleCell";
 import { Table } from "../common/Table";
 import { WinnerCell } from "../common/WinnerCell";
@@ -57,8 +56,9 @@ export function MatchupResultTable({
         {
             header: "Winrate",
             accessorFn: (result) => result.rating,
-            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
-            footer: (info) => <span>{formatRating(allyRating() ?? 0)}</span>,
+
+            cell: (info) => <RatingText rating={info.getValue<number>()} />,
+            footer: (info) => <RatingText rating={allyRating() ?? 0} />,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
@@ -92,7 +92,7 @@ export function MatchupResultTable({
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
             ),
-            footer: () => <span>{formatRating(opponentRating())}</span>,
+            footer: (info) => <RatingText rating={opponentRating()} />,
             sortingFn: (a, b, id) =>
                 dataset()!.championData[
                     a.getValue<string>(id)
@@ -104,9 +104,7 @@ export function MatchupResultTable({
             id: "opponent-winrate",
             header: "Winrate",
             accessorFn: (result) => -result.rating,
-            cell: (info) => (
-                <span>{formatRating(info.getValue<number>())}</span>
-            ),
+            cell: (info) => <RatingText rating={info.getValue<number>()} />,
         },
     ];
 

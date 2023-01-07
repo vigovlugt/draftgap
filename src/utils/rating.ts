@@ -17,3 +17,21 @@ export function formatPercentage(
 
     return p;
 }
+
+export function getRatingClass(rating: number, noOkay = false) {
+    const winrate = ratingToWinrate(rating);
+
+    if (winrate < 0.45) {
+        return "text-winrate-shiggo";
+    } else if (winrate < (noOkay ? 0.5 : 0.485)) {
+        return "text-winrate-meh";
+    } else if (winrate < 0.515 && !noOkay) {
+        return "text-winrate-okay dark:text-winrate-okay-dark";
+    } else if (winrate < 0.53) {
+        return "text-winrate-good";
+    } else if (winrate < 0.55) {
+        return "text-winrate-great";
+    }
+
+    return "text-winrate-volxd";
+}

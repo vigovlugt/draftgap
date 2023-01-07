@@ -22,9 +22,8 @@ export function tooltip(
     let timeout: NodeJS.Timeout | undefined;
 
     const onHover = (e: MouseEvent) => {
-        const target = e.target as HTMLElement;
-
         const { content, placement, delay } = accessor();
+        const target = e.target as HTMLElement;
 
         timeout = setTimeout(() => {
             setPopoverContent(content);

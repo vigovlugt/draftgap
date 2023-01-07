@@ -13,11 +13,11 @@ import { Suggestion } from "../../lib/suggestions/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
-import { formatRating } from "../../utils/rating";
 import { createSignal, Show } from "solid-js";
 import { Icon } from "solid-heroicons";
 import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
+import { RatingText } from "../common/RatingText";
 
 export default function DraftTable() {
     const {
@@ -155,7 +155,7 @@ export default function DraftTable() {
         {
             header: "Winrate",
             accessorFn: (suggestion) => suggestion.draftResult.totalRating,
-            cell: (info) => <>{formatRating(info.getValue<number>())}</>,
+            cell: (info) => <RatingText rating={info.getValue<number>()} />,
         },
     ];
 
