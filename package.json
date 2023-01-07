@@ -35,6 +35,7 @@
         "@popperjs/core": "^2.11.6",
         "@prisma/client": "^4.8.0",
         "@tanstack/solid-table": "^8.7.0",
+        "@tanstack/solid-virtual": "3.0.0-beta.34",
         "@tauri-apps/api": "^1.2.0",
         "@thisbeyond/solid-dnd": "^0.7.3",
         "date-fns": "^2.29.3",

@@ -66,11 +66,11 @@ export const Popover: Component<Props> = (props: Props) => {
                     >
                         <PopoverPanel
                             unmount={false}
-                            class="absolute px-4 right-0 sm:px-0 lg:max-w-3xl"
+                            class="absolute px-4 right-[1px] sm:px-0 lg:max-w-3xl"
                         >
                             <Menu
                                 as="div"
-                                class="relative overflow-hidden w-64 rounded-lg bg-neutral-800 flex flex-col cursor-default ring-1 ring-white ring-opacity-20"
+                                class="relative overflow-hidden w-64 rounded-lg bg-neutral-800 flex flex-col cursor-default ring-1 ring-white ring-opacity-10"
                             >
                                 {props.children(properties)}
                             </Menu>

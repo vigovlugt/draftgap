@@ -167,7 +167,7 @@ export const createLolClientContext = () => {
 
             const championId = String(selection.championId);
 
-            const teamPicks = team ? allyTeam : opponentTeam;
+            const teamPicks = team === "ally" ? allyTeam : opponentTeam;
             if (
                 teamPicks[index] &&
                 teamPicks[index].championKey === championId
@@ -198,6 +198,8 @@ export const createLolClientContext = () => {
             )) {
                 draftChanged ||= processSelection(selection, "opponent", i);
             }
+
+            console.log(draftChanged);
 
             if (nextPick && draftChanged) {
                 const nextPickTeamSelection = nextPick.isAllyAction

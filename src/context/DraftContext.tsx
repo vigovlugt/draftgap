@@ -253,6 +253,8 @@ export function createDraftContext() {
             for (let i = 0; i < 5; i++) {
                 resetChampion(team, i);
             }
+
+            select(team, 0);
         });
     };
 

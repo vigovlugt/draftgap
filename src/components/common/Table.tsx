@@ -1,5 +1,6 @@
 import { Table as TanstackTable, flexRender, Row } from "@tanstack/solid-table";
-import { For, JSX, Show } from "solid-js";
+import { createVirtualizer } from "@tanstack/solid-virtual";
+import { createEffect, For, JSX, Show } from "solid-js";
 
 interface Props<T> {
     table: TanstackTable<T>;
@@ -11,8 +12,32 @@ export function Table<T>({
     onClickRow,
     ...props
 }: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
+    let tableEl: HTMLTableElement | undefined;
+
+    const rows = () => table.getRowModel().rows;
+
+    const rowVirtualizer = createVirtualizer({
+        getScrollElement: () => tableEl!,
+        estimateSize: () => 57,
+        get count() {
+            return rows().length;
+        },
+        overscan: 10,
+    });
+
+    const virtualRows = () => rowVirtualizer.getVirtualItems();
+
+    const paddingTop = () =>
+        virtualRows().length > 0 ? virtualRows()?.[0]?.start || 0 : 0;
+    const paddingBottom = () =>
+        virtualRows().length > 0
+            ? rowVirtualizer.getTotalSize() -
+              (virtualRows()?.[virtualRows().length - 1]?.end || 0)
+            : 0;
+
     return (
         <div
+            ref={tableEl}
             {...props}
             class={`rounded-md overflow-auto max-h-full max-w-full ${props.class}`}
         >
@@ -65,7 +90,17 @@ export function Table<T>({
                     </For>
                 </thead>
                 <tbody class="divide-y divide-neutral-800 bg-primary">
-                    <For each={table.getRowModel().rows}>
+                    <Show when={paddingTop() > 0}>
+                        <tr>
+                            <td style={{ height: `${paddingTop()}px` }} />
+                        </tr>
+                    </Show>
+                    <For
+                        each={rowVirtualizer
+                            .getVirtualItems()
+                            .map((i) => rows()[i.index])
+                            .filter((r) => r)}
+                    >
                         {(row) => (
                             <tr
                                 class="transition duration-200 ease-out group/row"
@@ -114,6 +149,11 @@ export function Table<T>({
                             </tr>
                         )}
                     </For>
+                    <Show when={paddingBottom() > 0}>
+                        <tr>
+                            <td style={{ height: `${paddingBottom()}px` }} />
+                        </tr>
+                    </Show>
                 </tbody>
                 <Show
                     when={table
