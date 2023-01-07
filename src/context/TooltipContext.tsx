@@ -56,14 +56,23 @@ export function TooltipProvider(props: { children: JSX.Element }) {
     return (
         <TooltipContext.Provider value={ctx}>
             {props.children}
-            <Show when={ctx.popoverVisible()}>
-                <div ref={setPopper} id="tooltip" class="max-w-xs">
-                    <div class="rounded-md bg-neutral-800 z-10 shadow-lg px-4 py-2 font-body text-sm ring-1 ring-white ring-opacity-20">
+            <Transition
+                class="absolute top-1 left-1 z-10 transition opacity-0 translate-y-1"
+                show={ctx.popoverVisible()}
+                enter="transition duration-200"
+                enterFrom="opacity-0 translate-y-1"
+                enterTo="opacity-100 translate-y-0"
+                leave="transition duration-150"
+                leaveFrom="opacity-100 translate-y-0"
+                leaveTo="opacity-0 translate-y-1"
+            >
+                <div ref={setPopper} id="tooltip" class="max-w-xs w-max">
+                    <div class="rounded-md bg-neutral-800 shadow-lg px-4 py-2 font-body text-sm ring-1 ring-white ring-opacity-20">
                         {ctx.popoverContent}
                     </div>
                     <div data-popper-arrow id="arrow"></div>
                 </div>
-            </Show>
+            </Transition>
         </TooltipContext.Provider>
     );
 }
