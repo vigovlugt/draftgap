@@ -120,7 +120,6 @@ export default function DraftTable() {
                     e: MouseEvent,
                     info: CellContext<Suggestion, unknown>
                 ) => {
-                    console.log(e);
                     e.stopPropagation();
                     toggleFavourite(
                         info.row.original.championKey,

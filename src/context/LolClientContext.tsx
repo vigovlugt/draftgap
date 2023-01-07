@@ -205,7 +205,6 @@ export const createLolClientContext = () => {
 
     const checkImportFavourites = async () => {
         const gridChampions = await getGridChampions();
-        console.log("Grid champions:", gridChampions);
         if (!gridChampions) {
             console.error("Failed to get grid champions");
             return;
@@ -244,14 +243,12 @@ export const createLolClientContext = () => {
                 if (!hasCurrentSummoner()) {
                     const summoner = await getCurrentSummoner();
                     if (summoner) {
-                        console.log("Summoner:", summoner);
                         setCurrentSummoner(summoner);
                         setHasCurrentSummoner(true);
                     }
                 }
 
                 const session = await getChampSelectSession();
-                console.log("Session:", session);
                 if (session == null) {
                     setClientState(ClientState.MainMenu);
                 } else {
@@ -266,7 +263,6 @@ export const createLolClientContext = () => {
                     });
                 }
             } catch (e) {
-                console.log("Session error:", e);
                 setClientState(ClientState.NotFound);
             }
 

@@ -35,40 +35,29 @@ type Selection = {
 
 type FavouritePick = `${string}:${Role}`;
 
-const fetchDataset = async () => {
-    console.time("all");
+// const fetchDataset = async () => {
+//     console.time("all");
 
-    console.time("fetch");
-    const response = await fetch("data/datasets/30.json");
-    console.timeEnd("fetch");
+//     console.time("fetch");
+//     const response = await fetch("data/datasets/30.json");
+//     console.timeEnd("fetch");
 
-    console.time("json");
-    const json = await response.json();
-    console.timeEnd("json");
+//     console.time("json");
+//     const json = await response.json();
+//     console.timeEnd("json");
 
-    console.timeEnd("all");
+//     console.timeEnd("all");
 
-    return json as Dataset;
-};
+//     return json as Dataset;
+// };
 
 const fetchBinDataset = async () => {
-    console.time("all");
-    console.time("fetch");
     const response = await fetch(
         "https://bucket.draftgap.com/datasets/latest.bin"
     );
-    console.timeEnd("fetch");
-
-    console.time("arrayBuffer");
     const arrayBuffer = await response.arrayBuffer();
-    console.timeEnd("arrayBuffer");
 
-    console.time("deserialize");
     const deserialized = getDeserializedDataset(arrayBuffer);
-    console.timeEnd("deserialize");
-
-    console.timeEnd("all");
-
     return deserialized;
 };
 

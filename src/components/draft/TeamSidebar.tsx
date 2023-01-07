@@ -23,11 +23,6 @@ export function TeamSidebar({ team }: IProps) {
             ? allyDraftResult()?.totalRating
             : opponentDraftResult()?.totalRating;
 
-    createEffect(() => {
-        console.log("draftresults", allyDraftResult(), opponentDraftResult());
-        console.log("dataset", dataset());
-    });
-
     return (
         <div class="bg-primary flex flex-col h-full relative">
             <DamageDistributionBar team={team} />
