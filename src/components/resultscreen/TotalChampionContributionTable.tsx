@@ -35,7 +35,14 @@ type ChampionContribution = {
 
 export const TotalChampionContributionTable: Component<Props> = (props) => {
     const [local, other] = splitProps(props, ["team"]);
-    const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
+    const {
+        allyDraftResult,
+        opponentDraftResult,
+        dataset,
+        allyTeamComps,
+        opponentTeamComps,
+        config,
+    } = useDraft();
 
     const draftResult = () =>
         props.team === "ally" ? allyDraftResult() : opponentDraftResult();
@@ -69,6 +76,7 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
                 ),
         },
         {
+            id: "base",
             header: "Base",
             accessorFn: (result) => result.baseRating,
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
@@ -130,6 +138,19 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
         get data(): ChampionContribution[] {
             if (!draftResult()) return [];
 
+            const comp =
+                props.team === "ally"
+                    ? allyTeamComps()[0][0]
+                    : opponentTeamComps()[0][0];
+            const champions = [...comp.entries()]
+                .sort((a, b) => a[0] - b[0])
+                .map((e) => e[1]);
+
+            const roleByChampionKey = new Map<string, Role>();
+            for (const [role, championKey] of comp.entries()) {
+                roleByChampionKey.set(championKey, role);
+            }
+
             const allyChampionResultByChampionKey =
                 draftResult()!.allyChampionRating.championResults.reduce(
                     (acc, result) => {
@@ -169,17 +190,15 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
                     new Map<string, AnalyzeMatchupResult[]>()
                 );
 
-            const contributions = [
-                ...allyChampionResultByChampionKey.keys(),
-            ].map((championKey) => {
+            const contributions = champions.map((championKey) => {
                 const allyChampionResult =
-                    allyChampionResultByChampionKey.get(championKey)!;
+                    allyChampionResultByChampionKey.get(championKey);
                 const allyDuoResults =
                     allyDuoResultsByChampionKey.get(championKey)!;
                 const matchupResults =
                     allyMatchupResultsByChampionKey.get(championKey)!;
 
-                const baseRating = allyChampionResult.rating;
+                const baseRating = allyChampionResult?.rating ?? 0;
                 const matchupRating = matchupResults.reduce(
                     (acc, result) => acc + result.rating,
                     0
@@ -193,7 +212,7 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
 
                 return {
                     championKey,
-                    role: allyChampionResult.role,
+                    role: roleByChampionKey.get(championKey)!,
                     baseRating,
                     duoRating,
                     matchupRating,
@@ -207,6 +226,11 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
         state: {
             get sorting() {
                 return sorting();
+            },
+            get columnVisibility() {
+                return {
+                    base: !config().ignoreChampionWinrates,
+                };
             },
         },
         onSortingChange: setSorting,
