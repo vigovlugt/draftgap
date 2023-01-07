@@ -118,7 +118,18 @@ export const DownloadAppModal: Component<Props> = ({ isOpen, setIsOpen }) => {
             </p>
             <p class="font-body mt-3 text-neutral-400">
                 You may get a 'Windows protected your PC' warning, but you can
-                safely ignore it by clicking 'More info' and then 'Run anyway'.
+                safely ignore (check{" "}
+                <a
+                    href={
+                        "https://www.virustotal.com/gui/search/" +
+                        encodeURI(encodeURIComponent(windowsDownloadUrl()))
+                    }
+                    class="text-blue-500"
+                    target="_blank"
+                >
+                    VirusTotal
+                </a>
+                ) it by clicking 'More info' and then 'Run anyway'.
             </p>
             <div class="flex justify-between mt-4 gap-6">
                 <a
