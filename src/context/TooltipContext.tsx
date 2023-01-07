@@ -58,7 +58,7 @@ export function TooltipProvider(props: { children: JSX.Element }) {
             {props.children}
             <Show when={ctx.popoverVisible()}>
                 <div ref={setPopper} id="tooltip" class="max-w-xs">
-                    <div class="rounded-md bg-neutral-700 z-10 shadow-lg px-4 py-2 font-body text-sm">
+                    <div class="rounded-md bg-neutral-800 z-10 shadow-lg px-4 py-2 font-body text-sm ring-1 ring-white ring-opacity-20">
                         {ctx.popoverContent}
                     </div>
                     <div data-popper-arrow id="arrow"></div>

@@ -45,7 +45,7 @@
   visibility: visible;
   content: '';
   transform: rotate(45deg);
-  background-color: #404040;
+  background-color: #262626;
 }
 
 #tooltip[data-popper-placement^='top'] #arrow {
