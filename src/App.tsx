@@ -21,7 +21,7 @@ import ResultScreen from "./components/resultscreen/ResultScreen";
 import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
 import { useLolClient } from "./context/LolClientContext";
 import { UpdateModal } from "./components/modals/UpdateModal";
-import { OptionsPopover } from "./components/OptionsPopover";
+import { OptionsPopover } from "./components/OptionsMenu";
 import { FAQModal } from "./components/modals/FAQModal";
 import { DownloadAppModal } from "./components/modals/DownloadAppModal";
 import { Badge } from "./components/common/Badge";

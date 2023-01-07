@@ -3,7 +3,7 @@ import { ellipsisVertical } from "solid-heroicons/outline";
 import { arrowTopRightOnSquare, trash, user } from "solid-heroicons/solid-mini";
 import { useDraft } from "../../context/DraftContext";
 import { Team } from "../../lib/models/Team";
-import { Popover, PopoverItem } from "../common/Popover";
+import { DropdownMenu, PopoverItem } from "../common/DropdownMenu";
 
 export const LOLALYTICS_ROLES = [
     "top",
@@ -49,9 +49,9 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
 
     return (
         <div class="absolute right-0 top-0">
-            <Popover items={items()}>
+            <DropdownMenu items={items()}>
                 <Icon path={ellipsisVertical} class="h-7"></Icon>
-            </Popover>
+            </DropdownMenu>
         </div>
     );
 }

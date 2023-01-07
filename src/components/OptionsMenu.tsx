@@ -8,7 +8,7 @@ import {
     questionMarkCircle,
 } from "solid-heroicons/solid-mini";
 import { Component, createSignal } from "solid-js";
-import { Popover, PopoverItem } from "./common/Popover";
+import { DropdownMenu, PopoverItem } from "./common/DropdownMenu";
 
 type Props = {
     setShowSettings: (show: boolean) => void;
@@ -51,8 +51,8 @@ export const OptionsPopover: Component<Props> = ({
         },
     ];
     return (
-        <Popover items={items} buttonClass="px-0">
+        <DropdownMenu items={items} buttonClass="px-0">
             <Icon path={ellipsisVertical} class="w-7" />
-        </Popover>
+        </DropdownMenu>
     );
 };

@@ -1,7 +1,7 @@
 import { Component, JSX, Show } from "solid-js";
 import {
+    HeadlessDisclosureProperties,
     Menu,
-    MenuItem,
     Popover as PopoverComponent,
     PopoverButton,
     PopoverPanel,
@@ -31,73 +31,47 @@ type ButtonItem = BaseItem & {
 export type PopoverItem = LinkItem | ButtonItem;
 
 type Props = {
-    children: JSX.Element;
-    items: PopoverItem[];
+    children: (params: HeadlessDisclosureProperties) => JSX.Element;
+    buttonChildren: JSX.Element;
     buttonClass?: string;
 };
 
 export const Popover: Component<Props> = (props: Props) => {
     return (
         <PopoverComponent defaultOpen={false} class="relative">
-            {({ isOpen, setState }) => (
+            {(properties) => (
                 <>
                     <PopoverButton
                         classList={{
-                            "text-opacity-90": isOpen(),
+                            "text-opacity-90": properties.isOpen(),
                         }}
                         class={`bg-transparent p-2 px-1 rounded-md hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${props.buttonClass}`}
                         onClick={(e: MouseEvent) => e.stopPropagation()}
                     >
-                        {props.children}
+                        {props.buttonChildren}
                     </PopoverButton>
-                    <Show when={isOpen()}>
+                    <Transition
+                        show={properties.isOpen()}
+                        class="z-[9] transition opacity-0 scale-95"
+                        enter="transition duration-100"
+                        enterFrom="opacity-0 scale-95"
+                        enterTo="opacity-100 scale-100"
+                        leave="transition duration-75"
+                        leaveFrom="opacity-100 scale-100"
+                        leaveTo="opacity-0 scale-95"
+                    >
                         <PopoverPanel
                             unmount={false}
                             class="absolute px-4 transform right-0 sm:px-0 lg:max-w-3xl z-20"
                         >
-                            <Menu class="overflow-hidden w-64 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 flex flex-col cursor-default z-100">
-                                {props.items.map((item) => (
-                                    <MenuItem
-                                        as={
-                                            (item as LinkItem).href
-                                                ? "a"
-                                                : "button"
-                                        }
-                                        // @ts-ignore
-                                        href={(item as LinkItem).href}
-                                        target="_blank"
-                                        class="text-lg uppercase p-2 text-left focus:outline-none flex items-center space-x-2 transition-colors duration-150 ease-in-out"
-                                        classList={{
-                                            "hover:bg-neutral-700":
-                                                !item.disabled,
-                                            "opacity-50 cursor-default":
-                                                item.disabled,
-                                        }}
-                                        onClick={(e: MouseEvent) => {
-                                            if (item.disabled) {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                return;
-                                            }
-
-                                            (item as ButtonItem).onClick?.();
-                                            setState(false);
-                                        }}
-                                    >
-                                        {item.icon ? (
-                                            <Icon
-                                                path={item.icon}
-                                                class="w-5 mx-1 text-neutral-400"
-                                            />
-                                        ) : (
-                                            <div class="w-5 mx-1" />
-                                        )}
-                                        <span>{item.content}</span>
-                                    </MenuItem>
-                                ))}
+                            <Menu
+                                as="div"
+                                class="overflow-hidden w-64 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 flex flex-col cursor-default z-100"
+                            >
+                                {props.children(properties)}
                             </Menu>
                         </PopoverPanel>
-                    </Show>
+                    </Transition>
                 </>
             )}
         </PopoverComponent>
