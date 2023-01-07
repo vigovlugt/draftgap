@@ -1,6 +1,6 @@
 import { Icon } from "solid-heroicons";
-import { magnifyingGlass } from "solid-heroicons/outline";
-import { Accessor, onCleanup, onMount, Setter } from "solid-js";
+import { magnifyingGlass, xMark } from "solid-heroicons/outline";
+import { Accessor, onCleanup, onMount, Setter, Show } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 
 export function Search() {
@@ -55,6 +55,18 @@ export function Search() {
                     value={search()}
                     onInput={(e) => setSearch(e.currentTarget.value)}
                 />
+                <Show when={search().length}>
+                    <button
+                        class="absolute inset-y-0 right-0 flex items-center pr-3"
+                        onClick={() => setSearch("")}
+                    >
+                        <Icon
+                            path={xMark}
+                            class="h-5 w-5 text-gray-400"
+                            aria-hidden="true"
+                        />
+                    </button>
+                </Show>
             </div>
         </div>
     );
