@@ -56,14 +56,17 @@ const App: Component = () => {
                         <ResultScreen />
                     </Match>
                     <Match when={true}>
-                        <div class="mb-4 flex space-x-4">
+                        <div class="mb-4 flex gap-4">
                             <Search />
                             <TeamSelector />
                             <RoleFilter className="hidden lg:inline-flex" />
-                            <FilterMenu />
+                            <div class="hidden lg:inline-flex">
+                                <FilterMenu />
+                            </div>
                         </div>
-                        <div class="flex justify-end mb-4 lg:hidden">
+                        <div class="flex justify-end mb-4 gap-4 lg:hidden">
                             <RoleFilter />
+                            <FilterMenu />
                         </div>
                         <DraftTable />
                     </Match>
