@@ -182,6 +182,7 @@ export const createLolClientContext = () => {
             const resetFilters =
                 hasCurrentSummoner() &&
                 currentSummoner.summonerId === selection.summonerId;
+            console.log("picking chapmion...");
             pickChampion(team, index, championId, role, false, resetFilters);
 
             return true;
@@ -192,12 +193,14 @@ export const createLolClientContext = () => {
             for (const [selection, i] of session.myTeam.map(
                 (s, i) => [s, i] as const
             )) {
-                draftChanged ||= processSelection(selection, "ally", i);
+                draftChanged =
+                    processSelection(selection, "ally", i) || draftChanged;
             }
             for (const [selection, i] of session.theirTeam.map(
                 (s, i) => [s, i] as const
             )) {
-                draftChanged ||= processSelection(selection, "opponent", i);
+                draftChanged =
+                    processSelection(selection, "opponent", i) || draftChanged;
             }
 
             if (nextPick && draftChanged) {
