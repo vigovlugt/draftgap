@@ -52,7 +52,11 @@ export const Popover: Component<Props> = (props: Props) => {
                     </PopoverButton>
                     <Transition
                         show={properties.isOpen()}
-                        class="z-[9] transition opacity-0 scale-95"
+                        class="transition opacity-0 scale-95 isolate z-[2]"
+                        style={{
+                            // Classes on Transtion are removed or something
+                            position: "relative",
+                        }}
                         enter="transition duration-100"
                         enterFrom="opacity-0 scale-95"
                         enterTo="opacity-100 scale-100"
@@ -62,11 +66,11 @@ export const Popover: Component<Props> = (props: Props) => {
                     >
                         <PopoverPanel
                             unmount={false}
-                            class="absolute px-4 transform right-0 sm:px-0 lg:max-w-3xl z-20"
+                            class="absolute px-4 right-0 sm:px-0 lg:max-w-3xl"
                         >
                             <Menu
                                 as="div"
-                                class="overflow-hidden w-64 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 flex flex-col cursor-default z-100"
+                                class="relative overflow-hidden w-64 rounded-lg bg-neutral-800 flex flex-col cursor-default ring-1 ring-white ring-opacity-20"
                             >
                                 {props.children(properties)}
                             </Menu>

@@ -100,6 +100,7 @@ export function createDraftContext() {
         {
             ignoreChampionWinrates: false,
             riskLevel: "medium",
+            minGames: 1000,
         }
     );
 

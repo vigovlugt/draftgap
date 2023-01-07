@@ -3,11 +3,6 @@ import { Role, ROLES } from "../models/Role";
 import { winrateToRating, ratingToWinrate } from "../rating/ratings";
 import { calculateWilsonCI } from "../statistics/stats";
 
-const WINRATE_CONFIDENCE = 0;
-
-const PRIOR_GAMES = 250;
-const MIN_ROLE_GAMES = 1000;
-
 export interface Suggestion {
     championKey: string;
     role: Role;
@@ -32,7 +27,7 @@ export function getSuggestions(
 
         for (const role of remainingRoles) {
             if (team.has(role)) continue;
-            if (getStats(dataset, championKey, role).games < MIN_ROLE_GAMES)
+            if (getStats(dataset, championKey, role).games < config.minGames)
                 continue;
 
             team.set(role, championKey);
@@ -89,6 +84,7 @@ export const priorGamesByRiskLevel: Record<RiskLevel, number> = {
 export interface AnalyzeDraftConfig {
     ignoreChampionWinrates: boolean;
     riskLevel: RiskLevel;
+    minGames: number;
 }
 
 export function analyzeDraft(
@@ -157,11 +153,7 @@ export function analyzeChampions(
         const championData = championDataset.championData[championKey];
         const roleData = championData.statsByRole[role];
 
-        const winrate = calculateWilsonCI(
-            roleData.wins,
-            roleData.games,
-            WINRATE_CONFIDENCE
-        )[0];
+        const winrate = roleData.wins / roleData.games;
         const rating = winrateToRating(winrate);
         championResults.push({ role, championKey, rating, winrate });
         totalRating += rating;

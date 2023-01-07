@@ -25,6 +25,7 @@ import { OptionsPopover } from "./components/OptionsMenu";
 import { FAQModal } from "./components/modals/FAQModal";
 import { DownloadAppModal } from "./components/modals/DownloadAppModal";
 import { Badge } from "./components/common/Badge";
+import { FilterMenu } from "./components/draft/FilterMenu";
 
 const App: Component = () => {
     const { dataset, tab, setTab, draftFinished } = useDraft();
@@ -59,6 +60,7 @@ const App: Component = () => {
                             <Search />
                             <TeamSelector />
                             <RoleFilter className="hidden lg:inline-flex" />
+                            <FilterMenu />
                         </div>
                         <div class="flex justify-end mb-4 lg:hidden">
                             <RoleFilter />
