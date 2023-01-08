@@ -25,7 +25,7 @@ module.exports = {
             fontFamily: {
                 header: ["'Oswald'", "sans-serif"],
                 body: [
-                    "'Montserrat'",
+                    "'OpenSans'",
                     "-apple-system",
                     "BlinkMacSystemFont",
                     "Segoe UI",

@@ -24,8 +24,8 @@
 }
 
 @font-face {
-    font-family: "Montserrat";
-    src: url("/fonts/Montserrat-VariableFont_wght.ttf") format("truetype");
+    font-family: "OpenSans";
+    src: url("/fonts/OpenSans-VariableFont_wdth,wght.ttf") format("truetype");
     font-display: swap;
 }
 

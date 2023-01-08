@@ -41,6 +41,9 @@ export function TeamSidebar({ team }: IProps) {
                         class={`${getRatingClass(
                             rating() ?? 0
                         )} transition-colors duration-500`}
+                        style={{
+                            "font-variant-numeric": "tabular-nums",
+                        }}
                     />
                 </span>
             </div>

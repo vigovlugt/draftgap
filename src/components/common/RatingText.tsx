@@ -7,7 +7,12 @@ type Props = {
 
 export const RatingText: Component<Props> = (props) => {
     return (
-        <span class={`${getRatingClass(props.rating)}`}>
+        <span
+            class={`${getRatingClass(props.rating)}`}
+            style={{
+                "font-variant-numeric": "tabular-nums",
+            }}
+        >
             {formatRating(props.rating)}
         </span>
     );
