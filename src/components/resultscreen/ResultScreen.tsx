@@ -39,9 +39,6 @@ export default function ResultScreen() {
 
     return (
         <div>
-            {championDraftAnalysisModalChampionKey()}
-            {championDraftAnalysisModalTeam()}
-            {showChampionDraftAnalysisModal() ? "true" : "false"}
             <Show
                 when={
                     championDraftAnalysisModalChampionKey() != undefined &&
