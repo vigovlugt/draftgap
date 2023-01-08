@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "types": ["vite/client", "@types/gtag.js", "src/types/env.d.ts"],
+    "types": ["vite/client", "@types/gtag.js", "./src/types/env"],
     "noEmit": true,
     "isolatedModules": true,
     "skipLibCheck": true
