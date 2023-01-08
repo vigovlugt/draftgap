@@ -1,4 +1,5 @@
 import {
+    CellContext,
     ColumnDef,
     createSolidTable,
     getCoreRowModel,
@@ -18,9 +19,10 @@ import { RatingText } from "../common/RatingText";
 
 interface Props {
     team: Team;
+    onClickChampion?: (championKey: string) => void;
 }
 
-export function IndividualChampionsResult({
+export function IndividualChampionsResultTable({
     team,
     ...props
 }: Props & JSX.HTMLAttributes<HTMLDivElement>) {
@@ -52,6 +54,15 @@ export function IndividualChampionsResult({
                 ].name.localeCompare(
                     dataset()!.championData[b.getValue<string>(id)].name
                 ),
+            meta: {
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<AnalyzeChampionResult, unknown>
+                ) => {
+                    e.stopPropagation();
+                    props.onClickChampion?.(info.getValue<string>());
+                },
+            },
         },
         {
             header: "Winrate",

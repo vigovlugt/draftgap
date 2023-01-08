@@ -1,4 +1,5 @@
 import {
+    CellContext,
     ColumnDef,
     createSolidTable,
     getCoreRowModel,
@@ -22,6 +23,7 @@ import { Table } from "../common/Table";
 
 type Props = {
     team: Team;
+    onClickChampion?: (championKey: string) => void;
 } & JSX.HTMLAttributes<HTMLDivElement>;
 
 type ChampionContribution = {
@@ -74,6 +76,15 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
                 ].name.localeCompare(
                     dataset()!.championData[b.getValue<string>(id)].name
                 ),
+            meta: {
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<ChampionContribution, unknown>
+                ) => {
+                    e.stopPropagation();
+                    props.onClickChampion?.(info.getValue<string>());
+                },
+            },
         },
         {
             id: "base",

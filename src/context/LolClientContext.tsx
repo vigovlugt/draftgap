@@ -158,7 +158,7 @@ export const createLolClientContext = () => {
             team: Team,
             index: number
         ) => {
-            // In blind we do not know the enemy championId
+            // In blind we do not know the opponent championId
             if (!selection.championId) {
                 return false;
             }

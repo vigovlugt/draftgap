@@ -1,4 +1,5 @@
 import {
+    CellContext,
     ColumnDef,
     createSolidTable,
     getCoreRowModel,
@@ -17,15 +18,17 @@ import { Table } from "../common/Table";
 
 interface Props {
     team: Team;
+    data?: () => AnalyzeDuoResult[];
+    onClickChampion?: (championKey: string) => void;
 }
 
-export function DuoResultTable({
-    team,
-    ...props
-}: Props & JSX.HTMLAttributes<HTMLDivElement>) {
+export function DuoResultTable(
+    props: Props & JSX.HTMLAttributes<HTMLDivElement>
+) {
     const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
 
-    const draftResult = team === "ally" ? allyDraftResult : opponentDraftResult;
+    const draftResult =
+        props.team === "ally" ? allyDraftResult : opponentDraftResult;
 
     const columns: ColumnDef<AnalyzeDuoResult>[] = [
         {
@@ -52,6 +55,13 @@ export function DuoResultTable({
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<AnalyzeDuoResult, unknown>
+                ) => {
+                    e.stopPropagation();
+                    props.onClickChampion?.(info.getValue<string>());
+                },
             },
             sortingFn: (a, b, id) =>
                 dataset()!.championData[
@@ -82,8 +92,13 @@ export function DuoResultTable({
                 />
             ),
             meta: {
-                headerClass: "w-1",
-                footerClass: "w-1",
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<AnalyzeDuoResult, unknown>
+                ) => {
+                    e.stopPropagation();
+                    props.onClickChampion?.(info.getValue<string>());
+                },
             },
             sortingFn: (a, b, id) =>
                 dataset()!.championData[
@@ -104,19 +119,23 @@ export function DuoResultTable({
         },
     ];
 
-    const rating = () => draftResult()?.allyDuoRating?.totalRating;
+    const rating = () =>
+        table
+            .getRowModel()
+            .rows.map((r) => r.original.rating)
+            .reduce((a, b) => a + b, 0);
 
     const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({
         get data() {
+            if (props.data) {
+                return props.data();
+            }
+
             let data = draftResult()?.allyDuoRating?.duoResults;
             if (!data) {
                 return [];
             }
-
-            // if (!showAll()) {
-            //     data = data.filter((m) => m.roleA === m.roleB);
-            // }
 
             return data.sort((a, b) => a.roleA - b.roleA || a.roleB - b.roleB);
         },

@@ -15,8 +15,7 @@ interface IProps {
 }
 
 export function TeamSidebar({ team }: IProps) {
-    const { dataset, allyDraftResult, opponentDraftResult, allySuggestions } =
-        useDraft();
+    const { allyDraftResult, opponentDraftResult } = useDraft();
 
     const rating = () =>
         team === "ally"

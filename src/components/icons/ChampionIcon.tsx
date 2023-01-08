@@ -1,24 +1,28 @@
 import { JSX } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 
-export function ChampionIcon({
-    championKey,
-    ...props
-}: { championKey: string } & JSX.HTMLAttributes<HTMLDivElement>) {
+export function ChampionIcon(
+    props: {
+        championKey: string;
+        imgClass?: string;
+    } & JSX.HTMLAttributes<HTMLDivElement>
+) {
     const { dataset } = useDraft();
 
     return (
         <div
             {...props}
-            class={`${props.class} overflow-hidden h-9 w-9 rounded`}
+            class={`overflow-hidden h-9 w-9 rounded ${props.class}`}
         >
             <img
                 src={`https://ddragon.leagueoflegends.com/cdn/${
                     dataset()!.version
-                }/img/champion/${dataset()!.championData[championKey].id}.png`}
+                }/img/champion/${
+                    dataset()!.championData[props.championKey].id
+                }.png`}
                 loading="lazy"
-                class="scale-110 h-9 w-9"
-                alt={dataset()!.championData[championKey].name}
+                class={`scale-110 h-9 w-9 ${props.imgClass}`}
+                alt={dataset()!.championData[props.championKey].name}
             ></img>
         </div>
     );

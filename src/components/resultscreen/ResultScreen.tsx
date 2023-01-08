@@ -1,24 +1,71 @@
-import { createSignal, Show } from "solid-js";
+import { batch, createSignal, Show } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { ButtonGroup } from "../common/ButtonGroup";
 import { DuoResultTable } from "./DuoResultTable";
-import { IndividualChampionsResult } from "./IndividualChampionsResult";
+import { IndividualChampionsResultTable } from "./IndividualChampionsResultTable";
 import { MatchupResultTable } from "./MatchupResultTable";
-import { SummaryCards } from "./SummaryCards";
+import { DraftSummaryCards } from "./SummaryCards";
 import { TotalChampionContributionTable } from "./TotalChampionContributionTable";
 import { tooltip } from "../../directives/tooltip";
+import Modal from "../common/Modal";
+import { ChampionDraftAnalysisModal } from "../modals/ChampionDraftAnalysisModal";
+import { Team } from "../../lib/models/Team";
 tooltip;
 
 export default function ResultScreen() {
     const { config } = useDraft();
 
     const [showAllMatchups, setShowAllMatchups] = createSignal(false);
+    const [showChampionDraftAnalysisModal, setShowChampionDraftAnalysisModal] =
+        createSignal(false);
+    const [
+        championDraftAnalysisModalChampionKey,
+        setChampionDraftAnalysisModalChampionKey,
+    ] = createSignal<string>();
+    const [championDraftAnalysisModalTeam, setChampionDraftAnalysisModalTeam] =
+        createSignal<Team>();
+
+    const openChampionDraftAnalysisModal = (
+        team: Team,
+        championKey: string
+    ) => {
+        batch(() => {
+            setShowChampionDraftAnalysisModal(false);
+            setChampionDraftAnalysisModalChampionKey(championKey);
+            setChampionDraftAnalysisModalTeam(team);
+        });
+        setShowChampionDraftAnalysisModal(true);
+    };
 
     return (
         <div>
+            {championDraftAnalysisModalChampionKey()}
+            {championDraftAnalysisModalTeam()}
+            {showChampionDraftAnalysisModal() ? "true" : "false"}
+            <Show
+                when={
+                    championDraftAnalysisModalChampionKey() != undefined &&
+                    championDraftAnalysisModalTeam() != undefined
+                }
+            >
+                <ChampionDraftAnalysisModal
+                    isOpen={showChampionDraftAnalysisModal}
+                    setIsOpen={setShowChampionDraftAnalysisModal}
+                    championKey={championDraftAnalysisModalChampionKey()!}
+                    team={championDraftAnalysisModalTeam()!}
+                    openChampionDraftAnalysisModal={(team, key) => {
+                        setShowChampionDraftAnalysisModal(false);
+
+                        setTimeout(() => {
+                            openChampionDraftAnalysisModal(team, key);
+                        }, 250);
+                    }}
+                />
+            </Show>
+
             <h2 class="text-6xl uppercase mb-6">Draft analysis</h2>
-            <SummaryCards team="ally" />
-            <SummaryCards team="opponent" class="mb-12 mt-6" />
+            <DraftSummaryCards team="ally" />
+            <DraftSummaryCards team="opponent" class="mb-12 mt-6" />
 
             <Show when={!config().ignoreChampionWinrates}>
                 <div
@@ -38,7 +85,15 @@ export default function ResultScreen() {
                         >
                             Ally champions
                         </h3>
-                        <IndividualChampionsResult team="ally" />
+                        <IndividualChampionsResultTable
+                            team="ally"
+                            onClickChampion={(championKey) =>
+                                openChampionDraftAnalysisModal(
+                                    "ally",
+                                    championKey
+                                )
+                            }
+                        />
                     </div>
                     <div class="sm:w-1/2">
                         <h3
@@ -53,7 +108,15 @@ export default function ResultScreen() {
                         >
                             Opponent champions
                         </h3>
-                        <IndividualChampionsResult team="opponent" />
+                        <IndividualChampionsResultTable
+                            team="opponent"
+                            onClickChampion={(championKey) =>
+                                openChampionDraftAnalysisModal(
+                                    "opponent",
+                                    championKey
+                                )
+                            }
+                        />
                     </div>
                 </div>
             </Show>
@@ -62,7 +125,7 @@ export default function ResultScreen() {
                 class="flex-col flex md:flex-row justify-between gap-2 md:items-end mb-2"
                 id="matchup-result"
             >
-                <div class="">
+                <div>
                     <h3
                         class="text-3xl uppercase"
                         // @ts-ignore
@@ -70,7 +133,7 @@ export default function ResultScreen() {
                             content: (
                                 <>
                                     Winrates of all matchups between ally and
-                                    opponent champios
+                                    opponent champions
                                 </>
                             ),
                             placement: "top",
@@ -105,7 +168,13 @@ export default function ResultScreen() {
                     onChange={setShowAllMatchups}
                 />
             </div>
-            <MatchupResultTable class="w-full mb-8" showAll={showAllMatchups} />
+            <MatchupResultTable
+                class="w-full mb-8"
+                showAll={showAllMatchups()}
+                onClickChampion={(team, championKey) =>
+                    openChampionDraftAnalysisModal(team, championKey)
+                }
+            />
 
             <div class="flex-col md:flex-row flex gap-4 mb-8" id="duo-result">
                 <div class="md:w-1/2">
@@ -121,7 +190,12 @@ export default function ResultScreen() {
                     >
                         Ally duos
                     </h3>
-                    <DuoResultTable team="ally" />
+                    <DuoResultTable
+                        team="ally"
+                        onClickChampion={(key) =>
+                            openChampionDraftAnalysisModal("ally", key)
+                        }
+                    />
                 </div>
                 <div class="md:w-1/2">
                     <h3
@@ -136,7 +210,12 @@ export default function ResultScreen() {
                     >
                         Opponent duos
                     </h3>
-                    <DuoResultTable team="opponent" />
+                    <DuoResultTable
+                        team="opponent"
+                        onClickChampion={(key) =>
+                            openChampionDraftAnalysisModal("opponent", key)
+                        }
+                    />
                 </div>
             </div>
 
@@ -172,7 +251,12 @@ export default function ResultScreen() {
                     >
                         Ally overview
                     </h3>
-                    <TotalChampionContributionTable team="ally" />
+                    <TotalChampionContributionTable
+                        team="ally"
+                        onClickChampion={(key) =>
+                            openChampionDraftAnalysisModal("ally", key)
+                        }
+                    />
                 </div>
                 <div class="md:w-1/2">
                     <h3
@@ -202,7 +286,12 @@ export default function ResultScreen() {
                     >
                         Opponent overview
                     </h3>
-                    <TotalChampionContributionTable team="opponent" />
+                    <TotalChampionContributionTable
+                        team="opponent"
+                        onClickChampion={(key) =>
+                            openChampionDraftAnalysisModal("opponent", key)
+                        }
+                    />
                 </div>
             </div>
         </div>

@@ -128,6 +128,12 @@ export function Table<T>({
                                                     row.getVisibleCells()
                                                         .length -
                                                         1,
+                                                "cursor-pointer": Boolean(
+                                                    (
+                                                        cell.column.columnDef
+                                                            .meta as any
+                                                    )?.onClickCell
+                                                ),
                                             }}
                                             onClick={(e) =>
                                                 (

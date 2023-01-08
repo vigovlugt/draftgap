@@ -1,11 +1,16 @@
+import { DynamicProps } from "solid-headless/dist/types/utils/dynamic-prop";
+import { splitProps, ValidComponent } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
+import { Dynamic } from "solid-js/web";
 
-export function Button(
-    props: JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
+export function Button<T extends ValidComponent>(
+    props: DynamicProps<T> & {
         children?: JSX.Element;
+        as?: T;
         theme: "primary" | "secondary";
     }
 ) {
+    const [local, other] = splitProps(props, ["children", "as", "theme"]);
     const themeClasses = {
         primary: "bg-white border-0 text-primary  hover:bg-neutral-200",
         secondary:
@@ -13,15 +18,14 @@ export function Button(
     };
 
     return (
-        <button
-            type="button"
-            class="uppercase text-xl relative inline-flex items-center border px-4 py-1 font-medium focus:z-10 rounded-md"
-            classList={{
-                [themeClasses[props.theme]]: true,
-            }}
-            {...props}
+        <Dynamic
+            component={local.as || "button"}
+            {...other}
+            class={`uppercase text-xl relative inline-flex items-center border px-4 py-1 font-medium focus:z-10 rounded-md ${
+                themeClasses[local.theme]
+            } ${props.class}`}
         >
             {props.children}
-        </button>
+        </Dynamic>
     );
 }

@@ -1,14 +1,19 @@
 import {
+    CellContext,
     ColumnDef,
     createSolidTable,
     getCoreRowModel,
     getSortedRowModel,
     SortingState,
 } from "@tanstack/solid-table";
-import { Accessor, createSignal, JSX } from "solid-js";
+import { createSignal, JSX } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { Role } from "../../lib/models/Role";
-import { AnalyzeMatchupResult } from "../../lib/suggestions/suggestions";
+import { Team } from "../../lib/models/Team";
+import {
+    AnalyzeChampionResult,
+    AnalyzeMatchupResult,
+} from "../../lib/suggestions/suggestions";
 import ChampionCell from "../common/ChampionCell";
 import { RatingText } from "../common/RatingText";
 import { RoleCell } from "../common/RoleCell";
@@ -16,13 +21,14 @@ import { Table } from "../common/Table";
 import { WinnerCell } from "../common/WinnerCell";
 
 interface Props {
-    showAll: Accessor<boolean>;
+    showAll: boolean;
+    data?: () => AnalyzeMatchupResult[];
+    onClickChampion?: (team: Team, championKey: string) => void;
 }
 
-export function MatchupResultTable({
-    showAll,
-    ...props
-}: Props & JSX.HTMLAttributes<HTMLDivElement>) {
+export function MatchupResultTable(
+    props: Props & JSX.HTMLAttributes<HTMLDivElement>
+) {
     const { allyDraftResult, dataset } = useDraft();
 
     const columns: ColumnDef<AnalyzeMatchupResult>[] = [
@@ -45,6 +51,13 @@ export function MatchupResultTable({
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<AnalyzeChampionResult, unknown>
+                ) => {
+                    e.stopPropagation();
+                    props.onClickChampion?.("ally", info.getValue<string>());
+                },
             },
             sortingFn: (a, b, id) =>
                 dataset()!.championData[
@@ -99,6 +112,18 @@ export function MatchupResultTable({
                 ].name.localeCompare(
                     dataset()!.championData[b.getValue<string>(id)].name
                 ),
+            meta: {
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<AnalyzeChampionResult, unknown>
+                ) => {
+                    e.stopPropagation();
+                    props.onClickChampion?.(
+                        "opponent",
+                        info.getValue<string>()
+                    );
+                },
+            },
         },
         {
             id: "opponent-winrate",
@@ -108,19 +133,26 @@ export function MatchupResultTable({
         },
     ];
 
-    const allyRating = () => allyDraftResult()?.matchupRating?.totalRating ?? 0;
-    const opponentRating = () =>
-        -(allyDraftResult()?.matchupRating?.totalRating ?? 0);
+    const allyRating = () =>
+        table
+            .getRowModel()
+            .rows.map((r) => r.original.rating)
+            .reduce((a, b) => a + b, 0);
+    const opponentRating = () => -allyRating();
 
     const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({
         get data() {
+            if (props.data) {
+                return props.data();
+            }
+
             let data = allyDraftResult()?.matchupRating?.matchupResults;
             if (!data) {
                 return [];
             }
 
-            if (!showAll()) {
+            if (!props.showAll) {
                 data = data.filter((m) => m.roleA === m.roleB);
             }
 

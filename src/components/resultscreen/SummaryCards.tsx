@@ -10,27 +10,34 @@ import { useDraft } from "../../context/DraftContext";
 import { Team } from "../../lib/models/Team";
 import { tooltip } from "../../directives/tooltip";
 import { RatingText } from "../common/RatingText";
+import { Component } from "solid-js";
+import { capitalize } from "../../utils/strings";
 tooltip;
 
-const SummaryCard = (props: {
-    title: string;
-    rating: number;
-    icon: {
-        path: JSX.Element;
-        outline: boolean;
-        mini: boolean;
+const SummaryCard = (
+    props: {
+        team?: Team;
+        title: string;
+        rating: number;
+        icon: {
+            path: JSX.Element;
+            outline: boolean;
+            mini: boolean;
+        };
+        href?: string;
+        tooltip: JSX.Element;
+    } & JSX.HTMLAttributes<HTMLDivElement>
+) => {
+    const colorClasses = () => {
+        if (!props.team) return "bg-[#101010]";
+
+        return props.team === "ally" ? "bg-[#3c82f6]" : "bg-[#ef4444]";
     };
-    team: Team;
-    href?: string;
-    tooltip: JSX.Element;
-}) => {
-    const colorClasses = () =>
-        props.team === "ally" ? "bg-[#3c82f6]" : "bg-[#ef4444]";
 
     return (
         <a
-            class="px-4 py-5 flex gap-4 items-center text-left"
-            href={props.href}
+            {...props}
+            class={`px-4 py-5 flex gap-4 items-center text-left ${props.class}`}
             // @ts-ignore
             use:tooltip={{
                 content: props.tooltip,
@@ -56,7 +63,7 @@ const SummaryCard = (props: {
     );
 };
 
-export const SummaryCards = (
+export const DraftSummaryCards = (
     props: { team: Team } & JSX.HTMLAttributes<HTMLDivElement>
 ) => {
     const { allyDraftResult, opponentDraftResult } = useDraft();
@@ -69,7 +76,7 @@ export const SummaryCards = (
     return (
         <div
             {...props}
-            class={`grid divide-neutral-700 overflow-hidden rounded-lg bg-[#191919] shadow grid-cols-2 md:grid-cols-4 md:divide-x ${props.class}`}
+            class={`grid divide-neutral-700 overflow-hidden rounded-lg bg-[#191919] grid-cols-2 md:grid-cols-4 md:divide-x ${props.class}`}
         >
             <SummaryCard
                 team={props.team}
@@ -121,6 +128,102 @@ export const SummaryCards = (
                         {capitalize(props.team)} estimated winrate, taking into
                         account all factors: ally champions and duos, as well as
                         opponent champions and duos and all matchups
+                    </>
+                }
+            />
+        </div>
+    );
+};
+
+type ChampionSummaryCardProps = {
+    championKey: string;
+    team: Team;
+} & JSX.HTMLAttributes<HTMLDivElement>;
+
+export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
+    props
+) => {
+    const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
+
+    const draftResult = () =>
+        props.team === "ally" ? allyDraftResult()! : opponentDraftResult()!;
+
+    const name = () => dataset()!.championData[props.championKey].name;
+
+    const baseChampionRating = () =>
+        draftResult().allyChampionRating.championResults.find(
+            (r) => r.championKey === props.championKey
+        )!.rating;
+
+    const duoRating = () =>
+        draftResult()
+            .allyDuoRating.duoResults.filter(
+                (r) =>
+                    r.championKeyA === props.championKey ||
+                    r.championKeyB === props.championKey
+            )
+            .reduce((acc, r) => acc + r.rating / 2, 0);
+
+    const matchupRating = () =>
+        draftResult()
+            .matchupRating.matchupResults.filter(
+                (r) =>
+                    r.championKeyA === props.championKey ||
+                    r.championKeyB === props.championKey
+            )
+            .reduce((acc, r) => acc + r.rating, 0);
+
+    const totalRating = () =>
+        baseChampionRating() + duoRating() + matchupRating();
+
+    return (
+        <div
+            {...props}
+            class={`grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-4 ${props.class}`}
+        >
+            <SummaryCard
+                class="!py-2"
+                icon={user}
+                title="Champion"
+                rating={baseChampionRating()}
+                tooltip={<>{capitalize(name())} base winrate</>}
+            />
+            <SummaryCard
+                class="!py-2"
+                icon={arrowsRightLeft}
+                title="Matchups"
+                rating={matchupRating()}
+                href="#matchup-champion-result"
+                tooltip={
+                    <>
+                        {capitalize(name())} estimated winrate when taking into
+                        account all {name()} matchups with opponent champions
+                    </>
+                }
+            />
+            <SummaryCard
+                class="!py-2"
+                icon={users}
+                title="Duos"
+                rating={duoRating()}
+                href="#duo-champion-result"
+                tooltip={
+                    <>
+                        {capitalize(name())} estimated winrate when taking into
+                        account all {name()} duos with ally champions
+                    </>
+                }
+            />
+            <SummaryCard
+                class="!py-2"
+                icon={presentationChartLine}
+                title="Winrate"
+                rating={totalRating()}
+                tooltip={
+                    <>
+                        {capitalize(name())} contribution to winrate in draft,
+                        taking into account: {name()} base winrate, {name()}{" "}
+                        duos, and {name()} matchups
                     </>
                 }
             />

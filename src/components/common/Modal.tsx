@@ -15,7 +15,9 @@ interface Props {
     setIsOpen: Setter<boolean>;
     children: JSX.Element;
     title: JSX.Element;
-    size?: "sm" | "md" | "lg" | "xl";
+    titleContainerClass?: string;
+    size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
+    className?: string;
 }
 
 export default function Modal({
@@ -24,6 +26,8 @@ export default function Modal({
     title,
     children,
     size = "md",
+    titleContainerClass,
+    className,
 }: Props) {
     function close() {
         setIsOpen(false);
@@ -34,11 +38,13 @@ export default function Modal({
         md: "max-w-md",
         lg: "max-w-lg",
         xl: "max-w-xl",
+        "2xl": "max-w-2xl",
+        "3xl": "max-w-3xl",
     }[size];
 
     return (
         <>
-            <Transition appear show={isOpen()}>
+            <Transition unmount appear show={isOpen()}>
                 <Dialog isOpen class="relative z-10" onClose={close}>
                     <TransitionChild
                         enter="ease-out duration-300"
@@ -51,7 +57,12 @@ export default function Modal({
                         <div class="fixed inset-0 bg-black bg-opacity-40" />
                     </TransitionChild>
 
-                    <div class="fixed inset-0 overflow-y-auto">
+                    <div
+                        class="fixed inset-0 overflow-y-auto"
+                        style={{
+                            "scroll-behavior": "smooth",
+                        }}
+                    >
                         <div
                             class="flex min-h-full items-center justify-center p-4 text-center"
                             onClick={(e) => {
@@ -69,9 +80,14 @@ export default function Modal({
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <DialogPanel
-                                    class={`w-full transform overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all ${maxWClass}`}
+                                    class={`w-full transform overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all ring-1 ring-white ring-opacity-10 ${maxWClass} ${className}`}
+                                    style={{
+                                        "max-width": "calc(100vw - 1rem)",
+                                    }}
                                 >
-                                    <div class="flex justify-between mb-4">
+                                    <div
+                                        class={`flex justify-between mb-4 ${titleContainerClass}`}
+                                    >
                                         <DialogTitle
                                             as="h3"
                                             class="text-4xl uppercase font-medium leading-6"
