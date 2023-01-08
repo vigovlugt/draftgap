@@ -69,19 +69,32 @@ export function Table<T>({
                                             }}
                                             onClick={header.column.getToggleSortingHandler()}
                                         >
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                      header.column.columnDef
-                                                          .header,
-                                                      header.getContext()
-                                                  )}
-                                            {{
-                                                asc: " ▲",
-                                                desc: " ▼",
-                                            }[
-                                                header.column.getIsSorted() as string
-                                            ] ?? null}
+                                            <div class="flex items-center gap-1">
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                          header.column
+                                                              .columnDef.header,
+                                                          header.getContext()
+                                                      )}
+                                                <Show
+                                                    when={
+                                                        header.column.getIsSorted() !==
+                                                        false
+                                                    }
+                                                >
+                                                    <span class="text-base mr-">
+                                                        {
+                                                            {
+                                                                asc: " ▲",
+                                                                desc: " ▼",
+                                                            }[
+                                                                header.column.getIsSorted() as string
+                                                            ]
+                                                        }
+                                                    </span>
+                                                </Show>
+                                            </div>
                                         </th>
                                     )}
                                 </For>
