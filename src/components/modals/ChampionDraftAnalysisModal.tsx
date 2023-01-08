@@ -50,6 +50,7 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
             title=""
             titleContainerClass="!h-0 !m-0"
             size="3xl"
+            className="max-w-[calc(100vw_-_1rem)]"
         >
             <div class="h-24 bg-[#101010] -m-6 mb-0"></div>
             <div class="flex gap-4 -mt-[62.5px] items-center">

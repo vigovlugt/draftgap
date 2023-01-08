@@ -81,9 +81,6 @@ export default function Modal({
                             >
                                 <DialogPanel
                                     class={`w-full transform overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all ring-1 ring-white ring-opacity-10 ${maxWClass} ${className}`}
-                                    style={{
-                                        "max-width": "calc(100vw - 1rem)",
-                                    }}
                                 >
                                     <div
                                         class={`flex justify-between mb-4 ${titleContainerClass}`}
