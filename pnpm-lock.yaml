@@ -10,6 +10,7 @@ specifiers:
   '@tauri-apps/api': ^1.2.0
   '@tauri-apps/cli': ^1.2.2
   '@thisbeyond/solid-dnd': ^0.7.3
+  '@types/gtag.js': ^0.0.12
   '@types/node': ^18.11.9
   autoprefixer: ^10.4.13
   date-fns: ^2.29.3
@@ -52,6 +53,7 @@ dependencies:
 
 devDependencies:
   '@tauri-apps/cli': 1.2.2
+  '@types/gtag.js': 0.0.12
   '@types/node': 18.11.18
   autoprefixer: 10.4.13_postcss@8.4.20
   esbuild: 0.15.18
@@ -1710,6 +1712,10 @@ packages:
 
   /@types/chai/4.3.4:
     resolution: {integrity: sha512-KnRanxnpfpjUTqTCXslZSEdLfXExwgNxYPdiO2WGUj8+HDjFi8R3k5RVKPeSCzLjCcshCAtVO2QBbVuAV4kTnw==}
+    dev: true
+
+  /@types/gtag.js/0.0.12:
+    resolution: {integrity: sha512-YQV9bUsemkzG81Ea295/nF/5GijnD2Af7QhEofh7xu+kvCN6RdodgNwwGWXB5GMI3NoyvQo0odNctoH/qLMIpg==}
     dev: true
 
   /@types/node/18.11.18:

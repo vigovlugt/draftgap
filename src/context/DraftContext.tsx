@@ -11,7 +11,7 @@ import { createStore, produce } from "solid-js/store";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
 import { Dataset, getDeserializedDataset } from "../lib/models/Dataset";
 import { PickData } from "../lib/models/PickData";
-import { Role } from "../lib/models/Role";
+import { displayNameByRole, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
 import predictRoles, { getTeamComps } from "../lib/role/role-predictor";
 import {
@@ -207,19 +207,32 @@ export function createDraftContext() {
         index: number,
         championKey: string | undefined,
         role: Role | undefined,
-        updateSelection = true,
-        resetFilters = true
+        { updateSelection = true, resetFilters = true, reportEvent = true } = {}
     ) => {
         batch(() => {
-            if (team === "ally") {
-                setAllyTeam(index, "championKey", championKey);
-                setAllyTeam(index, "role", role);
-                setTab("ally");
-            } else {
-                setOpponentTeam(index, "championKey", championKey);
-                setOpponentTeam(index, "role", role);
-                setTab("opponent");
+            const teamPicks = team === "ally" ? allyTeam : opponentTeam;
+            const setTeam = team === "ally" ? setAllyTeam : setOpponentTeam;
+
+            const allyClashingChampion = allyTeam.findIndex(
+                (p) => p.championKey === championKey
+            );
+            if (allyClashingChampion !== -1) {
+                resetChampion("ally", allyClashingChampion);
             }
+            const opponentClashingChampion = opponentTeam.findIndex(
+                (p) => p.championKey === championKey
+            );
+            if (opponentClashingChampion !== -1) {
+                resetChampion("opponent", opponentClashingChampion);
+            }
+            setTeam(index, "championKey", championKey);
+
+            const clashingRole = teamPicks.findIndex((p) => p.role === role);
+            if (clashingRole !== -1) {
+                setTeam(clashingRole, "role", undefined);
+            }
+            setTeam(index, "role", role);
+            setTab(team);
 
             if (updateSelection) {
                 let nextIndex = getNextPick(team);
@@ -241,11 +254,24 @@ export function createDraftContext() {
                 setRoleFilter(undefined);
                 setFavouriteFilter(false);
             }
+
+            if (reportEvent && championKey !== undefined) {
+                gtag("event", "pick_champion", {
+                    event_category: "draft",
+                    champion_key: championKey,
+                    champion_name: dataset()!.championData[championKey].name,
+                    role,
+                    role_name: role ? displayNameByRole[role] : undefined,
+                });
+            }
         });
     };
 
     const resetChampion = (team: "ally" | "opponent", index: number) => {
-        pickChampion(team, index, undefined, undefined, false, false);
+        pickChampion(team, index, undefined, undefined, {
+            updateSelection: false,
+            resetFilters: false,
+        });
     };
 
     const resetTeam = (team: "ally" | "opponent") => {

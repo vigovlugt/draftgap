@@ -1,3 +1,8 @@
+export function gtag(...args: any[]) {
+    (window as any).dataLayer.push(arguments);
+}
+window.gtag = gtag;
+
 export function setupAnalytics() {
     const isProd = import.meta.env.PROD;
     if (!isProd) return;
@@ -9,10 +14,6 @@ export function setupAnalytics() {
     }
 
     (window as any).dataLayer = (window as any).dataLayer || [];
-    const dataLayer = (window as any).dataLayer;
-    function gtag(...args: any[]) {
-        (dataLayer as any).push(arguments);
-    }
     gtag("js", new Date());
     gtag("config", tag);
 
