@@ -90,6 +90,7 @@ export const createLolClientContext = () => {
     const [clientState, setClientState] = createSignal<ClientState>(
         ClientState.NotFound
     );
+    const [clientError, setClientError] = createSignal<string | undefined>();
     const [champSelectSession, setChampSelectSession] =
         createStore<LolChampSelectChampSelectSession>(
             createChampSelectSession()
@@ -285,8 +286,10 @@ export const createLolClientContext = () => {
                         setClientState(ClientState.InChampSelect);
                     });
                 }
+                setClientError(undefined);
             } catch (e) {
                 setClientState(ClientState.NotFound);
+                setClientError((e as any).toString());
             }
 
             const timeoutMs = {
@@ -310,6 +313,7 @@ export const createLolClientContext = () => {
         clientState,
         champSelectSession,
         startLolClientIntegration,
+        clientError,
     };
 };
 

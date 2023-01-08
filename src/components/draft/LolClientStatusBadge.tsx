@@ -1,6 +1,7 @@
 import { Component } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { ClientState, useLolClient } from "../../context/LolClientContext";
+import { createErrorToast } from "../../utils/toast";
 import { Badge } from "../common/Badge";
 
 type Props = {
@@ -23,7 +24,7 @@ export const LolClientStatusBadge: Component<Props> = ({
             </Badge>
         );
 
-    const { clientState } = useLolClient();
+    const { clientState, clientError } = useLolClient();
 
     const stateName = () =>
         ((
@@ -39,6 +40,7 @@ export const LolClientStatusBadge: Component<Props> = ({
             theme={
                 clientState() == ClientState.NotFound ? "secondary" : "primary"
             }
+            onDblClick={() => createErrorToast(clientError() ?? "No error")}
         >
             {stateName()}
         </Badge>

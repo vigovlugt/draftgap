@@ -1,8 +1,11 @@
-import { check, star } from "solid-heroicons/outline";
+import { check, star, xMark } from "solid-heroicons/outline";
 import toast from "solid-toast";
 import { Toast } from "../components/common/Toast";
 
-type ToastType = "import-favourite-picks" | "import-favourite-picks-success";
+type ToastType =
+    | "import-favourite-picks"
+    | "import-favourite-picks-success"
+    | "error";
 
 export const createImportFavouritePicksToast = (onSubmit: () => void) => {
     return toast.custom((t) => (
@@ -28,6 +31,15 @@ export const createImportFavouritePicksSuccessToast = (amount: number) => {
                 content={`Successfully imported ${amount} favourite champions.`}
             />
         ),
+        {
+            duration: 3000,
+        }
+    );
+};
+
+export const createErrorToast = (message: string) => {
+    return toast.custom(
+        (t) => <Toast t={t} icon={xMark} title="Error" content={message} />,
         {
             duration: 3000,
         }
