@@ -133,7 +133,6 @@ export function analyzeDraft(
 export type AnalyzeChampionResult = {
     role: Role;
     championKey: string;
-    winrate: number;
     rating: number;
 };
 
@@ -155,7 +154,7 @@ export function analyzeChampions(
 
         const winrate = roleData.wins / roleData.games;
         const rating = winrateToRating(winrate);
-        championResults.push({ role, championKey, rating, winrate });
+        championResults.push({ role, championKey, rating });
         totalRating += rating;
     }
 
@@ -170,20 +169,7 @@ export type AnalyzeDuoResult = {
     championKeyA: string;
     roleB: Role;
     championKeyB: string;
-    winrate: number;
     rating: number;
-    priorStats: {
-        wins: number;
-        games: number;
-        winrate: number;
-        rating: number;
-    };
-    posteriorStats: {
-        wins: number;
-        games: number;
-        winrate: number;
-        rating: number;
-    };
 };
 
 export type AnalyzeDuosResult = {
@@ -252,20 +238,7 @@ export function analyzeDuos(
                 championKeyA: championKey,
                 roleB: role2,
                 championKeyB: championKey2,
-                winrate,
                 rating,
-                priorStats: {
-                    ...combinedStats,
-                    winrate: combinedStats.wins / combinedStats.games,
-                    rating: winrateToRating(
-                        combinedStats.wins / combinedStats.games
-                    ),
-                },
-                posteriorStats: {
-                    ...stats,
-                    winrate: stats.wins / stats.games,
-                    rating: winrateToRating(stats.wins / stats.games),
-                },
             });
             totalRating += rating;
         }
@@ -282,7 +255,6 @@ export type AnalyzeMatchupResult = {
     championKeyA: string;
     roleB: Role;
     championKeyB: string;
-    winrate: number;
     rating: number;
 };
 
@@ -351,7 +323,6 @@ export function analyzeMatchups(
                 championKeyA: allyChampionKey,
                 roleB: enemyRole,
                 championKeyB: enemyChampionKey,
-                winrate,
                 rating,
             });
             totalRating += rating;
