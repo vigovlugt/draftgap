@@ -64,6 +64,13 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
         .arg("Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name LIKE 'LeagueClientUx.exe'\" | Select-Object -ExpandProperty CommandLine")
         .creation_flags(0x08000000) // CREATE_NO_WINDOW
         .output()
+        .map_err(|_|    
+            std::process::Command::new("%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\powershell")
+                .arg("/C")
+                .arg("Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name LIKE 'LeagueClientUx.exe'\" | Select-Object -ExpandProperty CommandLine")
+                .creation_flags(0x08000000) // CREATE_NO_WINDOW
+                .output()
+        )
         .map_err(|_| "Could not run command")?;
 
     let output_str = std::str::from_utf8(&output.stdout).map_err(|_| "Could not parse output")?;
