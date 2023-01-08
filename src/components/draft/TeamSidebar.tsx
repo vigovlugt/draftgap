@@ -28,7 +28,7 @@ export function TeamSidebar({ team }: IProps) {
             <DamageDistributionBar team={team} />
             <div class="flex-1 flex justify-center items-center bg-[#141414]">
                 <span
-                    class="text-[2.5rem]"
+                    class="text-[2.5rem] text-center"
                     // @ts-ignore
                     use:tooltip={{
                         content: <>{capitalize(team)} estimated winrate</>,
