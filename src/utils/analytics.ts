@@ -21,10 +21,11 @@ export function setupAnalytics() {
     });
 
     setInterval(() => {
+        if (!document.hasFocus()) return;
+
         window.gtag("event", "heartbeat", {
             event_category: "heartbeat",
             non_interaction: true,
-            is_focussed: document.hasFocus(),
         });
     }, 1000 * 15);
 }
