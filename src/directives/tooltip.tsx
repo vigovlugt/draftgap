@@ -33,7 +33,7 @@ export function tooltip(
         }, delay ?? 300);
     };
 
-    const onHoverLeave = (e: MouseEvent) => {
+    const onHoverLeave = () => {
         setPopoverVisible(false);
         clearTimeout(timeout);
     };
@@ -46,5 +46,6 @@ export function tooltip(
     onCleanup(() => {
         el.removeEventListener("mouseleave", onHoverLeave);
         el.removeEventListener("mouseenter", onHover);
+        clearTimeout(timeout);
     });
 }

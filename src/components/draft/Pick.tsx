@@ -8,6 +8,7 @@ import { lockOpen, lockClosed } from "solid-heroicons/solid-mini";
 import { Role } from "../../lib/models/Role";
 import { formatPercentage } from "../../utils/rating";
 import { tooltip } from "../../directives/tooltip";
+import { useTooltip } from "../../context/TooltipContext";
 tooltip;
 
 interface IProps {
@@ -27,6 +28,7 @@ export function Pick({ team, index }: IProps) {
         allyTeamComps,
         opponentTeamComps,
     } = useDraft();
+    const { setPopoverVisible } = useTooltip();
     const picks = team === "ally" ? allyTeam : opponentTeam;
     const championData = team === "ally" ? allyTeamData : opponentTeamData;
     const teamComp = () =>
@@ -55,9 +57,10 @@ export function Pick({ team, index }: IProps) {
 
     return (
         <div
-            class="flex-1 relative cursor-pointer border-t-2 border-neutral-700 hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
+            class="flex-1 relative border-t-2 border-neutral-700 hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
             classList={{
                 "!bg-neutral-700": isSelected(),
+                "cursor-pointer ": champion() === undefined,
             }}
             onClick={() => select(team, index)}
         >
@@ -71,7 +74,7 @@ export function Pick({ team, index }: IProps) {
                 {() => (
                     <>
                         <div
-                            class="absolute top-0 bottom-0 left-0 h-full w-full hover:brightness-110 transition-[filter] duration-150 ease-in-out"
+                            class="absolute top-0 bottom-0 left-0 h-full w-full"
                             style={{
                                 "background-image": `linear-gradient(to bottom, rgba(25, 25, 25, 0.8) 0%, rgba(0, 0, 0, 0) 50%, rgba(25, 25, 25, 0.8) 100%),
                                 url(https://ddragon.leagueoflegends.com/cdn/img/champion/centered/${
@@ -99,14 +102,15 @@ export function Pick({ team, index }: IProps) {
                                 .sort(([, probA], [, probB]) => probB - probA)
                                 .map(([role, probability], i) => (
                                     <div
-                                        class="flex flex-col items-center relative group mx-[0.4rem]"
-                                        onclick={() =>
+                                        class="flex flex-col items-center relative group mx-[0.4rem] cursor-pointer"
+                                        onClick={() => {
+                                            setPopoverVisible(false);
                                             setRole(
                                                 pick.role === undefined
                                                     ? role
                                                     : undefined
-                                            )
-                                        }
+                                            );
+                                        }}
                                         // @ts-ignore
                                         use:tooltip={{
                                             content: (
