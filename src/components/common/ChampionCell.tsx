@@ -21,7 +21,8 @@ export default function ChampionCell(props: Props) {
             </span>
             <ChampionIcon
                 championKey={props.championKey}
-                class="absolute inset-0"
+                class="!absolute inset-0"
+                size={36}
             />
         </div>
     );

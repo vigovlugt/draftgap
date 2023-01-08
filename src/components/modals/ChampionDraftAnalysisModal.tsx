@@ -56,8 +56,8 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                 <div class="rounded-full border-primary border-8">
                     <ChampionIcon
                         championKey={props.championKey}
-                        class="!rounded-full w-[109px] h-[109px]"
-                        imgClass="w-[109px] h-[109px]"
+                        size={120 / 1.1}
+                        class="!rounded-full"
                     />
                 </div>
                 <div class="flex flex-col justify-center">
