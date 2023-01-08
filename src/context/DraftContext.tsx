@@ -313,6 +313,13 @@ export function createDraftContext() {
         index: number,
         resetFilters = true
     ) => {
+        if (team !== undefined) {
+            const teamPicks = team === "ally" ? allyTeam : opponentTeam;
+            if (teamPicks[index].championKey !== undefined) {
+                return;
+            }
+        }
+
         setSelection("team", team);
         setSelection("index", index);
         if (resetFilters) {
