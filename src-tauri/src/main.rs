@@ -59,9 +59,9 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
         .map_err(|_| "Could not run command")?;
 
     #[cfg(target_os = "windows")]
-    let output = std::process::Command::new("cmd")
+    let output = std::process::Command::new("powershell")
         .arg("/C")
-        .arg("WMIC PROCESS WHERE name='LeagueClientUx.exe' GET commandline")
+        .arg("Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name LIKE 'LeagueClientUx.exe'\" | Select-Object CommandLine | fl")
         .creation_flags(0x08000000) // CREATE_NO_WINDOW
         .output()
         .map_err(|_| "Could not run command")?;
