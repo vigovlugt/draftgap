@@ -59,19 +59,22 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
         .map_err(|_| "Could not run command")?;
 
     #[cfg(target_os = "windows")]
-    let output = std::process::Command::new("powershell")
+    let output = {
+        match std::process::Command::new("powershell")
         .arg("/C")
         .arg("Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name LIKE 'LeagueClientUx.exe'\" | Select-Object -ExpandProperty CommandLine")
         .creation_flags(0x08000000) // CREATE_NO_WINDOW
-        .output()
-        .map_err(|_|    
-            std::process::Command::new("%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\powershell")
-                .arg("/C")
-                .arg("Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name LIKE 'LeagueClientUx.exe'\" | Select-Object -ExpandProperty CommandLine")
-                .creation_flags(0x08000000) // CREATE_NO_WINDOW
-                .output()
-        )
-        .map_err(|_| "Could not run command")?;
+        .output() {
+            Ok(output) => Ok(output),
+            Err(_) => {
+                std::process::Command::new("C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell")
+                    .arg("/C")
+                    .arg("Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name LIKE 'LeagueClientUx.exe'\" | Select-Object -ExpandProperty CommandLine")
+                    .creation_flags(0x08000000) // CREATE_NO_WINDOW
+                    .output()
+            }
+        }
+    }.map_err(|e| "Could not run command:".to_owned() + &e.to_string())?;
 
     let output_str = std::str::from_utf8(&output.stdout).map_err(|_| "Could not parse output")?;
 
