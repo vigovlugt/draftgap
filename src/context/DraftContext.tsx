@@ -7,9 +7,9 @@ import {
     JSXElement,
     useContext,
 } from "solid-js";
-import { createStore, produce } from "solid-js/store";
+import { createStore } from "solid-js/store";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
-import { Dataset, getDeserializedDataset } from "../lib/models/Dataset";
+import { getDeserializedDataset } from "../lib/models/Dataset";
 import { PickData } from "../lib/models/PickData";
 import { displayNameByRole, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
@@ -213,23 +213,35 @@ export function createDraftContext() {
             const teamPicks = team === "ally" ? allyTeam : opponentTeam;
             const setTeam = team === "ally" ? setAllyTeam : setOpponentTeam;
 
-            const allyClashingChampion = allyTeam.findIndex(
-                (p) => p.championKey === championKey
-            );
-            if (allyClashingChampion !== -1) {
-                resetChampion("ally", allyClashingChampion);
-            }
-            const opponentClashingChampion = opponentTeam.findIndex(
-                (p) => p.championKey === championKey
-            );
-            if (opponentClashingChampion !== -1) {
-                resetChampion("opponent", opponentClashingChampion);
+            if (championKey !== undefined) {
+                const allyClashingChampion = allyTeam.findIndex(
+                    (p) => p.championKey === championKey
+                );
+                if (
+                    allyClashingChampion !== -1 &&
+                    allyClashingChampion !== index
+                ) {
+                    resetChampion("ally", allyClashingChampion);
+                }
+                const opponentClashingChampion = opponentTeam.findIndex(
+                    (p) => p.championKey === championKey
+                );
+                if (
+                    opponentClashingChampion !== -1 &&
+                    allyClashingChampion !== index
+                ) {
+                    resetChampion("opponent", opponentClashingChampion);
+                }
             }
             setTeam(index, "championKey", championKey);
 
-            const clashingRole = teamPicks.findIndex((p) => p.role === role);
-            if (clashingRole !== -1) {
-                setTeam(clashingRole, "role", undefined);
+            if (championKey !== undefined) {
+                const clashingRole = teamPicks.findIndex(
+                    (p) => p.role === role
+                );
+                if (clashingRole !== -1 && clashingRole !== index) {
+                    setTeam(clashingRole, "role", undefined);
+                }
             }
             setTeam(index, "role", role);
             setTab(team);
