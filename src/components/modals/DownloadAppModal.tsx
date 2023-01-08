@@ -116,9 +116,9 @@ export const DownloadAppModal: Component<Props> = ({ isOpen, setIsOpen }) => {
                 a champion has been picked in the client, and will update the
                 draft accordingly. Let DraftGap do the work for you.
             </p>
-            <p class="font-body mt-3 text-neutral-400">
+            <p class="font-body mt-3 text-neutral-400 text-sm">
                 You may get a 'Windows protected your PC' warning, but you can
-                safely ignore (check{" "}
+                safely ignore it (check{" "}
                 <a
                     href={
                         "https://www.virustotal.com/gui/search/" +
@@ -129,7 +129,7 @@ export const DownloadAppModal: Component<Props> = ({ isOpen, setIsOpen }) => {
                 >
                     VirusTotal
                 </a>
-                ) it by clicking 'More info' and then 'Run anyway'.
+                ) by clicking 'More info' and then 'Run anyway'.
             </p>
             <div class="flex justify-between mt-4 gap-6">
                 <a
