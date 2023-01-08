@@ -182,8 +182,10 @@ export const createLolClientContext = () => {
             const resetFilters =
                 hasCurrentSummoner() &&
                 currentSummoner.summonerId === selection.summonerId;
-            console.log("picking chapmion...");
-            pickChampion(team, index, championId, role, false, resetFilters);
+            pickChampion(team, index, championId, role, {
+                updateSelection: false,
+                resetFilters,
+            });
 
             return true;
         };
