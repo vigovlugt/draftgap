@@ -4,6 +4,7 @@ import {
     Component,
     createSignal,
     createEffect,
+    Show,
 } from "solid-js";
 import { Button } from "../common/Button";
 import Modal from "../common/Modal";
@@ -71,6 +72,15 @@ export const DownloadAppModal: Component<Props> = ({ isOpen, setIsOpen }) => {
     const [latestRelease, setLatestRelease] = createSignal<any>(null);
     const [isLoading, setIsLoading] = createSignal(false);
 
+    const isMac =
+        (
+            (navigator as any)?.userAgentData?.platform ||
+            navigator?.platform ||
+            "unknown"
+        )
+            .toUpperCase()
+            .indexOf("MAC") >= 0;
+
     createEffect(() => {
         if (latestRelease() != null) {
             return;
@@ -116,36 +126,75 @@ export const DownloadAppModal: Component<Props> = ({ isOpen, setIsOpen }) => {
                 a champion has been picked in the client, and will update the
                 draft accordingly. Let DraftGap do the work for you.
             </p>
-            <p class="font-body mt-3 text-neutral-400 text-sm">
-                You may get a 'Windows protected your PC' warning, but you can
-                safely ignore it (check{" "}
-                <a
-                    href={
-                        "https://www.virustotal.com/gui/search/" +
-                        encodeURI(encodeURIComponent(windowsDownloadUrl()))
-                    }
-                    class="text-blue-500"
-                    target="_blank"
-                >
-                    VirusTotal
-                </a>
-                ) by clicking 'More info' and then 'Run anyway'.
-            </p>
-            <div class="flex justify-between mt-4 gap-6">
-                <a
+
+            <Show
+                when={!isMac}
+                fallback={
+                    <p class="font-body mt-3 text-neutral-400 text-sm">
+                        You may get a 'macOS cannot verify that this app is free
+                        from malware' warning, but you can safely ignore it
+                        (check{" "}
+                        <a
+                            href={
+                                "https://www.virustotal.com/gui/search/" +
+                                encodeURI(encodeURIComponent(macDownloadUrl()))
+                            }
+                            class="text-blue-500"
+                            target="_blank"
+                        >
+                            VirusTotal
+                        </a>
+                        ) by using command+click in finder on the app and
+                        clicking 'Open' and then 'Open' again.
+                    </p>
+                }
+            >
+                <p class="font-body mt-3 text-neutral-400 text-sm">
+                    You may get a 'Windows protected your PC' warning, but you
+                    can safely ignore it (check{" "}
+                    <a
+                        href={
+                            "https://www.virustotal.com/gui/search/" +
+                            encodeURI(encodeURIComponent(windowsDownloadUrl()))
+                        }
+                        class="text-blue-500"
+                        target="_blank"
+                    >
+                        VirusTotal
+                    </a>
+                    ) by clicking 'More info' and then 'Run anyway'.
+                </p>
+            </Show>
+            <div
+                class="flex justify-between mt-4 gap-6"
+                classList={{
+                    "flex-row-reverse": isMac,
+                }}
+            >
+                <Button
+                    as="a"
                     href={windowsDownloadUrl()}
-                    class="uppercase justify-center text-lg relative inline-flex items-center border px-4 py-1 font-medium focus:z-10 rounded-md text-neutral-300 border-neutral-700 bg-primary hover:bg-neutral-800 w-full text-center"
+                    class="w-full text-lg flex justify-center"
+                    classList={{
+                        "border-neutral-700 text-neutral-300": isMac,
+                    }}
+                    theme={isMac ? "secondary" : "primary"}
                 >
                     <WindowsLogo />
                     Download for windows
-                </a>
-                <a
+                </Button>
+                <Button
+                    as="a"
                     href={macDownloadUrl()}
-                    class="uppercase justify-center text-lg relative inline-flex items-center border px-4 py-1 font-medium focus:z-10 rounded-md text-neutral-300 border-neutral-700 bg-primary hover:bg-neutral-800 w-full text-center"
+                    class="w-full text-lg flex justify-center"
+                    classList={{
+                        "border-neutral-700 text-neutral-300": !isMac,
+                    }}
+                    theme={isMac ? "primary" : "secondary"}
                 >
                     <AppleLogo />
                     Download for mac
-                </a>
+                </Button>
             </div>
         </Modal>
     );
