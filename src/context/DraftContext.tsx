@@ -8,6 +8,7 @@ import {
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
+import { createMediaQuery } from "../hooks/createMediaQuery";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
 import { getDeserializedDataset } from "../lib/models/Dataset";
 import { PickData } from "../lib/models/PickData";
@@ -63,6 +64,7 @@ const fetchBinDataset = async () => {
 
 export function createDraftContext() {
     const isDesktop = (window as any).__TAURI__ !== undefined;
+    const isMobileLayout = createMediaQuery("(max-width: 1023px)");
 
     const [dataset] = createResource(fetchBinDataset);
 
@@ -246,7 +248,7 @@ export function createDraftContext() {
             setTeam(index, "role", role);
             setTab(team);
 
-            if (updateSelection) {
+            if (updateSelection && !isMobileLayout()) {
                 let nextIndex = getNextPick(team);
                 if (nextIndex === -1) {
                     const otherTeam = team === "ally" ? "opponent" : "ally";
@@ -304,7 +306,7 @@ export function createDraftContext() {
     };
 
     const [selection, setSelection] = createStore<Selection>({
-        team: "ally",
+        team: isMobileLayout() ? undefined : "ally",
         index: 0,
     });
 
@@ -328,7 +330,7 @@ export function createDraftContext() {
             setFavouriteFilter(false);
         }
 
-        if (draftFinished()) {
+        if (draftFinished() || isMobileLayout()) {
             setTab("draft");
         }
     };

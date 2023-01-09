@@ -9,6 +9,7 @@ import { Role } from "../../lib/models/Role";
 import { formatPercentage } from "../../utils/rating";
 import { tooltip } from "../../directives/tooltip";
 import { useTooltip } from "../../context/TooltipContext";
+import { cursorArrowRays } from "solid-heroicons/solid";
 tooltip;
 
 interface IProps {

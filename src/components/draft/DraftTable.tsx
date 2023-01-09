@@ -18,6 +18,7 @@ import { Icon } from "solid-heroicons";
 import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
 import { RatingText } from "../common/RatingText";
+import { createMustSelectToast } from "../../utils/toast";
 
 export default function DraftTable() {
     const {
@@ -176,6 +177,7 @@ export default function DraftTable() {
 
     function pick(row: Row<Suggestion>) {
         if (!selection.team) {
+            createMustSelectToast();
             return;
         }
 
