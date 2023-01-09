@@ -116,12 +116,13 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                     showAll={true}
                     class="ring-1 ring-white ring-opacity-10"
                     data={() => {
-                        const data =
-                            draftResult()!.matchupRating.matchupResults.filter(
+                        const data = draftResult()!
+                            .matchupRating.matchupResults.filter(
                                 (result) =>
                                     result.championKeyA === props.championKey ||
                                     result.championKeyB === props.championKey
-                            );
+                            )
+                            .sort((a, b) => a.roleB - b.roleB);
 
                         return data;
                     }}
@@ -171,7 +172,8 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                                     championKeyB: r.championKeyA,
                                     roleB: r.roleA,
                                 };
-                            });
+                            })
+                            .sort((a, b) => a.roleB - b.roleB);
 
                         return data;
                     }}
