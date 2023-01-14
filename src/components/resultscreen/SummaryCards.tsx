@@ -153,7 +153,7 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
     const baseChampionRating = () =>
         draftResult().allyChampionRating.championResults.find(
             (r) => r.championKey === props.championKey
-        )!.rating;
+        )?.rating ?? 0;
 
     const duoRating = () =>
         draftResult()
