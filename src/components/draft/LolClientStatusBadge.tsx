@@ -20,7 +20,7 @@ export const LolClientStatusBadge: Component<Props> = ({
                 theme="primary"
                 class="hidden md:block"
             >
-                Get the desktop app
+                Sync with league client
             </Badge>
         );
 
@@ -32,13 +32,17 @@ export const LolClientStatusBadge: Component<Props> = ({
                 [ClientState.NotFound]: "Not Connected",
                 [ClientState.MainMenu]: "Connected",
                 [ClientState.InChampSelect]: "Champ Select",
+                [ClientState.Disabled]: "Disabled",
             } as Record<ClientState, string>
         )[clientState()]);
 
     return (
         <Badge
             theme={
-                clientState() == ClientState.NotFound ? "secondary" : "primary"
+                clientState() == ClientState.NotFound ||
+                clientState() === ClientState.Disabled
+                    ? "secondary"
+                    : "primary"
             }
             onDblClick={() => createErrorToast(clientError() ?? "No error")}
         >

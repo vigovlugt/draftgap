@@ -1,26 +1,23 @@
 import { Icon } from "solid-heroicons";
 import { magnifyingGlass, xMark } from "solid-heroicons/outline";
-import { Accessor, onCleanup, onMount, Setter, Show } from "solid-js";
+import { onCleanup, onMount, Show } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 
 export function Search() {
     const { search, setSearch } = useDraft();
 
     let inputEl: HTMLInputElement | undefined = undefined;
-    const onControlF = (e: KeyboardEvent) => {
-        if (e.ctrlKey && e.key === "f") {
-            e.preventDefault();
-            inputEl!.focus();
-        }
-    };
-    window.addEventListener("keydown", onControlF);
-
-    onCleanup(() => {
-        window.removeEventListener("keydown", onControlF);
-    });
 
     onMount(() => {
         if (!inputEl) return;
+
+        const onControlF = (e: KeyboardEvent) => {
+            if (e.ctrlKey && e.key === "f") {
+                e.preventDefault();
+                inputEl!.focus();
+            }
+        };
+        window.addEventListener("keydown", onControlF);
 
         const onTabOrEnter = (e: KeyboardEvent) => {
             if (e.key === "Tab" || e.key === "Enter") {
@@ -35,6 +32,7 @@ export function Search() {
         inputEl.addEventListener("keydown", onTabOrEnter);
         onCleanup(() => {
             inputEl!.removeEventListener("keydown", onTabOrEnter);
+            window.removeEventListener("keydown", onControlF);
         });
     });
 

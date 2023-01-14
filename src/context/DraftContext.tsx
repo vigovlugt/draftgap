@@ -36,6 +36,10 @@ type Selection = {
 
 type FavouritePick = `${string}:${Role}`;
 
+type DraftGapConfig = AnalyzeDraftConfig & {
+    disableLeagueClientIntegration: boolean;
+};
+
 // const fetchDataset = async () => {
 //     console.time("all");
 
@@ -86,12 +90,14 @@ export function createDraftContext() {
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
     const [favouriteFilter, setFavouriteFilter] = createSignal(false);
-    const [config, setConfig] = createStoredSignal<AnalyzeDraftConfig>(
+
+    const [config, setConfig] = createStoredSignal<DraftGapConfig>(
         "draftgap-config",
         {
             ignoreChampionWinrates: false,
             riskLevel: "medium",
             minGames: 1000,
+            disableLeagueClientIntegration: false,
         }
     );
 
@@ -312,18 +318,22 @@ export function createDraftContext() {
 
     const select = (
         team: Team | undefined,
-        index: number,
+        index?: number,
         resetFilters = true
     ) => {
-        if (team !== undefined) {
+        if (team !== undefined && index !== undefined) {
             const teamPicks = team === "ally" ? allyTeam : opponentTeam;
             if (teamPicks[index].championKey !== undefined) {
                 return;
             }
         }
 
+        if (index === undefined && team !== undefined) {
+            index = getNextPick(team!);
+        }
+
         setSelection("team", team);
-        setSelection("index", index);
+        setSelection("index", index ?? 0);
         if (resetFilters) {
             setSearch("");
             setRoleFilter(undefined);

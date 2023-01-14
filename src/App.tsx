@@ -28,11 +28,17 @@ import { Badge } from "./components/common/Badge";
 import { FilterMenu } from "./components/draft/FilterMenu";
 
 const App: Component = () => {
-    const { dataset, tab, setTab, draftFinished } = useDraft();
-    const { startLolClientIntegration } = useLolClient();
+    const { config, dataset, tab, setTab, draftFinished } = useDraft();
+    const { startLolClientIntegration, stopLolClientIntegration } =
+        useLolClient();
 
-    const stopLolClientIntegration = startLolClientIntegration();
-    onCleanup(stopLolClientIntegration);
+    createEffect(() => {
+        if (config().disableLeagueClientIntegration) {
+            stopLolClientIntegration();
+        } else {
+            onCleanup(startLolClientIntegration());
+        }
+    });
 
     const [showSettings, setShowSettings] = createSignal(false);
     const [showFAQ, setShowFAQ] = createSignal(false);

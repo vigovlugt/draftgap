@@ -13,7 +13,7 @@ import { Suggestion } from "../../lib/suggestions/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
-import { createSignal, Show } from "solid-js";
+import { createSignal, onCleanup, onMount, Show } from "solid-js";
 import { Icon } from "solid-heroicons";
 import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
@@ -33,6 +33,7 @@ export default function DraftTable() {
         setFavouriteFilter,
         isFavourite,
         toggleFavourite,
+        select,
     } = useDraft();
 
     const suggestions = () =>
@@ -189,5 +190,59 @@ export default function DraftTable() {
         );
     }
 
-    return <Table table={table} onClickRow={pick} />;
+    onMount(() => {
+        const draftTable = document.getElementById("draft-table");
+
+        const onKeyDown = (e: KeyboardEvent) => {
+            const activeElement = document.activeElement;
+            if (
+                activeElement?.tagName === "INPUT" &&
+                e.key !== "ArrowUp" &&
+                e.key !== "ArrowDown"
+            ) {
+                return;
+            }
+
+            const selectFirstRow = () => {
+                (
+                    draftTable!.querySelector("tbody tr") as HTMLTableRowElement
+                )?.focus();
+            };
+
+            if (e.key === "ArrowLeft" || e.key === "h") {
+                e.preventDefault();
+                select("ally");
+            } else if (e.key === "ArrowRight" || e.key === "l") {
+                e.preventDefault();
+                select("opponent");
+            } else if (e.key === "ArrowUp" || e.key === "k") {
+                e.preventDefault();
+                if (!activeElement || activeElement.tagName !== "TR") {
+                    selectFirstRow();
+                    return;
+                }
+                const previous =
+                    activeElement.previousSibling as HTMLTableRowElement;
+                if (previous.tagName === "TR") {
+                    previous.focus();
+                }
+            } else if (e.key === "ArrowDown" || e.key === "j") {
+                e.preventDefault();
+                if (!activeElement || activeElement.tagName !== "TR") {
+                    selectFirstRow();
+                    return;
+                }
+                const next = activeElement.nextSibling as HTMLTableRowElement;
+                if (next.tagName === "TR") {
+                    next.focus();
+                }
+            }
+        };
+        window.addEventListener("keydown", onKeyDown);
+        onCleanup(() => {
+            window.removeEventListener("keydown", onKeyDown);
+        });
+    });
+
+    return <Table table={table} onClickRow={pick} id="draft-table" />;
 }

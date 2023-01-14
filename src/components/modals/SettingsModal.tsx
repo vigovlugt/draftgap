@@ -1,6 +1,6 @@
 import { Icon } from "solid-heroicons";
 import { questionMarkCircle } from "solid-heroicons/solid-mini";
-import { Accessor, Setter } from "solid-js";
+import { Accessor, Setter, Show } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import {
     displayNameByRiskLevel,
@@ -21,7 +21,7 @@ export default function SettingsModal({
     setIsOpen,
     setFAQOpen,
 }: Props) {
-    const { config, setConfig } = useDraft();
+    const { config, setConfig, isDesktop } = useDraft();
 
     const riskLevelOptions: ButtonGroupOption<RiskLevel>[] = RiskLevel.map(
         (level) => ({
@@ -32,7 +32,8 @@ export default function SettingsModal({
 
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Settings">
-            <div class="flex space-x-16 items-center justify-between">
+            <h3 class="text-3xl uppercase">Draft</h3>
+            <div class="flex space-x-16 items-center justify-between mt-2">
                 <span class="text-lg uppercase">
                     Ignore indivdual champion winrates
                 </span>
@@ -47,7 +48,7 @@ export default function SettingsModal({
                     }
                 />
             </div>
-            <div class="flex items-center mt-2 mb-1 gap-1">
+            <div class="flex items-center mt-1 mb-1 gap-1">
                 <span class="text-lg uppercase block">Risk level</span>
                 <button
                     onClick={() => {
@@ -77,6 +78,26 @@ export default function SettingsModal({
                     });
                 }}
             />
+            <Show when={isDesktop}>
+                <h3 class="text-3xl uppercase mt-4">League Client</h3>
+                <div class="flex space-x-16 items-center justify-between mt-2">
+                    <span class="text-lg uppercase">
+                        Disable league client integration
+                    </span>
+                    <Toggle
+                        isChecked={() =>
+                            config().disableLeagueClientIntegration
+                        }
+                        onChange={() =>
+                            setConfig({
+                                ...config(),
+                                disableLeagueClientIntegration:
+                                    !config().disableLeagueClientIntegration,
+                            })
+                        }
+                    />
+                </div>
+            </Show>
         </Modal>
     );
 }

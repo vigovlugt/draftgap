@@ -71,6 +71,7 @@ export const ClientState = {
     NotFound: "NotFound",
     MainMenu: "MainMenu",
     InChampSelect: "InChampSelect",
+    Disabled: "Disabled",
 } as const;
 
 export type ClientState = typeof ClientState[keyof typeof ClientState];
@@ -255,10 +256,13 @@ export const createLolClientContext = () => {
         });
     };
 
+    let [integrationTimeout, setIntegrationTimeout] = createSignal<
+        NodeJS.Timeout | undefined
+    >();
+
     const startLolClientIntegration = () => {
         if (!isDesktop) return () => {};
 
-        let timeout: NodeJS.Timeout | undefined;
         const update = async () => {
             try {
                 if (!hasCurrentSummoner()) {
@@ -296,23 +300,32 @@ export const createLolClientContext = () => {
                 [ClientState.MainMenu]: 1000,
                 [ClientState.InChampSelect]: 500,
                 [ClientState.NotFound]: 2000,
+                [ClientState.Disabled]: 2000,
             }[clientState()];
-            timeout = setTimeout(() => update(), timeoutMs);
+            setIntegrationTimeout(setTimeout(() => update(), timeoutMs));
         };
         update();
 
         return () => {
             setClientState(ClientState.NotFound);
-            if (timeout) {
-                clearTimeout(timeout);
+            if (integrationTimeout() != null) {
+                clearTimeout(integrationTimeout());
             }
         };
+    };
+
+    const stopLolClientIntegration = () => {
+        if (integrationTimeout() != null) {
+            clearTimeout(integrationTimeout());
+        }
+        setClientState(ClientState.Disabled);
     };
 
     return {
         clientState,
         champSelectSession,
         startLolClientIntegration,
+        stopLolClientIntegration,
         clientError,
     };
 };

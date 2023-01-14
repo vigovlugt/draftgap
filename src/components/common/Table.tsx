@@ -1,6 +1,6 @@
 import { Table as TanstackTable, flexRender, Row } from "@tanstack/solid-table";
 import { createVirtualizer } from "@tanstack/solid-virtual";
-import { createEffect, For, JSX, Show } from "solid-js";
+import { createEffect, For, JSX, onCleanup, onMount, Show } from "solid-js";
 
 interface Props<T> {
     table: TanstackTable<T>;
