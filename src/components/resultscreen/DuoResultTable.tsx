@@ -20,6 +20,7 @@ interface Props {
     team: Team;
     data?: () => AnalyzeDuoResult[];
     onClickChampion?: (championKey: string) => void;
+    halfDuoRating?: boolean;
 }
 
 export function DuoResultTable(
@@ -123,7 +124,7 @@ export function DuoResultTable(
         table
             .getRowModel()
             .rows.map((r) => r.original.rating)
-            .reduce((a, b) => a + b, 0);
+            .reduce((a, b) => a + b / (props.halfDuoRating ? 2 : 1), 0);
 
     const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({

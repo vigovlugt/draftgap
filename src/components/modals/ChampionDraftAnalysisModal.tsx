@@ -153,6 +153,7 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                 <DuoResultTable
                     team={props.team}
                     class="ring-1 ring-white ring-opacity-10"
+                    halfDuoRating
                     data={() => {
                         const data = draftResult()!
                             .allyDuoRating.duoResults.filter(
