@@ -18,11 +18,13 @@ import {
 
 export interface Dataset {
     version: string;
+    date: string;
     championData: Record<string, ChampionData>;
 }
 
 export function serializeDataset(ctx: SerializationContext, dataset: Dataset) {
     serializeString(ctx, dataset.version);
+    serializeString(ctx, dataset.date);
     serializeObject(
         ctx,
         (ctx, value) => serializeVarUint(ctx, Number(value)),
@@ -33,6 +35,7 @@ export function serializeDataset(ctx: SerializationContext, dataset: Dataset) {
 
 export function deserializeDataset(ctx: SerializationContext): Dataset {
     const version = deserializeString(ctx);
+    const date = deserializeString(ctx);
     const championData = deserializeObject(
         ctx,
         (ctx) => deserializeVarUint(ctx),
@@ -41,6 +44,7 @@ export function deserializeDataset(ctx: SerializationContext): Dataset {
 
     return {
         version,
+        date,
         championData,
     };
 }

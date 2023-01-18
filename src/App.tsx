@@ -26,6 +26,7 @@ import { FAQModal } from "./components/modals/FAQModal";
 import { DownloadAppModal } from "./components/modals/DownloadAppModal";
 import { Badge } from "./components/common/Badge";
 import { FilterMenu } from "./components/draft/FilterMenu";
+import { formatDistance } from "date-fns";
 
 const App: Component = () => {
     const { config, dataset, tab, setTab, draftFinished } = useDraft();
@@ -43,6 +44,13 @@ const App: Component = () => {
     const [showSettings, setShowSettings] = createSignal(false);
     const [showFAQ, setShowFAQ] = createSignal(false);
     const [showDownloadModal, setShowDownloadModal] = createSignal(false);
+
+    const timeAgo = () =>
+        dataset()
+            ? formatDistance(new Date(dataset()!.date), new Date(), {
+                  addSuffix: true,
+              })
+            : "";
 
     const MainView = () => {
         return (
@@ -104,6 +112,10 @@ const App: Component = () => {
                     DRAFTGAP
                 </h1>
                 <div class="flex items-center gap-4">
+                    <div class="text-xs text-neutral-400 hidden md:flex flex-col text-right uppercase">
+                        <span>Patch {dataset()?.version ?? ""}</span>
+                        <span>Last updated {timeAgo()}</span>
+                    </div>
                     <LolClientStatusBadge
                         setShowDownloadModal={setShowDownloadModal}
                     />

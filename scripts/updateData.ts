@@ -17,6 +17,7 @@ async function main() {
 
     const dataset: Dataset = {
         version: currentVersion,
+        date: new Date().toISOString(),
         championData: {},
     };
 
