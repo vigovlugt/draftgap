@@ -34,6 +34,7 @@ export default function DraftTable() {
         isFavourite,
         toggleFavourite,
         select,
+        config,
     } = useDraft();
 
     const suggestions = () =>
@@ -70,6 +71,20 @@ export default function DraftTable() {
             filtered = filtered.filter((s) =>
                 isFavourite(s.championKey, s.role)
             );
+        }
+
+        if (config().showFavouritesAtTop) {
+            filtered = filtered.sort((a, b) => {
+                const aFav = isFavourite(a.championKey, a.role);
+                const bFav = isFavourite(b.championKey, b.role);
+                if (aFav && !bFav) {
+                    return -1;
+                } else if (!aFav && bFav) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
         }
 
         return filtered;

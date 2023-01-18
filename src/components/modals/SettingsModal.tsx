@@ -78,6 +78,21 @@ export default function SettingsModal({
                     });
                 }}
             />
+            <h3 class="text-3xl uppercase mt-4">UI</h3>
+            <div class="flex space-x-16 items-center justify-between mt-2">
+                <span class="text-lg uppercase">
+                    Place favourites at top of suggestions
+                </span>
+                <Toggle
+                    isChecked={() => config().showFavouritesAtTop}
+                    onChange={() =>
+                        setConfig({
+                            ...config(),
+                            showFavouritesAtTop: !config().showFavouritesAtTop,
+                        })
+                    }
+                />
+            </div>
             <Show when={isDesktop}>
                 <h3 class="text-3xl uppercase mt-4">League Client</h3>
                 <div class="flex space-x-16 items-center justify-between mt-2">

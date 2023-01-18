@@ -38,6 +38,7 @@ type FavouritePick = `${string}:${Role}`;
 
 type DraftGapConfig = AnalyzeDraftConfig & {
     disableLeagueClientIntegration: boolean;
+    showFavouritesAtTop: boolean;
 };
 
 // const fetchDataset = async () => {
@@ -98,6 +99,7 @@ export function createDraftContext() {
             riskLevel: "medium",
             minGames: 1000,
             disableLeagueClientIntegration: false,
+            showFavouritesAtTop: false,
         }
     );
 
