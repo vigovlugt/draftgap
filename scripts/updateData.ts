@@ -19,6 +19,7 @@ async function main() {
         version: currentVersion,
         date: new Date().toISOString(),
         championData: {},
+        rankData: { wins: 0, games: 0 },
     };
 
     for (let i = 0; i < champions.length; i += BATCH_SIZE) {
@@ -46,6 +47,25 @@ async function main() {
             dataset.championData[champion.key] = champion;
         }
     }
+
+    dataset.rankData.wins = Object.values(dataset.championData).reduce(
+        (sum, champion) =>
+            sum +
+            Object.values(champion.statsByRole).reduce(
+                (sum, stats) => sum + stats.wins,
+                0
+            ),
+        0
+    );
+    dataset.rankData.games = Object.values(dataset.championData).reduce(
+        (sum, champion) =>
+            sum +
+            Object.values(champion.statsByRole).reduce(
+                (sum, stats) => sum + stats.games,
+                0
+            ),
+        0
+    );
 
     await storeDataset(dataset);
 }

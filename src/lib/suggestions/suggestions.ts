@@ -142,18 +142,22 @@ export type AnalyzeChampionsResult = {
 };
 
 export function analyzeChampions(
-    championDataset: Dataset,
+    dataset: Dataset,
     team: Map<Role, string>
 ): AnalyzeChampionsResult {
     const championResults: AnalyzeChampionResult[] = [];
     let totalRating = 0;
 
+    const rankRating = winrateToRating(
+        dataset.rankData.wins / dataset.rankData.games
+    );
+
     for (const [role, championKey] of team) {
-        const championData = championDataset.championData[championKey];
+        const championData = dataset.championData[championKey];
         const roleData = championData.statsByRole[role];
 
         const winrate = roleData.wins / roleData.games;
-        const rating = winrateToRating(winrate);
+        const rating = winrateToRating(winrate) - rankRating;
         championResults.push({ role, championKey, rating });
         totalRating += rating;
     }
@@ -187,6 +191,10 @@ export function analyzeDuos(
     const duoResults: AnalyzeDuoResult[] = [];
     let totalRating = 0;
 
+    const rankRating = winrateToRating(
+        dataset.rankData.wins / dataset.rankData.games
+    );
+
     for (let i = 0; i < teamEntries.length; i++) {
         for (let j = i + 1; j < teamEntries.length; j++) {
             const [role, championKey] = teamEntries[i];
@@ -194,10 +202,12 @@ export function analyzeDuos(
             const roleStats = getStats(dataset, championKey, role);
             const champion2RoleStats = getStats(dataset, championKey2, role2);
             const expectedRating =
-                winrateToRating(roleStats.wins / roleStats.games) +
-                winrateToRating(
+                winrateToRating(roleStats.wins / roleStats.games) -
+                rankRating +
+                (winrateToRating(
                     champion2RoleStats.wins / champion2RoleStats.games
-                );
+                ) -
+                    rankRating);
 
             const duoStats = getStats(
                 dataset,
@@ -216,6 +226,7 @@ export function analyzeDuos(
                 championKey
             );
             const combinedStats = divideStats(
+                // Adding two stats keeps only 1 rank winrate bias
                 addStats(duoStats, champion2DuoStats),
                 2
             );
@@ -224,13 +235,15 @@ export function analyzeDuos(
                 combinedStats,
                 // Scale prior stats by winrate of expected rating, as we expect the duo to have a similar winrate to the expected rating
                 {
-                    wins: priorGames * ratingToWinrate(expectedRating),
+                    wins:
+                        priorGames *
+                        ratingToWinrate(expectedRating + rankRating),
                     games: priorGames,
                 }
             );
             const winrate = stats.wins / stats.games;
 
-            const actualRating = winrateToRating(winrate);
+            const actualRating = winrateToRating(winrate) - rankRating;
             const rating = actualRating - expectedRating;
 
             duoResults.push({
@@ -272,6 +285,10 @@ export function analyzeMatchups(
     const matchupResults: AnalyzeMatchupResult[] = [];
     let totalRating = 0;
 
+    const rankRating = winrateToRating(
+        dataset.rankData.wins / dataset.rankData.games
+    );
+
     for (const [allyRole, allyChampionKey] of team) {
         for (const [enemyRole, enemyChampionKey] of enemy) {
             const roleStats = getStats(dataset, allyChampionKey, allyRole);
@@ -280,9 +297,12 @@ export function analyzeMatchups(
                 enemyChampionKey,
                 enemyRole
             );
+
             const expectedRating =
                 winrateToRating(roleStats.wins / roleStats.games) -
-                winrateToRating(enemyRoleStats.wins / enemyRoleStats.games);
+                rankRating -
+                (winrateToRating(enemyRoleStats.wins / enemyRoleStats.games) -
+                    rankRating);
 
             const matchupStats = getStats(
                 dataset,
@@ -305,6 +325,7 @@ export function analyzeMatchups(
                 enemyMatchupStats.games - enemyMatchupStats.wins;
             const stats = addStats(
                 {
+                    // Summing the wins and losses of the two matchups cancels the rank winrate bias of both matchups
                     wins: (matchupStats.wins + enemyLosses) / 2,
                     games: (matchupStats.games + enemyMatchupStats.games) / 2,
                 },
@@ -315,6 +336,7 @@ export function analyzeMatchups(
             );
             const winrate = stats.wins / stats.games;
 
+            // We don't need to subtract the rank rating here, as we already did it for the expected rating
             const actualRating = winrateToRating(winrate);
             const rating = actualRating - expectedRating;
 

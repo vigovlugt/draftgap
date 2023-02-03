@@ -8,18 +8,19 @@ import {
     deserialize,
     serializeString,
     deserializeString,
-    createObjectDeserializer,
     SerializationContext,
     serializeObject,
     serializeVarUint,
     deserializeObject,
     deserializeVarUint,
 } from "../serialization/serialization";
+import { deserializeRankData, RankData, serializeRankData } from "./RankData";
 
 export interface Dataset {
     version: string;
     date: string;
     championData: Record<string, ChampionData>;
+    rankData: RankData;
 }
 
 export function serializeDataset(ctx: SerializationContext, dataset: Dataset) {
@@ -31,6 +32,7 @@ export function serializeDataset(ctx: SerializationContext, dataset: Dataset) {
         serializeChampionData,
         dataset.championData
     );
+    serializeRankData(ctx, dataset.rankData);
 }
 
 export function deserializeDataset(ctx: SerializationContext): Dataset {
@@ -41,11 +43,13 @@ export function deserializeDataset(ctx: SerializationContext): Dataset {
         (ctx) => deserializeVarUint(ctx),
         deserializeChampionData
     );
+    const rankData = deserializeRankData(ctx);
 
     return {
         version,
         date,
         championData,
+        rankData,
     };
 }
 

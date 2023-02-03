@@ -71,7 +71,10 @@ export function createDraftContext() {
     const isDesktop = (window as any).__TAURI__ !== undefined;
     const isMobileLayout = createMediaQuery("(max-width: 1023px)");
 
+    const DRAFTGAP_DEBUG = ((window as any).DRAFTGAP_DEBUG = {} as any);
+
     const [dataset] = createResource(fetchBinDataset);
+    DRAFTGAP_DEBUG.dataset = dataset;
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
         { championKey: undefined, role: undefined },
@@ -87,6 +90,8 @@ export function createDraftContext() {
         { championKey: undefined, role: undefined },
         { championKey: undefined, role: undefined },
     ]);
+    DRAFTGAP_DEBUG.allyTeam = allyTeam;
+    DRAFTGAP_DEBUG.opponentTeam = opponentTeam;
 
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
@@ -102,6 +107,7 @@ export function createDraftContext() {
             showFavouritesAtTop: false,
         }
     );
+    DRAFTGAP_DEBUG.config = config;
 
     function getTeamCompsForTeam(team: Team) {
         if (!dataset()) return [];
@@ -141,6 +147,8 @@ export function createDraftContext() {
             config()
         );
     });
+    DRAFTGAP_DEBUG.allyDraftResult = allyDraftResult;
+    DRAFTGAP_DEBUG.opponentDraftResult = opponentDraftResult;
 
     const allyDamageDistribution = createMemo(() => {
         if (!dataset()) return undefined;
