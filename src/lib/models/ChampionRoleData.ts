@@ -106,3 +106,10 @@ export function deserializeChampionRoleData(
         damageProfile,
     };
 }
+
+export function deleteChampionRoleDataMatchupSynergyData(
+    data: ChampionRoleData
+) {
+    data.matchup = {} as ChampionRoleData["matchup"];
+    data.synergy = {} as ChampionRoleData["synergy"];
+}

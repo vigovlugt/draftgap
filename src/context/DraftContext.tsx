@@ -57,9 +57,9 @@ type DraftGapConfig = AnalyzeDraftConfig & {
 //     return json as Dataset;
 // };
 
-const fetchBinDataset = async () => {
+const fetchBinDataset = async (name: "30-days" | "current-patch") => {
     const response = await fetch(
-        "https://bucket.draftgap.com/datasets/latest.bin"
+        `https://bucket.draftgap.com/datasets/${name}.bin`
     );
     const arrayBuffer = await response.arrayBuffer();
 
@@ -73,8 +73,13 @@ export function createDraftContext() {
 
     const DRAFTGAP_DEBUG = ((window as any).DRAFTGAP_DEBUG = {} as any);
 
-    const [dataset] = createResource(fetchBinDataset);
+    const [dataset] = createResource(() => fetchBinDataset("current-patch"));
+    const [dataset30Days] = createResource(() => fetchBinDataset("30-days"));
     DRAFTGAP_DEBUG.dataset = dataset;
+    DRAFTGAP_DEBUG.dataset30Days = dataset30Days;
+
+    const isLoaded = () =>
+        dataset() !== undefined && dataset30Days() !== undefined;
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
         { championKey: undefined, role: undefined },
@@ -110,7 +115,7 @@ export function createDraftContext() {
     DRAFTGAP_DEBUG.config = config;
 
     function getTeamCompsForTeam(team: Team) {
-        if (!dataset()) return [];
+        if (!isLoaded()) return [];
 
         const picks = team === "ally" ? allyTeam : opponentTeam;
 
@@ -130,18 +135,20 @@ export function createDraftContext() {
     const opponentRoles = createMemo(() => predictRoles(opponentTeamComps()));
 
     const allyDraftResult = createMemo(() => {
-        if (!dataset()) return undefined;
+        if (!isLoaded()) return undefined;
         return analyzeDraft(
             dataset()!,
+            dataset30Days()!,
             allyTeamComps()[0][0],
             opponentTeamComps()[0][0],
             config()
         );
     });
     const opponentDraftResult = createMemo(() => {
-        if (!dataset()) return undefined;
+        if (!isLoaded()) return undefined;
         return analyzeDraft(
             dataset()!,
+            dataset30Days()!,
             opponentTeamComps()[0][0],
             allyTeamComps()[0][0],
             config()
@@ -151,19 +158,19 @@ export function createDraftContext() {
     DRAFTGAP_DEBUG.opponentDraftResult = opponentDraftResult;
 
     const allyDamageDistribution = createMemo(() => {
-        if (!dataset()) return undefined;
+        if (!isLoaded()) return undefined;
         if (!allyTeamComps().length) return undefined;
         return getTeamDamageDistribution(dataset()!, allyTeamComps()[0][0]);
     });
 
     const opponentDamageDistribution = createMemo(() => {
-        if (!dataset()) return undefined;
+        if (!isLoaded()) return undefined;
         if (!opponentTeamComps().length) return undefined;
         return getTeamDamageDistribution(dataset()!, opponentTeamComps()[0][0]);
     });
 
     function getTeamData(team: Team): Map<string, PickData> {
-        if (!dataset()) return new Map();
+        if (!isLoaded()) return new Map();
 
         const picks = team === "ally" ? allyTeam : opponentTeam;
         const roles = team === "ally" ? allyRoles() : opponentRoles();
@@ -187,13 +194,14 @@ export function createDraftContext() {
     const opponentTeamData = createMemo(() => getTeamData("opponent"));
 
     const allySuggestions = createMemo(() => {
-        if (!dataset()) return [];
+        if (!isLoaded()) return [];
 
         const allyTeamComp = allyTeamComps()[0][0] ?? new Map();
         const enemyTeamComp = opponentTeamComps()[0][0] ?? new Map();
 
         return getSuggestions(
             dataset()!,
+            dataset30Days()!,
             allyTeamComp,
             enemyTeamComp,
             config()
@@ -201,13 +209,14 @@ export function createDraftContext() {
     });
 
     const opponentSuggestions = createMemo(() => {
-        if (!dataset()) return [];
+        if (!isLoaded()) return [];
 
         const allyTeamComp = allyTeamComps()[0][0] ?? new Map();
         const enemyTeamComp = opponentTeamComps()[0][0] ?? new Map();
 
         return getSuggestions(
             dataset()!,
+            dataset30Days()!,
             enemyTeamComp,
             allyTeamComp,
             config()

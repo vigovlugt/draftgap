@@ -5,7 +5,10 @@ import { getChampionDataFromLolalytics } from "../src/lib/data/lolalytics";
 import { getVersions, getChampions } from "../src/lib/data/riot";
 import { storeDataset } from "../src/lib/data/storage/storage";
 import { ChampionData } from "../src/lib/models/ChampionData";
-import { Dataset } from "../src/lib/models/Dataset";
+import {
+    Dataset,
+    deleteDatasetMatchupSynergyData,
+} from "../src/lib/models/Dataset";
 
 const BATCH_SIZE = 10;
 
@@ -15,8 +18,20 @@ async function main() {
 
     const champions = await getChampions(currentVersion);
 
+    const dataset30days = await getDataset("30", champions);
+    await storeDataset(dataset30days, { name: "30-days" });
+
+    const datasetCurrentPatch = await getDataset(currentVersion, champions);
+    deleteDatasetMatchupSynergyData(datasetCurrentPatch);
+    await storeDataset(datasetCurrentPatch, { name: "current-patch" });
+}
+
+async function getDataset(
+    version: string,
+    champions: { id: string; key: string; name: string }[]
+) {
     const dataset: Dataset = {
-        version: currentVersion,
+        version: version,
         date: new Date().toISOString(),
         championData: {},
         rankData: { wins: 0, games: 0 },
@@ -31,9 +46,8 @@ async function main() {
         const batch = champions.slice(i, i + BATCH_SIZE);
         const championData = (
             await Promise.allSettled(
-                batch.map(
-                    (champion) => getChampionDataFromLolalytics("30", champion)
-                    //getChampionDataFromLolalytics(currentVersion, champion)
+                batch.map((champion) =>
+                    getChampionDataFromLolalytics(version, champion)
                 )
             )
         )
@@ -67,7 +81,7 @@ async function main() {
         0
     );
 
-    await storeDataset(dataset);
+    return dataset;
 }
 
 main();
