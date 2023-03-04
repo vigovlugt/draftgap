@@ -15,6 +15,7 @@ import {
     deserializeVarUint,
 } from "../serialization/serialization";
 import { deserializeRankData, RankData, serializeRankData } from "./RankData";
+import { deleteChampionRoleDataMatchupSynergyData } from "./ChampionRoleData";
 
 export interface Dataset {
     version: string;
@@ -59,4 +60,12 @@ export function getSerializedDataset(dataset: Dataset) {
 
 export function getDeserializedDataset(serializedDataset: ArrayBuffer) {
     return deserialize(deserializeDataset, serializedDataset);
+}
+
+export function deleteDatasetMatchupSynergyData(dataset: Dataset) {
+    for (const champion of Object.values(dataset.championData)) {
+        for (const role of Object.values(champion.statsByRole)) {
+            deleteChampionRoleDataMatchupSynergyData(role);
+        }
+    }
 }

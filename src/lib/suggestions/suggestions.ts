@@ -11,6 +11,7 @@ export interface Suggestion {
 
 export function getSuggestions(
     dataset: Dataset,
+    synergyMatchupDataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>,
     config: AnalyzeDraftConfig
@@ -31,7 +32,13 @@ export function getSuggestions(
                 continue;
 
             team.set(role, championKey);
-            const draftResult = analyzeDraft(dataset, team, enemy, config);
+            const draftResult = analyzeDraft(
+                dataset,
+                synergyMatchupDataset,
+                team,
+                enemy,
+                config
+            );
             team.delete(role);
 
             suggestions.push({
@@ -88,23 +95,29 @@ export interface AnalyzeDraftConfig {
 }
 
 export function analyzeDraft(
-    championDataset: Dataset,
+    dataset: Dataset,
+    synergyMatchupDataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>,
     config: AnalyzeDraftConfig
 ): DraftResult {
-    const allyChampionRating = !config.ignoreChampionWinrates
-        ? analyzeChampions(championDataset, team)
-        : { totalRating: 0, winrate: 0, championResults: [] };
-    const enemyChampionRating = !config.ignoreChampionWinrates
-        ? analyzeChampions(championDataset, enemy)
-        : { totalRating: 0, winrate: 0, championResults: [] };
     const priorGames = priorGamesByRiskLevel[config.riskLevel];
 
-    const allyDuoRating = analyzeDuos(championDataset, team, priorGames);
-    const enemyDuoRating = analyzeDuos(championDataset, enemy, priorGames);
+    const allyChampionRating = !config.ignoreChampionWinrates
+        ? analyzeChampions(dataset, team, priorGames)
+        : { totalRating: 0, winrate: 0, championResults: [] };
+    const enemyChampionRating = !config.ignoreChampionWinrates
+        ? analyzeChampions(dataset, enemy, priorGames)
+        : { totalRating: 0, winrate: 0, championResults: [] };
+
+    const allyDuoRating = analyzeDuos(synergyMatchupDataset, team, priorGames);
+    const enemyDuoRating = analyzeDuos(
+        synergyMatchupDataset,
+        enemy,
+        priorGames
+    );
     const matchupRating = analyzeMatchups(
-        championDataset,
+        synergyMatchupDataset,
         team,
         enemy,
         priorGames
@@ -143,21 +156,29 @@ export type AnalyzeChampionsResult = {
 
 export function analyzeChampions(
     dataset: Dataset,
-    team: Map<Role, string>
+    team: Map<Role, string>,
+    priorGames: number
 ): AnalyzeChampionsResult {
     const championResults: AnalyzeChampionResult[] = [];
     let totalRating = 0;
 
-    const rankRating = winrateToRating(
-        dataset.rankData.wins / dataset.rankData.games
-    );
+    const rankWinrate = dataset.rankData.wins / dataset.rankData.games;
+    const rankRating = winrateToRating(rankWinrate);
 
     for (const [role, championKey] of team) {
         const championData = dataset.championData[championKey];
         const roleData = championData.statsByRole[role];
 
-        const winrate = roleData.wins / roleData.games;
-        const rating = winrateToRating(winrate) - rankRating;
+        const stats = addStats(
+            roleData,
+            // Scale prior stats by winrate of expected rating, as we expect the duo to have a similar winrate to the expected rating
+            // We estimate the expected rating to be the rank winrate
+            {
+                wins: priorGames * rankWinrate,
+                games: priorGames,
+            }
+        );
+        const rating = winrateToRating(stats.wins / stats.games) - rankRating;
         championResults.push({ role, championKey, rating });
         totalRating += rating;
     }
