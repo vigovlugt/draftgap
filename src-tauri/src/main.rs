@@ -76,14 +76,14 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
         }
     }.map_err(|e| "Could not run command:".to_owned() + &e.to_string())?;
 
-    let output_str = std::str::from_utf8(&output.stdout).map_err(|_| "Could not parse output")?;
+    let output_str = String::from_utf8_lossy(&output.stdout);
 
     let port_regex = "--app-port=([0-9]+)";
     let password_regex = "--remoting-auth-token=([a-zA-Z0-9_-]+)";
 
     let port: u16 = regex::Regex::new(port_regex)
         .expect("Could not create port regex")
-        .captures(output_str)
+        .captures(&output_str)
         .ok_or_else(|| "Could not find port")?
         .get(1)
         .ok_or_else(|| "Could not find port")?
@@ -93,7 +93,7 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
 
     let password = regex::Regex::new(password_regex)
         .expect("Could not create password regex")
-        .captures(output_str)
+        .captures(&output_str)
         .ok_or_else(|| "Could not find password")?
         .get(1)
         .ok_or_else(|| "Could not find password")?
