@@ -74,7 +74,8 @@ export default function DraftTable() {
         }
 
         if (config().showFavouritesAtTop) {
-            filtered = filtered.sort((a, b) => {
+            // Sort is normally in place, but then tanstack table does not see the update.
+            filtered = [...filtered].sort((a, b) => {
                 const aFav = isFavourite(a.championKey, a.role);
                 const bFav = isFavourite(b.championKey, b.role);
                 if (aFav && !bFav) {
@@ -178,6 +179,7 @@ export default function DraftTable() {
     const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({
         get data() {
+            console.log("data");
             return filteredSuggestions();
         },
         columns,
