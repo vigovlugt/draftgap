@@ -179,7 +179,6 @@ export default function DraftTable() {
     const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({
         get data() {
-            console.log("data");
             return filteredSuggestions();
         },
         columns,

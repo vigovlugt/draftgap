@@ -3,6 +3,7 @@ import { Icon } from "solid-heroicons";
 import {
     Component,
     createEffect,
+    createMemo,
     createSignal,
     For,
     Match,
@@ -33,8 +34,12 @@ const App: Component = () => {
     const { startLolClientIntegration, stopLolClientIntegration } =
         useLolClient();
 
+    const disableLeagueClientIntegration = createMemo(
+        () => config().disableLeagueClientIntegration
+    );
+
     createEffect(() => {
-        if (config().disableLeagueClientIntegration) {
+        if (disableLeagueClientIntegration()) {
             stopLolClientIntegration();
         } else {
             onCleanup(startLolClientIntegration());
