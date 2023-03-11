@@ -4,7 +4,10 @@ import { ChampionMatchupData } from "../../models/ChampionMatchupData";
 import { getRoleFromString, Role, ROLES } from "../../models/Role";
 import { getLolalyticsChampion } from "./champion";
 import { getLolalyticsChampion2 } from "./champion2";
-import { ChampionRoleData } from "../../models/ChampionRoleData";
+import {
+    ChampionRoleData,
+    defaultChampionRoleData,
+} from "../../models/ChampionRoleData";
 
 const MIN_ROLE_PLAY_RATE = 10;
 
@@ -28,9 +31,11 @@ export async function getChampionDataFromLolalytics(
 
     // If data is not available, throw
     if (!championData.skills) {
-        throw new Error("No data available for this champion and patch");
+        return undefined;
+        //throw new Error("No data available for this champion and patch");
     }
 
+    const mainRole = championData.header.lane as LolalyticsRole;
     const remainingRoles = LOLALYTICS_ROLES.filter(
         (role) => role !== championData.header.lane
     );
@@ -41,14 +46,26 @@ export async function getChampionDataFromLolalytics(
             getLolalyticsChampion2(version, champion.key, role),
         ])
     );
-    let roleData = await Promise.all(rolePromises);
-    roleData = [[championData, champion2Data], ...roleData];
+    const roleDataResults = await Promise.allSettled(rolePromises);
+
+    let roleData = roleDataResults.map((result, i) => {
+        if (result.status === "fulfilled") {
+            return [remainingRoles[i], result.value] as const;
+        }
+
+        return [remainingRoles[i], undefined] as const;
+    });
+    roleData = [[mainRole, [championData, champion2Data]], ...roleData];
 
     const model: ChampionData = {
         ...champion,
         statsByRole: Object.fromEntries(
-            roleData.map(([championData, champion2Data]) => {
-                const role = championData.header.lane as LolalyticsRole;
+            roleData.map(([role, data]) => {
+                if (!data || data[0].header.n === 0) {
+                    return [getRoleFromString(role), defaultChampionRoleData()];
+                }
+
+                const [championData, champion2Data] = data;
 
                 const championRoleData: ChampionRoleData = {
                     games: championData.header.n,
@@ -58,6 +75,9 @@ export async function getChampionDataFromLolalytics(
                     matchup: Object.fromEntries(
                         LOLALYTICS_ROLES.map((role) => {
                             const data = championData[`enemy_${role}`];
+                            if (!data) {
+                                console.log(championData);
+                            }
 
                             return [
                                 getRoleFromString(role),

@@ -1,5 +1,6 @@
 import { fetch } from "undici";
 import { LolalyticsRole } from ".";
+import { retry } from "../../../utils/fetch";
 import { Role } from "../../models/Role";
 
 export interface LolalyticsChampionResponse {
@@ -230,11 +231,27 @@ export async function getLolalyticsChampion(
     // convert patch from 12.21.1 to 12.21
     patch = patch.split(".").slice(0, 2).join(".");
 
-    const res = await fetch(
-        `https://axe.lolalytics.com/mega/?ep=champion&p=d&v=1&patch=${patch}&cid=${championKey}&lane=${lane}&tier=platinum_plus&queue=420&region=all`
-    );
+    const url = `https://axe.lolalytics.com/mega/?ep=champion&p=d&v=1&patch=${patch}&cid=${championKey}&lane=${lane}&tier=platinum_plus&queue=420&region=all`;
+    const res = await retry(() => fetch(url));
 
-    const json = (await res.json()) as LolalyticsChampionResponse;
+    const text = await res.text();
+    if (!text) {
+        throw new Error("No text for lolalytics champion " + championKey);
+    }
 
-    return json;
+    try {
+        const json = JSON.parse(text) as LolalyticsChampionResponse;
+
+        return json;
+    } catch (e) {
+        throw new Error(
+            "Error parsing JSON for lolalytics champion " +
+                championKey +
+                " url: " +
+                url,
+            {
+                cause: e,
+            }
+        );
+    }
 }

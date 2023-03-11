@@ -9,6 +9,7 @@ import {
     Dataset,
     deleteDatasetMatchupSynergyData,
 } from "../src/lib/models/Dataset";
+import { retry } from "../src/utils/fetch";
 
 const BATCH_SIZE = 10;
 
@@ -18,18 +19,20 @@ async function main() {
 
     const champions = await getChampions(currentVersion);
 
-    const dataset30days = await getDataset("30", champions);
-    await storeDataset(dataset30days, { name: "30-days" });
-
     const datasetCurrentPatch = await getDataset(currentVersion, champions);
+    const dataset30days = await getDataset("30", champions);
+
     deleteDatasetMatchupSynergyData(datasetCurrentPatch);
+
     await storeDataset(datasetCurrentPatch, { name: "current-patch" });
+    await storeDataset(dataset30days, { name: "30-days" });
 }
 
 async function getDataset(
     version: string,
     champions: { id: string; key: string; name: string }[]
 ) {
+    console.log("Getting dataset for version", version);
     const dataset: Dataset = {
         version: version,
         date: new Date().toISOString(),
@@ -44,20 +47,26 @@ async function getDataset(
             )}`
         );
         const batch = champions.slice(i, i + BATCH_SIZE);
-        const championData = (
-            await Promise.allSettled(
-                batch.map((champion) =>
-                    getChampionDataFromLolalytics(version, champion)
-                )
+        const championData = await Promise.all(
+            batch.map(
+                async (champion) =>
+                    [
+                        champion,
+                        getChampionDataFromLolalytics(version, champion),
+                    ] as const
             )
-        )
-            .filter(
-                (result): result is PromiseFulfilledResult<ChampionData> =>
-                    result.status === "fulfilled"
-            )
-            .map((result) => result.value);
+        );
 
-        for (const champion of championData) {
+        for (const [c, champion] of championData) {
+            if (!champion) {
+                console.log(
+                    "Skipping champion " +
+                        c.name +
+                        " as it lolalytics has no data for it"
+                );
+                continue;
+            }
+
             dataset.championData[champion.key] = champion;
         }
     }

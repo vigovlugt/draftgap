@@ -1,5 +1,6 @@
 import { fetch } from "undici";
 import { LolalyticsRole } from ".";
+import { retry } from "../../../utils/fetch";
 import { Role } from "../../models/Role";
 
 export interface LolalyticsChampion2Response {
@@ -58,8 +59,10 @@ export async function getLolalyticsChampion2(
     // convert patch from 12.21.1 to 12.21
     patch = patch.split(".").slice(0, 2).join(".");
 
-    const res = await fetch(
-        `https://axe.lolalytics.com/mega/?ep=champion2&p=d&v=1&patch=${patch}&cid=${championKey}&lane=${lane}&tier=platinum_plus&queue=420&region=all`
+    const res = await retry(() =>
+        fetch(
+            `https://axe.lolalytics.com/mega/?ep=champion2&p=d&v=1&patch=${patch}&cid=${championKey}&lane=${lane}&tier=platinum_plus&queue=420&region=all`
+        )
     );
 
     const json = (await res.json()) as LolalyticsChampion2Response;
