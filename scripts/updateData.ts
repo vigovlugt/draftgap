@@ -52,7 +52,7 @@ async function getDataset(
                 async (champion) =>
                     [
                         champion,
-                        getChampionDataFromLolalytics(version, champion),
+                        await getChampionDataFromLolalytics(version, champion),
                     ] as const
             )
         );
