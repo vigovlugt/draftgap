@@ -4,12 +4,10 @@ dotenv.config();
 import { getChampionDataFromLolalytics } from "../src/lib/data/lolalytics";
 import { getVersions, getChampions } from "../src/lib/data/riot";
 import { storeDataset } from "../src/lib/data/storage/storage";
-import { ChampionData } from "../src/lib/models/ChampionData";
 import {
     Dataset,
     deleteDatasetMatchupSynergyData,
 } from "../src/lib/models/Dataset";
-import { retry } from "../src/utils/fetch";
 
 const BATCH_SIZE = 10;
 

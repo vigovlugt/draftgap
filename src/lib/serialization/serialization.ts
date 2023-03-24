@@ -1,4 +1,4 @@
-const MAX_BYTES = 1024 * 1024 * 50;
+const MAX_BYTES = 1024 * 1024 * 64; // 64 MB
 
 export interface SerializationContext {
     offset: number;

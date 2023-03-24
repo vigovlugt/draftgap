@@ -10,7 +10,7 @@ import {
 import { createStore } from "solid-js/store";
 import { createMediaQuery } from "../hooks/createMediaQuery";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
-import { getDeserializedDataset } from "../lib/models/Dataset";
+import { Dataset, getDeserializedDataset } from "../lib/models/Dataset";
 import { PickData } from "../lib/models/PickData";
 import { displayNameByRole, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
@@ -41,25 +41,17 @@ type DraftGapConfig = AnalyzeDraftConfig & {
     showFavouritesAtTop: boolean;
 };
 
-// const fetchDataset = async () => {
-//     console.time("all");
-
-//     console.time("fetch");
-//     const response = await fetch("data/datasets/30.json");
-//     console.timeEnd("fetch");
-
-//     console.time("json");
-//     const json = await response.json();
-//     console.timeEnd("json");
-
-//     console.timeEnd("all");
-
-//     return json as Dataset;
-// };
+const fetchDataset = async (name: "30-days" | "current-patch") => {
+    const response = await fetch(
+        `https://bucket.draftgap.com/datasets/v2/${name}.json`
+    );
+    const json = await response.json();
+    return json as Dataset;
+};
 
 const fetchBinDataset = async (name: "30-days" | "current-patch") => {
     const response = await fetch(
-        `https://bucket.draftgap.com/datasets/${name}.bin`
+        `https://bucket.draftgap.com/datasets/v2/${name}.json`
     );
     const arrayBuffer = await response.arrayBuffer();
 
@@ -73,8 +65,8 @@ export function createDraftContext() {
 
     const DRAFTGAP_DEBUG = ((window as any).DRAFTGAP_DEBUG = {} as any);
 
-    const [dataset] = createResource(() => fetchBinDataset("current-patch"));
-    const [dataset30Days] = createResource(() => fetchBinDataset("30-days"));
+    const [dataset] = createResource(() => fetchDataset("current-patch"));
+    const [dataset30Days] = createResource(() => fetchDataset("30-days"));
     DRAFTGAP_DEBUG.dataset = dataset;
     DRAFTGAP_DEBUG.dataset30Days = dataset30Days;
 
