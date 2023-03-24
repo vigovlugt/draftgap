@@ -1,10 +1,10 @@
-import { PutBucketCorsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { bytesToHumanReadable } from "../../../utils/bytes";
 import {
-    Dataset,
-    getDeserializedDataset,
-    getSerializedDataset,
-} from "../../models/Dataset";
+    PutBucketCorsCommand,
+    PutObjectCommand,
+    PutObjectCommandInput,
+} from "@aws-sdk/client-s3";
+import { bytesToHumanReadable } from "../../../utils/bytes";
+import { Dataset } from "../../models/Dataset";
 import { client } from "./client";
 
 export async function storeDataset(
@@ -19,7 +19,8 @@ export async function storeDataset(
         Bucket: process.env.S3_BUCKET || "draftgap",
         Key: `datasets/v2/${name}.json`,
         Body: JSON.stringify(dataset), //new Uint8Array(serialized),
-    };
+        ContentType: "application/json",
+    } satisfies PutObjectCommandInput;
     const command = new PutObjectCommand(params);
     await client.send(command);
 
