@@ -64,6 +64,82 @@ export default function ResultScreen() {
             <DraftSummaryCards team="ally" />
             <DraftSummaryCards team="opponent" class="mb-12 mt-6" />
 
+            <div
+                class="flex-col md:flex-row flex gap-4 mb-8 overflow-hidden"
+                id="total-result"
+            >
+                <div class="md:w-1/2">
+                    <h3
+                        class="text-3xl mb-1 uppercase"
+                        // @ts-ignore
+                        use:tooltip={{
+                            content: (
+                                <>
+                                    How much does every champion contribute to
+                                    the draft in which aspect?
+                                    <br />
+                                    <br />
+                                    <strong>BASE</strong>: Champion base winrate
+                                    <br />
+                                    <strong>MATCHUP</strong>: Total winrate of
+                                    all champion matchups
+                                    <br />
+                                    <strong>DUO</strong>: Total winrate of all
+                                    champion duos
+                                    <br />
+                                    <strong>TOTAL</strong>: Total contribution
+                                    of champion (BASE + MATCHUP + DUO)
+                                </>
+                            ),
+                            placement: "top",
+                        }}
+                    >
+                        Ally overview
+                    </h3>
+                    <TotalChampionContributionTable
+                        team="ally"
+                        onClickChampion={(key) =>
+                            openChampionDraftAnalysisModal("ally", key)
+                        }
+                    />
+                </div>
+                <div class="md:w-1/2">
+                    <h3
+                        class="text-3xl mb-1 uppercase"
+                        // @ts-ignore
+                        use:tooltip={{
+                            content: (
+                                <>
+                                    How much does every champion contribute to
+                                    the draft in which aspect?
+                                    <br />
+                                    <br />
+                                    <strong>BASE</strong>: Champion base winrate
+                                    <br />
+                                    <strong>MATCHUP</strong>: Total winrate of
+                                    all champion matchups
+                                    <br />
+                                    <strong>DUO</strong>: Total winrate of all
+                                    champion duos
+                                    <br />
+                                    <strong>TOTAL</strong>: Total contribution
+                                    of champion (BASE + MATCHUP + DUO)
+                                </>
+                            ),
+                            placement: "top",
+                        }}
+                    >
+                        Opponent overview
+                    </h3>
+                    <TotalChampionContributionTable
+                        team="opponent"
+                        onClickChampion={(key) =>
+                            openChampionDraftAnalysisModal("opponent", key)
+                        }
+                    />
+                </div>
+            </div>
+
             <Show when={!config().ignoreChampionWinrates}>
                 <div
                     class="flex-col flex sm:flex-row gap-4 mb-8"
@@ -208,82 +284,6 @@ export default function ResultScreen() {
                         Opponent duos
                     </h3>
                     <DuoResultTable
-                        team="opponent"
-                        onClickChampion={(key) =>
-                            openChampionDraftAnalysisModal("opponent", key)
-                        }
-                    />
-                </div>
-            </div>
-
-            <div
-                class="flex-col md:flex-row flex gap-4 mb-8 overflow-hidden"
-                id="total-result"
-            >
-                <div class="md:w-1/2">
-                    <h3
-                        class="text-3xl mb-1 uppercase"
-                        // @ts-ignore
-                        use:tooltip={{
-                            content: (
-                                <>
-                                    How much does every champion contribute to
-                                    the draft in which aspect?
-                                    <br />
-                                    <br />
-                                    <strong>BASE</strong>: Champion base winrate
-                                    <br />
-                                    <strong>MATCHUP</strong>: Total winrate of
-                                    all champion matchups
-                                    <br />
-                                    <strong>DUO</strong>: Total winrate of all
-                                    champion duos
-                                    <br />
-                                    <strong>TOTAL</strong>: Total contribution
-                                    of champion (BASE + MATCHUP + DUO)
-                                </>
-                            ),
-                            placement: "top",
-                        }}
-                    >
-                        Ally overview
-                    </h3>
-                    <TotalChampionContributionTable
-                        team="ally"
-                        onClickChampion={(key) =>
-                            openChampionDraftAnalysisModal("ally", key)
-                        }
-                    />
-                </div>
-                <div class="md:w-1/2">
-                    <h3
-                        class="text-3xl mb-1 uppercase"
-                        // @ts-ignore
-                        use:tooltip={{
-                            content: (
-                                <>
-                                    How much does every champion contribute to
-                                    the draft in which aspect?
-                                    <br />
-                                    <br />
-                                    <strong>BASE</strong>: Champion base winrate
-                                    <br />
-                                    <strong>MATCHUP</strong>: Total winrate of
-                                    all champion matchups
-                                    <br />
-                                    <strong>DUO</strong>: Total winrate of all
-                                    champion duos
-                                    <br />
-                                    <strong>TOTAL</strong>: Total contribution
-                                    of champion (BASE + MATCHUP + DUO)
-                                </>
-                            ),
-                            placement: "top",
-                        }}
-                    >
-                        Opponent overview
-                    </h3>
-                    <TotalChampionContributionTable
                         team="opponent"
                         onClickChampion={(key) =>
                             openChampionDraftAnalysisModal("opponent", key)
