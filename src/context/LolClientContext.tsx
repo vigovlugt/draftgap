@@ -11,6 +11,7 @@ import {
     getChampSelectSession,
     getCurrentSummoner,
     getGridChampions,
+    getOwnedChampionsMinimal,
 } from "../api/lcu-api";
 import { getRoleFromString, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
@@ -92,6 +93,7 @@ export const createLolClientContext = () => {
         opponentTeam,
         bans,
         setBans,
+        setOwnedChampions,
     } = useDraft();
 
     const [clientState, setClientState] = createSignal<ClientState>(
@@ -274,6 +276,16 @@ export const createLolClientContext = () => {
         });
     };
 
+    const updateUnownedChampions = async () => {
+        const ownedChampions = await getOwnedChampionsMinimal();
+        if (!ownedChampions) {
+            console.error("Failed to get owned champions");
+            return;
+        }
+
+        setOwnedChampions(new Set(ownedChampions.map((c) => c.id.toString())));
+    };
+
     let [integrationTimeout, setIntegrationTimeout] = createSignal<
         NodeJS.Timeout | undefined
     >();
@@ -295,12 +307,14 @@ export const createLolClientContext = () => {
                 if (session == null) {
                     if (clientState() !== ClientState.MainMenu) {
                         setBans([]);
+                        setOwnedChampions(new Set<string>());
                     }
 
                     setClientState(ClientState.MainMenu);
                 } else {
                     batch(() => {
                         if (clientState() !== ClientState.InChampSelect) {
+                            updateUnownedChampions();
                             checkImportFavourites();
                             resetAll();
                             setBans([]);

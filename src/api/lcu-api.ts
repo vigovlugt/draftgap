@@ -20,3 +20,12 @@ export async function getGridChampions(): Promise<LolChampSelectGridChampions | 
         "get_grid_champions"
     )) as LolChampSelectGridChampions | null;
 }
+
+export async function getOwnedChampionsMinimal(): Promise<
+    | {
+          id: number;
+      }[]
+    | null
+> {
+    return (await invoke("get_owned_champions_minimal")) as any;
+}

@@ -13,7 +13,7 @@ import { Suggestion } from "../../lib/suggestions/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
-import { createSignal, onCleanup, onMount, Show } from "solid-js";
+import { createEffect, createSignal, onCleanup, onMount, Show } from "solid-js";
 import { Icon } from "solid-heroicons";
 import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
@@ -36,12 +36,16 @@ export default function DraftTable() {
         select,
         config,
         bans,
+        ownedChampions,
     } = useDraft();
 
     const suggestions = () =>
         selection.team === "opponent"
             ? opponentSuggestions()
             : allySuggestions();
+
+    const ownsChampion = (championKey: string) =>
+        ownedChampions().size === 0 || ownedChampions().has(championKey);
 
     const filteredSuggestions = () => {
         let filtered = suggestions();
@@ -76,7 +80,7 @@ export default function DraftTable() {
 
         if (config().showFavouritesAtTop) {
             // Sort is normally in place, but then tanstack table does not see the update.
-            filtered = [...filtered].sort((a, b) => {
+            filtered = filtered.sort((a, b) => {
                 const aFav = isFavourite(a.championKey, a.role);
                 const bFav = isFavourite(b.championKey, b.role);
                 if (aFav && !bFav) {
@@ -92,7 +96,7 @@ export default function DraftTable() {
         if (config().banPlacement === "hidden") {
             filtered = filtered.filter((s) => !bans.includes(s.championKey));
         } else if (config().banPlacement === "bottom") {
-            filtered = [...filtered].sort((a, b) => {
+            filtered = filtered.sort((a, b) => {
                 const aBanned = bans.includes(a.championKey);
                 const bBanned = bans.includes(b.championKey);
                 if (aBanned && !bBanned) {
@@ -104,6 +108,23 @@ export default function DraftTable() {
                 }
             });
         }
+
+        if (config().unownedPlacement === "hidden") {
+            filtered = filtered.filter((s) => !ownsChampion(s.championKey));
+        } else if (config().unownedPlacement === "bottom") {
+            filtered = filtered.sort((a, b) => {
+                const aUnowned = !ownsChampion(a.championKey);
+                const bUnowned = !ownsChampion(b.championKey);
+                if (aUnowned && !bUnowned) {
+                    return 1;
+                } else if (!aUnowned && bUnowned) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
+        }
+        console.log("x");
 
         return filtered;
     };
@@ -282,8 +303,9 @@ export default function DraftTable() {
             table={table}
             onClickRow={pick}
             rowClassName={(r) =>
-                bans.find((b) => b === r.original.championKey)
-                    ? "opacity-30"
+                bans.find((b) => b === r.original.championKey) //||
+                    ? // !ownsChampion(r.original.championKey)
+                      "opacity-30"
                     : ""
             }
             id="draft-table"

@@ -101,6 +101,10 @@ export function createDraftContext() {
     DRAFTGAP_DEBUG.opponentTeam = opponentTeam;
 
     const [bans, setBans] = createStore<string[]>([]);
+    // If empty, assume all champions are owned
+    const [ownedChampions, setOwnedChampions] = createSignal<Set<string>>(
+        new Set()
+    );
 
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
@@ -415,6 +419,8 @@ export function createDraftContext() {
         opponentTeam,
         bans,
         setBans,
+        ownedChampions,
+        setOwnedChampions,
         allyTeamData,
         opponentTeamData,
         allyRoles,
