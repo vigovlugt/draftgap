@@ -9,12 +9,14 @@ interface Props<T> {
     options: ButtonGroupOption<T>[];
     selected: Accessor<T>;
     onChange: (value: T) => void;
+    size?: "sm" | "md";
 }
 
 export function ButtonGroup<T>({
     options,
     selected,
     onChange,
+    size = "md",
     ...props
 }: Props<T> & Omit<JSX.HTMLAttributes<HTMLDivElement>, "onChange">) {
     return (
@@ -33,6 +35,7 @@ export function ButtonGroup<T>({
                             "-ml-px": i() !== 0,
                             "text-white !bg-neutral-700":
                                 selected() === option.value,
+                            "!py-2": size === "sm",
                         }}
                         onClick={() => onChange(option.value)}
                     >

@@ -4,7 +4,7 @@ export type LolChampSelectChampSelectSession = {
     allowDuplicatePicks: boolean;
     allowLockedEvents: boolean;
     allowSkinSelection: boolean;
-    bans: LolChampSelectChampSelectBannedChampion[];
+    bans: LolChampSelectChampSelectBans;
     benchChampionIds: number[];
     benchEnabled: boolean;
     boostableSkinCount: number;
@@ -38,7 +38,7 @@ export type LolChampSelectChampSelectAction = {
     type: string;
 };
 
-export type LolChampSelectChampSelectBannedChampion = {
+export type LolChampSelectChampSelectBans = {
     myTeamBans: number[];
     numBans: number;
     theirTeamBans: number[];

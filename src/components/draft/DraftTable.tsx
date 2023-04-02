@@ -35,6 +35,7 @@ export default function DraftTable() {
         toggleFavourite,
         select,
         config,
+        bans,
     } = useDraft();
 
     const suggestions = () =>
@@ -82,6 +83,22 @@ export default function DraftTable() {
                     return -1;
                 } else if (!aFav && bFav) {
                     return 1;
+                } else {
+                    return 0;
+                }
+            });
+        }
+
+        if (config().banPlacement === "hidden") {
+            filtered = filtered.filter((s) => !bans.includes(s.championKey));
+        } else if (config().banPlacement === "bottom") {
+            filtered = [...filtered].sort((a, b) => {
+                const aBanned = bans.includes(a.championKey);
+                const bBanned = bans.includes(b.championKey);
+                if (aBanned && !bBanned) {
+                    return 1;
+                } else if (!aBanned && bBanned) {
+                    return -1;
                 } else {
                     return 0;
                 }
@@ -260,5 +277,16 @@ export default function DraftTable() {
         });
     });
 
-    return <Table table={table} onClickRow={pick} id="draft-table" />;
+    return (
+        <Table
+            table={table}
+            onClickRow={pick}
+            rowClassName={(r) =>
+                bans.find((b) => b === r.original.championKey)
+                    ? "opacity-30"
+                    : ""
+            }
+            id="draft-table"
+        />
+    );
 }

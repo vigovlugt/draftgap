@@ -32,7 +32,11 @@ const createChampSelectSession = (): LolChampSelectChampSelectSession => ({
     allowDuplicatePicks: false,
     allowLockedEvents: false,
     allowSkinSelection: false,
-    bans: [],
+    bans: {
+        myTeamBans: [],
+        numBans: 0,
+        theirTeamBans: [],
+    },
     benchChampionIds: [],
     benchEnabled: false,
     boostableSkinCount: 0,
@@ -86,6 +90,8 @@ export const createLolClientContext = () => {
         toggleFavourite,
         allyTeam,
         opponentTeam,
+        bans,
+        setBans,
     } = useDraft();
 
     const [clientState, setClientState] = createSignal<ClientState>(
@@ -207,6 +213,18 @@ export const createLolClientContext = () => {
                     processSelection(selection, "opponent", i) || draftChanged;
             }
 
+            console.log(session);
+            const bannedChampions = [
+                ...session.bans.myTeamBans,
+                ...session.bans.theirTeamBans,
+            ].map((b) => String(b));
+            if (
+                bannedChampions.length !== bans.length ||
+                bannedChampions.some((b, i) => b !== bans[i])
+            ) {
+                setBans(bannedChampions);
+            }
+
             if (nextPick && draftChanged) {
                 const nextPickTeamSelection = nextPick.isAllyAction
                     ? session.myTeam
@@ -275,12 +293,17 @@ export const createLolClientContext = () => {
 
                 const session = await getChampSelectSession();
                 if (session == null) {
+                    if (clientState() !== ClientState.MainMenu) {
+                        setBans([]);
+                    }
+
                     setClientState(ClientState.MainMenu);
                 } else {
                     batch(() => {
                         if (clientState() !== ClientState.InChampSelect) {
                             checkImportFavourites();
                             resetAll();
+                            setBans([]);
                         }
 
                         updateChampSelectSession(

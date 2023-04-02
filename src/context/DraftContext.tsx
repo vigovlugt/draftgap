@@ -36,9 +36,19 @@ type Selection = {
 
 type FavouritePick = `${string}:${Role}`;
 
+export const DraftTablePlacement = {
+    Bottom: "bottom",
+    Hidden: "hidden",
+    InPlace: "in-place",
+} as const;
+type DraftTablePlacement =
+    typeof DraftTablePlacement[keyof typeof DraftTablePlacement];
+
 type DraftGapConfig = AnalyzeDraftConfig & {
     disableLeagueClientIntegration: boolean;
     showFavouritesAtTop: boolean;
+    banPlacement: DraftTablePlacement;
+    unownedPlacement: DraftTablePlacement;
 };
 
 const fetchDataset = async (name: "30-days" | "current-patch") => {
@@ -90,6 +100,8 @@ export function createDraftContext() {
     DRAFTGAP_DEBUG.allyTeam = allyTeam;
     DRAFTGAP_DEBUG.opponentTeam = opponentTeam;
 
+    const [bans, setBans] = createStore<string[]>([]);
+
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
     const [favouriteFilter, setFavouriteFilter] = createSignal(false);
@@ -102,6 +114,8 @@ export function createDraftContext() {
             minGames: 1000,
             disableLeagueClientIntegration: false,
             showFavouritesAtTop: false,
+            banPlacement: "bottom",
+            unownedPlacement: "bottom",
         }
     );
     DRAFTGAP_DEBUG.config = config;
@@ -399,6 +413,8 @@ export function createDraftContext() {
         dataset,
         allyTeam,
         opponentTeam,
+        bans,
+        setBans,
         allyTeamData,
         opponentTeamData,
         allyRoles,

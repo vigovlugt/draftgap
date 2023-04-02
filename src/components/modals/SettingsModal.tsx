@@ -1,7 +1,7 @@
 import { Icon } from "solid-heroicons";
 import { questionMarkCircle } from "solid-heroicons/solid-mini";
 import { Accessor, Setter, Show } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
+import { DraftTablePlacement, useDraft } from "../../context/DraftContext";
 import {
     displayNameByRiskLevel,
     RiskLevel,
@@ -29,6 +29,21 @@ export default function SettingsModal({
             label: displayNameByRiskLevel[level],
         })
     );
+
+    const draftTablePlacementOptions = [
+        {
+            value: DraftTablePlacement.Bottom,
+            label: "Bottom",
+        },
+        {
+            value: DraftTablePlacement.InPlace,
+            label: "In Place",
+        },
+        {
+            value: DraftTablePlacement.Hidden,
+            label: "Hidden",
+        },
+    ];
 
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Settings">
@@ -71,6 +86,7 @@ export default function SettingsModal({
             <ButtonGroup
                 options={riskLevelOptions}
                 selected={() => config().riskLevel}
+                size="sm"
                 onChange={(value: RiskLevel) => {
                     setConfig({
                         ...config(),
@@ -79,7 +95,7 @@ export default function SettingsModal({
                 }}
             />
             <h3 class="text-3xl uppercase mt-4">UI</h3>
-            <div class="flex space-x-16 items-center justify-between mt-2">
+            <div class="flex space-x-8 items-center justify-between mt-2">
                 <span class="text-lg uppercase">
                     Place favourites at top of suggestions
                 </span>
@@ -93,6 +109,55 @@ export default function SettingsModal({
                     }
                 />
             </div>
+
+            <Show when={isDesktop}>
+                <div class="flex flex-col gap-1 mt-2">
+                    <span class="text-lg uppercase">
+                        Place banned champion suggestions at
+                    </span>
+                    <ButtonGroup
+                        options={draftTablePlacementOptions}
+                        selected={() => config().banPlacement}
+                        size="sm"
+                        onChange={(v) =>
+                            setConfig({
+                                ...config(),
+                                banPlacement: v,
+                            })
+                        }
+                    />
+                </div>
+                <div class="flex flex-col gap-1 mt-2">
+                    <span class="text-lg uppercase">
+                        Place unowned champion suggestions at
+                    </span>
+                    <ButtonGroup
+                        options={[
+                            {
+                                value: DraftTablePlacement.Bottom,
+                                label: "Bottom",
+                            },
+                            {
+                                value: DraftTablePlacement.InPlace,
+                                label: "In Place",
+                            },
+                            {
+                                value: DraftTablePlacement.Hidden,
+                                label: "Hidden",
+                            },
+                        ]}
+                        size="sm"
+                        selected={() => config().unownedPlacement}
+                        onChange={(v) =>
+                            setConfig({
+                                ...config(),
+                                unownedPlacement: v,
+                            })
+                        }
+                    />
+                </div>
+            </Show>
+
             <Show when={isDesktop}>
                 <h3 class="text-3xl uppercase mt-4">League Client</h3>
                 <div class="flex space-x-16 items-center justify-between mt-2">

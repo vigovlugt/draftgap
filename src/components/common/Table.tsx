@@ -5,11 +5,13 @@ import { createEffect, For, JSX, onCleanup, onMount, Show } from "solid-js";
 interface Props<T> {
     table: TanstackTable<T>;
     onClickRow?: (row: Row<T>) => void;
+    rowClassName?: (row: Row<T>) => string;
 }
 
 export function Table<T>({
     table,
     onClickRow,
+    rowClassName,
     ...props
 }: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
     let tableEl: HTMLTableElement | undefined;
@@ -120,6 +122,7 @@ export function Table<T>({
                                 classList={{
                                     "cursor-pointer hover:bg-neutral-800":
                                         Boolean(onClickRow),
+                                    [rowClassName?.(row) ?? ""]: true,
                                 }}
                                 onClick={() => onClickRow?.(row)}
                                 tabindex={onClickRow ? 0 : undefined}
