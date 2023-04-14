@@ -45,6 +45,7 @@ export default function DraftTable() {
             : allySuggestions();
 
     const ownsChampion = (championKey: string) =>
+        // If we don't have owned champions, we are not logged in, so we own all champions.
         ownedChampions().size === 0 || ownedChampions().has(championKey);
 
     const filteredSuggestions = () => {
@@ -302,9 +303,9 @@ export default function DraftTable() {
             table={table}
             onClickRow={pick}
             rowClassName={(r) =>
-                bans.find((b) => b === r.original.championKey) //||
-                    ? // !ownsChampion(r.original.championKey)
-                      "opacity-30"
+                bans.find((b) => b === r.original.championKey) ||
+                !ownsChampion(r.original.championKey)
+                    ? "opacity-30"
                     : ""
             }
             id="draft-table"

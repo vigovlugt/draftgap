@@ -215,7 +215,6 @@ export const createLolClientContext = () => {
                     processSelection(selection, "opponent", i) || draftChanged;
             }
 
-            console.log(session);
             const bannedChampions = [
                 ...session.bans.myTeamBans,
                 ...session.bans.theirTeamBans,
