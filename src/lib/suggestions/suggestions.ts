@@ -28,7 +28,10 @@ export function getSuggestions(
 
         for (const role of remainingRoles) {
             if (team.has(role)) continue;
-            if (getStats(dataset, championKey, role).games < config.minGames)
+            if (
+                getStats(synergyMatchupDataset, championKey, role).games <
+                config.minGames
+            )
                 continue;
 
             team.set(role, championKey);
@@ -104,10 +107,10 @@ export function analyzeDraft(
     const priorGames = priorGamesByRiskLevel[config.riskLevel];
 
     const allyChampionRating = !config.ignoreChampionWinrates
-        ? analyzeChampions(dataset, team, priorGames)
+        ? analyzeChampions(dataset, synergyMatchupDataset, team, priorGames)
         : { totalRating: 0, winrate: 0, championResults: [] };
     const enemyChampionRating = !config.ignoreChampionWinrates
-        ? analyzeChampions(dataset, enemy, priorGames)
+        ? analyzeChampions(dataset, synergyMatchupDataset, enemy, priorGames)
         : { totalRating: 0, winrate: 0, championResults: [] };
 
     const allyDuoRating = analyzeDuos(synergyMatchupDataset, team, priorGames);
@@ -156,6 +159,7 @@ export type AnalyzeChampionsResult = {
 
 export function analyzeChampions(
     dataset: Dataset,
+    synergyMatchupDataset: Dataset,
     team: Map<Role, string>,
     priorGames: number
 ): AnalyzeChampionsResult {
@@ -165,20 +169,45 @@ export function analyzeChampions(
     const rankWinrate = dataset.rankData.wins / dataset.rankData.games;
     const rankRating = winrateToRating(rankWinrate);
 
+    const synergyMatchupRankWinrate =
+        synergyMatchupDataset.rankData.wins /
+        synergyMatchupDataset.rankData.games;
+    const synergyMatchupRankRating = winrateToRating(synergyMatchupRankWinrate);
+
     for (const [role, championKey] of team) {
         const championData = dataset.championData[championKey];
         const roleData = championData.statsByRole[role];
 
+        const synergyMatchupChampionData =
+            synergyMatchupDataset.championData[championKey];
+        const synergyMatchupRoleData =
+            synergyMatchupChampionData.statsByRole[role];
+
+        const roleWinrate = roleData.wins / roleData.games;
+        // Real role winrate is the role winrate adjusted for the rank winrate bias
+        const realRoleWinrate = ratingToWinrate(
+            winrateToRating(roleWinrate) - rankRating
+        );
+        const synergyMatchupRoleWinrate =
+            synergyMatchupRoleData.wins / synergyMatchupRoleData.games;
+        const realSynergyMatchupRoleWinrate = ratingToWinrate(
+            winrateToRating(synergyMatchupRoleWinrate) -
+                synergyMatchupRankRating
+        );
+
         const stats = addStats(
-            roleData,
-            // Scale prior stats by winrate of expected rating, as we expect the duo to have a similar winrate to the expected rating
+            {
+                wins: roleData.games * realRoleWinrate,
+                games: roleData.games,
+            },
+            // Scale prior stats by winrate of expected rating, as we expect the champion to have a similar winrate to the expected rating
             // We estimate the expected rating to be the rank winrate
             {
-                wins: priorGames * rankWinrate,
+                wins: priorGames * realSynergyMatchupRoleWinrate,
                 games: priorGames,
             }
         );
-        const rating = winrateToRating(stats.wins / stats.games) - rankRating;
+        const rating = winrateToRating(stats.wins / stats.games);
         championResults.push({ role, championKey, rating });
         totalRating += rating;
     }
