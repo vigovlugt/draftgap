@@ -105,7 +105,6 @@ export function MatchupResultTable(
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
             ),
-            footer: (info) => <RatingText rating={opponentRating()} />,
             sortingFn: (a, b, id) =>
                 dataset()!.championData[
                     a.getValue<string>(id)
@@ -130,6 +129,7 @@ export function MatchupResultTable(
             header: "Winrate",
             accessorFn: (result) => -result.rating,
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
+            footer: (info) => <RatingText rating={opponentRating()} />,
         },
     ];
 
