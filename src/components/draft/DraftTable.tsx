@@ -80,7 +80,7 @@ export default function DraftTable() {
 
         if (config().showFavouritesAtTop) {
             // Sort is normally in place, but then tanstack table does not see the update.
-            filtered = filtered.sort((a, b) => {
+            filtered = [...filtered].sort((a, b) => {
                 const aFav = isFavourite(a.championKey, a.role);
                 const bFav = isFavourite(b.championKey, b.role);
                 if (aFav && !bFav) {
@@ -96,7 +96,7 @@ export default function DraftTable() {
         if (config().banPlacement === "hidden") {
             filtered = filtered.filter((s) => !bans.includes(s.championKey));
         } else if (config().banPlacement === "bottom") {
-            filtered = filtered.sort((a, b) => {
+            filtered = [...filtered].sort((a, b) => {
                 const aBanned = bans.includes(a.championKey);
                 const bBanned = bans.includes(b.championKey);
                 if (aBanned && !bBanned) {
@@ -112,7 +112,7 @@ export default function DraftTable() {
         if (config().unownedPlacement === "hidden") {
             filtered = filtered.filter((s) => !ownsChampion(s.championKey));
         } else if (config().unownedPlacement === "bottom") {
-            filtered = filtered.sort((a, b) => {
+            filtered = [...filtered].sort((a, b) => {
                 const aUnowned = !ownsChampion(a.championKey);
                 const bUnowned = !ownsChampion(b.championKey);
                 if (aUnowned && !bUnowned) {
