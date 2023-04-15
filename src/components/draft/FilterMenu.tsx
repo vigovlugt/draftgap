@@ -27,7 +27,7 @@ export const FilterMenu: Component<Props> = (props) => {
                 <div class="py-2 px-4">
                     <span class="text-2xl uppercase block mb-1">Filters</span>
                     <span class="text-lg uppercase block">
-                        Minumum game count
+                        Minimum game count (7d)
                     </span>
                     <ButtonGroup
                         options={minGameCountOptions}

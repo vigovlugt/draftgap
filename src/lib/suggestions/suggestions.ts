@@ -29,7 +29,9 @@ export function getSuggestions(
         for (const role of remainingRoles) {
             if (team.has(role)) continue;
             if (
-                getStats(synergyMatchupDataset, championKey, role).games <
+                (getStats(synergyMatchupDataset, championKey, role).games /
+                    30) *
+                    7 <
                 config.minGames
             )
                 continue;
