@@ -55,7 +55,7 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
         },
         {
             icon: user,
-            content: (champion()?.name ?? "") + " " + config().defaultStatsSite,
+            content: config().defaultStatsSite,
             href: champion()
                 ? linkByStatsSite(
                       champion()!.id.toLowerCase(),
