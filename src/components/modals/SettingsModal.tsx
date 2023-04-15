@@ -1,7 +1,11 @@
 import { Icon } from "solid-heroicons";
 import { questionMarkCircle } from "solid-heroicons/solid-mini";
 import { Accessor, Setter, Show } from "solid-js";
-import { DraftTablePlacement, useDraft } from "../../context/DraftContext";
+import {
+    DraftTablePlacement,
+    StatsSite,
+    useDraft,
+} from "../../context/DraftContext";
 import {
     displayNameByRiskLevel,
     RiskLevel,
@@ -44,6 +48,21 @@ export default function SettingsModal({
             label: "Hidden",
         },
     ];
+
+    const statsSiteOptions = [
+        {
+            value: "lolalytics",
+            label: "lolalytics",
+        },
+        {
+            value: "u.gg",
+            label: "u.gg",
+        },
+        {
+            value: "op.gg",
+            label: "op.gg",
+        },
+    ] as const;
 
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Settings">
@@ -178,6 +197,22 @@ export default function SettingsModal({
                     />
                 </div>
             </Show>
+
+            <h3 class="text-3xl uppercase mt-4">Misc</h3>
+            <div class="flex flex-col gap-1 mt-2">
+                <span class="text-lg uppercase">Favourite builds site</span>
+                <ButtonGroup
+                    options={statsSiteOptions}
+                    selected={() => config().defaultStatsSite}
+                    size="sm"
+                    onChange={(value: StatsSite) => {
+                        setConfig({
+                            ...config(),
+                            defaultStatsSite: value,
+                        });
+                    }}
+                />
+            </div>
         </Modal>
     );
 }

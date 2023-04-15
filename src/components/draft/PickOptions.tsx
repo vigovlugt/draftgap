@@ -4,6 +4,7 @@ import { arrowTopRightOnSquare, trash, user } from "solid-heroicons/solid-mini";
 import { useDraft } from "../../context/DraftContext";
 import { Team } from "../../lib/models/Team";
 import { DropdownMenu, PopoverItem } from "../common/DropdownMenu";
+import { Role } from "../../lib/models/Role";
 
 export const LOLALYTICS_ROLES = [
     "top",
@@ -15,14 +16,35 @@ export const LOLALYTICS_ROLES = [
 export type LolalyticsRole = typeof LOLALYTICS_ROLES[number];
 
 export function PickOptions({ team, index }: { team: Team; index: number }) {
-    const { pickChampion, allyTeam, opponentTeam, dataset } = useDraft();
+    const {
+        pickChampion,
+        allyTeam,
+        opponentTeam,
+        dataset,
+        config,
+        allyTeamComps,
+        opponentTeamComps,
+    } = useDraft();
 
     const teamPicks = () => (team === "ally" ? allyTeam : opponentTeam);
+    const teamComps = () =>
+        team === "ally" ? allyTeamComps() : opponentTeamComps();
 
     const champion = () =>
         teamPicks()[index].championKey
             ? dataset()?.championData[teamPicks()[index].championKey!]
             : undefined;
+
+    const linkByStatsSite = (champion: string, role: Role) => {
+        switch (config().defaultStatsSite) {
+            case "lolalytics":
+                return `https://lolalytics.com/lol/${champion}/build/?lane=${LOLALYTICS_ROLES[role]}`;
+            case "u.gg":
+                return `https://u.gg/lol/champions/${champion}/build?role=${LOLALYTICS_ROLES[role]}`;
+            case "op.gg":
+                return `https://op.gg/champions/${champion}/${LOLALYTICS_ROLES[role]}/build`;
+        }
+    };
 
     const items = (): PopoverItem[] => [
         {
@@ -33,15 +55,15 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
         },
         {
             icon: user,
-            content: (champion()?.name ?? "") + " Lolalytics",
+            content: (champion()?.name ?? "") + " " + config().defaultStatsSite,
             href: champion()
-                ? `https://lolalytics.com/lol/${champion()!.id.toLowerCase()}/build/${
-                      teamPicks()[index].role !== undefined
-                          ? `?lane=${
-                                LOLALYTICS_ROLES[teamPicks()[index].role!]
-                            }`
-                          : ``
-                  }`
+                ? linkByStatsSite(
+                      champion()!.id.toLowerCase(),
+                      [...teamComps()[0][0].entries()].find(
+                          ([, value]) =>
+                              value === teamPicks()[index].championKey
+                      )![0] as Role
+                  )
                 : "#",
             disabled: !champion(),
         },

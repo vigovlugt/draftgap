@@ -6,7 +6,7 @@ export type ButtonGroupOption<T> = {
 };
 
 interface Props<T> {
-    options: ButtonGroupOption<T>[];
+    options: readonly ButtonGroupOption<T>[];
     selected: Accessor<T>;
     onChange: (value: T) => void;
     size?: "sm" | "md";

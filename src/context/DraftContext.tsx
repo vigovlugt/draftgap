@@ -36,6 +36,8 @@ type Selection = {
 
 type FavouritePick = `${string}:${Role}`;
 
+export type StatsSite = "op.gg" | "u.gg" | "lolalytics";
+
 export const DraftTablePlacement = {
     Bottom: "bottom",
     Hidden: "hidden",
@@ -49,6 +51,7 @@ type DraftGapConfig = AnalyzeDraftConfig & {
     showFavouritesAtTop: boolean;
     banPlacement: DraftTablePlacement;
     unownedPlacement: DraftTablePlacement;
+    defaultStatsSite: StatsSite;
 };
 
 const fetchDataset = async (name: "30-days" | "current-patch") => {
@@ -120,6 +123,7 @@ export function createDraftContext() {
             showFavouritesAtTop: false,
             banPlacement: "bottom",
             unownedPlacement: "bottom",
+            defaultStatsSite: "lolalytics",
         }
     );
     DRAFTGAP_DEBUG.config = config;
