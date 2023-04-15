@@ -1,19 +1,11 @@
 import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/outline";
-import { arrowTopRightOnSquare, trash, user } from "solid-heroicons/solid-mini";
+import { trash, user } from "solid-heroicons/solid-mini";
 import { useDraft } from "../../context/DraftContext";
 import { Team } from "../../lib/models/Team";
 import { DropdownMenu, PopoverItem } from "../common/DropdownMenu";
 import { Role } from "../../lib/models/Role";
-
-export const LOLALYTICS_ROLES = [
-    "top",
-    "jungle",
-    "middle",
-    "bottom",
-    "support",
-] as const;
-export type LolalyticsRole = typeof LOLALYTICS_ROLES[number];
+import { linkByStatsSite } from "../../utils/sites";
 
 export function PickOptions({ team, index }: { team: Team; index: number }) {
     const {
@@ -35,29 +27,20 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
             ? dataset()?.championData[teamPicks()[index].championKey!]
             : undefined;
 
-    const linkByStatsSite = (champion: string, role: Role) => {
-        switch (config().defaultStatsSite) {
-            case "lolalytics":
-                return `https://lolalytics.com/lol/${champion}/build/?lane=${LOLALYTICS_ROLES[role]}`;
-            case "u.gg":
-                return `https://u.gg/lol/champions/${champion}/build?role=${LOLALYTICS_ROLES[role]}`;
-            case "op.gg":
-                return `https://op.gg/champions/${champion}/${LOLALYTICS_ROLES[role]}/build`;
-        }
-    };
-
     const items = (): PopoverItem[] => [
         {
             icon: trash,
             content: "Reset",
             onClick: () => pickChampion(team, index, undefined, undefined),
             disabled: !champion(),
+            key: "r",
         },
         {
             icon: user,
             content: config().defaultStatsSite,
             href: champion()
                 ? linkByStatsSite(
+                      config().defaultStatsSite,
                       champion()!.id.toLowerCase(),
                       [...teamComps()[0][0].entries()].find(
                           ([, value]) =>
@@ -66,6 +49,7 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
                   )
                 : "#",
             disabled: !champion(),
+            key: "b",
         },
     ];
 

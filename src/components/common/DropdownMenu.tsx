@@ -13,6 +13,7 @@ type BaseItem = {
     icon?: Icon;
     content: JSX.Element;
     disabled?: boolean | undefined;
+    key?: string;
 };
 type LinkItem = BaseItem & {
     href: string;
@@ -65,6 +66,9 @@ export const DropdownMenu: Component<Props> = (props: Props) => {
                             <div class="w-5 mx-1" />
                         )}
                         <span>{item.content}</span>
+                        <div class="!ml-auto pr-2 text-base text-neutral-400">
+                            <span>{item.key}</span>
+                        </div>
                     </MenuItem>
                 ))
             }

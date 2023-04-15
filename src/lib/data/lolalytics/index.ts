@@ -8,17 +8,9 @@ import {
     ChampionRoleData,
     defaultChampionRoleData,
 } from "../../models/ChampionRoleData";
+import { LOLALYTICS_ROLES, LolalyticsRole } from "./roles";
 
 const MIN_ROLE_PLAY_RATE = 10;
-
-export const LOLALYTICS_ROLES = [
-    "top",
-    "jungle",
-    "middle",
-    "bottom",
-    "support",
-] as const;
-export type LolalyticsRole = typeof LOLALYTICS_ROLES[number];
 
 export async function getChampionDataFromLolalytics(
     version: string,

@@ -1,4 +1,3 @@
-import { createDroppable } from "@thisbeyond/solid-dnd";
 import { Icon } from "solid-heroicons";
 import { Show } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
@@ -9,7 +8,7 @@ import { Role } from "../../lib/models/Role";
 import { formatPercentage } from "../../utils/rating";
 import { tooltip } from "../../directives/tooltip";
 import { useTooltip } from "../../context/TooltipContext";
-import { cursorArrowRays } from "solid-heroicons/solid";
+import { linkByStatsSite } from "../../utils/sites";
 tooltip;
 
 interface IProps {
@@ -28,6 +27,7 @@ export function Pick({ team, index }: IProps) {
         pickChampion,
         allyTeamComps,
         opponentTeamComps,
+        config,
     } = useDraft();
     const { setPopoverVisible } = useTooltip();
     const picks = team === "ally" ? allyTeam : opponentTeam;
@@ -56,6 +56,40 @@ export function Pick({ team, index }: IProps) {
         pickChampion(team, index, pick.championKey, role);
     }
 
+    const keyDownListener = (e: KeyboardEvent) => {
+        if (e.key === "b") {
+            if (!champion()) {
+                return;
+            }
+            e.preventDefault();
+
+            const link = linkByStatsSite(
+                config().defaultStatsSite,
+                champion()!.id.toLowerCase(),
+                [...teamComp()[0].entries()].find(
+                    ([, value]) => value === picks[index].championKey
+                )![0] as Role
+            );
+            window.open(link, "_blank");
+        } else if (
+            e.key === "r" ||
+            e.key === "Backspace" ||
+            e.key === "Delete"
+        ) {
+            e.preventDefault();
+            pickChampion(team, index, undefined, undefined);
+        }
+        console.log(e.key);
+    };
+
+    function onMouseOver() {
+        document.addEventListener("keydown", keyDownListener);
+    }
+
+    function onMouseOut() {
+        document.removeEventListener("keydown", keyDownListener);
+    }
+
     return (
         <div
             class="flex-1 relative border-t-2 border-neutral-700 hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
@@ -64,6 +98,8 @@ export function Pick({ team, index }: IProps) {
                 "cursor-pointer ": champion() === undefined,
             }}
             onClick={() => select(team, index)}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
         >
             <Show when={!champion()}>
                 <span class="absolute top-1 left-2 uppercase text-2xl">

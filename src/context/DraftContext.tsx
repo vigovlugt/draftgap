@@ -46,7 +46,7 @@ export const DraftTablePlacement = {
 type DraftTablePlacement =
     typeof DraftTablePlacement[keyof typeof DraftTablePlacement];
 
-type DraftGapConfig = AnalyzeDraftConfig & {
+export type DraftGapConfig = AnalyzeDraftConfig & {
     disableLeagueClientIntegration: boolean;
     showFavouritesAtTop: boolean;
     banPlacement: DraftTablePlacement;

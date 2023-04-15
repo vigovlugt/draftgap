@@ -9,7 +9,7 @@ import { ChampionSummaryCards } from "../resultscreen/SummaryCards";
 import { tooltip } from "../../directives/tooltip";
 import { DuoResultTable } from "../resultscreen/DuoResultTable";
 import { Button } from "../common/Button";
-import { LOLALYTICS_ROLES } from "../draft/PickOptions";
+import { LOLALYTICS_ROLES } from "../../lib/data/lolalytics/roles";
 tooltip;
 
 type Props = {
