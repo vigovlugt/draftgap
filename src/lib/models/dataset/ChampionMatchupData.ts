@@ -5,7 +5,7 @@ import {
     deserializeString,
     serializeVarUint,
     deserializeVarUint,
-} from "../serialization/serialization";
+} from "../../serialization/serialization";
 
 export interface ChampionMatchupData {
     championKey: string;

@@ -1,4 +1,5 @@
 import { useDraft } from "../../context/DraftContext";
+import { overflowEllipsis } from "../../utils/strings";
 import { ChampionIcon } from "../icons/ChampionIcon";
 
 interface Props {
@@ -14,10 +15,9 @@ export default function ChampionCell(props: Props) {
     return (
         <div class="relative">
             <span class="ml-11 uppercase">
-                {name().slice(0, props.nameMaxLength)}
-                {props.nameMaxLength &&
-                    name().length > props.nameMaxLength &&
-                    "..."}
+                {props.nameMaxLength
+                    ? overflowEllipsis(name(), props.nameMaxLength)
+                    : name()}
             </span>
             <ChampionIcon
                 championKey={props.championKey}

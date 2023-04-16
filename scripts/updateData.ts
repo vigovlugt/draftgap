@@ -7,7 +7,7 @@ import { storeDataset } from "../src/lib/data/storage/storage";
 import {
     Dataset,
     deleteDatasetMatchupSynergyData,
-} from "../src/lib/models/Dataset";
+} from "../src/lib/models/dataset/Dataset";
 
 const BATCH_SIZE = 10;
 

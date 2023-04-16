@@ -28,7 +28,8 @@ import { DownloadAppModal } from "./components/modals/DownloadAppModal";
 import { Badge } from "./components/common/Badge";
 import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
-import { ViewTabs } from "./components/views/ViewTabs";
+import { ViewTabs } from "./components/common/ViewTabs";
+import { BuildsView } from "./components/views/buildsview/BuildsView";
 
 const App: Component = () => {
     const { config, dataset, tab, setTab, draftFinished } = useDraft();
@@ -71,12 +72,12 @@ const App: Component = () => {
             >
                 <Switch>
                     <Match when={!dataset()}>
-                        <div class="flex justify-center items-center h-full text-4xl">
+                        <div class="flex justify-center items-center h-full text-2xl">
                             Loading...
                         </div>
                     </Match>
                     <Match when={draftFinished()}>
-                        <div class="flex flex-col overflow-hidden">
+                        <div class="flex flex-col overflow-hidden min-h-full flex-1">
                             <ViewTabs
                                 tabs={[
                                     {
@@ -89,16 +90,16 @@ const App: Component = () => {
                                 onChange={setCurrentTab}
                                 className="xl:px-4"
                             ></ViewTabs>
-                            <div class="py-5 px-4 xl:px-8 h-full overflow-y-auto">
-                                <Switch>
-                                    <Match when={currentTab() === "analysis"}>
+                            <Switch>
+                                <Match when={currentTab() === "analysis"}>
+                                    <div class="py-5 px-4 xl:px-8 h-full overflow-y-auto">
                                         <AnalysisView />
-                                    </Match>
-                                    <Match when={currentTab() === "builds"}>
-                                        <div />
-                                    </Match>
-                                </Switch>
-                            </div>
+                                    </div>
+                                </Match>
+                                <Match when={currentTab() === "builds"}>
+                                    <BuildsView />
+                                </Match>
+                            </Switch>
                         </div>
                     </Match>
                     <Match when={true}>

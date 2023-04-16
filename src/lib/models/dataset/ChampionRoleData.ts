@@ -5,7 +5,7 @@ import {
     DeserializationContext,
     deserializeVarUint,
     deserializeObject,
-} from "../serialization/serialization";
+} from "../../serialization/serialization";
 import {
     ChampionDamageProfile,
     deserializeChampionDamageProfile,
@@ -21,7 +21,7 @@ import {
     deserializeChampionSynergyData,
     serializeChampionSynergyData,
 } from "./ChampionSynergyData";
-import { Role } from "./Role";
+import { Role } from "../Role";
 
 export interface ChampionRoleData {
     games: number;

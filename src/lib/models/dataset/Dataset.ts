@@ -13,7 +13,7 @@ import {
     serializeVarUint,
     deserializeObject,
     deserializeVarUint,
-} from "../serialization/serialization";
+} from "../../serialization/serialization";
 import { deserializeRankData, RankData, serializeRankData } from "./RankData";
 import { deleteChampionRoleDataMatchupSynergyData } from "./ChampionRoleData";
 

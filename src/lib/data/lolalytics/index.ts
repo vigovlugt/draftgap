@@ -1,16 +1,14 @@
-import { ChampionData } from "../../models/ChampionData";
-import { ChampionSynergyData } from "../../models/ChampionSynergyData";
-import { ChampionMatchupData } from "../../models/ChampionMatchupData";
+import { ChampionData } from "../../models/dataset/ChampionData";
+import { ChampionSynergyData } from "../../models/dataset/ChampionSynergyData";
+import { ChampionMatchupData } from "../../models/dataset/ChampionMatchupData";
 import { getRoleFromString, Role, ROLES } from "../../models/Role";
 import { getLolalyticsChampion } from "./champion";
 import { getLolalyticsChampion2 } from "./champion2";
 import {
     ChampionRoleData,
     defaultChampionRoleData,
-} from "../../models/ChampionRoleData";
+} from "../../models/dataset/ChampionRoleData";
 import { LOLALYTICS_ROLES, LolalyticsRole } from "./roles";
-
-const MIN_ROLE_PLAY_RATE = 10;
 
 export async function getChampionDataFromLolalytics(
     version: string,

@@ -3,7 +3,7 @@ import {
     Serializer,
     Deserializer,
     serializeVarUint,
-} from "../serialization/serialization";
+} from "../../serialization/serialization";
 
 export interface RankData {
     wins: number;

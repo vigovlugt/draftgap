@@ -1,6 +1,6 @@
 import { For } from "solid-js";
 
-type Props<T extends string> = {
+type Props<T extends any> = {
     tabs: {
         value: T;
         label: string;
@@ -10,7 +10,7 @@ type Props<T extends string> = {
     className?: string;
 };
 
-export const ViewTabs = <T extends string>(props: Props<T>) => {
+export const ViewTabs = <T extends any>(props: Props<T>) => {
     return (
         <div
             class={
@@ -21,7 +21,7 @@ export const ViewTabs = <T extends string>(props: Props<T>) => {
             <For each={props.tabs}>
                 {(tab) => (
                     <button
-                        class="p-4 py-4 text-neutral-500 uppercase font-semibold"
+                        class="p-4 py-3 text-neutral-500 uppercase font-semibold"
                         classList={{
                             "text-neutral-50": tab.value === props.selected,
                         }}
