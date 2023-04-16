@@ -6,12 +6,12 @@ import {
     presentationChartLine,
 } from "solid-heroicons/solid";
 import { JSX } from "solid-js/jsx-runtime";
-import { useDraft } from "../../context/DraftContext";
-import { Team } from "../../lib/models/Team";
-import { tooltip } from "../../directives/tooltip";
-import { RatingText } from "../common/RatingText";
+import { useDraft } from "../../../context/DraftContext";
+import { Team } from "../../../lib/models/Team";
+import { tooltip } from "../../../directives/tooltip";
+import { RatingText } from "../../common/RatingText";
 import { Component } from "solid-js";
-import { capitalize } from "../../utils/strings";
+import { capitalize } from "../../../utils/strings";
 tooltip;
 
 const SummaryCard = (

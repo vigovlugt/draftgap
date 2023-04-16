@@ -18,7 +18,7 @@ import { TeamSidebar } from "./components/draft/TeamSidebar";
 import { useDraft } from "./context/DraftContext";
 import { cog_6Tooth } from "solid-heroicons/solid";
 import SettingsModal from "./components/modals/SettingsModal";
-import ResultScreen from "./components/resultscreen/ResultScreen";
+import AnalysisView from "./components/views/analysisview/AnalysisView";
 import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
 import { useLolClient } from "./context/LolClientContext";
 import { UpdateModal } from "./components/modals/UpdateModal";
@@ -28,6 +28,7 @@ import { DownloadAppModal } from "./components/modals/DownloadAppModal";
 import { Badge } from "./components/common/Badge";
 import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
+import { ViewTabs } from "./components/views/ViewTabs";
 
 const App: Component = () => {
     const { config, dataset, tab, setTab, draftFinished } = useDraft();
@@ -49,6 +50,9 @@ const App: Component = () => {
     const [showSettings, setShowSettings] = createSignal(false);
     const [showFAQ, setShowFAQ] = createSignal(false);
     const [showDownloadModal, setShowDownloadModal] = createSignal(false);
+    const [currentTab, setCurrentTab] = createSignal<"analysis" | "builds">(
+        "analysis"
+    );
 
     const timeAgo = () =>
         dataset()
@@ -60,7 +64,7 @@ const App: Component = () => {
     const MainView = () => {
         return (
             <div
-                class="p-4 xl:px-8 bg-[#101010] flex-1 overflow-auto overflow-x-hidden h-full flex flex-col"
+                class="bg-[#101010] flex-1 overflow-auto overflow-x-hidden h-full flex flex-col"
                 style={{
                     "scroll-behavior": "smooth",
                 }}
@@ -72,22 +76,47 @@ const App: Component = () => {
                         </div>
                     </Match>
                     <Match when={draftFinished()}>
-                        <ResultScreen />
-                    </Match>
-                    <Match when={true}>
-                        <div class="mb-4 flex gap-4">
-                            <Search />
-                            <TeamSelector />
-                            <RoleFilter className="hidden lg:inline-flex" />
-                            <div class="hidden lg:inline-flex">
-                                <FilterMenu />
+                        <div class="flex flex-col overflow-hidden">
+                            <ViewTabs
+                                tabs={[
+                                    {
+                                        label: "Draft Analysis",
+                                        value: "analysis",
+                                    },
+                                    { label: "Builds", value: "builds" },
+                                ]}
+                                selected={currentTab()}
+                                onChange={setCurrentTab}
+                                className="xl:px-4"
+                            ></ViewTabs>
+                            <div class="py-5 px-4 xl:px-8 h-full overflow-y-auto">
+                                <Switch>
+                                    <Match when={currentTab() === "analysis"}>
+                                        <AnalysisView />
+                                    </Match>
+                                    <Match when={currentTab() === "builds"}>
+                                        <div />
+                                    </Match>
+                                </Switch>
                             </div>
                         </div>
-                        <div class="flex justify-end mb-4 gap-4 lg:hidden">
-                            <RoleFilter className="w-full" />
-                            <FilterMenu />
+                    </Match>
+                    <Match when={true}>
+                        <div class="p-4 xl:px-8">
+                            <div class="mb-4 flex gap-4">
+                                <Search />
+                                <TeamSelector />
+                                <RoleFilter className="hidden lg:inline-flex" />
+                                <div class="hidden lg:inline-flex">
+                                    <FilterMenu />
+                                </div>
+                            </div>
+                            <div class="flex justify-end mb-4 gap-4 lg:hidden">
+                                <RoleFilter className="w-full" />
+                                <FilterMenu />
+                            </div>
+                            <DraftTable />
                         </div>
-                        <DraftTable />
                     </Match>
                 </Switch>
             </div>

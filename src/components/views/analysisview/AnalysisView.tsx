@@ -1,18 +1,18 @@
 import { batch, createSignal, Show } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
-import { ButtonGroup } from "../common/ButtonGroup";
+import { useDraft } from "../../../context/DraftContext";
+import { ButtonGroup } from "../../common/ButtonGroup";
 import { DuoResultTable } from "./DuoResultTable";
 import { IndividualChampionsResultTable } from "./IndividualChampionsResultTable";
 import { MatchupResultTable } from "./MatchupResultTable";
 import { DraftSummaryCards } from "./SummaryCards";
 import { TotalChampionContributionTable } from "./TotalChampionContributionTable";
-import { tooltip } from "../../directives/tooltip";
-import Modal from "../common/Modal";
-import { ChampionDraftAnalysisModal } from "../modals/ChampionDraftAnalysisModal";
-import { Team } from "../../lib/models/Team";
+import { tooltip } from "../../../directives/tooltip";
+import Modal from "../../common/Modal";
+import { ChampionDraftAnalysisModal } from "../../modals/ChampionDraftAnalysisModal";
+import { Team } from "../../../lib/models/Team";
 tooltip;
 
-export default function ResultScreen() {
+export default function AnalysisView() {
     const { config } = useDraft();
 
     const [showAllMatchups, setShowAllMatchups] = createSignal(false);
@@ -60,7 +60,6 @@ export default function ResultScreen() {
                 />
             </Show>
 
-            <h2 class="text-6xl uppercase mb-6">Draft analysis</h2>
             <DraftSummaryCards team="ally" />
             <DraftSummaryCards team="opponent" class="mb-12 mt-6" />
 

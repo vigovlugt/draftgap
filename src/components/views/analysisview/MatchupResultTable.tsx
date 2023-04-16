@@ -7,18 +7,18 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { createSignal, JSX } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
-import { Role } from "../../lib/models/Role";
-import { Team } from "../../lib/models/Team";
+import { useDraft } from "../../../context/DraftContext";
+import { Role } from "../../../lib/models/Role";
+import { Team } from "../../../lib/models/Team";
 import {
     AnalyzeChampionResult,
     AnalyzeMatchupResult,
-} from "../../lib/suggestions/suggestions";
-import ChampionCell from "../common/ChampionCell";
-import { RatingText } from "../common/RatingText";
-import { RoleCell } from "../common/RoleCell";
-import { Table } from "../common/Table";
-import { WinnerCell } from "../common/WinnerCell";
+} from "../../../lib/suggestions/suggestions";
+import ChampionCell from "../../common/ChampionCell";
+import { RatingText } from "../../common/RatingText";
+import { RoleCell } from "../../common/RoleCell";
+import { Table } from "../../common/Table";
+import { WinnerCell } from "../../common/WinnerCell";
 
 interface Props {
     showAll: boolean;
