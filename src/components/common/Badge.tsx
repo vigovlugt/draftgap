@@ -16,9 +16,10 @@ type Props<T extends BadgeElement = BadgeElement> = {
 
 export const Badge: Component<Props> = (props) => {
     const themeClass = () =>
-        props.theme == "secondary"
-            ? "bg-neutral-800 text-neutral-100"
-            : "bg-neutral-100 text-neutral-800 font-bold";
+        ({
+            secondary: "bg-neutral-800 text-neutral-100",
+            primary: "bg-neutral-100 text-neutral-800 font-bold",
+        }[props.theme]);
 
     return (
         <Dynamic

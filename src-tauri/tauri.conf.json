@@ -3,12 +3,12 @@
     "build": {
         "beforeBuildCommand": "pnpm run build",
         "beforeDevCommand": "pnpm run dev",
-        "devPath": "http://127.0.0.1:3000",
+        "devPath": "http://localhost:3000",
         "distDir": "../dist"
     },
     "package": {
         "productName": "DraftGap",
-        "version": "2.2.0"
+        "version": "2.2.1"
     },
     "tauri": {
         "allowlist": {
