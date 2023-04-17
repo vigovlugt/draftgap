@@ -11,7 +11,7 @@ import {
     getChampSelectSession,
     getCurrentSummoner,
     getGridChampions,
-    getOwnedChampionsMinimal,
+    getPickableChampionIds,
 } from "../api/lcu-api";
 import { getRoleFromString, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
@@ -280,13 +280,13 @@ export const createLolClientContext = () => {
     };
 
     const updateUnownedChampions = async () => {
-        const ownedChampions = await getOwnedChampionsMinimal();
+        const ownedChampions = await getPickableChampionIds();
         if (!ownedChampions) {
             console.error("Failed to get owned champions");
             return;
         }
 
-        setOwnedChampions(new Set(ownedChampions.map((c) => c.id.toString())));
+        setOwnedChampions(new Set(ownedChampions.map((c) => String(c))));
     };
 
     let [integrationTimeout, setIntegrationTimeout] = createSignal<

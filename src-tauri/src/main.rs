@@ -169,8 +169,8 @@ async fn get_grid_champions(state: tauri::State<'_, AppState>) -> Result<Value, 
 }
 
 #[tauri::command]
-async fn get_owned_champions_minimal(state: tauri::State<'_, AppState>) -> Result<Value, String> {
-    return get_lcu_response(&state, "lol-champions/v1/owned-champions-minimal").await;
+async fn get_pickable_champion_ids(state: tauri::State<'_, AppState>) -> Result<Value, String> {
+    return get_lcu_response(&state, "lol-champ-select/v1/pickable-champion-ids").await;
 }
 
 fn main() {
@@ -190,7 +190,7 @@ fn main() {
             get_champ_select_session,
             get_current_summoner,
             get_grid_champions,
-            get_owned_champions_minimal
+            get_pickable_champion_ids
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

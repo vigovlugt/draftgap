@@ -21,11 +21,6 @@ export async function getGridChampions(): Promise<LolChampSelectGridChampions | 
     )) as LolChampSelectGridChampions | null;
 }
 
-export async function getOwnedChampionsMinimal(): Promise<
-    | {
-          id: number;
-      }[]
-    | null
-> {
-    return (await invoke("get_owned_champions_minimal")) as any;
+export async function getPickableChampionIds(): Promise<number[] | null> {
+    return (await invoke("get_pickable_champion_ids")) as any;
 }
