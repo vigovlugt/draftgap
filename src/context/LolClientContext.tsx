@@ -215,7 +215,6 @@ export const createLolClientContext = () => {
                     processSelection(selection, "opponent", i) || draftChanged;
             }
 
-            console.log(session);
             const bannedChampions = session.actions
                 .flat()
                 .map((a) =>
@@ -224,7 +223,6 @@ export const createLolClientContext = () => {
                         : null
                 )
                 .filter(Boolean) as string[];
-            console.log(bannedChampions);
             if (
                 bannedChampions.length !== bans.length ||
                 bannedChampions.some((b, i) => b !== bans[i])
