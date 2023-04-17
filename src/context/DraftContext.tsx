@@ -10,8 +10,8 @@ import {
 import { createStore } from "solid-js/store";
 import { createMediaQuery } from "../hooks/createMediaQuery";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
-import { Dataset, getDeserializedDataset } from "../lib/models/Dataset";
-import { PickData } from "../lib/models/PickData";
+import { Dataset, getDeserializedDataset } from "../lib/models/dataset/Dataset";
+import { PickData } from "../lib/models/dataset/PickData";
 import { displayNameByRole, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
 import predictRoles, { getTeamComps } from "../lib/role/role-predictor";
