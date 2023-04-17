@@ -111,7 +111,7 @@ export default function DraftTable() {
         }
 
         if (config().unownedPlacement === "hidden") {
-            filtered = filtered.filter((s) => !ownsChampion(s.championKey));
+            filtered = filtered.filter((s) => ownsChampion(s.championKey));
         } else if (config().unownedPlacement === "bottom") {
             filtered = [...filtered].sort((a, b) => {
                 const aUnowned = !ownsChampion(a.championKey);
