@@ -97,6 +97,7 @@ export default function DraftTable() {
         if (config().banPlacement === "hidden") {
             filtered = filtered.filter((s) => !bans.includes(s.championKey));
         } else if (config().banPlacement === "bottom") {
+            console.log(bans, bans);
             filtered = [...filtered].sort((a, b) => {
                 const aBanned = bans.includes(a.championKey);
                 const bBanned = bans.includes(b.championKey);
