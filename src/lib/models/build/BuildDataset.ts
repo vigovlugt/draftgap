@@ -23,7 +23,6 @@ export type BuildMatchupData = {
 };
 
 export type RunesBuildData = {
-    keystone: Record<string, RuneStats>;
     primary: Record<string, RuneStats>;
     secondary: Record<string, RuneStats>;
     shards: {

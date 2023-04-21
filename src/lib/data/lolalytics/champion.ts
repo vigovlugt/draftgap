@@ -123,7 +123,7 @@ export interface Response {
 }
 
 export interface LolalyticsChampionResponseRunes {
-    stats: { [key: string]: Array<number[]> };
+    stats: { [key: string]: [number, number, number][] };
 }
 
 export interface Skills {
