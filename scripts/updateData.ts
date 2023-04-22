@@ -95,30 +95,37 @@ function riotRunesToRuneData(runes: RiotRunePath[]) {
             runes
                 .map((path) => {
                     return path.slots.map((slot, slotIndex) =>
-                        slot.runes.map((r, i) => [
-                            r.id,
-                            {
-                                id: r.id,
-                                key: r.key,
-                                name: r.name,
-                                pathId: path.id,
-                                slot: slotIndex,
-                                index: i,
-                            } satisfies RuneData,
-                        ])
+                        slot.runes.map(
+                            (r, i) =>
+                                [
+                                    r.id,
+                                    {
+                                        id: r.id,
+                                        key: r.key,
+                                        name: r.name,
+                                        pathId: path.id,
+                                        slot: slotIndex,
+                                        index: i,
+                                    } satisfies RuneData,
+                                ] as const
+                        )
                     );
                 })
                 .flat()
+                .flat()
         ),
         runePathData: Object.fromEntries(
-            runes.map((r) => [
-                r.id,
-                {
-                    id: r.id,
-                    key: r.key,
-                    name: r.name,
-                } satisfies RunePathData,
-            ])
+            runes.map(
+                (r) =>
+                    [
+                        r.id,
+                        {
+                            id: r.id,
+                            key: r.key,
+                            name: r.name,
+                        } satisfies RunePathData,
+                    ] as const
+            )
         ),
         statShardData: STAT_SHARD_DATA,
     } satisfies Pick<Dataset, "runeData" | "runePathData" | "statShardData">;

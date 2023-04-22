@@ -64,7 +64,7 @@ function partialDatasetFromLolalyticsData(
                     const slot = dataset.statShardData[runeId].positions.find(
                         (p) => p.slot !== 1
                     )?.slot;
-                    if (!slot) {
+                    if (slot === undefined) {
                         throw new Error(
                             "Shard has no slot other than flex " + runeId
                         );
@@ -111,14 +111,13 @@ function fullDatasetFromLolalyticsData(
 }
 
 export async function fetchBuildData(
-    patch: string,
     dataset: Dataset,
     championKey: string,
     role: Role,
     opponentTeamComp: Map<Role, string>
 ) {
     // convert patch from 13.7.1 to 13.7
-    patch = patch.split(".").slice(0, 2).join(".");
+    const patch = dataset.version.split(".").slice(0, 2).join(".");
 
     const championPatchDataPromises = getLolalyticsChampion(
         patch,

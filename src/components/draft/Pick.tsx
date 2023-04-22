@@ -79,7 +79,6 @@ export function Pick({ team, index }: IProps) {
             e.preventDefault();
             pickChampion(team, index, undefined, undefined);
         }
-        console.log(e.key);
     };
 
     function onMouseOver() {
