@@ -10,29 +10,17 @@ import { Icon } from "solid-heroicons";
 import { Accessor, JSX, Setter } from "solid-js";
 import { xMark } from "solid-heroicons/solid";
 
-interface Props {
-    isOpen: Accessor<boolean>;
-    setIsOpen: Setter<boolean>;
+type Props = {
+    isOpen: boolean;
+    setIsOpen: (value: boolean) => void;
     children: JSX.Element;
     title: JSX.Element;
     titleContainerClass?: string;
     size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
     className?: string;
-}
+};
 
-export default function Modal({
-    isOpen,
-    setIsOpen,
-    title,
-    children,
-    size = "md",
-    titleContainerClass,
-    className,
-}: Props) {
-    function close() {
-        setIsOpen(false);
-    }
-
+export default function Modal(props: Props) {
     const maxWClass = {
         sm: "max-w-sm",
         md: "max-w-md",
@@ -40,12 +28,16 @@ export default function Modal({
         xl: "max-w-xl",
         "2xl": "max-w-2xl",
         "3xl": "max-w-3xl",
-    }[size];
+    }[props.size ?? "md"];
 
     return (
         <>
-            <Transition unmount appear show={isOpen()}>
-                <Dialog isOpen class="relative z-10" onClose={close}>
+            <Transition unmount appear show={props.isOpen}>
+                <Dialog
+                    isOpen
+                    class="relative z-10"
+                    onClose={() => props.setIsOpen(false)}
+                >
                     <TransitionChild
                         enter="ease-out duration-300"
                         enterFrom="opacity-0"
@@ -68,7 +60,7 @@ export default function Modal({
                             onClick={(e) => {
                                 if (e.target !== e.currentTarget) return;
 
-                                setIsOpen(false);
+                                props.setIsOpen(false);
                             }}
                         >
                             <TransitionChild
@@ -80,16 +72,16 @@ export default function Modal({
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <DialogPanel
-                                    class={`w-full transform overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all ring-1 ring-white ring-opacity-10 ${maxWClass} ${className}`}
+                                    class={`w-screen transform overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all ring-1 ring-white ring-opacity-10 ${maxWClass} ${props.className}`}
                                 >
                                     <div
-                                        class={`flex justify-between mb-4 ${titleContainerClass}`}
+                                        class={`flex justify-between mb-4 ${props.titleContainerClass}`}
                                     >
                                         <DialogTitle
                                             as="h3"
                                             class="text-4xl uppercase font-medium leading-6"
                                         >
-                                            {title}
+                                            {props.title}
                                         </DialogTitle>
                                         <Button onClick={close}>
                                             <Icon
@@ -98,7 +90,7 @@ export default function Modal({
                                             />
                                         </Button>
                                     </div>
-                                    {children}
+                                    {props.children}
                                 </DialogPanel>
                             </TransitionChild>
                         </div>

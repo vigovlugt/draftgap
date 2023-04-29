@@ -139,14 +139,14 @@ const App: Component = () => {
             }}
         >
             <SettingsModal
-                isOpen={showSettings}
+                isOpen={showSettings()}
                 setIsOpen={setShowSettings}
                 setFAQOpen={setShowFAQ}
             ></SettingsModal>
             <UpdateModal />
-            <FAQModal isOpen={showFAQ} setIsOpen={setShowFAQ} />
+            <FAQModal isOpen={showFAQ()} setIsOpen={setShowFAQ} />
             <DownloadAppModal
-                isOpen={showDownloadModal}
+                isOpen={showDownloadModal()}
                 setIsOpen={setShowDownloadModal}
             />
             <header class="bg-primary px-1 py-0 border-b-2 border-neutral-700 flex justify-between">

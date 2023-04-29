@@ -10,7 +10,7 @@ import { Button } from "../common/Button";
 import Modal from "../common/Modal";
 
 type Props = {
-    isOpen: Accessor<boolean>;
+    isOpen: boolean;
     setIsOpen: Setter<boolean>;
 };
 
@@ -68,7 +68,7 @@ const fetchRelease = async () => {
     return json;
 };
 
-export const DownloadAppModal: Component<Props> = ({ isOpen, setIsOpen }) => {
+export const DownloadAppModal: Component<Props> = (props) => {
     const [latestRelease, setLatestRelease] = createSignal<any>(null);
     const [isLoading, setIsLoading] = createSignal(false);
 
@@ -88,7 +88,7 @@ export const DownloadAppModal: Component<Props> = ({ isOpen, setIsOpen }) => {
         if (isLoading()) {
             return;
         }
-        if (!isOpen()) {
+        if (!props.isOpen) {
             return;
         }
 
@@ -113,8 +113,8 @@ export const DownloadAppModal: Component<Props> = ({ isOpen, setIsOpen }) => {
     return (
         <Modal
             title="DraftGap desktop app"
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
+            isOpen={props.isOpen}
+            setIsOpen={props.setIsOpen}
             size="xl"
         >
             <div class="w-full flex justify-center">

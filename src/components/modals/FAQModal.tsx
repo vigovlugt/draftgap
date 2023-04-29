@@ -2,13 +2,18 @@ import { Accessor, Setter, Component } from "solid-js";
 import Modal from "../common/Modal";
 
 type Props = {
-    isOpen: Accessor<boolean>;
+    isOpen: boolean;
     setIsOpen: Setter<boolean>;
 };
 
-export const FAQModal: Component<Props> = ({ isOpen, setIsOpen }) => {
+export const FAQModal: Component<Props> = (props) => {
     return (
-        <Modal title="FAQ" isOpen={isOpen} setIsOpen={setIsOpen} size="xl">
+        <Modal
+            title="FAQ"
+            isOpen={props.isOpen}
+            setIsOpen={props.setIsOpen}
+            size="2xl"
+        >
             <h2 class="text-2xl uppercase">What is DraftGap?</h2>
             <p class="font-body mb-4">
                 DraftGap is a tool to help you pick the best champion for each

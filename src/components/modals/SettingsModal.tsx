@@ -12,16 +12,12 @@ import { Toggle } from "../common/Toggle";
 import { RiskLevel, displayNameByRiskLevel } from "../../lib/risk/risk-level";
 
 interface Props {
-    isOpen: Accessor<boolean>;
+    isOpen: boolean;
     setIsOpen: Setter<boolean>;
     setFAQOpen: Setter<boolean>;
 }
 
-export default function SettingsModal({
-    isOpen,
-    setIsOpen,
-    setFAQOpen,
-}: Props) {
+export default function SettingsModal(props: Props) {
     const { config, setConfig, isDesktop } = useDraft();
 
     const riskLevelOptions: ButtonGroupOption<RiskLevel>[] = RiskLevel.map(
@@ -62,7 +58,11 @@ export default function SettingsModal({
     ] as const;
 
     return (
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Settings">
+        <Modal
+            isOpen={props.isOpen}
+            setIsOpen={props.setIsOpen}
+            title="Settings"
+        >
             <h3 class="text-3xl uppercase">Draft</h3>
             <div class="flex space-x-16 items-center justify-between mt-2">
                 <span class="text-lg uppercase">
@@ -83,7 +83,7 @@ export default function SettingsModal({
                 <span class="text-lg uppercase block">Risk level</span>
                 <button
                     onClick={() => {
-                        setFAQOpen(true);
+                        props.setFAQOpen(true);
                         setTimeout(() => {
                             document
                                 .getElementById("faq-risk-level")!

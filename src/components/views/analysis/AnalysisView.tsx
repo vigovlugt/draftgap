@@ -30,11 +30,10 @@ export default function AnalysisView() {
         championKey: string
     ) => {
         batch(() => {
-            setShowChampionDraftAnalysisModal(false);
             setChampionDraftAnalysisModalChampionKey(championKey);
             setChampionDraftAnalysisModalTeam(team);
+            setShowChampionDraftAnalysisModal(true);
         });
-        setShowChampionDraftAnalysisModal(true);
     };
 
     return (
@@ -46,16 +45,12 @@ export default function AnalysisView() {
                 }
             >
                 <ChampionDraftAnalysisModal
-                    isOpen={showChampionDraftAnalysisModal}
+                    isOpen={showChampionDraftAnalysisModal()}
                     setIsOpen={setShowChampionDraftAnalysisModal}
                     championKey={championDraftAnalysisModalChampionKey()!}
                     team={championDraftAnalysisModalTeam()!}
                     openChampionDraftAnalysisModal={(team, key) => {
-                        setShowChampionDraftAnalysisModal(false);
-
-                        setTimeout(() => {
-                            openChampionDraftAnalysisModal(team, key);
-                        }, 250);
+                        openChampionDraftAnalysisModal(team, key);
                     }}
                 />
             </Show>
