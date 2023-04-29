@@ -4,14 +4,11 @@ import { ViewTabs } from "../../common/ViewTabs";
 import { useDraft } from "../../../context/DraftContext";
 import { overflowEllipsis } from "../../../utils/strings";
 import { BuildView } from "./BuildView";
+import { useBuild } from "../../../context/BuildContext";
 
 export const BuildsView = () => {
     const { allyTeam, opponentTeam, dataset } = useDraft();
-
-    const [selectedChampion, setSelectedChampion] = createSignal<{
-        team: Team;
-        index: number;
-    }>();
+    const { buildPick, setBuildPick } = useBuild();
 
     const BuildsViewTabs = (props: { team: Team }) => {
         const team = () => (props.team === "ally" ? allyTeam : opponentTeam);
@@ -24,8 +21,8 @@ export const BuildsView = () => {
                         10
                     ),
                 }))}
-                selected={selectedChampion()}
-                onChange={setSelectedChampion}
+                selected={buildPick()}
+                onChange={setBuildPick}
                 className="!w-auto !border-b-0"
             />
         );
@@ -33,23 +30,20 @@ export const BuildsView = () => {
 
     return (
         <>
-            <div class="flex justify-between bg-primary xl:px-4 border-b border-neutral-700">
+            <div class="flex justify-between bg-primary xl:px-8 border-b border-neutral-700">
                 <BuildsViewTabs team="ally" />
                 <BuildsViewTabs team="opponent" />
             </div>
             <div class="py-5 px-4 xl:px-8 h-full overflow-y-auto">
                 <Show
-                    when={selectedChampion()}
+                    when={buildPick()}
                     fallback={
                         <div class="text-neutral-500 text-2xl text-center grid place-items-center h-full">
                             Select a champion to view their build
                         </div>
                     }
                 >
-                    <BuildView
-                        team={selectedChampion()!.team}
-                        index={selectedChampion()!.index}
-                    />
+                    <BuildView />
                 </Show>
             </div>
         </>

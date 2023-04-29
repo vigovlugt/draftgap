@@ -104,6 +104,7 @@ function riotRunesToRuneData(runes: RiotRunePath[]) {
                                         key: r.key,
                                         name: r.name,
                                         pathId: path.id,
+                                        icon: r.icon,
                                         slot: slotIndex,
                                         index: i,
                                     } satisfies RuneData,
@@ -123,6 +124,7 @@ function riotRunesToRuneData(runes: RiotRunePath[]) {
                             id: r.id,
                             key: r.key,
                             name: r.name,
+                            icon: r.icon,
                         } satisfies RunePathData,
                     ] as const
             )

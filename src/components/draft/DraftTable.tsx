@@ -9,7 +9,7 @@ import {
 } from "@tanstack/solid-table";
 import { useDraft } from "../../context/DraftContext";
 import { Role } from "../../lib/models/Role";
-import { Suggestion } from "../../lib/suggestions/suggestions";
+import { Suggestion } from "../../lib/draft/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
@@ -97,7 +97,6 @@ export default function DraftTable() {
         if (config().banPlacement === "hidden") {
             filtered = filtered.filter((s) => !bans.includes(s.championKey));
         } else if (config().banPlacement === "bottom") {
-            console.log(bans, bans);
             filtered = [...filtered].sort((a, b) => {
                 const aBanned = bans.includes(a.championKey);
                 const bBanned = bans.includes(b.championKey);

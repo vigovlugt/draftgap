@@ -2,6 +2,7 @@ export type RuneData = {
     id: number;
     key: string;
     name: string;
+    icon: string;
 
     pathId: number;
     // 0: keystone, 1,2,3: minor runes in row 1,2 or 3
@@ -13,6 +14,7 @@ export type RunePathData = {
     id: number;
     key: string;
     name: string;
+    icon: string;
 };
 
 export type StatShardData = {

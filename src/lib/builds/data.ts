@@ -8,8 +8,77 @@ import {
     FullBuildDataset,
     PartialBuildDataset,
     RuneStats,
+    RunesBuildData,
 } from "../models/build/BuildDataset";
 import { Dataset } from "../models/dataset/Dataset";
+
+function getRunesBuildData(
+    dataset: Dataset,
+    championKey: string,
+    role: Role,
+    championData: LolalyticsChampionResponse
+) {
+    const runes: RunesBuildData = {
+        primary: {},
+        secondary: {},
+        shards: {
+            offense: {},
+            defense: {},
+            flex: {},
+        },
+    };
+
+    for (const [rawId, runesArray] of Object.entries(
+        championData.runes.stats
+    )) {
+        // Rune or Shard ID
+        const runeId = parseInt(rawId);
+        // Whether this shard is in the flex slot (slot 1)
+        const isFlexShard = rawId.at(-1) === "f";
+
+        for (const [i, rune] of runesArray.map(
+            (rune, i) => [i, rune] as const
+        )) {
+            const [_pickRate, winRate, games] = rune;
+            const chosenAsSecondary = i === 1;
+
+            const runeStats = {
+                wins: Math.round(games * (winRate / 100)),
+                games,
+            } satisfies RuneStats;
+
+            if (dataset.runeData[runeId]) {
+                if (chosenAsSecondary) {
+                    runes.secondary[runeId] = runeStats;
+                } else {
+                    runes.primary[runeId] = runeStats;
+                }
+            } else if (dataset.statShardData[runeId]) {
+                if (isFlexShard) {
+                    runes.shards.flex[runeId] = runeStats;
+                } else {
+                    const slot = dataset.statShardData[runeId].positions.find(
+                        (p) => p.slot !== 1
+                    )?.slot;
+                    if (slot === undefined) {
+                        throw new Error(
+                            "Shard has no slot other than flex " + runeId
+                        );
+                    }
+                    if (slot === 0) {
+                        runes.shards.offense[runeId] = runeStats;
+                    } else if (slot === 2) {
+                        runes.shards.defense[runeId] = runeStats;
+                    }
+                }
+            } else {
+                throw new Error("Unknown rune/shard ID " + runeId);
+            }
+        }
+    }
+
+    return runes;
+}
 
 function partialDatasetFromLolalyticsData(
     dataset: Dataset,
@@ -24,62 +93,8 @@ function partialDatasetFromLolalyticsData(
             (championData.header.n * championData.header.wr) / 100
         ),
         games: championData.header.n,
-        runes: {
-            primary: {},
-            secondary: {},
-            shards: {
-                offense: {},
-                defense: {},
-                flex: {},
-            },
-        },
+        runes: getRunesBuildData(dataset, championKey, role, championData),
     };
-
-    // Fill runes and shards
-    for (const [rawId, runes] of Object.entries(championData.runes.stats)) {
-        // Rune or Shard ID
-        const runeId = parseInt(rawId);
-        // Whether this shard is in the flex slot (slot 1)
-        const isFlexShard = rawId.at(-1) === "f";
-
-        for (const [i, rune] of runes.map((rune, i) => [i, rune] as const)) {
-            const [_pickRate, winRate, games] = rune;
-            const chosenAsSecondary = i === 1;
-
-            const runeStats = {
-                wins: Math.round(games * (winRate / 100)),
-                games,
-            } satisfies RuneStats;
-
-            if (dataset.runeData[runeId]) {
-                if (chosenAsSecondary) {
-                    partialDataset.runes.secondary[runeId] = runeStats;
-                } else {
-                    partialDataset.runes.primary[runeId] = runeStats;
-                }
-            } else if (dataset.statShardData[runeId]) {
-                if (isFlexShard) {
-                    partialDataset.runes.shards.flex[runeId] = runeStats;
-                } else {
-                    const slot = dataset.statShardData[runeId].positions.find(
-                        (p) => p.slot !== 1
-                    )?.slot;
-                    if (slot === undefined) {
-                        throw new Error(
-                            "Shard has no slot other than flex " + runeId
-                        );
-                    }
-                    if (slot === 0) {
-                        partialDataset.runes.shards.offense[runeId] = runeStats;
-                    } else if (slot === 2) {
-                        partialDataset.runes.shards.defense[runeId] = runeStats;
-                    }
-                }
-            } else {
-                throw new Error("Unknown rune/shard ID " + runeId);
-            }
-        }
-    }
 
     return partialDataset;
 }
@@ -104,7 +119,22 @@ function fullDatasetFromLolalyticsData(
 
     const fullDataset: FullBuildDataset = {
         ...partialDataset,
-        matchups: [],
+        matchups: matchupData.map((matchup) => ({
+            championKey: matchup.championKey,
+            role: matchup.role,
+            wins: Math.round(
+                (matchup.championData.header.n *
+                    matchup.championData.header.wr) /
+                    100
+            ),
+            games: matchup.championData.header.n,
+            runes: getRunesBuildData(
+                dataset,
+                matchup.championKey,
+                matchup.role,
+                matchup.championData
+            ),
+        })),
     };
 
     return fullDataset;
@@ -131,14 +161,16 @@ export async function fetchBuildData(
     );
 
     const matchup30DaysDataPromises = [...opponentTeamComp.entries()].map(
-        ([role, championKey]) =>
+        ([opponentRole, opponentChampionKey]) =>
             getLolalyticsChampion(
                 "30",
                 championKey,
-                LOLALYTICS_ROLES[role]
+                LOLALYTICS_ROLES[role],
+                opponentChampionKey,
+                LOLALYTICS_ROLES[opponentRole]
             ).then((championData) => ({
-                championKey,
-                role,
+                championKey: opponentChampionKey,
+                role: opponentRole,
                 championData,
             }))
     );

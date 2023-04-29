@@ -9,7 +9,7 @@ import {
 import { JSX } from "solid-js/jsx-runtime";
 import { useDraft } from "../../../context/DraftContext";
 import { Role } from "../../../lib/models/Role";
-import { AnalyzeChampionResult } from "../../../lib/suggestions/suggestions";
+import { AnalyzeChampionResult } from "../../../lib/draft/analysis";
 import ChampionCell from "../../common/ChampionCell";
 import { Table } from "../../common/Table";
 import { RoleCell } from "../../common/RoleCell";

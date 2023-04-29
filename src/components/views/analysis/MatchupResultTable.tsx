@@ -10,30 +10,29 @@ import { createSignal, JSX } from "solid-js";
 import { useDraft } from "../../../context/DraftContext";
 import { Role } from "../../../lib/models/Role";
 import { Team } from "../../../lib/models/Team";
-import { AnalyzeDuoResult } from "../../../lib/suggestions/suggestions";
+import {
+    AnalyzeChampionResult,
+    AnalyzeMatchupResult,
+} from "../../../lib/draft/analysis";
 import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
+import { WinnerCell } from "../../common/WinnerCell";
 
 interface Props {
-    team: Team;
-    data?: () => AnalyzeDuoResult[];
-    onClickChampion?: (championKey: string) => void;
-    halfDuoRating?: boolean;
+    showAll: boolean;
+    data?: () => AnalyzeMatchupResult[];
+    onClickChampion?: (team: Team, championKey: string) => void;
 }
 
-export function DuoResultTable(
+export function MatchupResultTable(
     props: Props & JSX.HTMLAttributes<HTMLDivElement>
 ) {
-    const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
+    const { allyDraftResult, dataset } = useDraft();
 
-    const draftResult =
-        props.team === "ally" ? allyDraftResult : opponentDraftResult;
-
-    const columns: ColumnDef<AnalyzeDuoResult>[] = [
+    const columns: ColumnDef<AnalyzeMatchupResult>[] = [
         {
-            id: "roleA",
             header: "Role",
             accessorFn: (result) => result.roleA,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
@@ -44,61 +43,20 @@ export function DuoResultTable(
             sortDescFirst: false,
         },
         {
-            id: "championA",
-            header: "Champion",
+            header: "Ally",
             accessorFn: (result) => result.championKeyA,
             cell: (info) => (
-                <ChampionCell
-                    championKey={info.getValue<string>()}
-                    nameMaxLength={6}
-                />
+                <ChampionCell championKey={info.getValue<string>()} />
             ),
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<AnalyzeDuoResult, unknown>
+                    info: CellContext<AnalyzeChampionResult, unknown>
                 ) => {
                     e.stopPropagation();
-                    props.onClickChampion?.(info.getValue<string>());
-                },
-            },
-            sortingFn: (a, b, id) =>
-                dataset()!.championData[
-                    a.getValue<string>(id)
-                ].name.localeCompare(
-                    dataset()!.championData[b.getValue<string>(id)].name
-                ),
-        },
-        {
-            id: "roleB",
-            header: "Role",
-            accessorFn: (result) => result.roleB,
-            cell: (info) => <RoleCell role={info.getValue<Role>()} />,
-            meta: {
-                headerClass: "w-1",
-                footerClass: "w-1",
-            },
-            sortDescFirst: false,
-        },
-        {
-            id: "championB",
-            header: "Champion",
-            accessorFn: (result) => result.championKeyB,
-            cell: (info) => (
-                <ChampionCell
-                    championKey={info.getValue<string>()}
-                    nameMaxLength={6}
-                />
-            ),
-            meta: {
-                onClickCell: (
-                    e: MouseEvent,
-                    info: CellContext<AnalyzeDuoResult, unknown>
-                ) => {
-                    e.stopPropagation();
-                    props.onClickChampion?.(info.getValue<string>());
+                    props.onClickChampion?.("ally", info.getValue<string>());
                 },
             },
             sortingFn: (a, b, id) =>
@@ -110,21 +68,77 @@ export function DuoResultTable(
         },
         {
             header: "Winrate",
-            accessorFn: (duo) => duo.rating,
+            accessorFn: (result) => result.rating,
+
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
-            footer: (info) => <RatingText rating={rating() ?? 0} />,
+            footer: (info) => <RatingText rating={allyRating() ?? 0} />,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
             },
         },
+        {
+            header: "Winner",
+            accessorFn: (result) => result.rating > 0,
+            cell: (info) => <WinnerCell winner={info.getValue<boolean>()} />,
+            footer: () => (
+                <WinnerCell winner={allyRating() > opponentRating()} />
+            ),
+            meta: {
+                headerClass: "text-center",
+            },
+        },
+        {
+            id: "opponent-role",
+            header: "Role",
+            accessorFn: (result) => result.roleB,
+            cell: (info) => <RoleCell role={info.getValue<Role>()} />,
+            meta: {
+                headerClass: "w-1",
+                footerClass: "w-1",
+            },
+            sortDescFirst: false,
+        },
+        {
+            header: "Opponent",
+            accessorFn: (result) => result.championKeyB,
+            cell: (info) => (
+                <ChampionCell championKey={info.getValue<string>()} />
+            ),
+            sortingFn: (a, b, id) =>
+                dataset()!.championData[
+                    a.getValue<string>(id)
+                ].name.localeCompare(
+                    dataset()!.championData[b.getValue<string>(id)].name
+                ),
+            meta: {
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<AnalyzeChampionResult, unknown>
+                ) => {
+                    e.stopPropagation();
+                    props.onClickChampion?.(
+                        "opponent",
+                        info.getValue<string>()
+                    );
+                },
+            },
+        },
+        {
+            id: "opponent-winrate",
+            header: "Winrate",
+            accessorFn: (result) => -result.rating,
+            cell: (info) => <RatingText rating={info.getValue<number>()} />,
+            footer: (info) => <RatingText rating={opponentRating()} />,
+        },
     ];
 
-    const rating = () =>
+    const allyRating = () =>
         table
             .getRowModel()
             .rows.map((r) => r.original.rating)
-            .reduce((a, b) => a + b / (props.halfDuoRating ? 2 : 1), 0);
+            .reduce((a, b) => a + b, 0);
+    const opponentRating = () => -allyRating();
 
     const [sorting, setSorting] = createSignal<SortingState>([]);
     const table = createSolidTable({
@@ -133,9 +147,13 @@ export function DuoResultTable(
                 return props.data();
             }
 
-            let data = draftResult()?.allyDuoRating?.duoResults;
+            let data = allyDraftResult()?.matchupRating?.matchupResults;
             if (!data) {
                 return [];
+            }
+
+            if (!props.showAll) {
+                data = data.filter((m) => m.roleA === m.roleB);
             }
 
             return data.sort((a, b) => a.roleA - b.roleA || a.roleB - b.roleB);

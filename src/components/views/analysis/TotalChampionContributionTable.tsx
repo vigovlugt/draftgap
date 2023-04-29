@@ -15,7 +15,7 @@ import {
     AnalyzeChampionResult,
     AnalyzeDuoResult,
     AnalyzeMatchupResult,
-} from "../../../lib/suggestions/suggestions";
+} from "../../../lib/draft/analysis";
 import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";

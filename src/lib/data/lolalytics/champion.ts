@@ -242,7 +242,7 @@ export async function getLolalyticsChampion(
     queryParams.append("cid", championKey);
     queryParams.append("lane", role);
     if (matchup && matchupRole) {
-        queryParams.append("matchup", matchup);
+        queryParams.append("vs", matchup);
         queryParams.append("vslane", matchupRole);
     }
 

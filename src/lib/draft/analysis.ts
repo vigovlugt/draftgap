@@ -1,63 +1,9 @@
-import { Dataset } from "../models/Dataset";
-import { Role, ROLES } from "../models/Role";
+import { Dataset } from "../models/dataset/Dataset";
+import { Role } from "../models/Role";
 import { winrateToRating, ratingToWinrate } from "../rating/ratings";
-import { calculateWilsonCI } from "../statistics/stats";
-
-export interface Suggestion {
-    championKey: string;
-    role: Role;
-    draftResult: DraftResult;
-}
-
-export function getSuggestions(
-    dataset: Dataset,
-    synergyMatchupDataset: Dataset,
-    team: Map<Role, string>,
-    enemy: Map<Role, string>,
-    config: AnalyzeDraftConfig
-) {
-    const remainingRoles = ROLES.filter((role) => !team.has(role));
-    const enemyChampions = new Set(enemy.values());
-    const allyChampions = new Set(team.values());
-
-    const suggestions: Suggestion[] = [];
-
-    for (const championKey of Object.keys(dataset.championData)) {
-        if (enemyChampions.has(championKey) || allyChampions.has(championKey))
-            continue;
-
-        for (const role of remainingRoles) {
-            if (team.has(role)) continue;
-            if (
-                (getStats(synergyMatchupDataset, championKey, role).games /
-                    30) *
-                    7 <
-                config.minGames
-            )
-                continue;
-
-            team.set(role, championKey);
-            const draftResult = analyzeDraft(
-                dataset,
-                synergyMatchupDataset,
-                team,
-                enemy,
-                config
-            );
-            team.delete(role);
-
-            suggestions.push({
-                championKey,
-                role,
-                draftResult,
-            });
-        }
-    }
-
-    return suggestions.sort(
-        (a, b) => b.draftResult.winrate - a.draftResult.winrate
-    );
-}
+import { RiskLevel, priorGamesByRiskLevel } from "../risk/risk-level";
+import { addStats, divideStats } from "../stats";
+import { getStats } from "./utils";
 
 export type DraftResult = {
     allyChampionRating: AnalyzeChampionsResult;
@@ -70,29 +16,6 @@ export type DraftResult = {
     winrate: number;
 };
 
-export const RiskLevel = [
-    "very-low",
-    "low",
-    "medium",
-    "high",
-    "very-high",
-] as const;
-export type RiskLevel = typeof RiskLevel[number];
-export const displayNameByRiskLevel: Record<RiskLevel, string> = {
-    "very-low": "Very Low",
-    low: "Low",
-    medium: "Medium",
-    high: "High",
-    "very-high": "Very High",
-};
-export const priorGamesByRiskLevel: Record<RiskLevel, number> = {
-    "very-low": 1000,
-    low: 500,
-    medium: 250,
-    high: 100,
-    "very-high": 50,
-};
-
 export interface AnalyzeDraftConfig {
     ignoreChampionWinrates: boolean;
     riskLevel: RiskLevel;
@@ -101,7 +24,7 @@ export interface AnalyzeDraftConfig {
 
 export function analyzeDraft(
     dataset: Dataset,
-    synergyMatchupDataset: Dataset,
+    fullDataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>,
     config: AnalyzeDraftConfig
@@ -109,24 +32,15 @@ export function analyzeDraft(
     const priorGames = priorGamesByRiskLevel[config.riskLevel];
 
     const allyChampionRating = !config.ignoreChampionWinrates
-        ? analyzeChampions(dataset, synergyMatchupDataset, team, priorGames)
+        ? analyzeChampions(dataset, fullDataset, team, priorGames)
         : { totalRating: 0, winrate: 0, championResults: [] };
     const enemyChampionRating = !config.ignoreChampionWinrates
-        ? analyzeChampions(dataset, synergyMatchupDataset, enemy, priorGames)
+        ? analyzeChampions(dataset, fullDataset, enemy, priorGames)
         : { totalRating: 0, winrate: 0, championResults: [] };
 
-    const allyDuoRating = analyzeDuos(synergyMatchupDataset, team, priorGames);
-    const enemyDuoRating = analyzeDuos(
-        synergyMatchupDataset,
-        enemy,
-        priorGames
-    );
-    const matchupRating = analyzeMatchups(
-        synergyMatchupDataset,
-        team,
-        enemy,
-        priorGames
-    );
+    const allyDuoRating = analyzeDuos(fullDataset, team, priorGames);
+    const enemyDuoRating = analyzeDuos(fullDataset, enemy, priorGames);
+    const matchupRating = analyzeMatchups(fullDataset, team, enemy, priorGames);
 
     const totalRating =
         allyChampionRating.totalRating +
@@ -407,85 +321,4 @@ export function analyzeMatchups(
         matchupResults,
         totalRating,
     };
-}
-
-function addStats(
-    stats: { wins: number; games: number },
-    stats2: { wins: number; games: number }
-) {
-    return {
-        wins: stats.wins + stats2.wins,
-        games: stats.games + stats2.games,
-    };
-}
-
-function divideStats(stats: { wins: number; games: number }, number: number) {
-    return {
-        wins: stats.wins / number,
-        games: stats.games / number,
-    };
-}
-
-function getStats(
-    dataset: Dataset,
-    championKey: string,
-    role: Role
-): { wins: number; games: number };
-function getStats(
-    dataset: Dataset,
-    championKey: string,
-    role: Role,
-    type: "duo",
-    role2: Role,
-    championKey2: string
-): { wins: number; games: number };
-function getStats(
-    dataset: Dataset,
-    championKey: string,
-    role: Role,
-    type: "matchup",
-    role2: Role,
-    championKey2: string
-): { wins: number; games: number };
-function getStats(
-    dataset: Dataset,
-    championKey: string,
-    role: Role,
-    type?: "matchup" | "duo",
-    matchupDuoRole?: Role,
-    matchupDuoChampionKey?: string
-) {
-    if (!type) {
-        return (
-            dataset.championData[championKey].statsByRole[role] ?? {
-                wins: 0,
-                games: 0,
-            }
-        );
-    }
-
-    if (type === "matchup") {
-        matchupDuoRole = matchupDuoRole!;
-        matchupDuoChampionKey = matchupDuoChampionKey!;
-        return (
-            dataset.championData[championKey].statsByRole[role]?.matchup[
-                matchupDuoRole
-            ][matchupDuoChampionKey] ?? {
-                wins: 0,
-                games: 0,
-            }
-        );
-    } else {
-        matchupDuoRole = matchupDuoRole!;
-        matchupDuoChampionKey = matchupDuoChampionKey!;
-
-        return (
-            dataset.championData[championKey].statsByRole[role].synergy[
-                matchupDuoRole
-            ][matchupDuoChampionKey] ?? {
-                wins: 0,
-                games: 0,
-            }
-        );
-    }
 }

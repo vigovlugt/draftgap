@@ -6,13 +6,10 @@ import {
     StatsSite,
     useDraft,
 } from "../../context/DraftContext";
-import {
-    displayNameByRiskLevel,
-    RiskLevel,
-} from "../../lib/suggestions/suggestions";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import Modal from "../common/Modal";
 import { Toggle } from "../common/Toggle";
+import { RiskLevel, displayNameByRiskLevel } from "../../lib/risk/risk-level";
 
 interface Props {
     isOpen: Accessor<boolean>;

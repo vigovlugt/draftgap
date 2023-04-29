@@ -69,7 +69,7 @@ export default function AnalysisView() {
             >
                 <div class="md:w-1/2">
                     <h3
-                        class="text-3xl mb-1 uppercase"
+                        class="text-3xl mb-1 uppercase ml-4"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
@@ -104,7 +104,7 @@ export default function AnalysisView() {
                 </div>
                 <div class="md:w-1/2">
                     <h3
-                        class="text-3xl mb-1 uppercase"
+                        class="text-3xl mb-1 uppercase ml-4"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
@@ -146,7 +146,7 @@ export default function AnalysisView() {
                 >
                     <div class="sm:w-1/2">
                         <h3
-                            class="text-3xl uppercase mb-1"
+                            class="text-3xl uppercase mb-1 ml-4"
                             // @ts-ignore
                             use:tooltip={{
                                 content: (
@@ -169,7 +169,7 @@ export default function AnalysisView() {
                     </div>
                     <div class="sm:w-1/2">
                         <h3
-                            class="text-3xl uppercase mb-1"
+                            class="text-3xl uppercase mb-1 ml-4"
                             // @ts-ignore
                             use:tooltip={{
                                 content: (
@@ -199,7 +199,7 @@ export default function AnalysisView() {
             >
                 <div>
                     <h3
-                        class="text-3xl uppercase"
+                        class="text-3xl uppercase ml-4"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
@@ -214,7 +214,7 @@ export default function AnalysisView() {
                         Matchups
                     </h3>
                     <p
-                        class="text-neutral-500 uppercase"
+                        class="text-neutral-500 uppercase ml-4"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
@@ -251,7 +251,7 @@ export default function AnalysisView() {
             <div class="flex-col md:flex-row flex gap-4 mb-8" id="duo-result">
                 <div class="md:w-1/2">
                     <h3
-                        class="text-3xl mb-1 uppercase"
+                        class="text-3xl mb-1 uppercase ml-4"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
@@ -271,7 +271,7 @@ export default function AnalysisView() {
                 </div>
                 <div class="md:w-1/2">
                     <h3
-                        class="text-3xl mb-1 uppercase"
+                        class="text-3xl mb-1 uppercase ml-4"
                         // @ts-ignore
                         use:tooltip={{
                             content: (

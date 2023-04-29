@@ -18,7 +18,7 @@ import { TeamSidebar } from "./components/draft/TeamSidebar";
 import { useDraft } from "./context/DraftContext";
 import { cog_6Tooth } from "solid-heroicons/solid";
 import SettingsModal from "./components/modals/SettingsModal";
-import AnalysisView from "./components/views/analysisview/AnalysisView";
+import AnalysisView from "./components/views/analysis/AnalysisView";
 import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
 import { useLolClient } from "./context/LolClientContext";
 import { UpdateModal } from "./components/modals/UpdateModal";
@@ -29,10 +29,12 @@ import { Badge } from "./components/common/Badge";
 import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
 import { ViewTabs } from "./components/common/ViewTabs";
-import { BuildsView } from "./components/views/buildsview/BuildsView";
+import { BuildsView } from "./components/views/builds/BuildsView";
+import { useBuild } from "./context/BuildContext";
 
 const App: Component = () => {
     const { config, dataset, tab, setTab, draftFinished } = useDraft();
+    const { setBuildPick } = useBuild();
     const { startLolClientIntegration, stopLolClientIntegration } =
         useLolClient();
 
@@ -54,6 +56,11 @@ const App: Component = () => {
     const [currentTab, setCurrentTab] = createSignal<"analysis" | "builds">(
         "analysis"
     );
+    const onChangeTab = (tab: "analysis" | "builds") => {
+        setCurrentTab(tab);
+        setBuildPick(undefined);
+        // TODO: IF LOLCLIENT INTEGRATION ENABLED, SET CURRENT BUILD TO OWN CHAMPION
+    };
 
     const timeAgo = () =>
         dataset()
@@ -87,8 +94,8 @@ const App: Component = () => {
                                     { label: "Builds", value: "builds" },
                                 ]}
                                 selected={currentTab()}
-                                onChange={setCurrentTab}
-                                className="xl:px-4"
+                                onChange={onChangeTab}
+                                className="xl:px-8"
                             ></ViewTabs>
                             <Switch>
                                 <Match when={currentTab() === "analysis"}>
@@ -167,7 +174,7 @@ const App: Component = () => {
             <main
                 class="h-full lg:grid overflow-hidden hidden"
                 style={{
-                    "grid-template-columns": "1fr 3fr 1fr",
+                    "grid-template-columns": "1fr 4fr 1fr",
                     "grid-template-rows": "100%",
                 }}
             >

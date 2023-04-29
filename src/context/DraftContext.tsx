@@ -15,12 +15,9 @@ import { PickData } from "../lib/models/dataset/PickData";
 import { displayNameByRole, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
 import predictRoles, { getTeamComps } from "../lib/role/role-predictor";
-import {
-    analyzeDraft,
-    AnalyzeDraftConfig,
-    getSuggestions,
-} from "../lib/suggestions/suggestions";
+import { analyzeDraft, AnalyzeDraftConfig } from "../lib/draft/analysis";
 import { createStoredSignal } from "../utils/signals";
+import { getSuggestions } from "../lib/draft/suggestions";
 
 type TeamPick = {
     championKey: string | undefined;
@@ -44,7 +41,7 @@ export const DraftTablePlacement = {
     InPlace: "in-place",
 } as const;
 type DraftTablePlacement =
-    typeof DraftTablePlacement[keyof typeof DraftTablePlacement];
+    (typeof DraftTablePlacement)[keyof typeof DraftTablePlacement];
 
 export type DraftGapConfig = AnalyzeDraftConfig & {
     disableLeagueClientIntegration: boolean;
@@ -419,6 +416,7 @@ export function createDraftContext() {
     return {
         isDesktop,
         dataset,
+        dataset30Days,
         allyTeam,
         opponentTeam,
         bans,
