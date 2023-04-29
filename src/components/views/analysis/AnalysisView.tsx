@@ -7,7 +7,6 @@ import { MatchupResultTable } from "./MatchupResultTable";
 import { DraftSummaryCards } from "./SummaryCards";
 import { TotalChampionContributionTable } from "./TotalChampionContributionTable";
 import { tooltip } from "../../../directives/tooltip";
-import Modal from "../../common/Modal";
 import { ChampionDraftAnalysisModal } from "../../modals/ChampionDraftAnalysisModal";
 import { Team } from "../../../lib/models/Team";
 tooltip;
@@ -49,9 +48,9 @@ export default function AnalysisView() {
                     setIsOpen={setShowChampionDraftAnalysisModal}
                     championKey={championDraftAnalysisModalChampionKey()!}
                     team={championDraftAnalysisModalTeam()!}
-                    openChampionDraftAnalysisModal={(team, key) => {
-                        openChampionDraftAnalysisModal(team, key);
-                    }}
+                    openChampionDraftAnalysisModal={
+                        openChampionDraftAnalysisModal
+                    }
                 />
             </Show>
 

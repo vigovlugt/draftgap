@@ -8,11 +8,7 @@ export function ChampionIcon(
         size: number;
     } & JSX.HTMLAttributes<HTMLDivElement>
 ) {
-    const [local, other] = splitProps(props, [
-        "championKey",
-        "imgClass",
-        "size",
-    ]);
+    const [, other] = splitProps(props, ["championKey", "imgClass", "size"]);
     const { dataset } = useDraft();
 
     return (

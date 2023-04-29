@@ -14,7 +14,7 @@ import { Component } from "solid-js";
 import { capitalize } from "../../../utils/strings";
 tooltip;
 
-const SummaryCard = (
+export const SummaryCard = (
     props: {
         team?: Team;
         title: string;

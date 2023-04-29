@@ -68,13 +68,13 @@ export const PathTable: Component<PathTableProps> = (props) => {
         partialBuildDataset()!.runes[props.type][runeId];
 
     return (
-        <div>
+        <div class="relative isolate">
             <Show when={props.type === "primary"}>
-                <h3 class="uppercase mb-2 min-w-[184px]">
+                <h3 class="uppercase mb-2 min-w-[184px] relative">
                     {dataset()!.runePathData[props.pathId].name}
                 </h3>
             </Show>
-            <div class="bg-[#141414] p-2 rounded-md flex flex-col gap-2">
+            <div class="bg-[#141414] p-2 rounded-md flex flex-col gap-2 relative">
                 <Show when={props.type === "primary"}>
                     <div class="flex gap-2 justify-between mb-2 min-w-[184px]">
                         <For each={runesBySlot().get(0)}>
@@ -84,6 +84,7 @@ export const PathTable: Component<PathTableProps> = (props) => {
                                     rating={runeAnalysis(rune.id).totalRating}
                                     games={runeStats(rune.id).games}
                                     totalGames={partialBuildDataset()!.games}
+                                    type={props.type}
                                 />
                             )}
                         </For>
@@ -107,6 +108,7 @@ export const PathTable: Component<PathTableProps> = (props) => {
                                         totalGames={
                                             partialBuildDataset()!.games
                                         }
+                                        type={props.type}
                                     />
                                 )}
                             </For>
@@ -120,6 +122,7 @@ export const PathTable: Component<PathTableProps> = (props) => {
 
 type RuneProps = {
     runeId: number;
+    type: "primary" | "secondary";
     rating: number;
     games: number;
     totalGames: number;
@@ -127,17 +130,25 @@ type RuneProps = {
 
 export const Rune: Component<RuneProps> = (props) => {
     const { dataset } = useDraft();
+    const { setSelectedEntity } = useBuild();
 
     const rune = () => dataset()!.runeData[props.runeId];
 
     const imgUrl = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${rune().icon.toLowerCase()}`;
 
     return (
-        <div
+        <button
             class="flex flex-col items-center justify-center gap-1 text-xs"
             classList={{
-                "opacity-30": props.games / props.totalGames < 0.01,
+                "opacity-20": props.games / props.totalGames < 0.01,
             }}
+            onClick={() =>
+                setSelectedEntity({
+                    type: "rune",
+                    runeType: props.type,
+                    id: props.runeId,
+                })
+            }
         >
             <img
                 src={imgUrl}
@@ -153,6 +164,6 @@ export const Rune: Component<RuneProps> = (props) => {
             <span class="text-neutral-500">
                 {formatPercentage(props.games / props.totalGames)}%
             </span>
-        </div>
+        </button>
     );
 };

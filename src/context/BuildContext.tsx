@@ -16,6 +16,12 @@ import {
 import { useDraft } from "./DraftContext";
 import { Team } from "../lib/models/Team";
 
+export type SelectedEntity = {
+    type: "rune";
+    runeType: "primary" | "secondary";
+    id: number;
+};
+
 export function createBuildContext() {
     const {
         allyTeam,
@@ -30,6 +36,20 @@ export function createBuildContext() {
     const [buildPick, setBuildPick] = createSignal(
         undefined as { team: Team; index: number } | undefined
     );
+    const [selectedEntity, _setSelectedEntity] = createSignal<
+        SelectedEntity | undefined
+    >();
+    const [showSelectedEntity, setShowSelectedEntity] = createSignal(false);
+    const setSelectedEntity = (entity: SelectedEntity | undefined) => {
+        if (!entity) {
+            setShowSelectedEntity(false);
+            return;
+        }
+
+        _setSelectedEntity(entity);
+        setShowSelectedEntity(true);
+    };
+
     createEffect(() => {
         if (!buildPick()) return;
 
@@ -141,11 +161,16 @@ export function createBuildContext() {
 
     return {
         query,
+        championKey,
+        championRole,
         partialBuildDataset,
         fullBuildDataset,
         buildAnalysisResult,
         buildPick,
         setBuildPick,
+        selectedEntity,
+        showSelectedEntity,
+        setSelectedEntity,
     };
 }
 

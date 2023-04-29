@@ -101,7 +101,7 @@ export function Pick({ team, index }: IProps) {
             onMouseOut={onMouseOut}
         >
             <Show when={!champion()}>
-                <span class="absolute top-1 left-2 uppercase text-2xl">
+                <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
                     PICK {index + 1}
                 </span>
             </Show>
@@ -123,7 +123,7 @@ export function Pick({ team, index }: IProps) {
                             }}
                         ></div>
 
-                        <span class="absolute top-0 left-2 uppercase text-2xl">
+                        <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
                             {champion()!.name}
                         </span>
 
