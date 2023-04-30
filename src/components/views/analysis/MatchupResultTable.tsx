@@ -78,15 +78,13 @@ export function MatchupResultTable(
             },
         },
         {
-            header: "Winner",
+            header: () => <div class="text-center w-full">Winner</div>,
+            id: "winner",
             accessorFn: (result) => result.rating > 0,
             cell: (info) => <WinnerCell winner={info.getValue<boolean>()} />,
             footer: () => (
                 <WinnerCell winner={allyRating() > opponentRating()} />
             ),
-            meta: {
-                headerClass: "text-center",
-            },
         },
         {
             id: "opponent-role",
