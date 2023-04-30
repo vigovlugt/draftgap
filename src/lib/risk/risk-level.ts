@@ -17,9 +17,9 @@ export const displayNameByRiskLevel: Record<RiskLevel, string> = {
 };
 
 export const priorGamesByRiskLevel: Record<RiskLevel, number> = {
-    "very-low": 1000,
-    low: 500,
-    medium: 250,
-    high: 100,
-    "very-high": 50,
+    "very-low": 2500,
+    low: 1000,
+    medium: 500,
+    high: 250,
+    "very-high": 100,
 };

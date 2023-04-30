@@ -188,11 +188,21 @@ function analyzeRuneMatchup(
             games: priorGamesByRiskLevel[config.riskLevel],
         }
     );
-    const runeMatchupWinrate = runeMatchupStats.wins / runeMatchupStats.games;
-    const runeMatchupRating =
-        winrateToRating(runeMatchupWinrate) - baseMatchupRating;
+    const matchupWithRuneWinrate =
+        runeMatchupStats.wins / runeMatchupStats.games;
+    const matchupWithRuneRating =
+        winrateToRating(matchupWithRuneWinrate) - baseMatchupRating;
 
-    const rating = runeMatchupRating - runeRating;
+    const rating = matchupWithRuneRating - runeRating;
+
+    if (
+        fullBuildDataset.championKey === "166" &&
+        buildMatchupData.championKey === "147" &&
+        runeId === 8017 &&
+        runeType === "primary"
+    ) {
+        debugger;
+    }
 
     return {
         championKey: buildMatchupData.championKey,

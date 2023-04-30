@@ -7,33 +7,31 @@ import { BuildView } from "./BuildView";
 import { useBuild } from "../../../context/BuildContext";
 import { BuildAnalysisModal } from "../../modals/BuildAnalysisModal";
 
-export const BuildsView = () => {
+export const BuildsViewTabs = (props: { team: Team }) => {
     const { allyTeam, opponentTeam, dataset } = useDraft();
-    const {
-        buildPick,
-        setBuildPick,
-        selectedEntity,
-        setSelectedEntity,
-        showSelectedEntity,
-    } = useBuild();
+    const { buildPick, setBuildPick } = useBuild();
 
-    const BuildsViewTabs = (props: { team: Team }) => {
-        const team = () => (props.team === "ally" ? allyTeam : opponentTeam);
-        return (
-            <ViewTabs
-                tabs={new Array(5).fill(null).map((_, i) => ({
-                    value: { team: props.team, index: i },
-                    label: overflowEllipsis(
-                        dataset()!.championData[team()[i].championKey!].name,
-                        10
-                    ),
-                }))}
-                selected={buildPick()}
-                onChange={setBuildPick}
-                className="!w-auto !border-b-0"
-            />
-        );
-    };
+    const team = () => (props.team === "ally" ? allyTeam : opponentTeam);
+
+    return (
+        <ViewTabs
+            tabs={new Array(5).fill(null).map((_, i) => ({
+                value: { team: props.team, index: i },
+                label: overflowEllipsis(
+                    dataset()!.championData[team()[i].championKey!].name,
+                    10
+                ),
+            }))}
+            selected={buildPick()}
+            onChange={setBuildPick}
+            className="!w-auto !border-b-0"
+        />
+    );
+};
+
+export const BuildsView = () => {
+    const { buildPick, selectedEntity, setSelectedEntity, showSelectedEntity } =
+        useBuild();
 
     return (
         <>

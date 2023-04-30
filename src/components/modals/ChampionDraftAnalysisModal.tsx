@@ -85,7 +85,7 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
 
             <div id="matchup-champion-result" class="mt-8">
                 <h3
-                    class="text-3xl uppercase"
+                    class="text-3xl uppercase ml-4"
                     // @ts-ignore
                     use:tooltip={{
                         content: <>Winrates of all {name()} matchups</>,
@@ -95,7 +95,7 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                     Matchups
                 </h3>
                 <p
-                    class="text-neutral-500 uppercase mb-1"
+                    class="text-neutral-500 uppercase mb-1 ml-4"
                     // @ts-ignore
                     use:tooltip={{
                         content: (
@@ -140,7 +140,7 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
 
             <div id="duo-champion-result" class="mt-4">
                 <h3
-                    class="text-3xl uppercase mb-1"
+                    class="text-3xl uppercase mb-1 ml-4"
                     // @ts-ignore
                     use:tooltip={{
                         content: <>Winrates of all {name()} duos</>,

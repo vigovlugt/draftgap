@@ -15,12 +15,7 @@ import {
 } from "../lib/models/build/BuildDataset";
 import { useDraft } from "./DraftContext";
 import { Team } from "../lib/models/Team";
-
-export type SelectedEntity = {
-    type: "rune";
-    runeType: "primary" | "secondary";
-    id: number;
-};
+import { BuildEntity } from "../lib/models/build/BuildEntity";
 
 export function createBuildContext() {
     const {
@@ -37,10 +32,10 @@ export function createBuildContext() {
         undefined as { team: Team; index: number } | undefined
     );
     const [selectedEntity, _setSelectedEntity] = createSignal<
-        SelectedEntity | undefined
+        BuildEntity | undefined
     >();
     const [showSelectedEntity, setShowSelectedEntity] = createSignal(false);
-    const setSelectedEntity = (entity: SelectedEntity | undefined) => {
+    const setSelectedEntity = (entity: BuildEntity | undefined) => {
         if (!entity) {
             setShowSelectedEntity(false);
             return;

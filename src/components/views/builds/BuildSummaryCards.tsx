@@ -71,7 +71,6 @@ export const BuildSummaryCards: Component<
                 icon={arrowsRightLeft}
                 title="Matchups"
                 rating={matchupRating()}
-                href="#matchup-entity-result"
                 tooltip={
                     <>
                         If above 50%, {name()} performs better against opponents

@@ -4,6 +4,9 @@ import { useDraft } from "../../context/DraftContext";
 import { useBuild } from "../../context/BuildContext";
 import { displayNameByRole } from "../../lib/models/Role";
 import { BuildSummaryCards } from "../views/builds/BuildSummaryCards";
+import { BuildMatchupTable } from "../views/builds/BuildMatchupTable";
+import { tooltip } from "../../directives/tooltip";
+tooltip;
 
 type Props = {
     isOpen: boolean;
@@ -59,6 +62,34 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
                 </div>
             </div>
             <BuildSummaryCards />
+            <h3
+                class="text-3xl uppercase mt-8 ml-4"
+                // @ts-ignore
+                use:tooltip={{
+                    content: <>Winrates of all {title()} matchups</>,
+                    placement: "top",
+                }}
+            >
+                Matchups
+            </h3>
+            <p
+                class="text-neutral-500 uppercase mb-1 ml-4"
+                // @ts-ignore
+                use:tooltip={{
+                    content: (
+                        <>
+                            The individual champion winrates have been
+                            normalized (removed) before calculating the matchup
+                            winrates, this to remove the current meta bias of
+                            the matchup.
+                        </>
+                    ),
+                    placement: "top",
+                }}
+            >
+                Champion winrates normalized
+            </p>
+            <BuildMatchupTable class="ring-1 ring-white ring-opacity-10" />
         </Modal>
     );
 };
