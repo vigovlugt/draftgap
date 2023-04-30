@@ -1,4 +1,4 @@
-import { Show, createSignal } from "solid-js";
+import { Show } from "solid-js";
 import { Team } from "../../../lib/models/Team";
 import { ViewTabs } from "../../common/ViewTabs";
 import { useDraft } from "../../../context/DraftContext";
@@ -24,6 +24,7 @@ export const BuildsViewTabs = (props: { team: Team }) => {
             }))}
             selected={buildPick()}
             onChange={setBuildPick}
+            equals={(a, b) => a?.team === b?.team && a?.index === b?.index}
             className="!w-auto !border-b-0"
         />
     );

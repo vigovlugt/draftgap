@@ -15,12 +15,12 @@ export const RuneTable: Component = (props) => {
     return (
         <Panel>
             <PanelHeader>Runes</PanelHeader>
-            <div class="flex gap-2 justify-between flex-wrap mb-4">
+            <div class="flex gap-2 justify-between flex-wrap mb-4 max-w-7xl">
                 <For each={paths()}>
                     {(pathId) => <PathTable pathId={pathId} type="primary" />}
                 </For>
             </div>
-            <div class="flex gap-2 justify-between flex-wrap">
+            <div class="flex gap-2 justify-between flex-wrap max-w-7xl">
                 <For each={paths()}>
                     {(pathId) => <PathTable pathId={pathId} type="secondary" />}
                 </For>
