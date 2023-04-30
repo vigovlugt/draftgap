@@ -23,7 +23,7 @@ export interface LolalyticsChampionResponse {
     spells: Array<Array<number | string>>;
     itemSets: ItemSets;
     startItem: Array<number[]>;
-    startSet: Array<Array<number | string>>;
+    startSet: Array<[string, number, number, number]>;
     earlyItem: Array<number[]>;
     boots: Array<number[]>;
     mythicItem: Array<number[]>;

@@ -5,6 +5,7 @@ export const RecommendedBuild: Component = (props) => {
     return (
         <Panel>
             <PanelHeader>Recommended Build</PanelHeader>
+            TBD
         </Panel>
     );
 };

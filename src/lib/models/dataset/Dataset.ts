@@ -17,12 +17,15 @@ import {
 import { deserializeRankData, RankData, serializeRankData } from "./RankData";
 import { deleteChampionRoleDataMatchupSynergyData } from "./ChampionRoleData";
 import { RuneData, RunePathData, StatShardData } from "./RuneData";
+import { ItemData } from "./ItemData";
 
 export interface Dataset {
     version: string;
     date: string;
     championData: Record<string, ChampionData>;
     rankData: RankData;
+
+    itemData: Record<number, ItemData>;
     runeData: Record<number, RuneData>;
     runePathData: Record<number, RunePathData>;
     statShardData: Record<number, StatShardData>;

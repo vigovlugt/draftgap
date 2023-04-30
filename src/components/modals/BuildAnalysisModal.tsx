@@ -17,25 +17,40 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
     const { dataset } = useDraft();
     const { championKey, championRole, selectedEntity } = useBuild();
 
-    const title = () =>
-        ({
-            rune: dataset()!.runeData[selectedEntity()!.id].name,
-        }[selectedEntity()!.type]);
+    const title = () => {
+        switch (selectedEntity()!.type) {
+            case "rune":
+                return dataset()!.runeData[selectedEntity()!.id].name;
+            case "item":
+                return dataset()!.itemData[selectedEntity()!.id].name;
+        }
+    };
     const subTitle = () =>
         dataset()!.championData[championKey()!].name +
         " " +
         displayNameByRole[championRole()!];
 
-    const imageSrc = () =>
-        ({
-            rune: `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${dataset()!.runeData[
-                selectedEntity()!.id
-            ].icon.toLowerCase()}`,
-        }[selectedEntity()!.type]);
-    const imageAlt = () =>
-        ({
-            rune: dataset()!.runeData[selectedEntity()!.id].name,
-        }[selectedEntity()!.type]);
+    const imageSrc = () => {
+        switch (selectedEntity()!.type) {
+            case "rune":
+                return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${dataset()!.runeData[
+                    selectedEntity()!.id
+                ].icon.toLowerCase()}`;
+            case "item":
+                return `https://ddragon.leagueoflegends.com/cdn/${
+                    dataset()!.version
+                }/img/item/${selectedEntity()!.id}.png`;
+        }
+    };
+
+    const imageAlt = () => {
+        switch (selectedEntity()!.type) {
+            case "rune":
+                return dataset()!.runeData[selectedEntity()!.id].name;
+            case "item":
+                return dataset()!.itemData[selectedEntity()!.id].name;
+        }
+    };
 
     return (
         <Modal

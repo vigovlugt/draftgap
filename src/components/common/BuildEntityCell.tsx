@@ -13,21 +13,35 @@ type Props = {
 export const BuildEntityCell = (props: Props) => {
     const { dataset } = useDraft();
 
-    const name = () =>
-        ({
-            rune: dataset()!.runeData[props.entityId].name,
-        }[props.entityType]);
+    const name = () => {
+        switch (props.entityType) {
+            case "rune":
+                return dataset()!.runeData[props.entityId].name;
+            case "item":
+                return dataset()!.itemData[props.entityId].name;
+        }
+    };
 
-    const imageSrc = () =>
-        ({
-            rune: `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${dataset()!.runeData[
-                props.entityId
-            ].icon.toLowerCase()}`,
-        }[props.entityType]);
+    const imageSrc = () => {
+        switch (props.entityType) {
+            case "rune":
+                return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${dataset()!.runeData[
+                    props.entityId
+                ].icon.toLowerCase()}`;
+            case "item":
+                return `https://ddragon.leagueoflegends.com/cdn/${
+                    dataset()!.version
+                }/img/item/${props.entityId}.png`;
+        }
+    };
 
     return (
         <div class="flex gap-2">
-            <img src={imageSrc()} alt={name()} class="h-[36px] w-36px]" />
+            <img
+                src={imageSrc()}
+                alt={name()}
+                class="h-[36px] w-36px] rounded"
+            />
             <Show when={!props.hideName}>
                 <span class="uppercase">
                     {props.nameMaxLength

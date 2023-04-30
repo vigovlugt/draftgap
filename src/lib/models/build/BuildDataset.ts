@@ -7,6 +7,7 @@ export type PartialBuildDataset = {
     games: number;
 
     runes: RunesBuildData;
+    items: ItemsBuildData;
 };
 
 export type FullBuildDataset = PartialBuildDataset & {
@@ -20,6 +21,7 @@ export type BuildMatchupData = {
     games: number;
 
     runes: RunesBuildData;
+    items: ItemsBuildData;
 };
 
 export type RunesBuildData = {
@@ -33,6 +35,24 @@ export type RunesBuildData = {
 };
 
 export type RuneStats = {
+    wins: number;
+    games: number;
+};
+
+export type ItemsBuildData = {
+    boots: Record<string, ItemStats>;
+    statsByOrder: Record<string, ItemStats>[];
+    startingSets: SetStats[];
+    sets: SetStats[];
+};
+
+export type SetStats = {
+    items: number[];
+    wins: number;
+    games: number;
+};
+
+export type ItemStats = {
     wins: number;
     games: number;
 };

@@ -26,14 +26,25 @@ export const BuildMatchupTable = (
     const title = () =>
         ({
             rune: "Rune",
+            item: "Item",
         }[selectedEntity()!.type]);
 
-    const data = () =>
-        ({
-            rune: buildAnalysisResult()?.runes[selectedEntity()!.runeType][
+    const data = () => {
+        const selected = selectedEntity();
+        if (selected?.type === "rune") {
+            return buildAnalysisResult()?.runes[selected.runeType][
                 selectedEntity()!.id
-            ].matchupResult,
-        }[selectedEntity()!.type]);
+            ].matchupResult;
+        } else if (selected?.type === "item") {
+            if (selected.itemType === "boots") {
+                return buildAnalysisResult()?.items.boots[selected.id]
+                    .matchupResult;
+            }
+            return buildAnalysisResult()?.items.statsByOrder[selected.itemType][
+                selected.id
+            ].matchupResult;
+        }
+    };
 
     const columns: ColumnDef<{
         championKey: string;

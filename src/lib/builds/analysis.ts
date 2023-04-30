@@ -4,6 +4,7 @@ import {
     PartialBuildDataset,
 } from "../models/build/BuildDataset";
 import { Dataset } from "../models/dataset/Dataset";
+import { analyzeItems } from "./item-analysis";
 import {
     RunesAnalysisResult as RunesAnalysisResult,
     analyzeRunes,
@@ -22,5 +23,6 @@ export function analyzeBuild(
 ) {
     return {
         runes: analyzeRunes(partialBuildDataset, fullBuildDatset, config),
+        items: analyzeItems(partialBuildDataset, fullBuildDatset, config),
     };
 }

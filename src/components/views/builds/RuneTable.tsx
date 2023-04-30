@@ -159,10 +159,10 @@ export const Rune: Component<RuneProps> = (props) => {
                 }}
             />
             <span class={getRatingClass(props.rating)}>
-                {formatPercentage(ratingToWinrate(props.rating))}%
+                {formatPercentage(ratingToWinrate(props.rating))}
             </span>
             <span class="text-neutral-500">
-                {formatPercentage(props.games / props.totalGames)}%
+                {formatPercentage(props.games / props.totalGames)}
             </span>
         </button>
     );

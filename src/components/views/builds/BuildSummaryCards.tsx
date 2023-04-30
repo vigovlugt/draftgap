@@ -18,35 +18,65 @@ export const BuildSummaryCards: Component<
     const title = () =>
         ({
             rune: "Rune",
+            item: "Item",
         }[selectedEntity()!.type]);
-    const name = () =>
-        ({
-            rune: dataset()!.runeData[selectedEntity()!.id].name,
-        }[selectedEntity()!.type]);
+    const name = () => {
+        switch (selectedEntity()!.type) {
+            case "rune":
+                return dataset()!.runeData[selectedEntity()!.id].name;
+            case "item":
+                return dataset()!.itemData[selectedEntity()!.id].name;
+        }
+    };
 
     const runeAnalysisResult = () => {
-        if (selectedEntity() && selectedEntity()!.type !== "rune")
-            return undefined;
+        const selected = selectedEntity();
+        if (selected?.type !== "rune") return undefined;
 
-        return buildAnalysisResult()!.runes[selectedEntity()!.runeType][
+        return buildAnalysisResult()!.runes[selected.runeType][
             selectedEntity()!.id
         ];
     };
 
-    const baseRating = () =>
-        ({
-            rune: runeAnalysisResult()!.runeResult.rating,
-        }[selectedEntity()!.type]);
+    const itemAnalysisResult = () => {
+        const selected = selectedEntity();
+        if (selected?.type !== "item") return undefined;
 
-    const matchupRating = () =>
-        ({
-            rune: runeAnalysisResult()!.matchupResult.totalRating,
-        }[selectedEntity()!.type]);
+        if (selected.itemType === "boots") {
+            return buildAnalysisResult()!.items.boots[selected.id];
+        }
 
-    const totalRating = () =>
-        ({
-            rune: runeAnalysisResult()!.totalRating,
-        }[selectedEntity()!.type]);
+        return buildAnalysisResult()!.items.statsByOrder[selected.itemType][
+            selectedEntity()!.id
+        ];
+    };
+
+    const baseRating = () => {
+        switch (selectedEntity()!.type) {
+            case "rune":
+                return runeAnalysisResult()!.runeResult.rating;
+            case "item":
+                return itemAnalysisResult()!.itemResult.rating;
+        }
+    };
+
+    const matchupRating = () => {
+        switch (selectedEntity()!.type) {
+            case "rune":
+                return runeAnalysisResult()!.matchupResult.totalRating;
+            case "item":
+                return itemAnalysisResult()!.matchupResult.totalRating;
+        }
+    };
+
+    const totalRating = () => {
+        switch (selectedEntity()!.type) {
+            case "rune":
+                return runeAnalysisResult()!.totalRating;
+            case "item":
+                return itemAnalysisResult()!.totalRating;
+        }
+    };
 
     return (
         <div

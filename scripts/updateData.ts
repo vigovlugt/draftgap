@@ -8,6 +8,7 @@ import {
     getRunes,
     RiotRunePath,
     RiotChampion,
+    RiotItem,
 } from "../src/lib/data/riot";
 import { storeDataset } from "../src/lib/data/storage/storage";
 import {
@@ -15,6 +16,8 @@ import {
     deleteDatasetMatchupSynergyData,
 } from "../src/lib/models/dataset/Dataset";
 import { RuneData, RunePathData } from "../src/lib/models/dataset/RuneData";
+import { ItemData } from "../src/lib/models/dataset/ItemData";
+import { getItems } from "../src/lib/data/riot";
 
 const BATCH_SIZE = 10;
 
@@ -71,17 +74,19 @@ async function main() {
     let currentVersion = (await getVersions())[0];
     console.log("Patch:", currentVersion);
 
-    const [champions, runes] = await Promise.all([
+    const [champions, runes, items] = await Promise.all([
         getChampions(currentVersion),
         getRunes(currentVersion),
+        getItems(currentVersion),
     ]);
 
     const datasetCurrentPatch = await getDataset(
         currentVersion,
         champions,
-        runes
+        runes,
+        items
     );
-    const dataset30days = await getDataset("30", champions, runes);
+    const dataset30days = await getDataset("30", champions, runes, items);
 
     deleteDatasetMatchupSynergyData(datasetCurrentPatch);
 
@@ -135,10 +140,28 @@ function riotRunesToRuneData(runes: RiotRunePath[]) {
     return data;
 }
 
+function riotItemsToItemData(
+    items: Record<string, RiotItem>
+): Record<number, ItemData> {
+    return Object.fromEntries(
+        Object.entries(items).map(
+            ([id, item]) =>
+                [
+                    id,
+                    {
+                        id: parseInt(id),
+                        name: item.name,
+                    },
+                ] as const
+        )
+    );
+}
+
 async function getDataset(
     version: string,
     champions: RiotChampion[],
-    runes: RiotRunePath[]
+    runes: RiotRunePath[],
+    items: Record<string, RiotItem>
 ) {
     console.log("Getting dataset for version", version);
     const dataset: Dataset = {
@@ -147,6 +170,7 @@ async function getDataset(
         championData: {},
         rankData: { wins: 0, games: 0 },
         ...riotRunesToRuneData(runes),
+        itemData: riotItemsToItemData(items),
     };
 
     for (let i = 0; i < champions.length; i += BATCH_SIZE) {

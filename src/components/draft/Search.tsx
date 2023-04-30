@@ -12,7 +12,7 @@ export function Search() {
         if (!inputEl) return;
 
         const onControlF = (e: KeyboardEvent) => {
-            if (e.ctrlKey && e.key === "f") {
+            if (e.ctrlKey && (e.key === "f" || e.key == "k")) {
                 e.preventDefault();
                 inputEl!.focus();
             }

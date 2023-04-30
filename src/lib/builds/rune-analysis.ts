@@ -6,7 +6,6 @@ import {
     RunesBuildData,
     BuildMatchupData,
 } from "../models/build/BuildDataset";
-import { Dataset } from "../models/dataset/Dataset";
 import { ratingToWinrate, winrateToRating } from "../rating/ratings";
 import { priorGamesByRiskLevel } from "../risk/risk-level";
 import { addStats } from "../stats";
@@ -20,25 +19,28 @@ const RUNE_TYPES = [
 ] as const;
 type RuneType = (typeof RUNE_TYPES)[number];
 
-type RuneMatchupAnalysisResult = {
-    championKey: string;
-    role: Role;
-    rating: number;
-};
-
 export type RuneAnalysisResult = {
     runeResult: BaseRuneAnalysisResult;
     matchupResult: RuneMatchupsAnalysisResult;
 
     totalRating: number;
 };
+
 export type BaseRuneAnalysisResult = {
     rating: number;
 };
+
+export type RuneMatchupAnalysisResult = {
+    championKey: string;
+    role: Role;
+    rating: number;
+};
+
 export type RuneMatchupsAnalysisResult = {
     matchupResults: RuneMatchupAnalysisResult[];
     totalRating: number;
 };
+
 export type RunesAnalysisResult = {
     primary: Record<string, RuneAnalysisResult>;
     secondary: Record<string, RuneAnalysisResult>;
@@ -51,7 +53,7 @@ export type RunesAnalysisResult = {
 
 export function analyzeRunes(
     partialBuildDataset: PartialBuildDataset,
-    fullBuildDatset: FullBuildDataset,
+    fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig
 ): RunesAnalysisResult {
     const analyze = (runeType: RuneType) => {
@@ -62,7 +64,7 @@ export function analyzeRunes(
             const runeIdNumber = parseInt(runeId);
             const runeResult = analyzeRune(
                 partialBuildDataset,
-                fullBuildDatset,
+                fullBuildDataset,
                 config,
                 runeType,
                 runeIdNumber
@@ -162,7 +164,7 @@ function analyzeRuneMatchup(
     config: AnalyzeDraftConfig,
     runeType: RuneType,
     runeId: number,
-    buildMatchupData: BuildMatchupData
+    matchup: BuildMatchupData
 ): RuneMatchupAnalysisResult {
     const baseChampionWinrate = fullBuildDataset.wins / fullBuildDataset.games;
     const championRuneStats = getRuneStats(
@@ -176,11 +178,11 @@ function analyzeRuneMatchup(
         winrateToRating(championRuneWinrate) -
         winrateToRating(baseChampionWinrate);
 
-    const baseMatchupWinrate = buildMatchupData.wins / buildMatchupData.games;
+    const baseMatchupWinrate = matchup.wins / matchup.games;
     const baseMatchupRating = winrateToRating(baseMatchupWinrate);
     const expectedRuneMatchupRating = baseMatchupRating + runeRating;
     const runeMatchupStats = addStats(
-        getRuneStats(buildMatchupData.runes, runeType, runeId),
+        getRuneStats(matchup.runes, runeType, runeId),
         {
             wins:
                 priorGamesByRiskLevel[config.riskLevel] *
@@ -196,8 +198,8 @@ function analyzeRuneMatchup(
     const rating = matchupWithRuneRating - runeRating;
 
     return {
-        championKey: buildMatchupData.championKey,
-        role: buildMatchupData.role,
+        championKey: matchup.championKey,
+        role: matchup.role,
         rating: isNaN(rating) ? 0 : rating,
     };
 }

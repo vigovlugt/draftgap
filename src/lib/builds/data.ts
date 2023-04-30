@@ -6,6 +6,7 @@ import { LOLALYTICS_ROLES } from "../data/lolalytics/roles";
 import { Role } from "../models/Role";
 import {
     FullBuildDataset,
+    ItemsBuildData,
     PartialBuildDataset,
     RuneStats,
     RunesBuildData,
@@ -14,8 +15,6 @@ import { Dataset } from "../models/dataset/Dataset";
 
 function getRunesBuildData(
     dataset: Dataset,
-    championKey: string,
-    role: Role,
     championData: LolalyticsChampionResponse
 ) {
     const runes: RunesBuildData = {
@@ -80,6 +79,75 @@ function getRunesBuildData(
     return runes;
 }
 
+function getItemsBuildData(championData: LolalyticsChampionResponse) {
+    const oneToFive = [1, 2, 3, 4, 5] as const;
+
+    const items: ItemsBuildData = {
+        boots: {},
+        startingSets: [],
+        sets: [],
+        statsByOrder: oneToFive.map(() => ({})),
+    };
+
+    const parseItem = (itemData: LolalyticsChampionResponse["item1"][0]) => {
+        const id = itemData[0];
+        const winrate = itemData[1] / 100;
+        const games = itemData[3];
+        const wins = Math.round(games * winrate);
+        return [id, { wins, games }] as const;
+    };
+
+    const parseSet = (setData: LolalyticsChampionResponse["startSet"][0]) => {
+        let setItems: number[];
+        if (typeof setData[0] === "number") {
+            setItems = [setData[0]];
+        } else {
+            setItems = setData[0].split("_").map((id) => parseInt(id));
+        }
+        const winrate = setData[1] / 100;
+        const games = setData[3];
+        const wins = Math.round(games * winrate);
+        return {
+            items: setItems,
+            wins,
+            games,
+        } as const;
+    };
+
+    // Boots
+    for (const itemData of championData.boots) {
+        const [id, { wins, games }] = parseItem(itemData);
+        // Skip no boots, magical footwear and base boots.
+        if ([9999, 2422, 1001].includes(id)) {
+            continue;
+        }
+        items.boots[id] = {
+            wins,
+            games,
+        };
+    }
+
+    // Starting items
+    for (const setData of championData.startSet) {
+        items.startingSets.push(parseSet(setData));
+    }
+
+    // Items
+    for (const n of oneToFive) {
+        const order = n - 1;
+        const orderItems = championData[`item${n}`] ?? [];
+        for (const itemData of orderItems) {
+            const [id, { wins, games }] = parseItem(itemData);
+            items.statsByOrder[order][id] = {
+                wins,
+                games,
+            };
+        }
+    }
+
+    return items;
+}
+
 function partialDatasetFromLolalyticsData(
     dataset: Dataset,
     championKey: string,
@@ -93,7 +161,8 @@ function partialDatasetFromLolalyticsData(
             (championData.header.n * championData.header.wr) / 100
         ),
         games: championData.header.n,
-        runes: getRunesBuildData(dataset, championKey, role, championData),
+        runes: getRunesBuildData(dataset, championData),
+        items: getItemsBuildData(championData),
     };
 
     return partialDataset;
@@ -128,12 +197,8 @@ function fullDatasetFromLolalyticsData(
                     100
             ),
             games: matchup.championData.header.n,
-            runes: getRunesBuildData(
-                dataset,
-                matchup.championKey,
-                matchup.role,
-                matchup.championData
-            ),
+            runes: getRunesBuildData(dataset, matchup.championData),
+            items: getItemsBuildData(matchup.championData),
         })),
     };
 
