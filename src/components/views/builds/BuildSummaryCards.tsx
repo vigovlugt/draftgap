@@ -51,7 +51,7 @@ export const BuildSummaryCards: Component<
     return (
         <div
             {...props}
-            class={`grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-4 ${props.class}`}
+            class={`grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-3 ${props.class}`}
         >
             <SummaryCard
                 class="!py-2"

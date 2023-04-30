@@ -195,15 +195,6 @@ function analyzeRuneMatchup(
 
     const rating = matchupWithRuneRating - runeRating;
 
-    if (
-        fullBuildDataset.championKey === "166" &&
-        buildMatchupData.championKey === "147" &&
-        runeId === 8017 &&
-        runeType === "primary"
-    ) {
-        debugger;
-    }
-
     return {
         championKey: buildMatchupData.championKey,
         role: buildMatchupData.role,

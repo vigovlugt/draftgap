@@ -17,7 +17,7 @@ import {
 } from "../../../lib/models/build/BuildDataset";
 import { RuneTable } from "./RuneTable";
 import { useBuild } from "../../../context/BuildContext";
-import { RecommenedBuild } from "./RecommendedBuild";
+import { RecommendedBuild } from "./RecommendedBuild";
 
 export const BuildView: Component = (props) => {
     const { query, buildAnalysisResult } = useBuild();
@@ -37,7 +37,7 @@ export const BuildView: Component = (props) => {
                 </Match>
                 <Match when={query.isSuccess && buildAnalysisResult}>
                     <div class="flex flex-col gap-8">
-                        <RecommenedBuild />
+                        <RecommendedBuild />
                         <RuneTable />
                     </div>
                 </Match>

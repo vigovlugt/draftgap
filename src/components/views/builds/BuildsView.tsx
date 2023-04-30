@@ -30,8 +30,13 @@ export const BuildsViewTabs = (props: { team: Team }) => {
 };
 
 export const BuildsView = () => {
-    const { buildPick, selectedEntity, setSelectedEntity, showSelectedEntity } =
-        useBuild();
+    const {
+        buildPick,
+        selectedEntity,
+        setSelectedEntity,
+        showSelectedEntity,
+        buildAnalysisResult,
+    } = useBuild();
 
     return (
         <>
@@ -51,7 +56,9 @@ export const BuildsView = () => {
                     <BuildView />
                 </Show>
             </div>
-            <Show when={selectedEntity() !== undefined}>
+            <Show
+                when={selectedEntity() !== undefined && buildAnalysisResult()}
+            >
                 <BuildAnalysisModal
                     isOpen={showSelectedEntity()}
                     setIsOpen={() => setSelectedEntity(undefined)}

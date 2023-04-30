@@ -186,13 +186,7 @@ const App: Component = () => {
             </main>
 
             {/* Mobile main */}
-            <main
-                class="h-full overflow-hidden lg:hidden"
-                style={{
-                    "grid-template-columns": "1fr 3fr 1fr",
-                    "grid-template-rows": "100%",
-                }}
-            >
+            <main class="h-full overflow-hidden lg:hidden">
                 <Switch>
                     <Match when={tab() === "ally"}>
                         <TeamSidebar team="ally" />
