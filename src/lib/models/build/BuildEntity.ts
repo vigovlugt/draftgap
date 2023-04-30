@@ -8,6 +8,11 @@ export type BuildEntity =
           type: "item";
           itemType: number | "boots";
           id: number;
+      }
+    | {
+          type: "item";
+          itemType: "startingSets" | "sets";
+          id: string;
       };
 
 export type BuildEntityType = BuildEntity["type"];

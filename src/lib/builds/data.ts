@@ -84,8 +84,8 @@ function getItemsBuildData(championData: LolalyticsChampionResponse) {
 
     const items: ItemsBuildData = {
         boots: {},
-        startingSets: [],
-        sets: [],
+        startingSets: {},
+        sets: {},
         statsByOrder: oneToFive.map(() => ({})),
     };
 
@@ -107,29 +107,23 @@ function getItemsBuildData(championData: LolalyticsChampionResponse) {
         const winrate = setData[1] / 100;
         const games = setData[3];
         const wins = Math.round(games * winrate);
-        return {
-            items: setItems,
-            wins,
-            games,
-        } as const;
+        return [setItems, { wins, games }] as const;
     };
 
     // Boots
     for (const itemData of championData.boots) {
-        const [id, { wins, games }] = parseItem(itemData);
+        const [id, stats] = parseItem(itemData);
         // Skip no boots, magical footwear and base boots.
         if ([9999, 2422, 1001].includes(id)) {
             continue;
         }
-        items.boots[id] = {
-            wins,
-            games,
-        };
+        items.boots[id] = stats;
     }
 
     // Starting items
     for (const setData of championData.startSet) {
-        items.startingSets.push(parseSet(setData));
+        const [setItems, stats] = parseSet(setData);
+        items.startingSets[setItems.sort().join("_")] = stats;
     }
 
     // Items
@@ -137,11 +131,8 @@ function getItemsBuildData(championData: LolalyticsChampionResponse) {
         const order = n - 1;
         const orderItems = championData[`item${n}`] ?? [];
         for (const itemData of orderItems) {
-            const [id, { wins, games }] = parseItem(itemData);
-            items.statsByOrder[order][id] = {
-                wins,
-                games,
-            };
+            const [id, stats] = parseItem(itemData);
+            items.statsByOrder[order][id] = stats;
         }
     }
 

@@ -151,6 +151,7 @@ function riotItemsToItemData(
                     {
                         id: parseInt(id),
                         name: item.name,
+                        gold: item.gold.total,
                     },
                 ] as const
         )

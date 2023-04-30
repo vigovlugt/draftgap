@@ -60,6 +60,9 @@ export async function getRunes(version: string) {
 
 export type RiotItem = {
     name: string;
+    gold: {
+        total: number;
+    };
 };
 
 export async function getItems(version: string) {

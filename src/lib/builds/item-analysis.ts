@@ -34,7 +34,11 @@ export type ItemMatchupsAnalysisResult = {
 export type ItemsAnalysisResult = {
     boots: Record<string, ItemAnalysisResult>;
     statsByOrder: Record<string, ItemAnalysisResult>[];
+    startingSets: Record<string, ItemAnalysisResult>;
+    sets: Record<string, ItemAnalysisResult>;
 };
+
+type ItemType = number | "boots" | "startingSets" | "sets";
 
 export function analyzeItems(
     partialBuildDataset: PartialBuildDataset,
@@ -67,6 +71,19 @@ export function analyzeItems(
                 return acc;
             }, {} as Record<string, ItemAnalysisResult>);
         }),
+        startingSets: Object.keys(
+            partialBuildDataset.items.startingSets
+        ).reduce((acc, setId) => {
+            acc[setId] = analyzeItem(
+                partialBuildDataset,
+                fullBuildDatset,
+                config,
+                "startingSets",
+                parseInt(setId)
+            );
+            return acc;
+        }, {} as Record<string, ItemAnalysisResult>),
+        sets: {},
     };
 }
 
@@ -74,7 +91,7 @@ export function analyzeItem(
     partialBuildDataset: PartialBuildDataset,
     fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
-    type: number | "boots",
+    type: ItemType,
     itemId: number
 ): ItemAnalysisResult {
     const itemResult = analyzeBaseItem(
@@ -103,7 +120,7 @@ export function analyzeItem(
 function analyzeBaseItem(
     partialBuildDataset: PartialBuildDataset,
     config: AnalyzeDraftConfig,
-    type: number | "boots",
+    type: ItemType,
     itemId: number
 ) {
     const championWinrate =
@@ -132,7 +149,7 @@ function analyzeBaseItem(
 function analyzeItemMatchups(
     fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
-    type: number | "boots",
+    type: ItemType,
     itemId: number
 ) {
     const matchupResults = fullBuildDataset.matchups.map((matchup) =>
@@ -152,7 +169,7 @@ function analyzeItemMatchups(
 function analyzeItemMatchup(
     fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
-    type: number | "boots",
+    type: ItemType,
     itemId: number,
     matchup: BuildMatchupData
 ): ItemMatchupAnalysisResult {
@@ -205,12 +222,30 @@ function analyzeItemMatchup(
 function getItemStats(
     itemData: ItemsBuildData,
     // order or boots
-    type: number | "boots",
-    itemId: number
+    type: ItemType,
+    itemId: number | string
 ) {
     if (type === "boots") {
         return (
             itemData.boots[itemId] ?? {
+                wins: 0,
+                games: 0,
+            }
+        );
+    }
+
+    if (type === "sets") {
+        return (
+            itemData.sets[itemId] ?? {
+                wins: 0,
+                games: 0,
+            }
+        );
+    }
+
+    if (type === "startingSets") {
+        return (
+            itemData.startingSets[itemId] ?? {
                 wins: 0,
                 games: 0,
             }

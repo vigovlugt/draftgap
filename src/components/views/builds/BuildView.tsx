@@ -19,6 +19,9 @@ import { RuneTable } from "./RuneTable";
 import { useBuild } from "../../../context/BuildContext";
 import { RecommendedBuild } from "./RecommendedBuild";
 import { BootsStats } from "./BootsStats";
+import { ItemSetStats } from "./ItemSetStats";
+import { ItemStats } from "./ItemStats";
+import { StarterItemStats } from "./StarterItemStats";
 
 export const BuildView: Component = (props) => {
     const { query, buildAnalysisResult } = useBuild();
@@ -40,7 +43,10 @@ export const BuildView: Component = (props) => {
                     <div class="flex flex-col gap-8">
                         <RecommendedBuild />
                         <RuneTable />
+                        <StarterItemStats />
+                        <ItemSetStats />
                         <BootsStats />
+                        <ItemStats />
                     </div>
                 </Match>
             </Switch>

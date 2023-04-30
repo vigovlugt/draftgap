@@ -40,6 +40,15 @@ export const BuildMatchupTable = (
                 return buildAnalysisResult()?.items.boots[selected.id]
                     .matchupResult;
             }
+            if (selected.itemType === "startingSets") {
+                return buildAnalysisResult()?.items.startingSets[selected.id]
+                    .matchupResult;
+            }
+            if (selected.itemType === "sets") {
+                return buildAnalysisResult()?.items.sets[selected.id]
+                    .matchupResult;
+            }
+
             return buildAnalysisResult()?.items.statsByOrder[selected.itemType][
                 selected.id
             ].matchupResult;

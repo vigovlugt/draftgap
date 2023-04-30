@@ -5,7 +5,7 @@ import { overflowEllipsis } from "../../utils/strings";
 
 type Props = {
     entityType: BuildEntityType;
-    entityId: number;
+    entityId: number | string;
     nameMaxLength?: number;
     hideName?: boolean;
 };
@@ -16,8 +16,11 @@ export const BuildEntityCell = (props: Props) => {
     const name = () => {
         switch (props.entityType) {
             case "rune":
-                return dataset()!.runeData[props.entityId].name;
+                return dataset()!.runeData[props.entityId as number].name;
             case "item":
+                if (typeof props.entityId === "string") {
+                    return "Item set";
+                }
                 return dataset()!.itemData[props.entityId].name;
         }
     };
@@ -26,7 +29,7 @@ export const BuildEntityCell = (props: Props) => {
         switch (props.entityType) {
             case "rune":
                 return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${dataset()!.runeData[
-                    props.entityId
+                    props.entityId as number
                 ].icon.toLowerCase()}`;
             case "item":
                 return `https://ddragon.leagueoflegends.com/cdn/${

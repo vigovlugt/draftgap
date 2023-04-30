@@ -42,12 +42,11 @@ export type RuneStats = {
 export type ItemsBuildData = {
     boots: Record<string, ItemStats>;
     statsByOrder: Record<string, ItemStats>[];
-    startingSets: SetStats[];
-    sets: SetStats[];
+    startingSets: Record<string, SetStats>;
+    sets: Record<string, SetStats>;
 };
 
 export type SetStats = {
-    items: number[];
     wins: number;
     games: number;
 };

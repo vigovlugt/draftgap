@@ -18,11 +18,41 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
     const { championKey, championRole, selectedEntity } = useBuild();
 
     const title = () => {
-        switch (selectedEntity()!.type) {
+        const selected = selectedEntity()!;
+        switch (selected.type) {
             case "rune":
-                return dataset()!.runeData[selectedEntity()!.id].name;
+                return dataset()!.runeData[selected.id].name;
             case "item":
-                return dataset()!.itemData[selectedEntity()!.id].name;
+                if (
+                    selected.itemType === "sets" ||
+                    selected.itemType === "startingSets"
+                ) {
+                    const items = selected.id
+                        .split("_")
+                        .map((id) => parseInt(id))
+                        .reduce((acc, id) => {
+                            if (acc[id] !== undefined) {
+                                acc[id] += 1;
+                            } else {
+                                acc[id] = 1;
+                            }
+
+                            return acc;
+                        }, {} as Record<number, number>);
+                    return Object.entries(items)
+                        .sort(
+                            ([id1], [id2]) =>
+                                dataset()!.itemData[parseInt(id2)].gold -
+                                dataset()!.itemData[parseInt(id1)].gold
+                        )
+                        .map(
+                            ([id, amount]) =>
+                                (amount > 1 ? `${amount} ` : "") +
+                                dataset()!.itemData[parseInt(id)].name
+                        )
+                        .join(" + ");
+                }
+                return dataset()!.itemData[selected.id as any].name;
         }
     };
     const subTitle = () =>
@@ -34,7 +64,7 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
         switch (selectedEntity()!.type) {
             case "rune":
                 return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${dataset()!.runeData[
-                    selectedEntity()!.id
+                    selectedEntity()!.id as any
                 ].icon.toLowerCase()}`;
             case "item":
                 return `https://ddragon.leagueoflegends.com/cdn/${
@@ -44,11 +74,22 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
     };
 
     const imageAlt = () => {
-        switch (selectedEntity()!.type) {
+        const selected = selectedEntity()!;
+        switch (selected.type) {
             case "rune":
-                return dataset()!.runeData[selectedEntity()!.id].name;
+                return dataset()!.runeData[selected.id].name;
             case "item":
-                return dataset()!.itemData[selectedEntity()!.id].name;
+                if (
+                    selected.itemType === "sets" ||
+                    selected.itemType === "startingSets"
+                ) {
+                    return selected.id
+                        .split("_")
+                        .map((id) => parseInt(id))
+                        .join(" + ");
+                }
+
+                return dataset()!.itemData[selected.id as number].name;
         }
     };
 

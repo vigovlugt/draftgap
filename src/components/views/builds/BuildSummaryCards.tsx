@@ -21,11 +21,19 @@ export const BuildSummaryCards: Component<
             item: "Item",
         }[selectedEntity()!.type]);
     const name = () => {
-        switch (selectedEntity()!.type) {
+        const selected = selectedEntity()!;
+        switch (selected.type) {
             case "rune":
-                return dataset()!.runeData[selectedEntity()!.id].name;
+                return dataset()!.runeData[selected.id].name;
             case "item":
-                return dataset()!.itemData[selectedEntity()!.id].name;
+                switch (selected.itemType) {
+                    case "startingSets":
+                        return "Starting Items";
+                    case "sets":
+                        return "Build";
+                    default:
+                        return dataset()!.itemData[selected.id].name;
+                }
         }
     };
 
@@ -44,6 +52,12 @@ export const BuildSummaryCards: Component<
 
         if (selected.itemType === "boots") {
             return buildAnalysisResult()!.items.boots[selected.id];
+        }
+        if (selected.itemType === "startingSets") {
+            return buildAnalysisResult()!.items.startingSets[selected.id];
+        }
+        if (selected.itemType === "sets") {
+            return buildAnalysisResult()!.items.sets[selected.id];
         }
 
         return buildAnalysisResult()!.items.statsByOrder[selected.itemType][
