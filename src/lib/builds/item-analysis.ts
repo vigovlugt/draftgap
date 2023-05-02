@@ -79,7 +79,7 @@ export function analyzeItems(
                 fullBuildDatset,
                 config,
                 "startingSets",
-                parseInt(setId)
+                setId
             );
             return acc;
         }, {} as Record<string, ItemAnalysisResult>),
@@ -92,7 +92,7 @@ export function analyzeItem(
     fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
     type: ItemType,
-    itemId: number
+    itemId: number | string
 ): ItemAnalysisResult {
     const itemResult = analyzeBaseItem(
         partialBuildDataset,
@@ -121,7 +121,7 @@ function analyzeBaseItem(
     partialBuildDataset: PartialBuildDataset,
     config: AnalyzeDraftConfig,
     type: ItemType,
-    itemId: number
+    itemId: number | string
 ) {
     const championWinrate =
         partialBuildDataset.wins / partialBuildDataset.games;
@@ -150,7 +150,7 @@ function analyzeItemMatchups(
     fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
     type: ItemType,
-    itemId: number
+    itemId: number | string
 ) {
     const matchupResults = fullBuildDataset.matchups.map((matchup) =>
         analyzeItemMatchup(fullBuildDataset, config, type, itemId, matchup)
@@ -170,7 +170,7 @@ function analyzeItemMatchup(
     fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
     type: ItemType,
-    itemId: number,
+    itemId: number | string,
     matchup: BuildMatchupData
 ): ItemMatchupAnalysisResult {
     const baseChampionWinrate = fullBuildDataset.wins / fullBuildDataset.games;
@@ -235,6 +235,7 @@ function getItemStats(
     }
 
     if (type === "sets") {
+        if (typeof itemId !== "string") throw new Error("Invalid item id");
         return (
             itemData.sets[itemId] ?? {
                 wins: 0,
@@ -244,6 +245,12 @@ function getItemStats(
     }
 
     if (type === "startingSets") {
+        if (typeof itemId !== "string") throw new Error("Invalid item id");
+        console.log(
+            itemData.startingSets,
+            itemId,
+            itemData.startingSets[itemId]
+        );
         return (
             itemData.startingSets[itemId] ?? {
                 wins: 0,

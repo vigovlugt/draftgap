@@ -53,7 +53,7 @@ export type DraftGapConfig = AnalyzeDraftConfig & {
 
 const fetchDataset = async (name: "30-days" | "current-patch") => {
     const response = await fetch(
-        `https://bucket.draftgap.com/datasets/v2/${name}.json`
+        `https://bucket.draftgap.com/datasets/v3/${name}.json`
     );
     const json = await response.json();
     return json as Dataset;
@@ -61,7 +61,7 @@ const fetchDataset = async (name: "30-days" | "current-patch") => {
 
 const fetchBinDataset = async (name: "30-days" | "current-patch") => {
     const response = await fetch(
-        `https://bucket.draftgap.com/datasets/v2/${name}.json`
+        `https://bucket.draftgap.com/datasets/v3/${name}.json`
     );
     const arrayBuffer = await response.arrayBuffer();
 

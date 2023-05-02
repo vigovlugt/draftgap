@@ -17,7 +17,7 @@ export async function storeDataset(
 
     const params = {
         Bucket: process.env.S3_BUCKET || "draftgap",
-        Key: `datasets/v2/${name}.json`,
+        Key: `datasets/v3/${name}.json`,
         Body: JSON.stringify(dataset), //new Uint8Array(serialized),
         ContentType: "application/json",
     } satisfies PutObjectCommandInput;
