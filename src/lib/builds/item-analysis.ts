@@ -246,11 +246,6 @@ function getItemStats(
 
     if (type === "startingSets") {
         if (typeof itemId !== "string") throw new Error("Invalid item id");
-        console.log(
-            itemData.startingSets,
-            itemId,
-            itemData.startingSets[itemId]
-        );
         return (
             itemData.startingSets[itemId] ?? {
                 wins: 0,

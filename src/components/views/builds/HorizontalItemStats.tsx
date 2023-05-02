@@ -1,5 +1,4 @@
-import { Component, For, JSX, Match, Switch, createSignal } from "solid-js";
-import { createAutoAnimateDirective } from "@formkit/auto-animate/solid";
+import { For, JSX, Match, Switch, createSignal } from "solid-js";
 
 type Props<T> = {
     items: T[];
@@ -51,19 +50,9 @@ export const HorizontalItemStats = <T,>(props: Props<T>) => {
         setCurrentSort(`${sort}-desc`);
     };
 
-    const autoAnimate = createAutoAnimateDirective();
-    autoAnimate;
-
     return (
-        <div
-            class="flex gap-4 p-2 bg-[#141414] rounded-md"
-            use:autoAnimate={{
-                duration: 150,
-                easing: "linear",
-            }}
-        >
-            <div class="flex flex-col gap-1 text-sm -mr-3 shrink-0">
-                <div class="h-12 w-12" />
+        <div class="flex gap-4 p-2 bg-[#141414] rounded-md items-end h-full">
+            <div class="flex flex-col text-sm -mr-3 shrink-0">
                 <button
                     onClick={() => onSortClick("rating")}
                     class="text-left uppercase"
@@ -91,7 +80,7 @@ export const HorizontalItemStats = <T,>(props: Props<T>) => {
                     </Switch>
                 </button>
             </div>
-            <div class="flex gap-4 overflow-x-auto">
+            <div class="flex gap-4 overflow-x-auto w-full">
                 <For each={items()}>{props.children}</For>
             </div>
         </div>

@@ -14,7 +14,14 @@ export const StarterItemStats: Component = () => {
         <Panel>
             <PanelHeader>Starter Items</PanelHeader>
             <HorizontalItemStats
-                items={Object.keys(buildAnalysisResult()!.items.startingSets)}
+                items={Object.keys(
+                    buildAnalysisResult()!.items.startingSets
+                ).filter(
+                    (id) =>
+                        partialBuildDataset()!.items.startingSets[id].games /
+                            partialBuildDataset()!.games >
+                        0.01
+                )}
                 getGames={(id) =>
                     partialBuildDataset()!.items.startingSets[id].games
                 }
@@ -52,7 +59,7 @@ const StarterItem: Component<{ setId: string }> = (props) => {
 
     return (
         <button
-            class="flex flex-col flex-shrink-0 gap-1 text-sm items-center"
+            class="flex flex-col flex-shrink-0 gap-1 text-sm items-center justify-between"
             classList={{
                 "opacity-20":
                     data().games / partialBuildDataset()!.games < 0.01,
@@ -65,7 +72,7 @@ const StarterItem: Component<{ setId: string }> = (props) => {
                 })
             }
         >
-            <div class="flex gap-1">
+            <div class="flex flex-col gap-1">
                 <For
                     each={Object.entries(items()).sort(
                         ([a], [b]) =>
@@ -91,11 +98,15 @@ const StarterItem: Component<{ setId: string }> = (props) => {
                     )}
                 </For>
             </div>
-            <div class={`${getRatingClass(result().totalRating)}`}>
-                {formatPercentage(ratingToWinrate(result().totalRating))}
-            </div>
-            <div class={"text-neutral-500"}>
-                {formatPercentage(data().games / partialBuildDataset()!.games)}
+            <div>
+                <div class={`${getRatingClass(result().totalRating)}`}>
+                    {formatPercentage(ratingToWinrate(result().totalRating))}
+                </div>
+                <div class={"text-neutral-500"}>
+                    {formatPercentage(
+                        data().games / partialBuildDataset()!.games
+                    )}
+                </div>
             </div>
         </button>
     );

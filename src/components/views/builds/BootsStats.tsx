@@ -55,11 +55,15 @@ const Boot: Component<{ itemId: number }> = (props) => {
                 }/img/item/${props.itemId}.png`}
                 class="w-12 h-12"
             />
-            <div class={`${getRatingClass(result().totalRating)}`}>
-                {formatPercentage(ratingToWinrate(result().totalRating))}
-            </div>
-            <div class={"text-neutral-500"}>
-                {formatPercentage(data().games / partialBuildDataset()!.games)}
+            <div>
+                <div class={`${getRatingClass(result().totalRating)}`}>
+                    {formatPercentage(ratingToWinrate(result().totalRating))}
+                </div>
+                <div class={"text-neutral-500"}>
+                    {formatPercentage(
+                        data().games / partialBuildDataset()!.games
+                    )}
+                </div>
             </div>
         </button>
     );
