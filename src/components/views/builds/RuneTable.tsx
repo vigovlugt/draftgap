@@ -1,7 +1,7 @@
 import { Component, For, Show, createMemo } from "solid-js";
 import { Panel, PanelHeader } from "../../common/Panel";
 import { useDraft } from "../../../context/DraftContext";
-import { RuneData } from "../../../lib/models/dataset/RuneData";
+import { RuneData, StatShardData } from "../../../lib/models/dataset/RuneData";
 import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
 import { useBuild } from "../../../context/BuildContext";
@@ -24,6 +24,7 @@ export const RuneTable: Component = (props) => {
                         </div>
                     )}
                 </For>
+                <ShardTable />
             </div>
         </Panel>
     );
@@ -68,7 +69,7 @@ export const PathTable: Component<PathTableProps> = (props) => {
         partialBuildDataset()!.runes[props.type][runeId];
 
     return (
-        <div class="relative isolate">
+        <div>
             <Show when={props.type === "primary"}>
                 <h3 class="uppercase mb-2 min-w-[184px] relative">
                     {dataset()!.runePathData[props.pathId].name}
@@ -120,9 +121,86 @@ export const PathTable: Component<PathTableProps> = (props) => {
     );
 };
 
+export const ShardTable: Component = (props) => {
+    const { dataset } = useDraft();
+    const { buildAnalysisResult, partialBuildDataset } = useBuild();
+
+    const shards = () => Object.values(dataset()!.statShardData);
+
+    const shardsByPosition = createMemo(() => {
+        const result = new Map<number, Map<number, StatShardData>>();
+
+        for (const shard of shards()) {
+            for (const position of shard.positions) {
+                if (!result.has(position.slot)) {
+                    result.set(position.slot, new Map());
+                }
+
+                result.get(position.slot)!.set(position.index, shard);
+            }
+        }
+
+        return result;
+    });
+
+    return (
+        <div>
+            <h3 class="uppercase mb-2 min-w-[184px]">Shards</h3>
+            <div class="bg-[#141414] p-2 rounded-md flex flex-col gap-2 relative">
+                <For
+                    each={
+                        [
+                            [0, "offense"],
+                            [1, "flex"],
+                            [2, "defense"],
+                        ] as const
+                    }
+                >
+                    {([slot, shardType]) => {
+                        const shards = shardsByPosition().get(slot)!;
+                        return (
+                            <div class="flex gap-2 justify-between min-w-[184px]">
+                                <For each={[0, 1, 2]}>
+                                    {(index) => {
+                                        const shard = shards.get(index)!;
+                                        const analysis =
+                                            buildAnalysisResult()!.runes.shards[
+                                                shardType
+                                            ][shard.id];
+                                        const stats =
+                                            partialBuildDataset()!.runes.shards[
+                                                shardType
+                                            ][shard.id];
+                                        return (
+                                            <Rune
+                                                runeId={shard.id}
+                                                rating={analysis.totalRating}
+                                                games={stats.games}
+                                                totalGames={
+                                                    partialBuildDataset()!.games
+                                                }
+                                                type={`shard-${shardType}`}
+                                            />
+                                        );
+                                    }}
+                                </For>
+                            </div>
+                        );
+                    }}
+                </For>
+            </div>
+        </div>
+    );
+};
+
 type RuneProps = {
     runeId: number;
-    type: "primary" | "secondary";
+    type:
+        | "primary"
+        | "secondary"
+        | "shard-offense"
+        | "shard-flex"
+        | "shard-defense";
     rating: number;
     games: number;
     totalGames: number;
@@ -132,9 +210,16 @@ export const Rune: Component<RuneProps> = (props) => {
     const { dataset } = useDraft();
     const { setSelectedEntity } = useBuild();
 
+    const isRune = () => props.type.startsWith("shard-") === false;
     const rune = () => dataset()!.runeData[props.runeId];
+    const shard = () => dataset()!.statShardData[props.runeId];
 
-    const imgUrl = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${rune().icon.toLowerCase()}`;
+    const imgUrl = () =>
+        isRune()
+            ? `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${rune().icon.toLowerCase()}`
+            : `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/statmods/statmods${shard().key.toLocaleLowerCase()}icon${
+                  shard().key === "MagicRes" ? ".magicresist_fix" : ""
+              }.png`;
 
     return (
         <button
@@ -151,11 +236,11 @@ export const Rune: Component<RuneProps> = (props) => {
             }
         >
             <img
-                src={imgUrl}
-                alt={rune().name}
+                src={imgUrl()}
+                alt={isRune() ? rune().name : shard().name}
                 classList={{
-                    "w-7 h-7": rune().slot !== 0,
-                    "w-10 h-10 -mb-1": rune().slot === 0,
+                    "w-7 h-7": !isRune() || rune().slot !== 0,
+                    "w-10 h-10 -mb-1": isRune() && rune().slot === 0,
                 }}
             />
             <span class={getRatingClass(props.rating)}>

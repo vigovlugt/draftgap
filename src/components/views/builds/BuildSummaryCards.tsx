@@ -24,6 +24,9 @@ export const BuildSummaryCards: Component<
         const selected = selectedEntity()!;
         switch (selected.type) {
             case "rune":
+                if (selected.runeType.startsWith("shard-")) {
+                    return dataset()!.statShardData[selected.id].name;
+                }
                 return dataset()!.runeData[selected.id].name;
             case "item":
                 switch (selected.itemType) {
@@ -41,9 +44,18 @@ export const BuildSummaryCards: Component<
         const selected = selectedEntity();
         if (selected?.type !== "rune") return undefined;
 
-        return buildAnalysisResult()!.runes[selected.runeType][
-            selectedEntity()!.id
-        ];
+        switch (selected.runeType) {
+            case "primary":
+                return buildAnalysisResult()?.runes.primary[selected.id];
+            case "secondary":
+                return buildAnalysisResult()?.runes.secondary[selected.id];
+            case "shard-offense":
+                return buildAnalysisResult()?.runes.shards.offense[selected.id];
+            case "shard-flex":
+                return buildAnalysisResult()?.runes.shards.flex[selected.id];
+            case "shard-defense":
+                return buildAnalysisResult()?.runes.shards.defense[selected.id];
+        }
     };
 
     const itemAnalysisResult = () => {

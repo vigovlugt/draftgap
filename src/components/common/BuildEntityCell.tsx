@@ -1,11 +1,13 @@
 import { Show } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
-import { BuildEntityType } from "../../lib/models/build/BuildEntity";
+import {
+    BuildEntity,
+    BuildEntityType,
+} from "../../lib/models/build/BuildEntity";
 import { overflowEllipsis } from "../../utils/strings";
 
 type Props = {
-    entityType: BuildEntityType;
-    entityId: number | string;
+    entity: BuildEntity;
     nameMaxLength?: number;
     hideName?: boolean;
 };
@@ -14,27 +16,40 @@ export const BuildEntityCell = (props: Props) => {
     const { dataset } = useDraft();
 
     const name = () => {
-        switch (props.entityType) {
+        switch (props.entity.type) {
             case "rune":
-                return dataset()!.runeData[props.entityId as number].name;
+                if (props.entity.runeType.startsWith("shard-")) {
+                    return dataset()!.statShardData[props.entity.id].name;
+                }
+                return dataset()!.runeData[props.entity.id].name;
             case "item":
-                if (typeof props.entityId === "string") {
+                if (
+                    props.entity.itemType === "sets" ||
+                    props.entity.itemType === "startingSets"
+                ) {
                     return "Item set";
                 }
-                return dataset()!.itemData[props.entityId].name;
+
+                return dataset()!.itemData[props.entity.id as number].name;
         }
     };
 
     const imageSrc = () => {
-        switch (props.entityType) {
+        switch (props.entity.type) {
             case "rune":
+                if (props.entity.runeType.startsWith("shard-")) {
+                    const shard = dataset()!.statShardData[props.entity.id];
+                    return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/statmods/statmods${shard.key.toLocaleLowerCase()}icon${
+                        shard.key === "MagicRes" ? ".magicresist_fix" : ""
+                    }.png`;
+                }
                 return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${dataset()!.runeData[
-                    props.entityId as number
+                    props.entity.id as number
                 ].icon.toLowerCase()}`;
             case "item":
                 return `https://ddragon.leagueoflegends.com/cdn/${
                     dataset()!.version
-                }/img/item/${props.entityId}.png`;
+                }/img/item/${props.entity.id}.png`;
         }
     };
 

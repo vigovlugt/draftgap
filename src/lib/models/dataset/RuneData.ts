@@ -23,6 +23,7 @@ export type StatShardData = {
     name: string;
 
     positions: {
+        // 0: offense, 1: flex, 2: defense
         slot: number;
         index: number;
     }[];

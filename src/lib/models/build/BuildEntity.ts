@@ -1,7 +1,12 @@
 export type BuildEntity =
     | {
           type: "rune";
-          runeType: "primary" | "secondary";
+          runeType:
+              | "primary"
+              | "secondary"
+              | "shard-offense"
+              | "shard-defense"
+              | "shard-flex";
           id: number;
       }
     | {

@@ -32,9 +32,25 @@ export const BuildMatchupTable = (
     const data = () => {
         const selected = selectedEntity();
         if (selected?.type === "rune") {
-            return buildAnalysisResult()?.runes[selected.runeType][
-                selectedEntity()!.id
-            ].matchupResult;
+            switch (selected.runeType) {
+                case "primary":
+                    return buildAnalysisResult()?.runes.primary[selected.id]
+                        .matchupResult;
+                case "secondary":
+                    return buildAnalysisResult()?.runes.secondary[selected.id]
+                        .matchupResult;
+                case "shard-offense":
+                    return buildAnalysisResult()?.runes.shards.offense[
+                        selected.id
+                    ].matchupResult;
+                case "shard-flex":
+                    return buildAnalysisResult()?.runes.shards.flex[selected.id]
+                        .matchupResult;
+                case "shard-defense":
+                    return buildAnalysisResult()?.runes.shards.defense[
+                        selected.id
+                    ].matchupResult;
+            }
         } else if (selected?.type === "item") {
             if (selected.itemType === "boots") {
                 return buildAnalysisResult()?.items.boots[selected.id]
@@ -90,13 +106,7 @@ export const BuildMatchupTable = (
         {
             header: title,
             id: "entity",
-            cell: () => (
-                <BuildEntityCell
-                    entityId={selectedEntity()!.id}
-                    entityType={selectedEntity()!.type}
-                    hideName
-                />
-            ),
+            cell: () => <BuildEntityCell entity={selectedEntity()!} hideName />,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",

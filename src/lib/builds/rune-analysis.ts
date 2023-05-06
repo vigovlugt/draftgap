@@ -44,7 +44,7 @@ export type RuneMatchupsAnalysisResult = {
 export type RunesAnalysisResult = {
     primary: Record<string, RuneAnalysisResult>;
     secondary: Record<string, RuneAnalysisResult>;
-    shard: {
+    shards: {
         offense: Record<string, RuneAnalysisResult>;
         defense: Record<string, RuneAnalysisResult>;
         flex: Record<string, RuneAnalysisResult>;
@@ -78,7 +78,7 @@ export function analyzeRunes(
     return {
         primary: analyze("primary"),
         secondary: analyze("secondary"),
-        shard: {
+        shards: {
             offense: analyze("shard-offense"),
             defense: analyze("shard-defense"),
             flex: analyze("shard-flex"),

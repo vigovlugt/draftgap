@@ -21,6 +21,9 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
         const selected = selectedEntity()!;
         switch (selected.type) {
             case "rune":
+                if (selected.runeType.startsWith("shard-")) {
+                    return dataset()!.statShardData[selected.id].name;
+                }
                 return dataset()!.runeData[selected.id].name;
             case "item":
                 if (
@@ -61,8 +64,15 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
         displayNameByRole[championRole()!];
 
     const imageSrc = () => {
-        switch (selectedEntity()!.type) {
+        const selected = selectedEntity()!;
+        switch (selected.type) {
             case "rune":
+                if (selected.runeType.startsWith("shard-")) {
+                    const shard = () => dataset()!.statShardData[selected.id];
+                    return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/statmods/statmods${shard().key.toLocaleLowerCase()}icon${
+                        shard().key === "MagicRes" ? ".magicresist_fix" : ""
+                    }.png`;
+                }
                 return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${dataset()!.runeData[
                     selectedEntity()!.id as any
                 ].icon.toLowerCase()}`;
@@ -77,6 +87,9 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
         const selected = selectedEntity()!;
         switch (selected.type) {
             case "rune":
+                if (selected.runeType.startsWith("shard-")) {
+                    return dataset()!.statShardData[selected.id].name;
+                }
                 return dataset()!.runeData[selected.id].name;
             case "item":
                 if (
@@ -108,6 +121,18 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
                         src={imageSrc()}
                         class="rounded-full w-20 h-20"
                         alt={imageAlt()}
+                        style={{
+                            "image-rendering": (() => {
+                                const selected = selectedEntity()!;
+                                if (
+                                    selected.type === "rune" &&
+                                    selected.runeType.startsWith("shard")
+                                ) {
+                                    return "pixelated";
+                                }
+                                return undefined;
+                            })(),
+                        }}
                     />
                 </div>
                 <div class="flex flex-col justify-center">
