@@ -22,6 +22,7 @@ import { BootsStats } from "./BootsStats";
 import { ItemSetStats } from "./ItemSetStats";
 import { ItemStats } from "./ItemStats";
 import { StarterItemStats } from "./StarterItemStats";
+import { SummonerSpellsStats } from "./SummonerSpellsStats";
 
 export const BuildView: Component = (props) => {
     const { query, buildAnalysisResult } = useBuild();
@@ -41,10 +42,11 @@ export const BuildView: Component = (props) => {
                 </Match>
                 <Match when={query.isSuccess && buildAnalysisResult}>
                     <div class="flex flex-col gap-8">
-                        <RecommendedBuild />
+                        {/* <RecommendedBuild /> */}
                         <RuneTable />
+                        {/* <SummonerSpellsStats /> */}
                         <StarterItemStats />
-                        <ItemSetStats />
+                        {/* <ItemSetStats /> */}
                         <BootsStats />
                         <ItemStats />
                     </div>

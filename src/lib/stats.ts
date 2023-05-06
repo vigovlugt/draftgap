@@ -1,10 +1,25 @@
-export function addStats(
+export function addStats(...stats: { wins: number; games: number }[]) {
+    let wins = 0;
+    let games = 0;
+
+    for (const stat of stats) {
+        wins += stat.wins;
+        games += stat.games;
+    }
+
+    return {
+        wins,
+        games,
+    };
+}
+
+export function multiplyStats(
     stats: { wins: number; games: number },
-    stats2: { wins: number; games: number }
+    number: number
 ) {
     return {
-        wins: stats.wins + stats2.wins,
-        games: stats.games + stats2.games,
+        wins: stats.wins * number,
+        games: stats.games * number,
     };
 }
 

@@ -1,6 +1,6 @@
 import { Component, For, Show } from "solid-js";
 import { Panel, PanelHeader } from "../../common/Panel";
-import { HorizontalItemStats } from "./HorizontalItemStats";
+import { HorizontalEntityStats } from "./EntityStats";
 import { useDraft } from "../../../context/DraftContext";
 import { useBuild } from "../../../context/BuildContext";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
@@ -13,8 +13,8 @@ export const StarterItemStats: Component = () => {
     return (
         <Panel>
             <PanelHeader>Starter Items</PanelHeader>
-            <HorizontalItemStats
-                items={Object.keys(
+            <HorizontalEntityStats
+                data={Object.keys(
                     buildAnalysisResult()!.items.startingSets
                 ).filter(
                     (id) =>
@@ -30,7 +30,7 @@ export const StarterItemStats: Component = () => {
                 }
             >
                 {(id) => <StarterItem setId={id} />}
-            </HorizontalItemStats>
+            </HorizontalEntityStats>
         </Panel>
     );
 };

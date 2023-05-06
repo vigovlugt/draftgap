@@ -7,7 +7,7 @@ import {
     ItemsBuildData,
 } from "../models/build/BuildDataset";
 import { ratingToWinrate, winrateToRating } from "../rating/ratings";
-import { priorGamesByRiskLevel } from "../risk/risk-level";
+import { buildPriorGamesByRiskLevel } from "../risk/risk-level";
 import { addStats } from "../stats";
 
 export type ItemAnalysisResult = {
@@ -96,6 +96,7 @@ export function analyzeItem(
 ): ItemAnalysisResult {
     const itemResult = analyzeBaseItem(
         partialBuildDataset,
+        fullBuildDataset,
         config,
         type,
         itemId
@@ -119,6 +120,7 @@ export function analyzeItem(
 
 function analyzeBaseItem(
     partialBuildDataset: PartialBuildDataset,
+    fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
     type: ItemType,
     itemId: number | string
@@ -126,13 +128,16 @@ function analyzeBaseItem(
     const championWinrate =
         partialBuildDataset.wins / partialBuildDataset.games;
 
+    const previousItemStats = getItemStats(
+        fullBuildDataset.items,
+        type,
+        itemId
+    );
+
     // TODO: add wilson score interval for low amount of games (instead of prior?)
     const championWithItemStats = addStats(
         getItemStats(partialBuildDataset.items, type, itemId),
-        {
-            wins: priorGamesByRiskLevel[config.riskLevel] * championWinrate,
-            games: priorGamesByRiskLevel[config.riskLevel],
-        }
+        previousItemStats
     );
     const championWithItemWinrate =
         championWithItemStats.wins / championWithItemStats.games;
@@ -193,9 +198,9 @@ function analyzeItemMatchup(
         getItemStats(matchup.items, type, itemId),
         {
             wins:
-                priorGamesByRiskLevel[config.riskLevel] *
+                buildPriorGamesByRiskLevel[config.riskLevel] *
                 ratingToWinrate(expectedItemMatchupRating),
-            games: priorGamesByRiskLevel[config.riskLevel],
+            games: buildPriorGamesByRiskLevel[config.riskLevel],
         }
     );
     const matchupWithItemWinrate =
@@ -204,13 +209,6 @@ function analyzeItemMatchup(
         winrateToRating(matchupWithItemWinrate) - baseMatchupRating;
 
     const rating = matchupWithItemRating - itemRating;
-
-    if (
-        fullBuildDataset.championKey === "96" &&
-        matchup.championKey == "147" &&
-        itemId == 3006
-    )
-        debugger;
 
     return {
         championKey: matchup.championKey,

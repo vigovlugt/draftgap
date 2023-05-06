@@ -23,3 +23,12 @@ export const priorGamesByRiskLevel: Record<RiskLevel, number> = {
     high: 250,
     "very-high": 100,
 };
+
+export const buildPriorGamesByRiskLevel: Record<RiskLevel, number> =
+    priorGamesByRiskLevel ?? {
+        "very-low": 5000,
+        low: 4000,
+        medium: 3000,
+        high: 2000,
+        "very-high": 1000,
+    };

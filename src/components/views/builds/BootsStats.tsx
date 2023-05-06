@@ -4,7 +4,7 @@ import { useDraft } from "../../../context/DraftContext";
 import { Panel, PanelHeader } from "../../common/Panel";
 import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
-import { HorizontalItemStats } from "./HorizontalItemStats";
+import { HorizontalEntityStats } from "./EntityStats";
 
 export const BootsStats: Component = (props) => {
     const { dataset } = useDraft();
@@ -13,15 +13,20 @@ export const BootsStats: Component = (props) => {
     return (
         <Panel>
             <PanelHeader>Boots</PanelHeader>
-            <HorizontalItemStats
-                items={Object.keys(buildAnalysisResult()!.items.boots)}
+            <HorizontalEntityStats
+                data={Object.keys(buildAnalysisResult()!.items.boots).filter(
+                    (id) =>
+                        partialBuildDataset()!.items.boots[parseInt(id)].games /
+                            partialBuildDataset()!.games >
+                        0.01
+                )}
                 getGames={(id) => partialBuildDataset()!.items.boots[id].games}
                 getRating={(id) =>
                     buildAnalysisResult()!.items.boots[id].totalRating
                 }
             >
                 {(id) => <Boot itemId={parseInt(id)} />}
-            </HorizontalItemStats>
+            </HorizontalEntityStats>
         </Panel>
     );
 };

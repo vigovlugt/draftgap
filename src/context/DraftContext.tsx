@@ -73,12 +73,8 @@ export function createDraftContext() {
     const isDesktop = (window as any).__TAURI__ !== undefined;
     const isMobileLayout = createMediaQuery("(max-width: 1023px)");
 
-    const DRAFTGAP_DEBUG = ((window as any).DRAFTGAP_DEBUG = {} as any);
-
     const [dataset] = createResource(() => fetchDataset("current-patch"));
     const [dataset30Days] = createResource(() => fetchDataset("30-days"));
-    DRAFTGAP_DEBUG.dataset = dataset;
-    DRAFTGAP_DEBUG.dataset30Days = dataset30Days;
 
     const isLoaded = () =>
         dataset() !== undefined && dataset30Days() !== undefined;
@@ -97,8 +93,6 @@ export function createDraftContext() {
         { championKey: undefined, role: undefined },
         { championKey: undefined, role: undefined },
     ]);
-    DRAFTGAP_DEBUG.allyTeam = allyTeam;
-    DRAFTGAP_DEBUG.opponentTeam = opponentTeam;
 
     const [bans, setBans] = createStore<string[]>([]);
     // If empty, assume all champions are owned
@@ -123,7 +117,6 @@ export function createDraftContext() {
             defaultStatsSite: "lolalytics",
         }
     );
-    DRAFTGAP_DEBUG.config = config;
 
     function getTeamCompsForTeam(team: Team) {
         if (!isLoaded()) return [];
@@ -165,8 +158,6 @@ export function createDraftContext() {
             config()
         );
     });
-    DRAFTGAP_DEBUG.allyDraftResult = allyDraftResult;
-    DRAFTGAP_DEBUG.opponentDraftResult = opponentDraftResult;
 
     const allyDamageDistribution = createMemo(() => {
         if (!isLoaded()) return undefined;
@@ -461,6 +452,7 @@ const DraftContext = createContext<ReturnType<typeof createDraftContext>>();
 
 export function DraftProvider(props: { children: JSXElement }) {
     const ctx = createDraftContext();
+    (window as any).DRAFTGAP_DEBUG = ctx;
 
     return (
         <DraftContext.Provider value={ctx}>

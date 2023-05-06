@@ -7,8 +7,8 @@ import {
     BuildMatchupData,
 } from "../models/build/BuildDataset";
 import { ratingToWinrate, winrateToRating } from "../rating/ratings";
-import { priorGamesByRiskLevel } from "../risk/risk-level";
-import { addStats } from "../stats";
+import { buildPriorGamesByRiskLevel } from "../risk/risk-level";
+import { addStats, multiplyStats } from "../stats";
 
 const RUNE_TYPES = [
     "primary",
@@ -50,6 +50,8 @@ export type RunesAnalysisResult = {
         flex: Record<string, RuneAnalysisResult>;
     };
 };
+
+const MULTIPLIER_GAMES = 1000;
 
 export function analyzeRunes(
     partialBuildDataset: PartialBuildDataset,
@@ -93,6 +95,7 @@ function analyzeRune(
 ): RuneAnalysisResult {
     const baseRuneResult = analyzeBaseRune(
         partialBuildDataset,
+        fullBuildDatset,
         config,
         runeType,
         runeId
@@ -114,6 +117,7 @@ function analyzeRune(
 
 function analyzeBaseRune(
     partialBuildDataset: PartialBuildDataset,
+    fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
     runeType: RuneType,
     runeId: number
@@ -121,12 +125,21 @@ function analyzeBaseRune(
     const championWinrate =
         partialBuildDataset.wins / partialBuildDataset.games;
 
+    const previousRuneStats = getRuneStats(
+        fullBuildDataset.runes,
+        runeType,
+        runeId
+    );
+
     // TODO: add wilson score interval for low amount of games (instead of prior?)
     const runeStats = addStats(
         getRuneStats(partialBuildDataset.runes, runeType, runeId),
         {
-            wins: priorGamesByRiskLevel[config.riskLevel] * championWinrate,
-            games: priorGamesByRiskLevel[config.riskLevel],
+            wins:
+                (buildPriorGamesByRiskLevel[config.riskLevel] *
+                    previousRuneStats.wins) /
+                previousRuneStats.games,
+            games: buildPriorGamesByRiskLevel[config.riskLevel],
         }
     );
     const runeWinrate = runeStats.wins / runeStats.games;
@@ -185,17 +198,25 @@ function analyzeRuneMatchup(
         getRuneStats(matchup.runes, runeType, runeId),
         {
             wins:
-                priorGamesByRiskLevel[config.riskLevel] *
+                buildPriorGamesByRiskLevel[config.riskLevel] *
                 ratingToWinrate(expectedRuneMatchupRating),
-            games: priorGamesByRiskLevel[config.riskLevel],
+            games: buildPriorGamesByRiskLevel[config.riskLevel],
         }
     );
     const matchupWithRuneWinrate =
         runeMatchupStats.wins / runeMatchupStats.games;
-    const matchupWithRuneRating =
+    const runeRatingInMatchup =
         winrateToRating(matchupWithRuneWinrate) - baseMatchupRating;
 
-    const rating = matchupWithRuneRating - runeRating;
+    const rating = runeRatingInMatchup - runeRating;
+
+    if (
+        fullBuildDataset.championKey === "57" &&
+        matchup.championKey === "16" &&
+        runeId === 8230 &&
+        runeType === "primary"
+    ) {
+    }
 
     return {
         championKey: matchup.championKey,

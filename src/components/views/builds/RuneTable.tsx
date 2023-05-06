@@ -15,7 +15,7 @@ export const RuneTable: Component = (props) => {
     return (
         <Panel>
             <PanelHeader>Runes</PanelHeader>
-            <div class="flex gap-4 justify-between flex-wrap mb-4 max-w-7xl">
+            <div class="flex gap-4 justify-between flex-wrap max-w-7xl">
                 <For each={paths()}>
                     {(pathId) => (
                         <div class="flex flex-col gap-4">
