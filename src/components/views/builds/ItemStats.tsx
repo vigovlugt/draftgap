@@ -87,7 +87,7 @@ const Item: Component<{ order: number; itemId: number }> = (props) => {
                     src={`https://ddragon.leagueoflegends.com/cdn/${
                         dataset()!.version
                     }/img/item/${props.itemId}.png`}
-                    class="w-12 h-12"
+                    class="w-12 h-12 rounded"
                 />
             </td>
             <td class={`${getRatingClass(result().totalRating)} text-right`}>

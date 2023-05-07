@@ -12,7 +12,7 @@ export const StarterItemStats: Component = () => {
 
     return (
         <Panel>
-            <PanelHeader>Starter Items</PanelHeader>
+            <PanelHeader>Starting Items</PanelHeader>
             <HorizontalEntityStats
                 data={Object.keys(
                     buildAnalysisResult()!.items.startingSets
@@ -86,7 +86,7 @@ const StarterItem: Component<{ setId: string }> = (props) => {
                                 src={`https://ddragon.leagueoflegends.com/cdn/${
                                     dataset()!.version
                                 }/img/item/${id}.png`}
-                                class="w-12 h-12"
+                                class="w-12 h-12 rounded"
                             />
 
                             <Show when={number > 1}>

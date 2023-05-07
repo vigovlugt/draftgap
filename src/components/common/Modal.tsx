@@ -83,7 +83,11 @@ export default function Modal(props: Props) {
                                         >
                                             {props.title}
                                         </DialogTitle>
-                                        <Button onClick={close}>
+                                        <Button
+                                            onClick={() =>
+                                                props.setIsOpen(false)
+                                            }
+                                        >
                                             <Icon
                                                 path={xMark}
                                                 class="h-[24px] text-neutral-400"
