@@ -31,7 +31,7 @@ export const ItemStats: Component = () => {
     return (
         <Panel>
             <PanelHeader>Items</PanelHeader>
-            <div class="flex gap-2 flex-wrap justify-between">
+            <div class="flex gap-2 flex-wrap justify-between max-w-[1170px]">
                 <For each={ZERO_TO_FOUR}>
                     {(i) => (
                         <div>

@@ -80,9 +80,9 @@ export const BuildSummaryCards: Component<
     const baseRating = () => {
         switch (selectedEntity()!.type) {
             case "rune":
-                return runeAnalysisResult()!.runeResult.rating;
+                return runeAnalysisResult()!.baseResult.rating;
             case "item":
-                return itemAnalysisResult()!.itemResult.rating;
+                return itemAnalysisResult()!.baseResult.rating;
         }
     };
 

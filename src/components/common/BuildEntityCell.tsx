@@ -47,6 +47,24 @@ export const BuildEntityCell = (props: Props) => {
                     props.entity.id as number
                 ].icon.toLowerCase()}`;
             case "item":
+                if (
+                    props.entity.itemType === "sets" ||
+                    props.entity.itemType === "startingSets"
+                ) {
+                    const items = props.entity.id
+                        .split("_")
+                        .map((id) => parseInt(id))
+                        .sort(
+                            (a, b) =>
+                                dataset()!.itemData[b].gold -
+                                dataset()!.itemData[a].gold
+                        );
+
+                    return `https://ddragon.leagueoflegends.com/cdn/${
+                        dataset()!.version
+                    }/img/item/${items[0]}.png`;
+                }
+
                 return `https://ddragon.leagueoflegends.com/cdn/${
                     dataset()!.version
                 }/img/item/${props.entity.id}.png`;

@@ -77,6 +77,23 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
                     selectedEntity()!.id as any
                 ].icon.toLowerCase()}`;
             case "item":
+                if (
+                    selected.itemType === "sets" ||
+                    selected.itemType === "startingSets"
+                ) {
+                    const items = selected.id
+                        .split("_")
+                        .map((id) => parseInt(id))
+                        .sort(
+                            (a, b) =>
+                                dataset()!.itemData[b].gold -
+                                dataset()!.itemData[a].gold
+                        );
+
+                    return `https://ddragon.leagueoflegends.com/cdn/${
+                        dataset()!.version
+                    }/img/item/${items[0]}.png`;
+                }
                 return `https://ddragon.leagueoflegends.com/cdn/${
                     dataset()!.version
                 }/img/item/${selectedEntity()!.id}.png`;
@@ -116,7 +133,7 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
         >
             <div class="h-24 bg-[#101010] -m-6 mb-0"></div>
             <div class="flex gap-4 -mt-[48px] items-center">
-                <div class="rounded-full border-primary border-8 bg-primary">
+                <div class="rounded-full border-primary border-8 bg-primary shrink-0">
                     <img
                         src={imageSrc()}
                         class="rounded-full w-20 h-20"
@@ -135,8 +152,10 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
                         }}
                     />
                 </div>
-                <div class="flex flex-col justify-center">
-                    <h2 class="text-4xl uppercase mb-1">{title()}</h2>
+                <div class="flex flex-col justify-center w-full min-w-0">
+                    <h2 class="text-4xl uppercase mb-1 overflow-hidden whitespace-nowrap text-ellipsis">
+                        {title()}
+                    </h2>
                     <span class="text-xl text-neutral-300 uppercase mb-[16px]">
                         {subTitle()}
                     </span>

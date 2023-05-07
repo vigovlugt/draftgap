@@ -29,9 +29,34 @@ export function createBuildContext() {
         config,
     } = useDraft();
 
-    const [buildPick, setBuildPick] = createSignal(
+    const [buildPick, _setBuildPick] = createSignal(
         undefined as { team: Team; index: number } | undefined
     );
+    function setBuildPick(pick: { team: Team; index: number } | undefined) {
+        const teamPicks = pick?.team === "ally" ? allyTeam : opponentTeam;
+        const teamComp =
+            pick?.team === "ally"
+                ? allyTeamComps()[0][0]
+                : opponentTeamComps()[0][0];
+        gtag("event", "set_build_pick", {
+            event_category: "build",
+            team: pick?.team,
+            index: pick?.index,
+            champion_key: pick ? teamPicks[pick!.index].championKey : undefined,
+            champion_name: pick
+                ? dataset()!.championData[teamPicks[pick!.index].championKey!]
+                      .name
+                : undefined,
+            role: pick
+                ? [...teamComp!.entries()].find(
+                      ([, key]) => key === teamPicks[pick!.index].championKey
+                  )?.[0]
+                : undefined,
+        });
+
+        _setBuildPick(pick);
+    }
+
     const [selectedEntity, _setSelectedEntity] = createSignal<
         BuildEntity | undefined
     >();
@@ -56,7 +81,7 @@ export function createBuildContext() {
         }
         if (allDefined) return;
 
-        setBuildPick(undefined);
+        _setBuildPick(undefined);
     }, [allyTeam, opponentTeam]);
 
     const team = () => (buildPick()?.team === "ally" ? allyTeam : opponentTeam);

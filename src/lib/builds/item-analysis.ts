@@ -6,36 +6,13 @@ import {
     BuildMatchupData,
     ItemsBuildData,
 } from "../models/build/BuildDataset";
-import { ratingToWinrate, winrateToRating } from "../rating/ratings";
-import { buildPriorGamesByRiskLevel } from "../risk/risk-level";
-import { addStats } from "../stats";
-
-export type ItemAnalysisResult = {
-    itemResult: BaseItemAnalysisResult;
-    matchupResult: ItemMatchupsAnalysisResult;
-    totalRating: number;
-};
-
-export type BaseItemAnalysisResult = {
-    rating: number;
-};
-
-export type ItemMatchupAnalysisResult = {
-    championKey: string;
-    role: Role;
-    rating: number;
-};
-
-export type ItemMatchupsAnalysisResult = {
-    matchupResults: ItemMatchupAnalysisResult[];
-    totalRating: number;
-};
+import { EntityAnalysisResult, analyzeEntity } from "./entity-analysis";
 
 export type ItemsAnalysisResult = {
-    boots: Record<string, ItemAnalysisResult>;
-    statsByOrder: Record<string, ItemAnalysisResult>[];
-    startingSets: Record<string, ItemAnalysisResult>;
-    sets: Record<string, ItemAnalysisResult>;
+    boots: Record<string, EntityAnalysisResult>;
+    statsByOrder: Record<string, EntityAnalysisResult>[];
+    startingSets: Record<string, EntityAnalysisResult>;
+    sets: Record<string, EntityAnalysisResult>;
 };
 
 type ItemType = number | "boots" | "startingSets" | "sets";
@@ -48,214 +25,90 @@ export function analyzeItems(
     return {
         boots: Object.keys(partialBuildDataset.items.boots).reduce(
             (acc, itemId) => {
-                acc[itemId] = analyzeItem(
+                acc[itemId] = analyzeEntity(
                     partialBuildDataset,
                     fullBuildDatset,
                     config,
-                    "boots",
-                    parseInt(itemId)
+                    getItemStats,
+                    {
+                        type: "boots",
+                        id: parseInt(itemId),
+                    }
                 );
                 return acc;
             },
-            {} as Record<string, ItemAnalysisResult>
+            {} as Record<string, EntityAnalysisResult>
         ),
         statsByOrder: partialBuildDataset.items.statsByOrder.map((stats, i) => {
             return Object.keys(stats).reduce((acc, itemId) => {
-                acc[itemId] = analyzeItem(
+                acc[itemId] = analyzeEntity(
                     partialBuildDataset,
                     fullBuildDatset,
                     config,
-                    i,
-                    parseInt(itemId)
+                    getItemStats,
+                    {
+                        type: i,
+                        id: parseInt(itemId),
+                    }
                 );
                 return acc;
-            }, {} as Record<string, ItemAnalysisResult>);
+            }, {} as Record<string, EntityAnalysisResult>);
         }),
         startingSets: Object.keys(
             partialBuildDataset.items.startingSets
         ).reduce((acc, setId) => {
-            acc[setId] = analyzeItem(
+            acc[setId] = analyzeEntity(
                 partialBuildDataset,
                 fullBuildDatset,
                 config,
-                "startingSets",
-                setId
+                getItemStats,
+                {
+                    type: "startingSets",
+                    id: setId,
+                }
             );
             return acc;
-        }, {} as Record<string, ItemAnalysisResult>),
+        }, {} as Record<string, EntityAnalysisResult>),
         sets: {},
     };
 }
 
-export function analyzeItem(
-    partialBuildDataset: PartialBuildDataset,
-    fullBuildDataset: FullBuildDataset,
-    config: AnalyzeDraftConfig,
-    type: ItemType,
-    itemId: number | string
-): ItemAnalysisResult {
-    const itemResult = analyzeBaseItem(
-        partialBuildDataset,
-        fullBuildDataset,
-        config,
-        type,
-        itemId
-    );
-
-    const matchupResult = analyzeItemMatchups(
-        fullBuildDataset,
-        config,
-        type,
-        itemId
-    );
-
-    const totalRating = itemResult.rating + matchupResult.totalRating;
-
-    return {
-        itemResult,
-        matchupResult,
-        totalRating,
-    };
-}
-
-function analyzeBaseItem(
-    partialBuildDataset: PartialBuildDataset,
-    fullBuildDataset: FullBuildDataset,
-    config: AnalyzeDraftConfig,
-    type: ItemType,
-    itemId: number | string
-) {
-    const championWinrate =
-        partialBuildDataset.wins / partialBuildDataset.games;
-
-    const previousItemStats = getItemStats(
-        fullBuildDataset.items,
-        type,
-        itemId
-    );
-
-    // TODO: add wilson score interval for low amount of games (instead of prior?)
-    const championWithItemStats = addStats(
-        getItemStats(partialBuildDataset.items, type, itemId),
-        previousItemStats
-    );
-    const championWithItemWinrate =
-        championWithItemStats.wins / championWithItemStats.games;
-
-    const rating =
-        winrateToRating(championWithItemWinrate) -
-        winrateToRating(championWinrate);
-
-    return {
-        rating,
-    };
-}
-
-function analyzeItemMatchups(
-    fullBuildDataset: FullBuildDataset,
-    config: AnalyzeDraftConfig,
-    type: ItemType,
-    itemId: number | string
-) {
-    const matchupResults = fullBuildDataset.matchups.map((matchup) =>
-        analyzeItemMatchup(fullBuildDataset, config, type, itemId, matchup)
-    );
-    const totalRating = matchupResults.reduce(
-        (total, matchup) => total + matchup.rating,
-        0
-    );
-
-    return {
-        matchupResults,
-        totalRating,
-    };
-}
-
-function analyzeItemMatchup(
-    fullBuildDataset: FullBuildDataset,
-    config: AnalyzeDraftConfig,
-    type: ItemType,
-    itemId: number | string,
-    matchup: BuildMatchupData
-): ItemMatchupAnalysisResult {
-    const baseChampionWinrate = fullBuildDataset.wins / fullBuildDataset.games;
-    const championWithItemStats = getItemStats(
-        fullBuildDataset.items,
-        type,
-        itemId
-    );
-    const championWithItemWinrate =
-        championWithItemStats.wins / championWithItemStats.games;
-    const itemRating =
-        winrateToRating(championWithItemWinrate) -
-        winrateToRating(baseChampionWinrate);
-
-    const baseMatchupWinrate = matchup.wins / matchup.games;
-    const baseMatchupRating = winrateToRating(baseMatchupWinrate);
-    const expectedItemMatchupRating = baseMatchupRating + itemRating;
-
-    const itemMatchupStats = addStats(
-        getItemStats(matchup.items, type, itemId),
-        {
-            wins:
-                buildPriorGamesByRiskLevel[config.riskLevel] *
-                ratingToWinrate(expectedItemMatchupRating),
-            games: buildPriorGamesByRiskLevel[config.riskLevel],
-        }
-    );
-    const matchupWithItemWinrate =
-        itemMatchupStats.wins / itemMatchupStats.games;
-    const matchupWithItemRating =
-        winrateToRating(matchupWithItemWinrate) - baseMatchupRating;
-
-    const rating = matchupWithItemRating - itemRating;
-
-    return {
-        championKey: matchup.championKey,
-        role: matchup.role,
-        rating: isNaN(rating) ? 0 : rating,
-    };
-}
-
 function getItemStats(
-    itemData: ItemsBuildData,
+    data: PartialBuildDataset,
     // order or boots
-    type: ItemType,
-    itemId: number | string
+    item: {
+        id: number | string;
+        type: ItemType;
+    }
 ) {
-    if (type === "boots") {
-        return (
-            itemData.boots[itemId] ?? {
-                wins: 0,
-                games: 0,
-            }
-        );
+    switch (item.type) {
+        case "boots":
+            return (
+                data.items.boots[item.id] ?? {
+                    wins: 0,
+                    games: 0,
+                }
+            );
+        case "sets":
+            return (
+                data.items.sets[item.id] ?? {
+                    wins: 0,
+                    games: 0,
+                }
+            );
+        case "startingSets":
+            return (
+                data.items.startingSets[item.id] ?? {
+                    wins: 0,
+                    games: 0,
+                }
+            );
+        default:
+            return (
+                data.items.statsByOrder[item.type][item.id] ?? {
+                    wins: 0,
+                    games: 0,
+                }
+            );
     }
-
-    if (type === "sets") {
-        if (typeof itemId !== "string") throw new Error("Invalid item id");
-        return (
-            itemData.sets[itemId] ?? {
-                wins: 0,
-                games: 0,
-            }
-        );
-    }
-
-    if (type === "startingSets") {
-        if (typeof itemId !== "string") throw new Error("Invalid item id");
-        return (
-            itemData.startingSets[itemId] ?? {
-                wins: 0,
-                games: 0,
-            }
-        );
-    }
-
-    return (
-        itemData.statsByOrder[type][itemId] ?? {
-            wins: 0,
-            games: 0,
-        }
-    );
 }

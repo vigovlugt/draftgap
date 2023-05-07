@@ -15,6 +15,7 @@ import { createSignal } from "solid-js";
 import { RoleCell } from "../../common/RoleCell";
 import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
+import { formatPercentage } from "../../../utils/rating";
 
 export const BuildMatchupTable = (
     props: JSX.HTMLAttributes<HTMLDivElement>
@@ -152,6 +153,44 @@ export const BuildMatchupTable = (
             accessorFn: (result) => result.rating,
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
         },
+        ...(import.meta.env.DEV
+            ? ([
+                  {
+                      header: "Games",
+                      id: "games",
+                      accessorFn: (result) => (result as any).raw.games,
+                  },
+                  {
+                      header: "Delta",
+                      id: "delta",
+                      accessorFn: (result) =>
+                          formatPercentage(
+                              (result as any).raw.wins /
+                                  (result as any).raw.games -
+                                  (result as any).expected
+                          ),
+                  },
+                  {
+                      header: "WR",
+                      id: "winrate",
+                      accessorFn: (result) =>
+                          formatPercentage(
+                              (result as any).raw.wins /
+                                  (result as any).raw.games
+                          ),
+                  },
+                  {
+                      header: "Expected",
+                      id: "expected",
+                      accessorFn: (result) =>
+                          formatPercentage((result as any).expected),
+                  },
+              ] as ColumnDef<{
+                  championKey: string;
+                  role: Role;
+                  rating: number;
+              }>[])
+            : []),
     ];
 
     const [sorting, setSorting] = createSignal<SortingState>([]);

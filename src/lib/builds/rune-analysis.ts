@@ -4,11 +4,8 @@ import {
     PartialBuildDataset,
     FullBuildDataset,
     RunesBuildData,
-    BuildMatchupData,
 } from "../models/build/BuildDataset";
-import { ratingToWinrate, winrateToRating } from "../rating/ratings";
-import { buildPriorGamesByRiskLevel } from "../risk/risk-level";
-import { addStats, multiplyStats } from "../stats";
+import { EntityAnalysisResult, analyzeEntity } from "./entity-analysis";
 
 const RUNE_TYPES = [
     "primary",
@@ -19,39 +16,15 @@ const RUNE_TYPES = [
 ] as const;
 type RuneType = (typeof RUNE_TYPES)[number];
 
-export type RuneAnalysisResult = {
-    runeResult: BaseRuneAnalysisResult;
-    matchupResult: RuneMatchupsAnalysisResult;
-
-    totalRating: number;
-};
-
-export type BaseRuneAnalysisResult = {
-    rating: number;
-};
-
-export type RuneMatchupAnalysisResult = {
-    championKey: string;
-    role: Role;
-    rating: number;
-};
-
-export type RuneMatchupsAnalysisResult = {
-    matchupResults: RuneMatchupAnalysisResult[];
-    totalRating: number;
-};
-
 export type RunesAnalysisResult = {
-    primary: Record<string, RuneAnalysisResult>;
-    secondary: Record<string, RuneAnalysisResult>;
+    primary: Record<string, EntityAnalysisResult>;
+    secondary: Record<string, EntityAnalysisResult>;
     shards: {
-        offense: Record<string, RuneAnalysisResult>;
-        defense: Record<string, RuneAnalysisResult>;
-        flex: Record<string, RuneAnalysisResult>;
+        offense: Record<string, EntityAnalysisResult>;
+        defense: Record<string, EntityAnalysisResult>;
+        flex: Record<string, EntityAnalysisResult>;
     };
 };
-
-const MULTIPLIER_GAMES = 1000;
 
 export function analyzeRunes(
     partialBuildDataset: PartialBuildDataset,
@@ -64,16 +37,19 @@ export function analyzeRunes(
         );
         return runeIds.reduce((result, runeId) => {
             const runeIdNumber = parseInt(runeId);
-            const runeResult = analyzeRune(
+            const runeResult = analyzeEntity(
                 partialBuildDataset,
                 fullBuildDataset,
                 config,
-                runeType,
-                runeIdNumber
+                getRuneStats,
+                {
+                    type: runeType,
+                    id: runeIdNumber,
+                }
             );
             result[runeId] = runeResult;
             return result;
-        }, {} as Record<string, RuneAnalysisResult>);
+        }, {} as Record<string, EntityAnalysisResult>);
     };
     return {
         primary: analyze("primary"),
@@ -83,145 +59,6 @@ export function analyzeRunes(
             defense: analyze("shard-defense"),
             flex: analyze("shard-flex"),
         },
-    };
-}
-
-function analyzeRune(
-    partialBuildDataset: PartialBuildDataset,
-    fullBuildDatset: FullBuildDataset,
-    config: AnalyzeDraftConfig,
-    runeType: RuneType,
-    runeId: number
-): RuneAnalysisResult {
-    const baseRuneResult = analyzeBaseRune(
-        partialBuildDataset,
-        fullBuildDatset,
-        config,
-        runeType,
-        runeId
-    );
-    const matchupResult = analyzeRuneMatchups(
-        fullBuildDatset,
-        config,
-        runeType,
-        runeId
-    );
-
-    const totalRating = baseRuneResult.rating + matchupResult.totalRating;
-    return {
-        runeResult: baseRuneResult,
-        matchupResult,
-        totalRating,
-    };
-}
-
-function analyzeBaseRune(
-    partialBuildDataset: PartialBuildDataset,
-    fullBuildDataset: FullBuildDataset,
-    config: AnalyzeDraftConfig,
-    runeType: RuneType,
-    runeId: number
-) {
-    const championWinrate =
-        partialBuildDataset.wins / partialBuildDataset.games;
-
-    const previousRuneStats = getRuneStats(
-        fullBuildDataset.runes,
-        runeType,
-        runeId
-    );
-
-    // TODO: add wilson score interval for low amount of games (instead of prior?)
-    const runeStats = addStats(
-        getRuneStats(partialBuildDataset.runes, runeType, runeId),
-        {
-            wins:
-                (buildPriorGamesByRiskLevel[config.riskLevel] *
-                    previousRuneStats.wins) /
-                previousRuneStats.games,
-            games: buildPriorGamesByRiskLevel[config.riskLevel],
-        }
-    );
-    const runeWinrate = runeStats.wins / runeStats.games;
-
-    const rating =
-        winrateToRating(runeWinrate) - winrateToRating(championWinrate);
-
-    return {
-        rating,
-    };
-}
-
-function analyzeRuneMatchups(
-    fullBuildDataset: FullBuildDataset,
-    config: AnalyzeDraftConfig,
-    runeType: RuneType,
-    runeId: number
-): RuneMatchupsAnalysisResult {
-    const matchupResults = fullBuildDataset.matchups.map((matchup) =>
-        analyzeRuneMatchup(fullBuildDataset, config, runeType, runeId, matchup)
-    );
-    const totalRating = matchupResults.reduce(
-        (total, result) => total + result.rating,
-        0
-    );
-
-    return {
-        matchupResults,
-        totalRating,
-    };
-}
-
-function analyzeRuneMatchup(
-    fullBuildDataset: FullBuildDataset,
-    config: AnalyzeDraftConfig,
-    runeType: RuneType,
-    runeId: number,
-    matchup: BuildMatchupData
-): RuneMatchupAnalysisResult {
-    const baseChampionWinrate = fullBuildDataset.wins / fullBuildDataset.games;
-    const championRuneStats = getRuneStats(
-        fullBuildDataset.runes,
-        runeType,
-        runeId
-    );
-    const championRuneWinrate =
-        championRuneStats.wins / championRuneStats.games;
-    const runeRating =
-        winrateToRating(championRuneWinrate) -
-        winrateToRating(baseChampionWinrate);
-
-    const baseMatchupWinrate = matchup.wins / matchup.games;
-    const baseMatchupRating = winrateToRating(baseMatchupWinrate);
-    const expectedRuneMatchupRating = baseMatchupRating + runeRating;
-    const runeMatchupStats = addStats(
-        getRuneStats(matchup.runes, runeType, runeId),
-        {
-            wins:
-                buildPriorGamesByRiskLevel[config.riskLevel] *
-                ratingToWinrate(expectedRuneMatchupRating),
-            games: buildPriorGamesByRiskLevel[config.riskLevel],
-        }
-    );
-    const matchupWithRuneWinrate =
-        runeMatchupStats.wins / runeMatchupStats.games;
-    const runeRatingInMatchup =
-        winrateToRating(matchupWithRuneWinrate) - baseMatchupRating;
-
-    const rating = runeRatingInMatchup - runeRating;
-
-    if (
-        fullBuildDataset.championKey === "57" &&
-        matchup.championKey === "16" &&
-        runeId === 8230 &&
-        runeType === "primary"
-    ) {
-    }
-
-    return {
-        championKey: matchup.championKey,
-        role: matchup.role,
-        rating: isNaN(rating) ? 0 : rating,
     };
 }
 
@@ -241,20 +78,22 @@ function getRuneStatsMap(runeBuildData: RunesBuildData, runeType: RuneType) {
 }
 
 function getRuneStats(
-    runeBuildData: RunesBuildData,
-    runeType: RuneType,
-    runeId: number
+    data: PartialBuildDataset,
+    rune: {
+        type: RuneType;
+        id: number;
+    }
 ) {
-    switch (runeType) {
+    switch (rune.type) {
         case "primary":
-            return runeBuildData.primary[runeId];
+            return data.runes.primary[rune.id];
         case "secondary":
-            return runeBuildData.secondary[runeId];
+            return data.runes.secondary[rune.id];
         case "shard-offense":
-            return runeBuildData.shards.offense[runeId];
+            return data.runes.shards.offense[rune.id];
         case "shard-defense":
-            return runeBuildData.shards.defense[runeId];
+            return data.runes.shards.defense[rune.id];
         case "shard-flex":
-            return runeBuildData.shards.flex[runeId];
+            return data.runes.shards.flex[rune.id];
     }
 }
