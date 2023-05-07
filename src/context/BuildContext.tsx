@@ -16,7 +16,6 @@ import {
 import { useDraft } from "./DraftContext";
 import { Team } from "../lib/models/Team";
 import { BuildEntity } from "../lib/models/build/BuildEntity";
-import { C } from "@tauri-apps/api/event-2a9960e7";
 
 export function createBuildContext() {
     const {
@@ -126,7 +125,6 @@ export function createBuildContext() {
                 return null;
             }
 
-            console.log(ctx.queryKey);
             const cached = queryClient.getQueryCache().find(ctx.queryKey);
             if (cached?.state?.data && cached.state.error == null) {
                 return cached.state.data as [
@@ -164,10 +162,6 @@ export function createBuildContext() {
     (window as any).DRAFTGAP_DEBUG.fullBuildDataset = fullBuildDataset;
     (window as any).DRAFTGAP_DEBUG.partialBuildDataset = partialBuildDataset;
 
-    createEffect(() => {
-        console.log("query.data", query.data);
-    });
-
     const buildAnalysisResult = createMemo(() => {
         if (!query.data || !dataset() || !dataset30Days()) {
             return;
@@ -178,9 +172,6 @@ export function createBuildContext() {
             ...query.data,
             config()
         );
-    });
-    createEffect(() => {
-        console.log("buildAnalysisResult", buildAnalysisResult());
     });
 
     return {
