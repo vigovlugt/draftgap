@@ -1,9 +1,6 @@
 import { Show } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
-import {
-    BuildEntity,
-    BuildEntityType,
-} from "../../lib/models/build/BuildEntity";
+import { BuildEntity } from "../../lib/models/build/BuildEntity";
 import { overflowEllipsis } from "../../utils/strings";
 
 type Props = {

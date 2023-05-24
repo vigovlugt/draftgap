@@ -1,6 +1,5 @@
-import { ChampionData } from "../models/ChampionData";
-import { Dataset } from "../models/Dataset";
 import { Role } from "../models/Role";
+import { Dataset } from "../models/dataset/Dataset";
 
 export function getTeamDamageDistribution(
     dataset: Dataset,

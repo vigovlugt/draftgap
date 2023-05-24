@@ -1,5 +1,5 @@
-import { ChampionData } from "../models/ChampionData";
 import { Role, ROLES } from "../models/Role";
+import { ChampionData } from "../models/dataset/ChampionData";
 
 export function getTeamComps(champions: (ChampionData & { role?: Role })[]) {
     const existingTeam = new Map(

@@ -4,8 +4,8 @@ import {
     PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
 import { bytesToHumanReadable } from "../../../utils/bytes";
-import { Dataset } from "../../models/Dataset";
 import { client } from "./client";
+import { Dataset } from "../../models/dataset/Dataset";
 
 export async function storeDataset(
     dataset: Dataset,
