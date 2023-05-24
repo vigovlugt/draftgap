@@ -26,11 +26,13 @@ export function getRatingClass(rating: number, noOkay = false) {
     } else if (winrate < (noOkay ? 0.5 : 0.485)) {
         return "text-winrate-meh";
     } else if (winrate < 0.515 && !noOkay) {
-        return "text-winrate-okay dark:text-winrate-okay-dark";
+        return "text-winrate-okay";
     } else if (winrate < 0.53) {
         return "text-winrate-good";
     } else if (winrate < 0.55) {
         return "text-winrate-great";
+    } else if (isNaN(winrate)) {
+        return "text-winrate-okay";
     }
 
     return "text-winrate-volxd";

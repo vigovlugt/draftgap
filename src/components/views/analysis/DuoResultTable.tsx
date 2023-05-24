@@ -7,14 +7,14 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { createSignal, JSX } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
-import { Role } from "../../lib/models/Role";
-import { Team } from "../../lib/models/Team";
-import { AnalyzeDuoResult } from "../../lib/suggestions/suggestions";
-import ChampionCell from "../common/ChampionCell";
-import { RatingText } from "../common/RatingText";
-import { RoleCell } from "../common/RoleCell";
-import { Table } from "../common/Table";
+import { useDraft } from "../../../context/DraftContext";
+import { Role } from "../../../lib/models/Role";
+import { Team } from "../../../lib/models/Team";
+import { AnalyzeDuoResult } from "../../../lib/draft/analysis";
+import ChampionCell from "../../common/ChampionCell";
+import { RatingText } from "../../common/RatingText";
+import { RoleCell } from "../../common/RoleCell";
+import { Table } from "../../common/Table";
 
 interface Props {
     team: Team;

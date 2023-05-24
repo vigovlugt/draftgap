@@ -4,6 +4,9 @@ dependencies:
   '@aws-sdk/client-s3':
     specifier: ^3.218.0
     version: 3.241.0
+  '@formkit/auto-animate':
+    specifier: 1.0.0-beta.6
+    version: 1.0.0-beta.6
   '@octokit/rest':
     specifier: ^19.0.5
     version: 19.0.5
@@ -13,6 +16,9 @@ dependencies:
   '@prisma/client':
     specifier: ^4.8.0
     version: 4.8.0(prisma@4.8.0)
+  '@tanstack/solid-query':
+    specifier: ^4.29.1
+    version: 4.29.1(solid-js@1.6.6)
   '@tanstack/solid-table':
     specifier: ^8.7.0
     version: 8.7.4(solid-js@1.6.6)
@@ -1393,6 +1399,10 @@ packages:
     dev: true
     optional: true
 
+  /@formkit/auto-animate@1.0.0-beta.6:
+    resolution: {integrity: sha512-PVDhLAlr+B4Xb7e+1wozBUWmXa6BFU8xUPR/W/E+TsQhPS1qkAdAsJ25keEnFrcePSnXHrOsh3tiFbEToOzV9w==}
+    dev: false
+
   /@jridgewell/gen-mapping@0.1.1:
     resolution: {integrity: sha512-sQXCasFk+U8lWYEe66WxRDOE9PjVz4vSM51fTu3Hw+ClTpUSQb718772vH3pyS5pShp6lvQM7SxgIDXXXmOX7w==}
     engines: {node: '>=6.0.0'}
@@ -1593,6 +1603,19 @@ packages:
   /@prisma/engines@4.8.0:
     resolution: {integrity: sha512-A1Asn2rxZMlLAj1HTyfaCv0VQrLUv034jVay05QlqZg1qiHPeA3/pGTfNMijbsMYCsGVxfWEJuaZZuNxXGMCrA==}
     requiresBuild: true
+
+  /@tanstack/query-core@4.29.1:
+    resolution: {integrity: sha512-vkPewLEG8ua0efo3SsVT0BcBtkq5RZX8oPhDAyKL+k/rdOYSQTEocfGEXSaBwIwsXeOGBUpfKqI+UmHvNqdWXg==}
+    dev: false
+
+  /@tanstack/solid-query@4.29.1(solid-js@1.6.6):
+    resolution: {integrity: sha512-XvRfk7Epi0gh5p+sgaMrrFu2yLY0nIq1wYbcBExehiNgyIfOw032xyZLNk5LJTAy5bLwMqL7hYR92j+ThtZ8mA==}
+    peerDependencies:
+      solid-js: ^1.5.7
+    dependencies:
+      '@tanstack/query-core': 4.29.1
+      solid-js: 1.6.6
+    dev: false
 
   /@tanstack/solid-table@8.7.4(solid-js@1.6.6):
     resolution: {integrity: sha512-2A0ZHrx1LwVQPy9QUebageDgj9keVrfgi6rXDIy5LT/Azhwnxqw/hMufzEAAGWGBW+pQSAmCv/CrlU4sj/TX3Q==}

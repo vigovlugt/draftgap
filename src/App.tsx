@@ -18,7 +18,7 @@ import { TeamSidebar } from "./components/draft/TeamSidebar";
 import { useDraft } from "./context/DraftContext";
 import { cog_6Tooth } from "solid-heroicons/solid";
 import SettingsModal from "./components/modals/SettingsModal";
-import ResultScreen from "./components/resultscreen/ResultScreen";
+import AnalysisView from "./components/views/analysis/AnalysisView";
 import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
 import { useLolClient } from "./context/LolClientContext";
 import { UpdateModal } from "./components/modals/UpdateModal";
@@ -28,9 +28,13 @@ import { DownloadAppModal } from "./components/modals/DownloadAppModal";
 import { Badge } from "./components/common/Badge";
 import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
+import { ViewTabs } from "./components/common/ViewTabs";
+import { BuildsView } from "./components/views/builds/BuildsView";
+import { useBuild } from "./context/BuildContext";
 
 const App: Component = () => {
     const { config, dataset, tab, setTab, draftFinished } = useDraft();
+    const { setBuildPick } = useBuild();
     const { startLolClientIntegration, stopLolClientIntegration } =
         useLolClient();
 
@@ -49,6 +53,14 @@ const App: Component = () => {
     const [showSettings, setShowSettings] = createSignal(false);
     const [showFAQ, setShowFAQ] = createSignal(false);
     const [showDownloadModal, setShowDownloadModal] = createSignal(false);
+    const [currentTab, setCurrentTab] = createSignal<"analysis" | "builds">(
+        "analysis"
+    );
+    const onChangeTab = (tab: "analysis" | "builds") => {
+        setCurrentTab(tab);
+        setBuildPick(undefined);
+        // TODO: IF LOLCLIENT INTEGRATION ENABLED, SET CURRENT BUILD TO OWN CHAMPION
+    };
 
     const timeAgo = () =>
         dataset()
@@ -60,34 +72,66 @@ const App: Component = () => {
     const MainView = () => {
         return (
             <div
-                class="p-4 xl:px-8 bg-[#101010] flex-1 overflow-auto overflow-x-hidden h-full flex flex-col"
+                class="bg-[#101010] flex-1 overflow-auto overflow-x-hidden h-full flex flex-col"
                 style={{
                     "scroll-behavior": "smooth",
                 }}
             >
                 <Switch>
                     <Match when={!dataset()}>
-                        <div class="flex justify-center items-center h-full text-4xl">
+                        <div class="flex justify-center items-center h-full text-2xl">
                             Loading...
                         </div>
                     </Match>
                     <Match when={draftFinished()}>
-                        <ResultScreen />
+                        <div class="flex flex-col overflow-hidden min-h-full flex-1">
+                            <ViewTabs
+                                tabs={[
+                                    {
+                                        label: "Draft Analysis",
+                                        value: "analysis",
+                                    },
+                                    ...(import.meta.env.DEV
+                                        ? ([
+                                              {
+                                                  label: "Builds",
+                                                  value: "builds",
+                                              },
+                                          ] as const)
+                                        : []),
+                                ]}
+                                selected={currentTab()}
+                                onChange={onChangeTab}
+                                className="xl:px-8"
+                            ></ViewTabs>
+                            <Switch>
+                                <Match when={currentTab() === "analysis"}>
+                                    <div class="py-5 px-4 xl:px-8 h-full overflow-y-auto">
+                                        <AnalysisView />
+                                    </div>
+                                </Match>
+                                <Match when={currentTab() === "builds"}>
+                                    <BuildsView />
+                                </Match>
+                            </Switch>
+                        </div>
                     </Match>
                     <Match when={true}>
-                        <div class="mb-4 flex gap-4">
-                            <Search />
-                            <TeamSelector />
-                            <RoleFilter className="hidden lg:inline-flex" />
-                            <div class="hidden lg:inline-flex">
+                        <div class="p-4 xl:px-8">
+                            <div class="mb-4 flex gap-4">
+                                <Search />
+                                <TeamSelector />
+                                <RoleFilter className="hidden lg:inline-flex" />
+                                <div class="hidden lg:inline-flex">
+                                    <FilterMenu />
+                                </div>
+                            </div>
+                            <div class="flex justify-end mb-4 gap-4 lg:hidden">
+                                <RoleFilter className="w-full" />
                                 <FilterMenu />
                             </div>
+                            <DraftTable />
                         </div>
-                        <div class="flex justify-end mb-4 gap-4 lg:hidden">
-                            <RoleFilter className="w-full" />
-                            <FilterMenu />
-                        </div>
-                        <DraftTable />
                     </Match>
                 </Switch>
             </div>
@@ -102,14 +146,14 @@ const App: Component = () => {
             }}
         >
             <SettingsModal
-                isOpen={showSettings}
+                isOpen={showSettings()}
                 setIsOpen={setShowSettings}
                 setFAQOpen={setShowFAQ}
             ></SettingsModal>
             <UpdateModal />
-            <FAQModal isOpen={showFAQ} setIsOpen={setShowFAQ} />
+            <FAQModal isOpen={showFAQ()} setIsOpen={setShowFAQ} />
             <DownloadAppModal
-                isOpen={showDownloadModal}
+                isOpen={showDownloadModal()}
                 setIsOpen={setShowDownloadModal}
             />
             <header class="bg-primary px-1 py-0 border-b-2 border-neutral-700 flex justify-between">
@@ -137,7 +181,7 @@ const App: Component = () => {
             <main
                 class="h-full lg:grid overflow-hidden hidden"
                 style={{
-                    "grid-template-columns": "1fr 3fr 1fr",
+                    "grid-template-columns": "1fr 4fr 1fr",
                     "grid-template-rows": "100%",
                 }}
             >
@@ -149,13 +193,7 @@ const App: Component = () => {
             </main>
 
             {/* Mobile main */}
-            <main
-                class="h-full overflow-hidden lg:hidden"
-                style={{
-                    "grid-template-columns": "1fr 3fr 1fr",
-                    "grid-template-rows": "100%",
-                }}
-            >
+            <main class="h-full overflow-hidden lg:hidden">
                 <Switch>
                     <Match when={tab() === "ally"}>
                         <TeamSidebar team="ally" />

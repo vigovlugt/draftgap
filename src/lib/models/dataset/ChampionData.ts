@@ -7,13 +7,13 @@ import {
     SerializationContext,
     serializeVarUint,
     deserializeVarUint,
-} from "../serialization/serialization";
+} from "../../serialization/serialization";
 import {
     ChampionRoleData,
     deserializeChampionRoleData,
     serializeChampionRoleData,
 } from "./ChampionRoleData";
-import { Role } from "./Role";
+import { Role } from "../Role";
 
 export interface ChampionData {
     id: string;

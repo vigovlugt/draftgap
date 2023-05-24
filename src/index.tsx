@@ -9,25 +9,33 @@ import { setupAnalytics } from "./utils/analytics";
 import { TooltipProvider } from "./context/TooltipContext";
 import { Toaster } from "solid-toast";
 import { setupMobileVH } from "./utils/mobile";
+import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
+import { BuildProvider } from "./context/BuildContext";
 
 setupMobileVH();
 setupAnalytics();
 
+const queryClient = new QueryClient();
+
 render(
     () => (
-        <TooltipProvider>
-            <DraftProvider>
-                <LolClientProvider>
-                    <App />
-                    <Toaster
-                        position="bottom-right"
-                        toastOptions={{
-                            duration: Infinity,
-                        }}
-                    />
-                </LolClientProvider>
-            </DraftProvider>
-        </TooltipProvider>
+        <QueryClientProvider client={queryClient}>
+            <TooltipProvider>
+                <DraftProvider>
+                    <BuildProvider>
+                        <LolClientProvider>
+                            <App />
+                            <Toaster
+                                position="bottom-right"
+                                toastOptions={{
+                                    duration: Infinity,
+                                }}
+                            />
+                        </LolClientProvider>
+                    </BuildProvider>
+                </DraftProvider>
+            </TooltipProvider>
+        </QueryClientProvider>
     ),
     document.getElementById("root") as HTMLElement
 );

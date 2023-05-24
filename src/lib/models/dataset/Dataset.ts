@@ -13,18 +13,26 @@ import {
     serializeVarUint,
     deserializeObject,
     deserializeVarUint,
-} from "../serialization/serialization";
+} from "../../serialization/serialization";
 import { deserializeRankData, RankData, serializeRankData } from "./RankData";
 import { deleteChampionRoleDataMatchupSynergyData } from "./ChampionRoleData";
+import { RuneData, RunePathData, StatShardData } from "./RuneData";
+import { ItemData } from "./ItemData";
 
 export interface Dataset {
     version: string;
     date: string;
     championData: Record<string, ChampionData>;
     rankData: RankData;
+
+    itemData: Record<number, ItemData>;
+    runeData: Record<number, RuneData>;
+    runePathData: Record<number, RunePathData>;
+    statShardData: Record<number, StatShardData>;
 }
 
 export function serializeDataset(ctx: SerializationContext, dataset: Dataset) {
+    throw new Error("Not implemented");
     serializeString(ctx, dataset.version);
     serializeString(ctx, dataset.date);
     serializeObject(
@@ -37,6 +45,7 @@ export function serializeDataset(ctx: SerializationContext, dataset: Dataset) {
 }
 
 export function deserializeDataset(ctx: SerializationContext): Dataset {
+    throw new Error("Not implemented");
     const version = deserializeString(ctx);
     const date = deserializeString(ctx);
     const championData = deserializeObject(
@@ -46,6 +55,7 @@ export function deserializeDataset(ctx: SerializationContext): Dataset {
     );
     const rankData = deserializeRankData(ctx);
 
+    // @ts-ignore
     return {
         version,
         date,

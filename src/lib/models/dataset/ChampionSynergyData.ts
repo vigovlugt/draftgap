@@ -3,7 +3,7 @@ import {
     serializeVarUint,
     DeserializationContext,
     deserializeVarUint,
-} from "../serialization/serialization";
+} from "../../serialization/serialization";
 
 export interface ChampionSynergyData {
     championKey: string;

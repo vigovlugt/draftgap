@@ -1,11 +1,9 @@
 import {
     SerializationContext,
-    serializeFloat64,
     DeserializationContext,
-    deserializeFloat64,
     serializeVarUint,
     deserializeVarUint,
-} from "../serialization/serialization";
+} from "../../serialization/serialization";
 
 export interface ChampionDamageProfile {
     magic: number;

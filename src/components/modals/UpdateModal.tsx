@@ -36,7 +36,11 @@ export const UpdateModal: Component = () => {
     };
 
     return (
-        <Modal title="Update available!" isOpen={isOpen} setIsOpen={setIsOpen}>
+        <Modal
+            title="Update available!"
+            isOpen={isOpen()}
+            setIsOpen={setIsOpen}
+        >
             <p class="text-2xl">
                 A new version of DraftGap is available. Do you want to update?
             </p>

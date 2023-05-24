@@ -10,17 +10,14 @@ import {
 import { createStore } from "solid-js/store";
 import { createMediaQuery } from "../hooks/createMediaQuery";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
-import { Dataset, getDeserializedDataset } from "../lib/models/Dataset";
-import { PickData } from "../lib/models/PickData";
+import { Dataset, getDeserializedDataset } from "../lib/models/dataset/Dataset";
+import { PickData } from "../lib/models/dataset/PickData";
 import { displayNameByRole, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
 import predictRoles, { getTeamComps } from "../lib/role/role-predictor";
-import {
-    analyzeDraft,
-    AnalyzeDraftConfig,
-    getSuggestions,
-} from "../lib/suggestions/suggestions";
+import { analyzeDraft, AnalyzeDraftConfig } from "../lib/draft/analysis";
 import { createStoredSignal } from "../utils/signals";
+import { getSuggestions } from "../lib/draft/suggestions";
 
 type TeamPick = {
     championKey: string | undefined;
@@ -44,7 +41,7 @@ export const DraftTablePlacement = {
     InPlace: "in-place",
 } as const;
 type DraftTablePlacement =
-    typeof DraftTablePlacement[keyof typeof DraftTablePlacement];
+    (typeof DraftTablePlacement)[keyof typeof DraftTablePlacement];
 
 export type DraftGapConfig = AnalyzeDraftConfig & {
     disableLeagueClientIntegration: boolean;
@@ -56,7 +53,7 @@ export type DraftGapConfig = AnalyzeDraftConfig & {
 
 const fetchDataset = async (name: "30-days" | "current-patch") => {
     const response = await fetch(
-        `https://bucket.draftgap.com/datasets/v2/${name}.json`
+        `https://bucket.draftgap.com/datasets/v3/${name}.json`
     );
     const json = await response.json();
     return json as Dataset;
@@ -64,7 +61,7 @@ const fetchDataset = async (name: "30-days" | "current-patch") => {
 
 const fetchBinDataset = async (name: "30-days" | "current-patch") => {
     const response = await fetch(
-        `https://bucket.draftgap.com/datasets/v2/${name}.json`
+        `https://bucket.draftgap.com/datasets/v3/${name}.json`
     );
     const arrayBuffer = await response.arrayBuffer();
 
@@ -76,12 +73,8 @@ export function createDraftContext() {
     const isDesktop = (window as any).__TAURI__ !== undefined;
     const isMobileLayout = createMediaQuery("(max-width: 1023px)");
 
-    const DRAFTGAP_DEBUG = ((window as any).DRAFTGAP_DEBUG = {} as any);
-
     const [dataset] = createResource(() => fetchDataset("current-patch"));
     const [dataset30Days] = createResource(() => fetchDataset("30-days"));
-    DRAFTGAP_DEBUG.dataset = dataset;
-    DRAFTGAP_DEBUG.dataset30Days = dataset30Days;
 
     const isLoaded = () =>
         dataset() !== undefined && dataset30Days() !== undefined;
@@ -100,8 +93,6 @@ export function createDraftContext() {
         { championKey: undefined, role: undefined },
         { championKey: undefined, role: undefined },
     ]);
-    DRAFTGAP_DEBUG.allyTeam = allyTeam;
-    DRAFTGAP_DEBUG.opponentTeam = opponentTeam;
 
     const [bans, setBans] = createStore<string[]>([]);
     // If empty, assume all champions are owned
@@ -126,7 +117,6 @@ export function createDraftContext() {
             defaultStatsSite: "lolalytics",
         }
     );
-    DRAFTGAP_DEBUG.config = config;
 
     function getTeamCompsForTeam(team: Team) {
         if (!isLoaded()) return [];
@@ -168,8 +158,6 @@ export function createDraftContext() {
             config()
         );
     });
-    DRAFTGAP_DEBUG.allyDraftResult = allyDraftResult;
-    DRAFTGAP_DEBUG.opponentDraftResult = opponentDraftResult;
 
     const allyDamageDistribution = createMemo(() => {
         if (!isLoaded()) return undefined;
@@ -419,6 +407,7 @@ export function createDraftContext() {
     return {
         isDesktop,
         dataset,
+        dataset30Days,
         allyTeam,
         opponentTeam,
         bans,
@@ -463,6 +452,22 @@ const DraftContext = createContext<ReturnType<typeof createDraftContext>>();
 
 export function DraftProvider(props: { children: JSXElement }) {
     const ctx = createDraftContext();
+    const DRAFTGAP_DEBUG = ((window as any).DRAFTGAP_DEBUG = ctx) as any;
+    DRAFTGAP_DEBUG.test = () => {
+        batch(() => {
+            DRAFTGAP_DEBUG.pickChampion("ally", 0, "57", 0);
+            DRAFTGAP_DEBUG.pickChampion("ally", 1, "234", 1);
+            DRAFTGAP_DEBUG.pickChampion("ally", 2, "30", 2);
+            DRAFTGAP_DEBUG.pickChampion("ally", 3, "429", 3);
+            DRAFTGAP_DEBUG.pickChampion("ally", 4, "412", 4);
+
+            DRAFTGAP_DEBUG.pickChampion("opponent", 0, "164", 0);
+            DRAFTGAP_DEBUG.pickChampion("opponent", 1, "64", 1);
+            DRAFTGAP_DEBUG.pickChampion("opponent", 2, "147", 2);
+            DRAFTGAP_DEBUG.pickChampion("opponent", 3, "145", 3);
+            DRAFTGAP_DEBUG.pickChampion("opponent", 4, "16", 4);
+        });
+    };
 
     return (
         <DraftContext.Provider value={ctx}>

@@ -27,14 +27,15 @@ export function TeamSidebar({ team }: IProps) {
             <DamageDistributionBar team={team} />
             <div class="flex-1 flex justify-center items-center bg-[#141414]">
                 <span
-                    class="text-[2.5rem] text-center"
+                    class="text-[2.5rem] text-center leading-tight"
                     // @ts-ignore
                     use:tooltip={{
                         content: <>{capitalize(team)} estimated winrate</>,
                         placement: "top",
                     }}
                 >
-                    {team.toUpperCase()} -{" "}
+                    {team.toUpperCase()}
+                    <br />
                     <CountUp
                         value={rating() ? ratingToWinrate(rating()!) : 0.5}
                         formatFn={(value) => (value * 100).toFixed(2)}

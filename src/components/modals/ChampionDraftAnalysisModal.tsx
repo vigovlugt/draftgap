@@ -4,10 +4,10 @@ import { displayNameByRole } from "../../lib/models/Role";
 import { Team } from "../../lib/models/Team";
 import Modal from "../common/Modal";
 import { ChampionIcon } from "../icons/ChampionIcon";
-import { MatchupResultTable } from "../resultscreen/MatchupResultTable";
-import { ChampionSummaryCards } from "../resultscreen/SummaryCards";
+import { MatchupResultTable } from "../views/analysis/MatchupResultTable";
+import { ChampionSummaryCards } from "../views/analysis/SummaryCards";
 import { tooltip } from "../../directives/tooltip";
-import { DuoResultTable } from "../resultscreen/DuoResultTable";
+import { DuoResultTable } from "../views/analysis/DuoResultTable";
 import { Button } from "../common/Button";
 import { LOLALYTICS_ROLES } from "../../lib/data/lolalytics/roles";
 tooltip;
@@ -15,8 +15,8 @@ tooltip;
 type Props = {
     team: Team;
     championKey: string;
-    setIsOpen: Setter<boolean>;
-    isOpen: Accessor<boolean>;
+    setIsOpen: (value: boolean) => void;
+    isOpen: boolean;
     openChampionDraftAnalysisModal: (team: Team, championKey: string) => void;
 };
 
@@ -50,7 +50,6 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
             title=""
             titleContainerClass="!h-0 !m-0"
             size="3xl"
-            className="max-w-[calc(100vw_-_1rem)]"
         >
             <div class="h-24 bg-[#101010] -m-6 mb-0"></div>
             <div class="flex gap-4 -mt-[62.5px] items-center">
@@ -86,7 +85,7 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
 
             <div id="matchup-champion-result" class="mt-8">
                 <h3
-                    class="text-3xl uppercase"
+                    class="text-3xl uppercase ml-4"
                     // @ts-ignore
                     use:tooltip={{
                         content: <>Winrates of all {name()} matchups</>,
@@ -96,7 +95,7 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                     Matchups
                 </h3>
                 <p
-                    class="text-neutral-500 uppercase mb-1"
+                    class="text-neutral-500 uppercase mb-1 ml-4"
                     // @ts-ignore
                     use:tooltip={{
                         content: (
@@ -141,7 +140,7 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
 
             <div id="duo-champion-result" class="mt-4">
                 <h3
-                    class="text-3xl uppercase mb-1"
+                    class="text-3xl uppercase mb-1 ml-4"
                     // @ts-ignore
                     use:tooltip={{
                         content: <>Winrates of all {name()} duos</>,

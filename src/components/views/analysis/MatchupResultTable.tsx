@@ -7,18 +7,18 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { createSignal, JSX } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
-import { Role } from "../../lib/models/Role";
-import { Team } from "../../lib/models/Team";
+import { useDraft } from "../../../context/DraftContext";
+import { Role } from "../../../lib/models/Role";
+import { Team } from "../../../lib/models/Team";
 import {
     AnalyzeChampionResult,
     AnalyzeMatchupResult,
-} from "../../lib/suggestions/suggestions";
-import ChampionCell from "../common/ChampionCell";
-import { RatingText } from "../common/RatingText";
-import { RoleCell } from "../common/RoleCell";
-import { Table } from "../common/Table";
-import { WinnerCell } from "../common/WinnerCell";
+} from "../../../lib/draft/analysis";
+import ChampionCell from "../../common/ChampionCell";
+import { RatingText } from "../../common/RatingText";
+import { RoleCell } from "../../common/RoleCell";
+import { Table } from "../../common/Table";
+import { WinnerCell } from "../../common/WinnerCell";
 
 interface Props {
     showAll: boolean;
@@ -78,15 +78,13 @@ export function MatchupResultTable(
             },
         },
         {
-            header: "Winner",
+            header: () => <div class="text-center w-full">Winner</div>,
+            id: "winner",
             accessorFn: (result) => result.rating > 0,
             cell: (info) => <WinnerCell winner={info.getValue<boolean>()} />,
             footer: () => (
                 <WinnerCell winner={allyRating() > opponentRating()} />
             ),
-            meta: {
-                headerClass: "text-center",
-            },
         },
         {
             id: "opponent-role",

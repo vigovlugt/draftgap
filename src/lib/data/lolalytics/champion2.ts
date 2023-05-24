@@ -1,7 +1,5 @@
-import { fetch } from "undici";
-import { LolalyticsRole } from ".";
 import { retry } from "../../../utils/fetch";
-import { Role } from "../../models/Role";
+import { LolalyticsRole } from "./roles";
 
 export interface LolalyticsChampion2Response {
     skills: Skills;
@@ -54,15 +52,30 @@ interface Skills {
 export async function getLolalyticsChampion2(
     patch: string,
     championKey: string,
-    lane: LolalyticsRole | "default" = "default"
+    role: LolalyticsRole | "default" = "default",
+    matchup?: string,
+    matchupRole?: LolalyticsRole
 ) {
     // convert patch from 12.21.1 to 12.21
     patch = patch.split(".").slice(0, 2).join(".");
 
+    const queryParams = new URLSearchParams();
+    queryParams.append("ep", "champion2");
+    queryParams.append("p", "d");
+    queryParams.append("v", "1");
+    queryParams.append("tier", "platinum_plus");
+    queryParams.append("queue", "420");
+    queryParams.append("region", "all");
+    queryParams.append("patch", patch);
+    queryParams.append("cid", championKey);
+    queryParams.append("lane", role);
+    if (matchup && matchupRole) {
+        queryParams.append("matchup", matchup);
+        queryParams.append("vslane", matchupRole);
+    }
+
     const res = await retry(() =>
-        fetch(
-            `https://axe.lolalytics.com/mega/?ep=champion2&p=d&v=1&patch=${patch}&cid=${championKey}&lane=${lane}&tier=platinum_plus&queue=420&region=all`
-        )
+        fetch(`https://axe.lolalytics.com/mega/?${queryParams.toString()}`)
     );
 
     const json = (await res.json()) as LolalyticsChampion2Response;

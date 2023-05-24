@@ -1,9 +1,12 @@
+import { Show } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
+import { overflowEllipsis } from "../../utils/strings";
 import { ChampionIcon } from "../icons/ChampionIcon";
 
 interface Props {
     championKey: string;
     nameMaxLength?: number;
+    hideName?: boolean;
 }
 
 export default function ChampionCell(props: Props) {
@@ -12,18 +15,15 @@ export default function ChampionCell(props: Props) {
     const name = () => dataset()!.championData[props.championKey].name;
 
     return (
-        <div class="relative">
-            <span class="ml-11 uppercase">
-                {name().slice(0, props.nameMaxLength)}
-                {props.nameMaxLength &&
-                    name().length > props.nameMaxLength &&
-                    "..."}
-            </span>
-            <ChampionIcon
-                championKey={props.championKey}
-                class="!absolute inset-0"
-                size={36}
-            />
+        <div class="flex gap-2">
+            <ChampionIcon championKey={props.championKey} size={36} />
+            <Show when={!props.hideName}>
+                <span class="uppercase">
+                    {props.nameMaxLength
+                        ? overflowEllipsis(name(), props.nameMaxLength)
+                        : name()}
+                </span>
+            </Show>
         </div>
     );
 }

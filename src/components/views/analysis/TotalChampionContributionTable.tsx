@@ -8,18 +8,18 @@ import {
 } from "@tanstack/solid-table";
 import { Component, createSignal, splitProps } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
-import { useDraft } from "../../context/DraftContext";
-import { Role } from "../../lib/models/Role";
-import { Team } from "../../lib/models/Team";
+import { useDraft } from "../../../context/DraftContext";
+import { Role } from "../../../lib/models/Role";
+import { Team } from "../../../lib/models/Team";
 import {
     AnalyzeChampionResult,
     AnalyzeDuoResult,
     AnalyzeMatchupResult,
-} from "../../lib/suggestions/suggestions";
-import ChampionCell from "../common/ChampionCell";
-import { RatingText } from "../common/RatingText";
-import { RoleCell } from "../common/RoleCell";
-import { Table } from "../common/Table";
+} from "../../../lib/draft/analysis";
+import ChampionCell from "../../common/ChampionCell";
+import { RatingText } from "../../common/RatingText";
+import { RoleCell } from "../../common/RoleCell";
+import { Table } from "../../common/Table";
 
 type Props = {
     team: Team;

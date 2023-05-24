@@ -1,9 +1,9 @@
-import { ChampionDamageProfile } from "../models/ChampionDamageProfile";
-import { ChampionData } from "../models/ChampionData";
-import { ChampionMatchupData } from "../models/ChampionMatchupData";
-import { ChampionRoleData } from "../models/ChampionRoleData";
-import { ChampionSynergyData } from "../models/ChampionSynergyData";
-import { Dataset } from "../models/Dataset";
+import { ChampionDamageProfile } from "../models/dataset/ChampionDamageProfile";
+import { ChampionData } from "../models/dataset/ChampionData";
+import { ChampionMatchupData } from "../models/dataset/ChampionMatchupData";
+import { ChampionRoleData } from "../models/dataset/ChampionRoleData";
+import { ChampionSynergyData } from "../models/dataset/ChampionSynergyData";
+import { Dataset } from "../models/dataset/Dataset";
 import { Role } from "../models/Role";
 
 export function combineDatasets(
@@ -24,6 +24,8 @@ export function combineDatasets(
     }
 
     return {
+        date: datasets[0].date,
+        rankData: datasets[0].rankData,
         version,
         championData,
     };
