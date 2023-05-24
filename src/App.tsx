@@ -91,7 +91,14 @@ const App: Component = () => {
                                         label: "Draft Analysis",
                                         value: "analysis",
                                     },
-                                    { label: "Builds", value: "builds" },
+                                    ...(import.meta.env.DEV
+                                        ? ([
+                                              {
+                                                  label: "Builds",
+                                                  value: "builds",
+                                              },
+                                          ] as const)
+                                        : []),
                                 ]}
                                 selected={currentTab()}
                                 onChange={onChangeTab}
