@@ -39,49 +39,20 @@ export async function main() {
         repo: REPOSITORY_NAME,
     });
 
-    const tagName = latestRelease.data.tag_name;
-    const version = tagName.replace("v", "");
-
-    const windowsSignatureUrl = latestRelease.data.assets.find(
-        (asset) => asset.name === `DraftGap_${version}_x64_en-US.msi.zip.sig`
-    )!.browser_download_url;
-    const windowsSignatureResponse = await fetch(windowsSignatureUrl);
-    const windowsSignature = await windowsSignatureResponse.text();
-
-    const macSignatureUrl = latestRelease.data.assets.find(
-        (asset) => asset.name === `DraftGap.app.tar.gz.sig`
-    )!.browser_download_url;
-    const macSignatureResponse = await fetch(macSignatureUrl);
-    const macSignature = await macSignatureResponse.text();
-
-    const linuxSignatureUrl = latestRelease.data.assets.find(
-        (asset) =>
-            asset.name === `draft-gap_${version}_amd64.AppImage.tar.gz.sig`
-    )!.browser_download_url;
-    const linuxSignatureResponse = await fetch(linuxSignatureUrl);
-    const linuxSignature = await linuxSignatureResponse.text();
-
-    const tauriUpdaterJson = {
-        version: "v" + version,
-        platforms: {
-            "windows-x86_64": {
-                signature: windowsSignature,
-                url: `https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/download/v${version}/DraftGap_${version}_x64_en-US.msi.zip`,
-            },
-            "darwin-x86_64": {
-                signature: macSignature,
-                url: `https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/download/v${version}/DraftGap.app.tar.gz.sig`,
-            },
-            "linux-x86_64": {
-                signature: linuxSignature,
-                url: `https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/download/v${version}/draft-gap_${version}_amd64.AppImage.tar.gz`,
-            },
+    const latestJson = await octokit.repos.getReleaseAsset({
+        owner: REPOSITORY_OWNER,
+        repo: REPOSITORY_NAME,
+        asset_id: latestRelease.data.assets.find(
+            (a) => a.name === "latest.json"
+        )!.id,
+        headers: {
+            Accept: "application/octet-stream",
         },
-    };
+    });
 
-    const json = JSON.stringify(tauriUpdaterJson, null, 4);
-    console.log("Updating tauri update json");
-    console.log(json);
+    const latestJsonString = new TextDecoder().decode(
+        latestJson.data as unknown as ArrayBuffer
+    );
 
     const gistOctokit = new Octokit({
         auth: GIST_TOKEN,
@@ -90,7 +61,7 @@ export async function main() {
         gist_id: GIST_ID,
         files: {
             "draftgap-tauri-update.json": {
-                content: json,
+                content: latestJsonString,
             },
         },
     });
