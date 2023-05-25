@@ -66,6 +66,8 @@ export type AnalyzeChampionResult = {
     role: Role;
     championKey: string;
     rating: number;
+    wins: number;
+    games: number;
 };
 
 export type AnalyzeChampionsResult = {
@@ -82,55 +84,80 @@ export function analyzeChampions(
     const championResults: AnalyzeChampionResult[] = [];
     let totalRating = 0;
 
-    const rankWinrate = dataset.rankData.wins / dataset.rankData.games;
-    const rankRating = winrateToRating(rankWinrate);
-
-    const synergyMatchupRankWinrate =
-        synergyMatchupDataset.rankData.wins /
-        synergyMatchupDataset.rankData.games;
-    const synergyMatchupRankRating = winrateToRating(synergyMatchupRankWinrate);
-
     for (const [role, championKey] of team) {
-        const championData = dataset.championData[championKey];
-        const roleData = championData.statsByRole[role];
-
-        const synergyMatchupChampionData =
-            synergyMatchupDataset.championData[championKey];
-        const synergyMatchupRoleData =
-            synergyMatchupChampionData.statsByRole[role];
-
-        const roleWinrate = roleData.wins / roleData.games;
-        // Real role winrate is the role winrate adjusted for the rank winrate bias
-        const realRoleWinrate = ratingToWinrate(
-            winrateToRating(roleWinrate) - rankRating
-        );
-        const synergyMatchupRoleWinrate =
-            synergyMatchupRoleData.wins / synergyMatchupRoleData.games;
-        const realSynergyMatchupRoleWinrate = ratingToWinrate(
-            winrateToRating(synergyMatchupRoleWinrate) -
-                synergyMatchupRankRating
+        const championResult = analyzeChampion(
+            dataset,
+            synergyMatchupDataset,
+            role,
+            championKey,
+            priorGames
         );
 
-        const stats = addStats(
-            {
-                wins: roleData.games * realRoleWinrate,
-                games: roleData.games,
-            },
-            // Scale prior stats by winrate of expected rating, as we expect the champion to have a similar winrate to the expected rating
-            // We estimate the expected rating to be the rank winrate
-            {
-                wins: priorGames * realSynergyMatchupRoleWinrate,
-                games: priorGames,
-            }
-        );
-        const rating = winrateToRating(stats.wins / stats.games);
-        championResults.push({ role, championKey, rating });
-        totalRating += rating;
+        championResults.push(championResult);
+        totalRating += championResult.rating;
     }
 
     return {
         championResults,
         totalRating,
+    };
+}
+
+export function analyzeChampion(
+    dataset: Dataset,
+    fullDataset: Dataset,
+    role: Role,
+    championKey: string,
+    priorGames: number
+) {
+    // Get stats for this patch
+    const rankWinrate = dataset.rankData.wins / dataset.rankData.games;
+    const rankRating = winrateToRating(rankWinrate);
+
+    const championData = dataset.championData[championKey];
+    const roleData = championData.statsByRole[role];
+
+    const winrate = roleData.wins / roleData.games;
+    // Is the role winrate adjusted for the rank winrate bias
+    const winrateWithoutBias = ratingToWinrate(
+        winrateToRating(winrate) - rankRating
+    );
+
+    // Get stats for the full dataset (30days)
+    const fullRankWinrate =
+        fullDataset.rankData.wins / fullDataset.rankData.games;
+    const fullRankRating = winrateToRating(fullRankWinrate);
+
+    const fullChampionData = fullDataset.championData[championKey];
+    const fullChampionRoleData = fullChampionData.statsByRole[role];
+
+    const fullRoleWinrate =
+        fullChampionRoleData.wins / fullChampionRoleData.games;
+    const fullRoleWinrateWithoutBias = ratingToWinrate(
+        winrateToRating(fullRoleWinrate) - fullRankRating
+    );
+
+    const stats = addStats(
+        {
+            wins: roleData.games * winrateWithoutBias,
+            games: roleData.games,
+        },
+        // Scale prior stats by winrate of expected rating, as we expect the champion to have a similar winrate to the expected rating
+        // We estimate the expected rating to be the rank winrate
+        {
+            wins: priorGames * fullRoleWinrateWithoutBias,
+            games: priorGames,
+        }
+    );
+
+    const rating = winrateToRating(stats.wins / stats.games);
+
+    return {
+        role,
+        championKey,
+        rating,
+        wins: roleData.wins,
+        games: roleData.games,
     };
 }
 
@@ -140,6 +167,8 @@ export type AnalyzeDuoResult = {
     roleB: Role;
     championKeyB: string;
     rating: number;
+    wins: number;
+    games: number;
 };
 
 export type AnalyzeDuosResult = {
@@ -218,6 +247,8 @@ export function analyzeDuos(
                 roleB: role2,
                 championKeyB: championKey2,
                 rating,
+                wins: combinedStats.wins,
+                games: combinedStats.games,
             });
             totalRating += rating;
         }
@@ -235,6 +266,8 @@ export type AnalyzeMatchupResult = {
     roleB: Role;
     championKeyB: string;
     rating: number;
+    wins: number;
+    games: number;
 };
 
 export type AnalyzeMatchupsResult = {
@@ -289,11 +322,15 @@ export function analyzeMatchups(
 
             const enemyLosses =
                 enemyMatchupStats.games - enemyMatchupStats.wins;
+
+            // Summing the wins and losses of the two matchups cancels the rank winrate bias of both matchups
+            const wins = matchupStats.wins + enemyLosses / 2;
+            const games = matchupStats.games + enemyMatchupStats.games / 2;
+
             const stats = addStats(
                 {
-                    // Summing the wins and losses of the two matchups cancels the rank winrate bias of both matchups
-                    wins: (matchupStats.wins + enemyLosses) / 2,
-                    games: (matchupStats.games + enemyMatchupStats.games) / 2,
+                    wins,
+                    games,
                 },
                 {
                     wins: priorGames * ratingToWinrate(expectedRating),
@@ -312,6 +349,8 @@ export function analyzeMatchups(
                 roleB: enemyRole,
                 championKeyB: enemyChampionKey,
                 rating,
+                wins,
+                games,
             });
             totalRating += rating;
         }
