@@ -20,6 +20,7 @@ interface Props {
     team: Team;
     data?: () => AnalyzeDuoResult[];
     onClickChampion?: (championKey: string) => void;
+    onClickWinrate?: (result: AnalyzeDuoResult) => void;
     halfDuoRating?: boolean;
 }
 
@@ -116,6 +117,13 @@ export function DuoResultTable(
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<AnalyzeDuoResult, unknown>
+                ) => {
+                    e.stopPropagation();
+                    props.onClickWinrate?.(info.row.original);
+                },
             },
         },
     ];

@@ -1,4 +1,4 @@
-import { Accessor, Component, Setter, Show } from "solid-js";
+import { Accessor, Component, Setter, Show, createSignal } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { displayNameByRole } from "../../lib/models/Role";
 import { Team } from "../../lib/models/Team";
@@ -10,6 +10,7 @@ import { tooltip } from "../../directives/tooltip";
 import { DuoResultTable } from "../views/analysis/DuoResultTable";
 import { Button } from "../common/Button";
 import { LOLALYTICS_ROLES } from "../../lib/data/lolalytics/roles";
+import { ConfidenceAnalysisModal } from "./ConfidenceAnalysisModal";
 tooltip;
 
 type Props = {
@@ -28,6 +29,14 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
         allyTeamComps,
         opponentTeamComps,
     } = useDraft();
+
+    const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
+        createSignal(false);
+    const [chosenResult, setChosenResult] = createSignal<{
+        games: number;
+        wins: number;
+        rating: number;
+    }>();
 
     const draftResult = () =>
         props.team === "ally" ? allyDraftResult() : opponentDraftResult();
@@ -183,8 +192,20 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                             championKey
                         );
                     }}
+                    onClickWinrate={(result) => {
+                        setConfidenceAnalysisModalIsOpen(true);
+                        setChosenResult(result);
+                    }}
                 />
             </div>
+
+            <Show when={chosenResult() !== undefined}>
+                <ConfidenceAnalysisModal
+                    isOpen={confidenceAnalysisModalIsOpen()}
+                    setIsOpen={setConfidenceAnalysisModalIsOpen}
+                    data={chosenResult()!}
+                />
+            </Show>
         </Modal>
     );
 };

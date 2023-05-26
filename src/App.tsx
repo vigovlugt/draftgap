@@ -78,7 +78,12 @@ const App: Component = () => {
                 }}
             >
                 <Switch>
-                    <Match when={!dataset()}>
+                    <Match when={dataset.state === "errored"}>
+                        <div class="flex justify-center items-center h-full text-2xl text-red-500">
+                            Error
+                        </div>
+                    </Match>
+                    <Match when={dataset() === undefined}>
                         <div class="flex justify-center items-center h-full text-2xl">
                             Loading...
                         </div>
@@ -116,7 +121,7 @@ const App: Component = () => {
                             </Switch>
                         </div>
                     </Match>
-                    <Match when={true}>
+                    <Match when={dataset()}>
                         <div class="p-4 xl:px-8">
                             <div class="mb-4 flex gap-4">
                                 <Search />

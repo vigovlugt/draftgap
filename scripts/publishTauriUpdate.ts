@@ -1,6 +1,5 @@
 import { Octokit } from "@octokit/rest";
 import { config } from "dotenv";
-import { fetch } from "undici";
 
 export async function main() {
     config();

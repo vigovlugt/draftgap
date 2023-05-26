@@ -1,5 +1,3 @@
-import { fetch } from "undici";
-
 export async function getVersions() {
     const res = await fetch(
         "https://ddragon.leagueoflegends.com/api/versions.json"

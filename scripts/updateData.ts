@@ -14,6 +14,7 @@ import { storeDataset } from "../src/lib/data/storage/storage";
 import {
     Dataset,
     deleteDatasetMatchupSynergyData,
+    removeRankBias,
 } from "../src/lib/models/dataset/Dataset";
 import { RuneData, RunePathData } from "../src/lib/models/dataset/RuneData";
 import { ItemData } from "../src/lib/models/dataset/ItemData";
@@ -169,7 +170,6 @@ async function getDataset(
         version: version,
         date: new Date().toISOString(),
         championData: {},
-        rankData: { wins: 0, games: 0 },
         ...riotRunesToRuneData(runes),
         itemData: riotItemsToItemData(items),
     };
@@ -205,24 +205,7 @@ async function getDataset(
         }
     }
 
-    dataset.rankData.wins = Object.values(dataset.championData).reduce(
-        (sum, champion) =>
-            sum +
-            Object.values(champion.statsByRole).reduce(
-                (sum, stats) => sum + stats.wins,
-                0
-            ),
-        0
-    );
-    dataset.rankData.games = Object.values(dataset.championData).reduce(
-        (sum, champion) =>
-            sum +
-            Object.values(champion.statsByRole).reduce(
-                (sum, stats) => sum + stats.games,
-                0
-            ),
-        0
-    );
+    removeRankBias(dataset);
 
     return dataset;
 }

@@ -45,9 +45,8 @@ export default function Modal(props: Props) {
                         leave="ease-in duration-200"
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
-                    >
-                        <div class="fixed inset-0 bg-black bg-opacity-40" />
-                    </TransitionChild>
+                        class="fixed inset-0 bg-black bg-opacity-40"
+                    ></TransitionChild>
 
                     <div
                         class="fixed inset-0 overflow-y-auto"
@@ -59,6 +58,7 @@ export default function Modal(props: Props) {
                             class="flex min-h-full items-center justify-center p-4 text-center"
                             onClick={(e) => {
                                 if (e.target !== e.currentTarget) return;
+                                e.stopPropagation();
 
                                 props.setIsOpen(false);
                             }}
@@ -72,7 +72,7 @@ export default function Modal(props: Props) {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <DialogPanel
-                                    class={`w-screen transform overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all ring-1 ring-white ring-opacity-10 ${maxWClass} ${props.className}`}
+                                    class={`w-screen overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all ring-1 ring-white ring-opacity-10 ${maxWClass} ${props.className}`}
                                 >
                                     <div
                                         class={`flex justify-between mb-4 ${props.titleContainerClass}`}

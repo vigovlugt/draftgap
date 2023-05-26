@@ -10,7 +10,11 @@ import {
 import { createStore } from "solid-js/store";
 import { createMediaQuery } from "../hooks/createMediaQuery";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
-import { Dataset, getDeserializedDataset } from "../lib/models/dataset/Dataset";
+import {
+    Dataset,
+    DATASET_VERSION,
+    getDeserializedDataset,
+} from "../lib/models/dataset/Dataset";
 import { PickData } from "../lib/models/dataset/PickData";
 import { displayNameByRole, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
@@ -53,7 +57,7 @@ export type DraftGapConfig = AnalyzeDraftConfig & {
 
 const fetchDataset = async (name: "30-days" | "current-patch") => {
     const response = await fetch(
-        `https://bucket.draftgap.com/datasets/v3/${name}.json`
+        `https://bucket.draftgap.com/datasets/v${DATASET_VERSION}/${name}.json`
     );
     const json = await response.json();
     return json as Dataset;
@@ -61,7 +65,7 @@ const fetchDataset = async (name: "30-days" | "current-patch") => {
 
 const fetchBinDataset = async (name: "30-days" | "current-patch") => {
     const response = await fetch(
-        `https://bucket.draftgap.com/datasets/v3/${name}.json`
+        `https://bucket.draftgap.com/datasets/v${DATASET_VERSION}/${name}.json`
     );
     const arrayBuffer = await response.arrayBuffer();
 

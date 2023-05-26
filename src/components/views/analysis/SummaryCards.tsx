@@ -18,12 +18,13 @@ export const SummaryCard = (
     props: {
         team?: Team;
         title: string;
-        rating: number;
         icon: {
             path: JSX.Element;
             outline: boolean;
             mini: boolean;
         };
+        rating?: number;
+        number?: number;
         href?: string;
         tooltip: JSX.Element;
     } & JSX.HTMLAttributes<HTMLDivElement>
@@ -55,7 +56,11 @@ export const SummaryCard = (
                 </div>
                 <div class="flex items-baseline justify-between md:block lg:flex -mt-1">
                     <div class="flex items-baseline text-3xl">
-                        <RatingText rating={props.rating} />
+                        {props.rating ? (
+                            <RatingText rating={props.rating} />
+                        ) : (
+                            props.number
+                        )}
                     </div>
                 </div>
             </div>
