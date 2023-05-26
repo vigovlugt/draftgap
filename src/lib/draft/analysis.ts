@@ -216,7 +216,12 @@ export function analyzeDuos(
                 roleB: role2,
                 championKeyB: championKey2,
                 rating,
-                wins: combinedStats.wins,
+                wins:
+                    ratingToWinrate(
+                        winrateToRating(
+                            combinedStats.wins / combinedStats.games
+                        ) - expectedRating
+                    ) * combinedStats.games,
                 games: combinedStats.games,
             });
             totalRating += rating;
@@ -311,8 +316,10 @@ export function analyzeMatchups(
                 roleB: enemyRole,
                 championKeyB: enemyChampionKey,
                 rating,
-                // TODO, expected winrate is not subtracted from raw wins
-                wins,
+                wins:
+                    ratingToWinrate(
+                        winrateToRating(wins / games) - expectedRating
+                    ) * games,
                 games,
             });
             totalRating += rating;

@@ -14,12 +14,12 @@ type Props = {
     };
 };
 
-export const ConfidenceAnalysisModal: Component<Props> = (props) => {
+export const WinrateDecompositionModal: Component<Props> = (props) => {
     return (
         <Modal
             isOpen={props.isOpen}
             setIsOpen={props.setIsOpen}
-            title="Confidence analysis"
+            title="Winrate Decomposition"
             size="3xl"
         >
             <div
@@ -45,8 +45,8 @@ export const ConfidenceAnalysisModal: Component<Props> = (props) => {
                     rating={winrateToRating(props.data.wins / props.data.games)}
                     tooltip={
                         <>
-                            Raw winrate from the sample of games from the
-                            dataset.
+                            Raw normalized winrate from the sample of games from
+                            the dataset.
                         </>
                     }
                 />

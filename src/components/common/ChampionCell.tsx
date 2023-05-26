@@ -18,7 +18,7 @@ export default function ChampionCell(props: Props) {
         <div class="flex gap-2">
             <ChampionIcon championKey={props.championKey} size={36} />
             <Show when={!props.hideName}>
-                <span class="uppercase">
+                <span class="uppercase truncate">
                     {props.nameMaxLength
                         ? overflowEllipsis(name(), props.nameMaxLength)
                         : name()}

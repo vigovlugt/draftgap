@@ -6,7 +6,7 @@ import {
     getSortedRowModel,
     SortingState,
 } from "@tanstack/solid-table";
-import { createSignal, JSX } from "solid-js";
+import { createSignal, JSX, Show } from "solid-js";
 import { useDraft } from "../../../context/DraftContext";
 import { Role } from "../../../lib/models/Role";
 import { Team } from "../../../lib/models/Team";
@@ -19,6 +19,7 @@ import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
 import { WinnerCell } from "../../common/WinnerCell";
+import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
 
 interface Props {
     showAll: boolean;
@@ -30,6 +31,14 @@ export function MatchupResultTable(
     props: Props & JSX.HTMLAttributes<HTMLDivElement>
 ) {
     const { allyDraftResult, dataset } = useDraft();
+
+    const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
+        createSignal(false);
+    const [chosenResult, setChosenResult] = createSignal<{
+        games: number;
+        wins: number;
+        rating: number;
+    }>();
 
     const columns: ColumnDef<AnalyzeMatchupResult>[] = [
         {
@@ -75,6 +84,14 @@ export function MatchupResultTable(
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<AnalyzeMatchupResult, unknown>
+                ) => {
+                    e.stopPropagation();
+                    setChosenResult(info.row.original);
+                    setConfidenceAnalysisModalIsOpen(true);
+                },
             },
         },
         {
@@ -128,6 +145,20 @@ export function MatchupResultTable(
             accessorFn: (result) => -result.rating,
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
             footer: (info) => <RatingText rating={opponentRating()} />,
+            meta: {
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<AnalyzeMatchupResult, unknown>
+                ) => {
+                    e.stopPropagation();
+                    setChosenResult({
+                        ...info.row.original,
+                        rating: -info.row.original.rating,
+                        wins: info.row.original.games - info.row.original.wins,
+                    });
+                    setConfidenceAnalysisModalIsOpen(true);
+                },
+            },
         },
     ];
 
@@ -167,5 +198,17 @@ export function MatchupResultTable(
         getSortedRowModel: getSortedRowModel(),
     });
 
-    return <Table table={table} {...props} />;
+    return (
+        <>
+            <Table table={table} {...props} />
+
+            <Show when={chosenResult() !== undefined}>
+                <WinrateDecompositionModal
+                    isOpen={confidenceAnalysisModalIsOpen()}
+                    setIsOpen={setConfidenceAnalysisModalIsOpen}
+                    data={chosenResult()!}
+                />
+            </Show>
+        </>
+    );
 }

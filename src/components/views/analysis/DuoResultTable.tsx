@@ -6,7 +6,7 @@ import {
     getSortedRowModel,
     SortingState,
 } from "@tanstack/solid-table";
-import { createSignal, JSX } from "solid-js";
+import { createSignal, JSX, Show } from "solid-js";
 import { useDraft } from "../../../context/DraftContext";
 import { Role } from "../../../lib/models/Role";
 import { Team } from "../../../lib/models/Team";
@@ -15,12 +15,12 @@ import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
+import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
 
 interface Props {
     team: Team;
     data?: () => AnalyzeDuoResult[];
     onClickChampion?: (championKey: string) => void;
-    onClickWinrate?: (result: AnalyzeDuoResult) => void;
     halfDuoRating?: boolean;
 }
 
@@ -28,6 +28,14 @@ export function DuoResultTable(
     props: Props & JSX.HTMLAttributes<HTMLDivElement>
 ) {
     const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
+
+    const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
+        createSignal(false);
+    const [chosenResult, setChosenResult] = createSignal<{
+        games: number;
+        wins: number;
+        rating: number;
+    }>();
 
     const draftResult =
         props.team === "ally" ? allyDraftResult : opponentDraftResult;
@@ -122,7 +130,8 @@ export function DuoResultTable(
                     info: CellContext<AnalyzeDuoResult, unknown>
                 ) => {
                     e.stopPropagation();
-                    props.onClickWinrate?.(info.row.original);
+                    setChosenResult(info.row.original);
+                    setConfidenceAnalysisModalIsOpen(true);
                 },
             },
         },
@@ -159,5 +168,16 @@ export function DuoResultTable(
         getSortedRowModel: getSortedRowModel(),
     });
 
-    return <Table table={table} {...props} />;
+    return (
+        <>
+            <Table table={table} {...props} />;
+            <Show when={chosenResult() !== undefined}>
+                <WinrateDecompositionModal
+                    isOpen={confidenceAnalysisModalIsOpen()}
+                    setIsOpen={setConfidenceAnalysisModalIsOpen}
+                    data={chosenResult()!}
+                />
+            </Show>
+        </>
+    );
 }
