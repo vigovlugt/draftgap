@@ -54,52 +54,18 @@ const Svg = () => {
     );
 };
 
-const fetchRelease = async () => {
-    const response = await fetch(
-        "https://gist.githubusercontent.com/vigovlugt/5d549f4fdd602eb22542ef55e7c881ec/raw"
-    );
-    const json = await response.json();
-    return json as {
-        version: string;
-        notes: string;
-        pub_date: string;
-        platforms: Record<
-            string,
-            {
-                url: string;
-                signature: string;
-            }
-        >;
-    };
-};
+const MAC_DOWNLOAD_URL =
+    "https://bucket.draftgap.com/releases/DraftGap_latest_x64.dmg";
+const WINDOWS_DOWNLOAD_URL =
+    "https://bucket.draftgap.com/releases/DraftGap_latest_x64_en-US.msi";
 
 export const DownloadAppModal: Component<Props> = (props) => {
-    const query = createQuery({
-        queryKey: () => ["latestRelease"],
-        queryFn: () => fetchRelease(),
-        get enabled() {
-            return props.isOpen;
-        },
-        refetchInterval: false,
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-        refetchIntervalInBackground: false,
-    });
-
-    const latestRelease = () => query.data;
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const nav = navigator as any;
     const isMac =
         (nav?.userAgentData?.platform || navigator?.platform || "unknown")
             .toUpperCase()
             .indexOf("MAC") >= 0;
-
-    const windowsDownloadUrl = () =>
-        latestRelease()?.platforms["windows-x86_64"].url;
-    const macDownloadUrl = () =>
-        latestRelease()?.platforms["darwin-x86_64"].url;
 
     return (
         <Modal
@@ -128,7 +94,7 @@ export const DownloadAppModal: Component<Props> = (props) => {
                         <a
                             href={
                                 "https://www.virustotal.com/gui/search/" +
-                                encodeURI(encodeURIComponent(macDownloadUrl()!))
+                                encodeURI(encodeURIComponent(MAC_DOWNLOAD_URL!))
                             }
                             class="text-blue-500"
                             target="_blank"
@@ -146,7 +112,7 @@ export const DownloadAppModal: Component<Props> = (props) => {
                     <a
                         href={
                             "https://www.virustotal.com/gui/search/" +
-                            encodeURI(encodeURIComponent(windowsDownloadUrl()!))
+                            encodeURI(encodeURIComponent(WINDOWS_DOWNLOAD_URL!))
                         }
                         class="text-blue-500"
                         target="_blank"
@@ -164,7 +130,7 @@ export const DownloadAppModal: Component<Props> = (props) => {
             >
                 <Button
                     as="a"
-                    href={windowsDownloadUrl()}
+                    href={WINDOWS_DOWNLOAD_URL}
                     class="w-full text-lg flex justify-center"
                     classList={{
                         "border-neutral-700 text-neutral-300": isMac,
@@ -176,7 +142,7 @@ export const DownloadAppModal: Component<Props> = (props) => {
                 </Button>
                 <Button
                     as="a"
-                    href={macDownloadUrl()}
+                    href={MAC_DOWNLOAD_URL}
                     class="w-full text-lg flex justify-center"
                     classList={{
                         "border-neutral-700 text-neutral-300": !isMac,
