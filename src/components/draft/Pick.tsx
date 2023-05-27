@@ -156,7 +156,6 @@ export function Pick({ team, index }: IProps) {
                                                         : "Click to lock the champion in this position, the current estimated position is highlighted"}
                                                 </>
                                             ),
-                                            placement: "top",
                                         }}
                                     >
                                         <div class="text-md">
@@ -186,7 +185,6 @@ export function Pick({ team, index }: IProps) {
                                                             position
                                                         </>
                                                     ),
-                                                    placement: "top",
                                                 }}
                                             >
                                                 {formatPercentage(

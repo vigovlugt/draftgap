@@ -42,7 +42,6 @@ export const SummaryCard = (
             // @ts-ignore
             use:tooltip={{
                 content: props.tooltip,
-                placement: "top",
             }}
         >
             <div

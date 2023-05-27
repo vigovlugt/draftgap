@@ -76,7 +76,12 @@ export function IndividualChampionsResultTable({
         {
             header: "Winrate",
             accessorFn: (result) => result.rating,
-            cell: (info) => <RatingText rating={info.getValue<number>()} />,
+            cell: (info) => (
+                <RatingText
+                    rating={info.getValue<number>()}
+                    games={info.row.original.games}
+                />
+            ),
             footer: (info) => <RatingText rating={allyRating() ?? 0} />,
             meta: {
                 headerClass: "w-1",

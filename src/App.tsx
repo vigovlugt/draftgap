@@ -30,11 +30,17 @@ import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
 import { ViewTabs } from "./components/common/ViewTabs";
 import { BuildsView } from "./components/views/builds/BuildsView";
-import { useBuild } from "./context/BuildContext";
 
 const App: Component = () => {
-    const { config, dataset, tab, setTab, draftFinished } = useDraft();
-    const { setBuildPick } = useBuild();
+    const {
+        config,
+        dataset,
+        tab,
+        setTab,
+        isLoaded,
+        currentTab,
+        setCurrentTab,
+    } = useDraft();
     const { startLolClientIntegration, stopLolClientIntegration } =
         useLolClient();
 
@@ -53,14 +59,6 @@ const App: Component = () => {
     const [showSettings, setShowSettings] = createSignal(false);
     const [showFAQ, setShowFAQ] = createSignal(false);
     const [showDownloadModal, setShowDownloadModal] = createSignal(false);
-    const [currentTab, setCurrentTab] = createSignal<"analysis" | "builds">(
-        "analysis"
-    );
-    const onChangeTab = (tab: "analysis" | "builds") => {
-        setCurrentTab(tab);
-        setBuildPick(undefined);
-        // TODO: IF LOLCLIENT INTEGRATION ENABLED, SET CURRENT BUILD TO OWN CHAMPION
-    };
 
     const timeAgo = () =>
         dataset()
@@ -68,6 +66,10 @@ const App: Component = () => {
                   addSuffix: true,
               })
             : "";
+
+    const onChangeTab = (tab: "analysis" | "builds" | "draft") => {
+        setCurrentTab(tab);
+    };
 
     const MainView = () => {
         return (
@@ -88,10 +90,14 @@ const App: Component = () => {
                             Loading...
                         </div>
                     </Match>
-                    <Match when={draftFinished()}>
+                    <Match when={isLoaded()}>
                         <div class="flex flex-col overflow-hidden min-h-full flex-1">
                             <ViewTabs
                                 tabs={[
+                                    {
+                                        label: "Draft",
+                                        value: "draft",
+                                    },
                                     {
                                         label: "Draft Analysis",
                                         value: "analysis",
@@ -110,6 +116,23 @@ const App: Component = () => {
                                 className="xl:px-8"
                             ></ViewTabs>
                             <Switch>
+                                <Match when={currentTab() == "draft"}>
+                                    <div class="p-4 xl:px-8">
+                                        <div class="mb-4 flex gap-4">
+                                            <Search />
+                                            <TeamSelector />
+                                            <RoleFilter className="hidden lg:inline-flex" />
+                                            <div class="hidden lg:inline-flex">
+                                                <FilterMenu />
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-end mb-4 gap-4 lg:hidden">
+                                            <RoleFilter className="w-full" />
+                                            <FilterMenu />
+                                        </div>
+                                        <DraftTable />
+                                    </div>
+                                </Match>
                                 <Match when={currentTab() === "analysis"}>
                                     <div class="py-5 px-4 xl:px-8 h-full overflow-y-auto">
                                         <AnalysisView />
@@ -119,23 +142,6 @@ const App: Component = () => {
                                     <BuildsView />
                                 </Match>
                             </Switch>
-                        </div>
-                    </Match>
-                    <Match when={dataset()}>
-                        <div class="p-4 xl:px-8">
-                            <div class="mb-4 flex gap-4">
-                                <Search />
-                                <TeamSelector />
-                                <RoleFilter className="hidden lg:inline-flex" />
-                                <div class="hidden lg:inline-flex">
-                                    <FilterMenu />
-                                </div>
-                            </div>
-                            <div class="flex justify-end mb-4 gap-4 lg:hidden">
-                                <RoleFilter className="w-full" />
-                                <FilterMenu />
-                            </div>
-                            <DraftTable />
                         </div>
                     </Match>
                 </Switch>

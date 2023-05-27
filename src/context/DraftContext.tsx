@@ -1,6 +1,7 @@
 import {
     batch,
     createContext,
+    createEffect,
     createMemo,
     createResource,
     createSignal,
@@ -103,6 +104,10 @@ export function createDraftContext() {
     const [ownedChampions, setOwnedChampions] = createSignal<Set<string>>(
         new Set()
     );
+
+    const [currentTab, setCurrentTab] = createSignal<
+        "analysis" | "builds" | "draft"
+    >("draft");
 
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
@@ -277,7 +282,7 @@ export function createDraftContext() {
                 }
             }
             setTeam(index, "role", role);
-            setTab(team);
+            setMobileTab(team);
 
             if (updateSelection && !isMobileLayout()) {
                 let nextIndex = getNextPick(team);
@@ -292,6 +297,10 @@ export function createDraftContext() {
                 } else {
                     select(team, nextIndex);
                 }
+            }
+
+            if (draftFinished()) {
+                setCurrentTab("analysis");
             }
 
             if (resetFilters) {
@@ -365,8 +374,10 @@ export function createDraftContext() {
             setFavouriteFilter(false);
         }
 
+        setCurrentTab("draft");
+
         if (draftFinished() || isMobileLayout()) {
-            setTab("draft");
+            setMobileTab("draft");
         }
     };
 
@@ -375,7 +386,9 @@ export function createDraftContext() {
             (s) => s.championKey !== undefined
         );
 
-    const [tab, setTab] = createSignal<"ally" | "opponent" | "draft">("ally");
+    const [mobileTab, setMobileTab] = createSignal<
+        "ally" | "opponent" | "draft"
+    >("ally");
 
     const [favouritePicks, setFavouritePicks] = createStoredSignal<
         Set<FavouritePick>
@@ -444,11 +457,14 @@ export function createDraftContext() {
         setRoleFilter,
         config,
         setConfig,
-        tab,
-        setTab,
+        tab: mobileTab,
+        setTab: setMobileTab,
         draftFinished,
         isFavourite,
         toggleFavourite,
+        isLoaded,
+        currentTab,
+        setCurrentTab,
     };
 }
 

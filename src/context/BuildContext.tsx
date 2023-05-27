@@ -28,9 +28,11 @@ export function createBuildContext() {
         config,
     } = useDraft();
 
-    const [buildPick, _setBuildPick] = createSignal(
-        undefined as { team: Team; index: number } | undefined
-    );
+    const [buildPick, _setBuildPick] = createSignal<{
+        team: Team;
+        index: number;
+    }>();
+
     function setBuildPick(pick: { team: Team; index: number } | undefined) {
         const teamPicks = pick?.team === "ally" ? allyTeam : opponentTeam;
         const teamComp =
@@ -56,6 +58,16 @@ export function createBuildContext() {
         _setBuildPick(pick);
     }
 
+    createEffect(() => {
+        if (!buildPick()) return;
+
+        const team = buildPick()!.team === "ally" ? allyTeam : opponentTeam;
+        const championKey = team[buildPick()!.index].championKey;
+        if (championKey) return;
+
+        _setBuildPick(undefined);
+    }, [allyTeam, opponentTeam]);
+
     const [selectedEntity, _setSelectedEntity] = createSignal<
         BuildEntity | undefined
     >();
@@ -69,19 +81,6 @@ export function createBuildContext() {
         _setSelectedEntity(entity);
         setShowSelectedEntity(true);
     };
-
-    createEffect(() => {
-        if (!buildPick()) return;
-
-        let allDefined = true;
-        for (let i = 0; i < 5; i++) {
-            allDefined &&= !!allyTeam[i].championKey;
-            allDefined &&= !!opponentTeam[i].championKey;
-        }
-        if (allDefined) return;
-
-        _setBuildPick(undefined);
-    }, [allyTeam, opponentTeam]);
 
     const team = () => (buildPick()?.team === "ally" ? allyTeam : opponentTeam);
     const championKey = () =>

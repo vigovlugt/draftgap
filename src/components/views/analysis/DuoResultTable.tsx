@@ -120,7 +120,12 @@ export function DuoResultTable(
         {
             header: "Winrate",
             accessorFn: (duo) => duo.rating,
-            cell: (info) => <RatingText rating={info.getValue<number>()} />,
+            cell: (info) => (
+                <RatingText
+                    rating={info.getValue<number>()}
+                    games={info.row.original.games}
+                />
+            ),
             footer: (info) => <RatingText rating={rating() ?? 0} />,
             meta: {
                 headerClass: "w-1",

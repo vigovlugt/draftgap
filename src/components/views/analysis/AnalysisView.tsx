@@ -84,7 +84,6 @@ export default function AnalysisView() {
                                     of champion (BASE + MATCHUP + DUO)
                                 </>
                             ),
-                            placement: "top",
                         }}
                     >
                         Ally overview
@@ -119,7 +118,6 @@ export default function AnalysisView() {
                                     of champion (BASE + MATCHUP + DUO)
                                 </>
                             ),
-                            placement: "top",
                         }}
                     >
                         Opponent overview
@@ -146,7 +144,6 @@ export default function AnalysisView() {
                                 content: (
                                     <>Base winrates of individual champions</>
                                 ),
-                                placement: "top",
                             }}
                         >
                             Ally champions
@@ -169,7 +166,6 @@ export default function AnalysisView() {
                                 content: (
                                     <>Base winrates of individual champions</>
                                 ),
-                                placement: "top",
                             }}
                         >
                             Opponent champions
@@ -202,7 +198,6 @@ export default function AnalysisView() {
                                     opponent champions
                                 </>
                             ),
-                            placement: "top",
                         }}
                     >
                         Matchups
@@ -219,7 +214,6 @@ export default function AnalysisView() {
                                     meta bias of the matchup.
                                 </>
                             ),
-                            placement: "top",
                         }}
                     >
                         Champion winrates normalized
@@ -251,7 +245,6 @@ export default function AnalysisView() {
                             content: (
                                 <>Winrates of all duos in the ally draft</>
                             ),
-                            placement: "top",
                         }}
                     >
                         Ally duos
@@ -271,7 +264,6 @@ export default function AnalysisView() {
                             content: (
                                 <>Winrates of all duos in the opponent draft</>
                             ),
-                            placement: "top",
                         }}
                     >
                         Opponent duos

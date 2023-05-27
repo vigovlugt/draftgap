@@ -31,7 +31,6 @@ export function TeamSidebar({ team }: IProps) {
                     // @ts-ignore
                     use:tooltip={{
                         content: <>{capitalize(team)} estimated winrate</>,
-                        placement: "top",
                     }}
                 >
                     {team.toUpperCase()}

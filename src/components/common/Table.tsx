@@ -8,17 +8,12 @@ interface Props<T> {
     rowClassName?: (row: Row<T>) => string;
 }
 
-export function Table<T>({
-    table,
-    onClickRow,
-    rowClassName,
-    ...props
-}: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
+export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
     let tableEl: HTMLTableElement | undefined;
 
     const rows = createMemo(
-        () => table.getRowModel().rows,
-        [table.getRowModel().rows]
+        () => props.table.getRowModel().rows,
+        [props.table.getRowModel().rows]
     );
 
     const rowVirtualizer = createVirtualizer({
@@ -49,9 +44,14 @@ export function Table<T>({
             {...props}
             class={`rounded-md overflow-auto max-h-full max-w-full ${props.class}`}
         >
-            <table class="min-w-full divide-y divide-neutral-700 text-lg md:text-xl lg:text-2xl">
+            <table
+                class="min-w-full text-lg md:text-xl lg:text-2xl"
+                classList={{
+                    "divide-y divide-neutral-700": rows.length > 0,
+                }}
+            >
                 <thead class="bg-neutral-900 sticky top-0 z-[1]">
-                    <For each={table.getHeaderGroups()}>
+                    <For each={props.table.getHeaderGroups()}>
                         {(headerGroup) => (
                             <tr>
                                 <For each={headerGroup.headers}>
@@ -127,15 +127,15 @@ export function Table<T>({
                                 class="transition duration-200 ease-out group/row"
                                 classList={{
                                     "cursor-pointer hover:bg-neutral-800":
-                                        Boolean(onClickRow),
-                                    [rowClassName?.(row) ?? ""]: true,
+                                        Boolean(props.onClickRow),
+                                    [props.rowClassName?.(row) ?? ""]: true,
                                 }}
-                                onClick={() => onClickRow?.(row)}
-                                tabindex={onClickRow ? 0 : undefined}
-                                onSubmit={() => onClickRow?.(row)}
+                                onClick={() => props.onClickRow?.(row)}
+                                tabindex={props.onClickRow ? 0 : undefined}
+                                onSubmit={() => props.onClickRow?.(row)}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter") {
-                                        onClickRow?.(row);
+                                        props.onClickRow?.(row);
                                     }
                                 }}
                             >
@@ -182,15 +182,25 @@ export function Table<T>({
                             <td style={{ height: `${paddingBottom()}px` }} />
                         </tr>
                     </Show>
+                    <Show when={rows().length === 0}>
+                        <tr>
+                            <td
+                                class="py-6 px-2 text-center uppercase text-lg text-neutral-500"
+                                colspan="100%"
+                            >
+                                No results
+                            </td>
+                        </tr>
+                    </Show>
                 </tbody>
                 <Show
-                    when={table
+                    when={props.table
                         .getFooterGroups()
                         .flatMap((g) => g.headers)
                         .some((h) => h.column.columnDef.footer)}
                 >
                     <tfoot class="bg-neutral-900">
-                        <For each={table.getFooterGroups()}>
+                        <For each={props.table.getFooterGroups()}>
                             {(footerGroup) => (
                                 <tr>
                                     <For each={footerGroup.headers}>

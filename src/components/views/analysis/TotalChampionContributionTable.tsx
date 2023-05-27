@@ -205,9 +205,9 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
                 const allyChampionResult =
                     allyChampionResultByChampionKey.get(championKey);
                 const allyDuoResults =
-                    allyDuoResultsByChampionKey.get(championKey)!;
+                    allyDuoResultsByChampionKey.get(championKey) ?? [];
                 const matchupResults =
-                    allyMatchupResultsByChampionKey.get(championKey)!;
+                    allyMatchupResultsByChampionKey.get(championKey) ?? [];
 
                 const baseRating = allyChampionResult?.rating ?? 0;
                 const matchupRating = matchupResults.reduce(

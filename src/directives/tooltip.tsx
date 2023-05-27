@@ -27,7 +27,7 @@ export function tooltip(
 
         timeout = setTimeout(() => {
             setPopoverContent(content);
-            setPopoverPlacement(placement ?? "auto");
+            setPopoverPlacement(placement ?? "top");
             setPopoverTarget(target);
             setPopoverVisible(true);
         }, delay ?? 300);

@@ -167,7 +167,6 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
                 // @ts-ignore
                 use:tooltip={{
                     content: <>Winrates of all {title()} matchups</>,
-                    placement: "top",
                 }}
             >
                 Matchups
@@ -184,7 +183,6 @@ export const BuildAnalysisModal: Component<Props> = (props) => {
                             the matchup.
                         </>
                     ),
-                    placement: "top",
                 }}
             >
                 Champion winrates normalized

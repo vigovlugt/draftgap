@@ -15,13 +15,17 @@ export const BuildsViewTabs = (props: { team: Team }) => {
 
     return (
         <ViewTabs
-            tabs={new Array(5).fill(null).map((_, i) => ({
-                value: { team: props.team, index: i },
-                label: overflowEllipsis(
-                    dataset()!.championData[team()[i].championKey!].name,
-                    10
-                ),
-            }))}
+            tabs={new Array(5)
+                .fill(null)
+                .map((_, i) => i)
+                .filter((i) => team()[i].championKey !== undefined)
+                .map((i) => ({
+                    value: { team: props.team, index: i },
+                    label: overflowEllipsis(
+                        dataset()!.championData[team()[i].championKey!].name,
+                        10
+                    ),
+                }))}
             selected={buildPick()}
             onChange={setBuildPick}
             equals={(a, b) => a?.team === b?.team && a?.index === b?.index}

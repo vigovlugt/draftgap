@@ -89,7 +89,6 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                     // @ts-ignore
                     use:tooltip={{
                         content: <>Winrates of all {name()} matchups</>,
-                        placement: "top",
                     }}
                 >
                     Matchups
@@ -106,7 +105,6 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                                 meta bias of the matchup.
                             </>
                         ),
-                        placement: "top",
                     }}
                 >
                     Champion winrates normalized
@@ -144,7 +142,6 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                     // @ts-ignore
                     use:tooltip={{
                         content: <>Winrates of all {name()} duos</>,
-                        placement: "top",
                     }}
                 >
                     Duos
