@@ -10,6 +10,7 @@ import { tooltip } from "../../directives/tooltip";
 import { useTooltip } from "../../context/TooltipContext";
 import { linkByStatsSite } from "../../utils/sites";
 import { useConfig } from "../../context/ConfigContext";
+import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
 tooltip;
 
 type Props = {
@@ -19,27 +20,22 @@ type Props = {
 
 export function Pick(props: Props) {
     const { config } = useConfig();
-    const {
-        allyTeam,
-        opponentTeam,
-        allyTeamData,
-        opponentTeamData,
-        selection,
-        select,
-        pickChampion,
-        allyTeamComps,
-        opponentTeamComps,
-    } = useDraft();
+    const { allyTeam, opponentTeam, selection, select, pickChampion } =
+        useDraft();
+
+    const { allyTeamComp, opponentTeamComp, allyTeamData, opponentTeamData } =
+        useDraftAnalysis();
+
     const { setPopoverVisible } = useTooltip();
     const picks = () => (props.team === "ally" ? allyTeam : opponentTeam);
     const championData = () =>
         props.team === "ally" ? allyTeamData() : opponentTeamData();
     const teamComp = () =>
-        props.team === "ally" ? allyTeamComps()[0] : opponentTeamComps()[0];
+        props.team === "ally" ? allyTeamComp() : opponentTeamComp();
 
     const pick = () => picks()[props.index];
     const teamCompRole = () =>
-        [...(teamComp()[0]?.entries() ?? [])].find(
+        [...(teamComp()?.entries() ?? [])].find(
             (e) => e[1] === pick().championKey
         )?.[0];
 
@@ -68,7 +64,7 @@ export function Pick(props: Props) {
             const link = linkByStatsSite(
                 config.defaultStatsSite,
                 champion()!.id.toLowerCase(),
-                [...teamComp()[0].entries()].find(
+                [...teamComp().entries()].find(
                     ([, value]) => value === pick().championKey
                 )![0] as Role
             );
@@ -137,7 +133,8 @@ export function Pick(props: Props) {
                         >
                             <For
                                 each={[
-                                    ...champion()!.probabilityByRole.entries(),
+                                    ...(champion()?.probabilityByRole.entries() ??
+                                        []),
                                 ]
                                     .filter(([, prob]) => prob > 0.05)
                                     .sort(

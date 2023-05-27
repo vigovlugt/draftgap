@@ -20,6 +20,7 @@ import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
 import { WinnerCell } from "../../common/WinnerCell";
 import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
+import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
 
 interface Props {
     showAll: boolean;
@@ -30,7 +31,8 @@ interface Props {
 export function MatchupResultTable(
     props: Props & JSX.HTMLAttributes<HTMLDivElement>
 ) {
-    const { allyDraftResult, dataset } = useDraft();
+    const { dataset } = useDraft();
+    const { allyDraftAnalysis } = useDraftAnalysis();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
         createSignal(false);
@@ -186,7 +188,7 @@ export function MatchupResultTable(
                 return props.data();
             }
 
-            let data = allyDraftResult()?.matchupRating?.matchupResults;
+            let data = allyDraftAnalysis()?.matchupRating?.matchupResults;
             if (!data) {
                 return [];
             }

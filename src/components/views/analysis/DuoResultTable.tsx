@@ -16,6 +16,7 @@ import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
 import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
+import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
 
 interface Props {
     team: Team;
@@ -27,7 +28,8 @@ interface Props {
 export function DuoResultTable(
     props: Props & JSX.HTMLAttributes<HTMLDivElement>
 ) {
-    const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
+    const { dataset } = useDraft();
+    const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
         createSignal(false);
@@ -37,8 +39,8 @@ export function DuoResultTable(
         rating: number;
     }>();
 
-    const draftResult = () =>
-        props.team === "ally" ? allyDraftResult() : opponentDraftResult();
+    const draftAnalysis = () =>
+        props.team === "ally" ? allyDraftAnalysis() : opponentDraftAnalysis();
 
     const columns: ColumnDef<AnalyzeDuoResult>[] = [
         {
@@ -156,7 +158,7 @@ export function DuoResultTable(
                 return props.data();
             }
 
-            const data = draftResult()?.allyDuoRating?.duoResults;
+            const data = draftAnalysis()?.allyDuoRating?.duoResults;
             if (!data) {
                 return [];
             }

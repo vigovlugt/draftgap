@@ -12,6 +12,7 @@ import { tooltip } from "../../../directives/tooltip";
 import { RatingText } from "../../common/RatingText";
 import { Component, Show } from "solid-js";
 import { capitalize } from "../../../utils/strings";
+import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
 tooltip;
 
 export const SummaryCard = (
@@ -72,10 +73,10 @@ export const SummaryCard = (
 export const DraftSummaryCards = (
     props: { team: Team } & JSX.HTMLAttributes<HTMLDivElement>
 ) => {
-    const { allyDraftResult, opponentDraftResult } = useDraft();
+    const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
 
     const draftResult = () =>
-        props.team === "ally" ? allyDraftResult()! : opponentDraftResult()!;
+        props.team === "ally" ? allyDraftAnalysis()! : opponentDraftAnalysis()!;
 
     const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -149,10 +150,11 @@ type ChampionSummaryCardProps = {
 export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
     props
 ) => {
-    const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
+    const { dataset } = useDraft();
+    const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
 
     const draftResult = () =>
-        props.team === "ally" ? allyDraftResult()! : opponentDraftResult()!;
+        props.team === "ally" ? allyDraftAnalysis()! : opponentDraftAnalysis()!;
 
     const name = () => dataset()!.championData[props.championKey].name;
 

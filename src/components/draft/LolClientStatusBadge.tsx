@@ -1,15 +1,15 @@
 import { Component } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
 import { ClientState, useLolClient } from "../../context/LolClientContext";
 import { createErrorToast } from "../../utils/toast";
 import { Badge } from "../common/Badge";
+import { useMedia } from "../../hooks/useMedia";
 
 type Props = {
     setShowDownloadModal: (show: boolean) => void;
 };
 
 export const LolClientStatusBadge: Component<Props> = (props) => {
-    const { isDesktop } = useDraft();
+    const { isDesktop } = useMedia();
     if (!isDesktop)
         // eslint-disable-next-line solid/components-return-once
         return (

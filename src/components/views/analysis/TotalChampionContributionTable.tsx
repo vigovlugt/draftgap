@@ -21,6 +21,7 @@ import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
 import { useConfig } from "../../../context/ConfigContext";
+import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
 
 type Props = {
     team: Team;
@@ -39,16 +40,16 @@ type ChampionContribution = {
 export const TotalChampionContributionTable: Component<Props> = (_props) => {
     const [props, other] = splitProps(_props, ["team", "onClickChampion"]);
     const { config } = useConfig();
+    const { dataset } = useDraft();
     const {
-        allyDraftResult,
-        opponentDraftResult,
-        dataset,
-        allyTeamComps,
-        opponentTeamComps,
-    } = useDraft();
+        allyTeamComp,
+        opponentTeamComp,
+        allyDraftAnalysis,
+        opponentDraftAnalysis,
+    } = useDraftAnalysis();
 
     const draftResult = () =>
-        props.team === "ally" ? allyDraftResult() : opponentDraftResult();
+        props.team === "ally" ? allyDraftAnalysis() : opponentDraftAnalysis();
 
     const columns: ColumnDef<ChampionContribution>[] = [
         {
@@ -151,9 +152,7 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
             if (!draftResult()) return [];
 
             const comp =
-                props.team === "ally"
-                    ? allyTeamComps()[0][0]
-                    : opponentTeamComps()[0][0];
+                props.team === "ally" ? allyTeamComp() : opponentTeamComp();
             const champions = [...comp.entries()]
                 .sort((a, b) => a[0] - b[0])
                 .map((e) => e[1]);

@@ -16,17 +16,12 @@ import {
 import { useDraft } from "./DraftContext";
 import { Team } from "../lib/models/Team";
 import { BuildEntity } from "../lib/models/build/BuildEntity";
+import { useDraftAnalysis } from "./DraftAnalysisContext";
 
 export function createBuildContext() {
-    const {
-        allyTeam,
-        opponentTeam,
-        dataset,
-        dataset30Days,
-        allyTeamComps,
-        opponentTeamComps,
-        draftConfig,
-    } = useDraft();
+    const { allyTeam, opponentTeam, dataset, dataset30Days } = useDraft();
+    const { allyTeamComp, opponentTeamComp, draftAnalysisConfig } =
+        useDraftAnalysis();
 
     const [buildPick, _setBuildPick] = createSignal<{
         team: Team;
@@ -36,9 +31,7 @@ export function createBuildContext() {
     function setBuildPick(pick: { team: Team; index: number } | undefined) {
         const teamPicks = pick?.team === "ally" ? allyTeam : opponentTeam;
         const teamComp =
-            pick?.team === "ally"
-                ? allyTeamComps()[0][0]
-                : opponentTeamComps()[0][0];
+            pick?.team === "ally" ? allyTeamComp() : opponentTeamComp();
         gtag("event", "set_build_pick", {
             event_category: "build",
             team: pick?.team,
@@ -85,21 +78,21 @@ export function createBuildContext() {
     const team = () => (buildPick()?.team === "ally" ? allyTeam : opponentTeam);
     const championKey = () =>
         buildPick() ? team()[buildPick()!.index].championKey : undefined;
-    const allyTeamComp = () => {
+    const myTeamComp = () => {
         if (!buildPick()) return undefined;
         return buildPick()!.team === "ally"
-            ? allyTeamComps()[0][0]
-            : opponentTeamComps()[0][0];
+            ? allyTeamComp()
+            : opponentTeamComp();
     };
-    const opponentTeamComp = () => {
+    const theirTeamComp = () => {
         if (!buildPick()) return undefined;
         return buildPick()!.team === "ally"
-            ? opponentTeamComps()[0][0]
-            : allyTeamComps()[0][0];
+            ? opponentTeamComp()
+            : allyTeamComp();
     };
     const championRole = () => {
-        if (!buildPick() || !allyTeamComp()) return undefined;
-        return [...allyTeamComp()!.entries()].find(
+        if (!buildPick() || !myTeamComp()) return undefined;
+        return [...myTeamComp()!.entries()].find(
             ([, key]) => key === championKey()
         )?.[0];
     };
@@ -110,17 +103,11 @@ export function createBuildContext() {
             "build",
             championKey(),
             championRole(),
-            opponentTeamComp()
-                ? Object.fromEntries(opponentTeamComp()!)
-                : undefined,
+            theirTeamComp() ? Object.fromEntries(theirTeamComp()!) : undefined,
             dataset(),
         ],
         async (ctx) => {
-            if (
-                championKey() === undefined ||
-                !opponentTeamComp() ||
-                !dataset()
-            ) {
+            if (championKey() === undefined || !theirTeamComp() || !dataset()) {
                 return null;
             }
 
@@ -136,7 +123,7 @@ export function createBuildContext() {
                 dataset()!,
                 championKey()!,
                 championRole()!,
-                opponentTeamComp()!
+                theirTeamComp()!
             );
         },
         {
@@ -171,7 +158,7 @@ export function createBuildContext() {
             dataset()!,
             dataset30Days()!,
             ...query.data,
-            draftConfig()
+            draftAnalysisConfig()
         );
     });
 

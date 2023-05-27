@@ -10,6 +10,7 @@ import { tooltip } from "../../directives/tooltip";
 import { DuoResultTable } from "../views/analysis/DuoResultTable";
 import { Button } from "../common/Button";
 import { LOLALYTICS_ROLES } from "../../lib/data/lolalytics/roles";
+import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
 tooltip;
 
 type Props = {
@@ -21,20 +22,19 @@ type Props = {
 };
 
 export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
+    const { dataset } = useDraft();
+
     const {
-        allyDraftResult,
-        opponentDraftResult,
-        dataset,
-        allyTeamComps,
-        opponentTeamComps,
-    } = useDraft();
+        allyDraftAnalysis: allyDraftResult,
+        opponentDraftAnalysis: opponentDraftResult,
+        allyTeamComp,
+        opponentTeamComp,
+    } = useDraftAnalysis();
 
     const draftResult = () =>
         props.team === "ally" ? allyDraftResult() : opponentDraftResult();
     const teamComp = () =>
-        props.team === "ally"
-            ? allyTeamComps()[0][0]
-            : opponentTeamComps()[0][0];
+        props.team === "ally" ? allyTeamComp() : opponentTeamComp();
 
     const champion = () => dataset()!.championData[props.championKey];
     const name = () => champion().name;

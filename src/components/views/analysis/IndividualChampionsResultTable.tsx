@@ -17,6 +17,7 @@ import { Team } from "../../../lib/models/Team";
 import { createSignal, Show, splitProps } from "solid-js";
 import { RatingText } from "../../common/RatingText";
 import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
+import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
 
 interface Props {
     team: Team;
@@ -30,7 +31,8 @@ export function IndividualChampionsResultTable(
         "team",
         "onClickChampion",
     ]);
-    const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
+    const { dataset } = useDraft();
+    const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
         createSignal(false);
@@ -41,7 +43,7 @@ export function IndividualChampionsResultTable(
     }>();
 
     const draftResult = () =>
-        props.team === "ally" ? allyDraftResult() : opponentDraftResult();
+        props.team === "ally" ? allyDraftAnalysis() : opponentDraftAnalysis();
 
     const columns: ColumnDef<AnalyzeChampionResult>[] = [
         {

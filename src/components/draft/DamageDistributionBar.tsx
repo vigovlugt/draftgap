@@ -1,9 +1,10 @@
 import { Show } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
 import { Team } from "../../lib/models/Team";
+import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
 
 export function DamageDistributionBar(props: { team: Team }) {
-    const { allyDamageDistribution, opponentDamageDistribution } = useDraft();
+    const { allyDamageDistribution, opponentDamageDistribution } =
+        useDraftAnalysis();
 
     const damageDistribution = () =>
         props.team === "ally"

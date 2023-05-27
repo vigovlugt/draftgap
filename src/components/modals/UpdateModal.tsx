@@ -3,10 +3,10 @@ import Modal from "../common/Modal";
 import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
 import { relaunch } from "@tauri-apps/api/process";
 import { Button } from "../common/Button";
-import { useDraft } from "../../context/DraftContext";
+import { useMedia } from "../../hooks/useMedia";
 
 export const UpdateModal: Component = () => {
-    const { isDesktop } = useDraft();
+    const { isDesktop } = useMedia();
     const [isOpen, setIsOpen] = createSignal(false);
 
     onMount(() => {

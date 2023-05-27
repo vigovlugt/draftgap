@@ -26,6 +26,7 @@ import {
     createImportFavouritePicksToast,
 } from "../utils/toast";
 import { useDraft } from "./DraftContext";
+import { useMedia } from "../hooks/useMedia";
 
 const createChampSelectSession = (): LolChampSelectChampSelectSession => ({
     actions: [],
@@ -82,8 +83,8 @@ export const ClientState = {
 export type ClientState = (typeof ClientState)[keyof typeof ClientState];
 
 export const createLolClientContext = () => {
+    const { isDesktop } = useMedia();
     const {
-        isDesktop,
         pickChampion,
         select,
         resetAll,
@@ -294,8 +295,7 @@ export const createLolClientContext = () => {
     >();
 
     const startLolClientIntegration = () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        if (!isDesktop) return () => {};
+        if (!isDesktop) return;
 
         const update = async () => {
             try {
@@ -334,6 +334,7 @@ export const createLolClientContext = () => {
                 setClientError(undefined);
             } catch (e) {
                 setClientState(ClientState.NotFound);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 setClientError((e as any).toString());
             }
 

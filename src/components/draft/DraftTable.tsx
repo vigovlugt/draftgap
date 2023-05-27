@@ -20,11 +20,10 @@ import { star as starOutline } from "solid-heroicons/outline";
 import { RatingText } from "../common/RatingText";
 import { createMustSelectToast } from "../../utils/toast";
 import { useConfig } from "../../context/ConfigContext";
+import { useDraftSuggestions } from "../../context/DraftSuggestionsContext";
 
 export default function DraftTable() {
     const {
-        allySuggestions,
-        opponentSuggestions,
         dataset,
         selection,
         search,
@@ -38,6 +37,7 @@ export default function DraftTable() {
         bans,
         ownedChampions,
     } = useDraft();
+    const { allySuggestions, opponentSuggestions } = useDraftSuggestions();
 
     const { config } = useConfig();
 

@@ -13,6 +13,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { BuildProvider } from "./context/BuildContext";
 import { DraftViewProvider } from "./context/DraftViewContext";
 import { ConfigProvider } from "./context/ConfigContext";
+import { DraftSuggestionsProvider } from "./context/DraftSuggestionsContext";
+import {
+    DraftAnalysisContext,
+    DraftAnalysisProvider,
+} from "./context/DraftAnalysisContext";
 
 setupMobileVH();
 setupAnalytics();
@@ -26,17 +31,21 @@ render(
                 <TooltipProvider>
                     <DraftViewProvider>
                         <DraftProvider>
-                            <BuildProvider>
-                                <LolClientProvider>
-                                    <App />
-                                    <Toaster
-                                        position="bottom-right"
-                                        toastOptions={{
-                                            duration: Infinity,
-                                        }}
-                                    />
-                                </LolClientProvider>
-                            </BuildProvider>
+                            <DraftAnalysisProvider>
+                                <DraftSuggestionsProvider>
+                                    <BuildProvider>
+                                        <LolClientProvider>
+                                            <App />
+                                            <Toaster
+                                                position="bottom-right"
+                                                toastOptions={{
+                                                    duration: Infinity,
+                                                }}
+                                            />
+                                        </LolClientProvider>
+                                    </BuildProvider>
+                                </DraftSuggestionsProvider>
+                            </DraftAnalysisProvider>
                         </DraftProvider>
                     </DraftViewProvider>
                 </TooltipProvider>

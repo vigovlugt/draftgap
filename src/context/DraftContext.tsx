@@ -1,26 +1,19 @@
 import {
     batch,
     createContext,
-    createEffect,
-    createMemo,
     createResource,
     createSignal,
     JSXElement,
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { createMediaQuery } from "../hooks/createMediaQuery";
-import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
 import { Dataset, DATASET_VERSION } from "../lib/models/dataset/Dataset";
-import { PickData } from "../lib/models/dataset/PickData";
 import { displayNameByRole, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
-import predictRoles, { getTeamComps } from "../lib/role/role-predictor";
-import { analyzeDraft, AnalyzeDraftConfig } from "../lib/draft/analysis";
+import { AnalyzeDraftConfig } from "../lib/draft/analysis";
 import { createStoredSignal } from "../utils/signals";
-import { getSuggestions } from "../lib/draft/suggestions";
 import { useDraftView } from "./DraftViewContext";
-import { useConfig } from "./ConfigContext";
+import { useMedia } from "../hooks/useMedia";
 
 type TeamPick = {
     championKey: string | undefined;
@@ -63,12 +56,8 @@ const fetchDataset = async (name: "30-days" | "current-patch") => {
 };
 
 export function createDraftContext() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isDesktop = (window as any).__TAURI__ !== undefined;
-    const isMobileLayout = createMediaQuery("(max-width: 1023px)");
-
     const { setCurrentDraftView } = useDraftView();
-    const { config } = useConfig();
+    const { isMobileLayout } = useMedia();
 
     const [dataset] = createResource(() => fetchDataset("current-patch"));
     const [dataset30Days] = createResource(() => fetchDataset("30-days"));
@@ -100,147 +89,7 @@ export function createDraftContext() {
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
 
-    const getLockedRoles = (team: Team) => {
-        if (!selection.team) return new Set();
-        const teamDraft = team === "ally" ? allyTeam : opponentTeam;
-
-        return new Set(teamDraft.map((p) => p.role));
-    };
-    const getFilledRoles = (team: Team) => {
-        if (!selection.team) return new Set();
-
-        const teamComp =
-            team === "ally"
-                ? allyTeamComps().at(0)?.[0]
-                : opponentTeamComps().at(0)?.[0];
-        if (!teamComp) return new Set();
-
-        return new Set(teamComp.keys());
-    };
-
-    createEffect(() => {
-        if (!selection.team) return;
-
-        const filledRoles = getFilledRoles(selection.team!);
-        if (roleFilter() !== undefined && filledRoles.has(roleFilter())) {
-            setRoleFilter(undefined);
-        }
-    });
-
     const [favouriteFilter, setFavouriteFilter] = createSignal(false);
-
-    function getTeamCompsForTeam(team: Team) {
-        if (!isLoaded()) return [];
-
-        const picks = team === "ally" ? allyTeam : opponentTeam;
-
-        const championData = picks
-            .filter((pick) => pick.championKey)
-            .map((pick) => ({
-                ...dataset()!.championData[pick.championKey!],
-                role: pick.role,
-            }));
-        return getTeamComps(championData);
-    }
-
-    const allyTeamComps = createMemo(() => getTeamCompsForTeam("ally"));
-    const opponentTeamComps = createMemo(() => getTeamCompsForTeam("opponent"));
-
-    const allyRoles = createMemo(() => predictRoles(allyTeamComps()));
-    const opponentRoles = createMemo(() => predictRoles(opponentTeamComps()));
-
-    const draftConfig = () => ({
-        ignoreChampionWinrates: config.ignoreChampionWinrates,
-        riskLevel: config.riskLevel,
-        minGames: config.minGames,
-    });
-
-    const allyDraftResult = createMemo(() => {
-        if (!isLoaded()) return undefined;
-        return analyzeDraft(
-            dataset()!,
-            dataset30Days()!,
-            allyTeamComps()[0][0],
-            opponentTeamComps()[0][0],
-            draftConfig()
-        );
-    });
-    const opponentDraftResult = createMemo(() => {
-        if (!isLoaded()) return undefined;
-        return analyzeDraft(
-            dataset()!,
-            dataset30Days()!,
-            opponentTeamComps()[0][0],
-            allyTeamComps()[0][0],
-            draftConfig()
-        );
-    });
-
-    const allyDamageDistribution = createMemo(() => {
-        if (!isLoaded()) return undefined;
-        if (!allyTeamComps().length) return undefined;
-        return getTeamDamageDistribution(dataset()!, allyTeamComps()[0][0]);
-    });
-
-    const opponentDamageDistribution = createMemo(() => {
-        if (!isLoaded()) return undefined;
-        if (!opponentTeamComps().length) return undefined;
-        return getTeamDamageDistribution(dataset()!, opponentTeamComps()[0][0]);
-    });
-
-    function getTeamData(team: Team): Map<string, PickData> {
-        if (!isLoaded()) return new Map();
-
-        const picks = team === "ally" ? allyTeam : opponentTeam;
-        const roles = team === "ally" ? allyRoles() : opponentRoles();
-
-        const teamData = new Map<string, PickData>();
-
-        for (const { championKey } of picks) {
-            if (!championKey) continue;
-            const championData = dataset()!.championData[championKey];
-            const probabilityByRole = roles.get(championKey)!;
-            teamData.set(championKey, {
-                ...championData,
-                probabilityByRole,
-            });
-        }
-
-        return teamData;
-    }
-
-    const allyTeamData = createMemo(() => getTeamData("ally"));
-    const opponentTeamData = createMemo(() => getTeamData("opponent"));
-
-    const allySuggestions = createMemo(() => {
-        if (!isLoaded()) return [];
-
-        const allyTeamComp = allyTeamComps()[0][0] ?? new Map();
-        const enemyTeamComp = opponentTeamComps()[0][0] ?? new Map();
-
-        return getSuggestions(
-            dataset()!,
-            dataset30Days()!,
-            allyTeamComp,
-            enemyTeamComp,
-            draftConfig()
-        );
-    });
-
-    const opponentSuggestions = createMemo(() => {
-        if (!isLoaded()) return [];
-
-        const allyTeamComp = allyTeamComps()[0][0] ?? new Map();
-        const enemyTeamComp = opponentTeamComps()[0][0] ?? new Map();
-
-        return getSuggestions(
-            dataset()!,
-            dataset30Days()!,
-            enemyTeamComp,
-            allyTeamComp,
-            draftConfig()
-        );
-    });
 
     function getNextPick(team: Team) {
         const picks = team === "ally" ? allyTeam : opponentTeam;
@@ -430,7 +279,6 @@ export function createDraftContext() {
     };
 
     return {
-        isDesktop,
         dataset,
         dataset30Days,
         allyTeam,
@@ -439,18 +287,6 @@ export function createDraftContext() {
         setBans,
         ownedChampions,
         setOwnedChampions,
-        allyTeamData,
-        opponentTeamData,
-        allyRoles,
-        opponentRoles,
-        allyTeamComps,
-        opponentTeamComps,
-        allyDraftResult,
-        opponentDraftResult,
-        allyDamageDistribution,
-        opponentDamageDistribution,
-        allySuggestions,
-        opponentSuggestions,
         pickChampion,
         resetChampion,
         resetTeam,
@@ -467,9 +303,6 @@ export function createDraftContext() {
         isFavourite,
         toggleFavourite,
         isLoaded,
-        draftConfig,
-        getLockedRoles,
-        getFilledRoles,
     };
 }
 

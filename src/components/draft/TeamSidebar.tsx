@@ -1,5 +1,4 @@
 import { For } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
 import { ratingToWinrate } from "../../lib/rating/ratings";
 import { CountUp } from "../CountUp";
 import { DamageDistributionBar } from "./DamageDistributionBar";
@@ -8,6 +7,7 @@ import { TeamOptions } from "./TeamOptions";
 import { tooltip } from "../../directives/tooltip";
 import { capitalize } from "../../utils/strings";
 import { getRatingClass } from "../../utils/rating";
+import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
 tooltip;
 
 interface IProps {
@@ -15,7 +15,10 @@ interface IProps {
 }
 
 export function TeamSidebar(props: IProps) {
-    const { allyDraftResult, opponentDraftResult } = useDraft();
+    const {
+        allyDraftAnalysis: allyDraftResult,
+        opponentDraftAnalysis: opponentDraftResult,
+    } = useDraftAnalysis();
 
     const rating = () =>
         props.team === "ally"

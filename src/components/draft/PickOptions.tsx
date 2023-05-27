@@ -7,21 +7,17 @@ import { DropdownMenu, PopoverItem } from "../common/DropdownMenu";
 import { Role } from "../../lib/models/Role";
 import { linkByStatsSite } from "../../utils/sites";
 import { useConfig } from "../../context/ConfigContext";
+import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
 
 export function PickOptions(props: { team: Team; index: number }) {
     const { config } = useConfig();
-    const {
-        pickChampion,
-        allyTeam,
-        opponentTeam,
-        dataset,
-        allyTeamComps,
-        opponentTeamComps,
-    } = useDraft();
+    const { pickChampion, allyTeam, opponentTeam, dataset } = useDraft();
+
+    const { allyTeamComp, opponentTeamComp } = useDraftAnalysis();
 
     const teamPicks = () => (props.team === "ally" ? allyTeam : opponentTeam);
-    const teamComps = () =>
-        props.team === "ally" ? allyTeamComps() : opponentTeamComps();
+    const teamComp = () =>
+        props.team === "ally" ? allyTeamComp() : opponentTeamComp();
 
     const champion = () =>
         teamPicks()[props.index].championKey
@@ -44,7 +40,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                 ? linkByStatsSite(
                       config.defaultStatsSite,
                       champion()!.id.toLowerCase(),
-                      [...teamComps()[0][0].entries()].find(
+                      [...teamComp().entries()].find(
                           ([, value]) =>
                               value === teamPicks()[props.index].championKey
                       )![0] as Role
