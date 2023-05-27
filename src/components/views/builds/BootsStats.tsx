@@ -1,10 +1,10 @@
 import { Component } from "solid-js";
 import { useBuild } from "../../../context/BuildContext";
-import { useDraft } from "../../../context/DraftContext";
 import { Panel, PanelHeader } from "../../common/Panel";
 import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
 import { HorizontalEntityStats } from "./EntityStats";
+import { useDataset } from "../../../context/DatasetContext";
 
 export const BootsStats: Component = () => {
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
@@ -31,7 +31,7 @@ export const BootsStats: Component = () => {
 };
 
 const Boot: Component<{ itemId: number }> = (props) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { partialBuildDataset, buildAnalysisResult, setSelectedEntity } =
         useBuild();
 

@@ -1,10 +1,10 @@
 import { Component, For, Show } from "solid-js";
 import { Panel, PanelHeader } from "../../common/Panel";
 import { HorizontalEntityStats } from "./EntityStats";
-import { useDraft } from "../../../context/DraftContext";
 import { useBuild } from "../../../context/BuildContext";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
 import { getRatingClass, formatPercentage } from "../../../utils/rating";
+import { useDataset } from "../../../context/DatasetContext";
 
 export const StarterItemStats: Component = () => {
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
@@ -35,7 +35,7 @@ export const StarterItemStats: Component = () => {
 };
 
 const StarterItem: Component<{ setId: string }> = (props) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { partialBuildDataset, buildAnalysisResult, setSelectedEntity } =
         useBuild();
 
@@ -75,8 +75,8 @@ const StarterItem: Component<{ setId: string }> = (props) => {
                 <For
                     each={Object.entries(items()).sort(
                         ([a], [b]) =>
-                            dataset()!.itemData[b as any].gold -
-                            dataset()!.itemData[a as any].gold
+                            dataset()!.itemData[Number(b)].gold -
+                            dataset()!.itemData[Number(a)].gold
                     )}
                 >
                     {([id, number]) => (

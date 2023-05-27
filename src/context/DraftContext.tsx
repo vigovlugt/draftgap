@@ -1,19 +1,18 @@
 import {
     batch,
     createContext,
-    createResource,
     createSignal,
     JSXElement,
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { Dataset, DATASET_VERSION } from "../lib/models/dataset/Dataset";
 import { displayNameByRole, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
 import { AnalyzeDraftConfig } from "../lib/draft/analysis";
 import { createStoredSignal } from "../utils/signals";
 import { useDraftView } from "./DraftViewContext";
 import { useMedia } from "../hooks/useMedia";
+import { useDataset } from "./DatasetContext";
 
 type TeamPick = {
     championKey: string | undefined;
@@ -47,23 +46,10 @@ export type DraftGapConfig = AnalyzeDraftConfig & {
     defaultStatsSite: StatsSite;
 };
 
-const fetchDataset = async (name: "30-days" | "current-patch") => {
-    const response = await fetch(
-        `https://bucket.draftgap.com/datasets/v${DATASET_VERSION}/${name}.json`
-    );
-    const json = await response.json();
-    return json as Dataset;
-};
-
 export function createDraftContext() {
+    const { dataset } = useDataset();
     const { setCurrentDraftView } = useDraftView();
     const { isMobileLayout } = useMedia();
-
-    const [dataset] = createResource(() => fetchDataset("current-patch"));
-    const [dataset30Days] = createResource(() => fetchDataset("30-days"));
-
-    const isLoaded = () =>
-        dataset() !== undefined && dataset30Days() !== undefined;
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
         { championKey: undefined, role: undefined },
@@ -279,8 +265,6 @@ export function createDraftContext() {
     };
 
     return {
-        dataset,
-        dataset30Days,
         allyTeam,
         opponentTeam,
         bans,
@@ -302,7 +286,6 @@ export function createDraftContext() {
         draftFinished,
         isFavourite,
         toggleFavourite,
-        isLoaded,
     };
 }
 

@@ -1,6 +1,5 @@
 import { JSX } from "solid-js/jsx-runtime";
 import { Table } from "../../common/Table";
-import { useDraft } from "../../../context/DraftContext";
 import {
     ColumnDef,
     SortingState,
@@ -16,11 +15,12 @@ import { RoleCell } from "../../common/RoleCell";
 import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { formatPercentage } from "../../../utils/rating";
+import { useDataset } from "../../../context/DatasetContext";
 
 export const BuildMatchupTable = (
     props: JSX.HTMLAttributes<HTMLDivElement>
 ) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { selectedEntity, buildAnalysisResult, partialBuildDataset } =
         useBuild();
 

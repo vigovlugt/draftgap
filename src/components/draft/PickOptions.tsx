@@ -8,10 +8,12 @@ import { Role } from "../../lib/models/Role";
 import { linkByStatsSite } from "../../utils/sites";
 import { useConfig } from "../../context/ConfigContext";
 import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
+import { useDataset } from "../../context/DatasetContext";
 
 export function PickOptions(props: { team: Team; index: number }) {
     const { config } = useConfig();
-    const { pickChampion, allyTeam, opponentTeam, dataset } = useDraft();
+    const { dataset } = useDataset();
+    const { pickChampion, allyTeam, opponentTeam } = useDraft();
 
     const { allyTeamComp, opponentTeamComp } = useDraftAnalysis();
 

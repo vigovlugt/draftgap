@@ -21,10 +21,11 @@ import { RatingText } from "../common/RatingText";
 import { createMustSelectToast } from "../../utils/toast";
 import { useConfig } from "../../context/ConfigContext";
 import { useDraftSuggestions } from "../../context/DraftSuggestionsContext";
+import { useDataset } from "../../context/DatasetContext";
 
 export default function DraftTable() {
+    const { dataset } = useDataset();
     const {
-        dataset,
         selection,
         search,
         roleFilter,

@@ -1,11 +1,11 @@
 import { Component } from "solid-js";
 import Modal from "../common/Modal";
-import { useDraft } from "../../context/DraftContext";
 import { useBuild } from "../../context/BuildContext";
 import { displayNameByRole } from "../../lib/models/Role";
 import { BuildSummaryCards } from "../views/builds/BuildSummaryCards";
 import { BuildMatchupTable } from "../views/builds/BuildMatchupTable";
 import { tooltip } from "../../directives/tooltip";
+import { useDataset } from "../../context/DatasetContext";
 tooltip;
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export const BuildAnalysisModal: Component<Props> = (props) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { championKey, championRole, selectedEntity } = useBuild();
 
     const title = () => {

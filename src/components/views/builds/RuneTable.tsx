@@ -1,13 +1,13 @@
 import { Component, For, Show, createMemo } from "solid-js";
 import { Panel, PanelHeader } from "../../common/Panel";
-import { useDraft } from "../../../context/DraftContext";
 import { RuneData, StatShardData } from "../../../lib/models/dataset/RuneData";
 import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
 import { useBuild } from "../../../context/BuildContext";
+import { useDataset } from "../../../context/DatasetContext";
 
 export const RuneTable: Component = () => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
 
     const paths = () =>
         Object.keys(dataset()!.runePathData).map((str) => parseInt(str));
@@ -36,7 +36,8 @@ type PathTableProps = {
 };
 
 export const PathTable: Component<PathTableProps> = (props) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
+
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
 
     const runes = () =>
@@ -122,7 +123,7 @@ export const PathTable: Component<PathTableProps> = (props) => {
 };
 
 export const ShardTable: Component = () => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
 
     const shards = () => Object.values(dataset()!.statShardData);
@@ -207,7 +208,7 @@ type RuneProps = {
 };
 
 export const Rune: Component<RuneProps> = (props) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { setSelectedEntity } = useBuild();
 
     const isRune = () => props.type.startsWith("shard-") === false;

@@ -7,7 +7,6 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { JSX } from "solid-js/jsx-runtime";
-import { useDraft } from "../../../context/DraftContext";
 import { Role } from "../../../lib/models/Role";
 import { AnalyzeChampionResult } from "../../../lib/draft/analysis";
 import ChampionCell from "../../common/ChampionCell";
@@ -18,6 +17,7 @@ import { createSignal, Show, splitProps } from "solid-js";
 import { RatingText } from "../../common/RatingText";
 import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
 import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
+import { useDataset } from "../../../context/DatasetContext";
 
 interface Props {
     team: Team;
@@ -31,7 +31,7 @@ export function IndividualChampionsResultTable(
         "team",
         "onClickChampion",
     ]);
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =

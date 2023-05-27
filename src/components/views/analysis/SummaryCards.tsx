@@ -6,13 +6,13 @@ import {
     presentationChartLine,
 } from "solid-heroicons/solid";
 import { JSX } from "solid-js/jsx-runtime";
-import { useDraft } from "../../../context/DraftContext";
 import { Team } from "../../../lib/models/Team";
 import { tooltip } from "../../../directives/tooltip";
 import { RatingText } from "../../common/RatingText";
 import { Component, Show } from "solid-js";
 import { capitalize } from "../../../utils/strings";
 import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
+import { useDataset } from "../../../context/DatasetContext";
 tooltip;
 
 export const SummaryCard = (
@@ -150,7 +150,7 @@ type ChampionSummaryCardProps = {
 export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
     props
 ) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
 
     const draftResult = () =>

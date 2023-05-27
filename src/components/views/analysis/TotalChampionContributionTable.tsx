@@ -8,7 +8,6 @@ import {
 } from "@tanstack/solid-table";
 import { Component, createSignal, splitProps } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
-import { useDraft } from "../../../context/DraftContext";
 import { Role } from "../../../lib/models/Role";
 import { Team } from "../../../lib/models/Team";
 import {
@@ -22,6 +21,7 @@ import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
 import { useConfig } from "../../../context/ConfigContext";
 import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
+import { useDataset } from "../../../context/DatasetContext";
 
 type Props = {
     team: Team;
@@ -40,7 +40,7 @@ type ChampionContribution = {
 export const TotalChampionContributionTable: Component<Props> = (_props) => {
     const [props, other] = splitProps(_props, ["team", "onClickChampion"]);
     const { config } = useConfig();
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const {
         allyTeamComp,
         opponentTeamComp,

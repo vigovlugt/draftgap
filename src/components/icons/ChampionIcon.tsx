@@ -1,5 +1,5 @@
 import { JSX, splitProps } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
+import { useDataset } from "../../context/DatasetContext";
 
 export function ChampionIcon(
     props: {
@@ -9,7 +9,7 @@ export function ChampionIcon(
     } & JSX.HTMLAttributes<HTMLDivElement>
 ) {
     const [, other] = splitProps(props, ["championKey", "imgClass", "size"]);
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
 
     return (
         <div
@@ -36,7 +36,7 @@ export function ChampionIcon(
                     top: -props.size * 0.055 + "px",
                     left: -props.size * 0.055 + "px",
                 }}
-             />
+            />
         </div>
     );
 }

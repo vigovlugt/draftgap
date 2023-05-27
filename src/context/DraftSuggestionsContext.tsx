@@ -1,10 +1,10 @@
 import { JSXElement, createContext, createMemo, useContext } from "solid-js";
-import { useDraft } from "./DraftContext";
 import { getSuggestions } from "../lib/draft/suggestions";
 import { useDraftAnalysis } from "./DraftAnalysisContext";
+import { useDataset } from "./DatasetContext";
 
 export function createDraftSuggestionsContext() {
-    const { isLoaded, dataset, dataset30Days } = useDraft();
+    const { isLoaded, dataset, dataset30Days } = useDataset();
     const { draftAnalysisConfig, allyTeamComp, opponentTeamComp } =
         useDraftAnalysis();
 

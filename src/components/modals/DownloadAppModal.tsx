@@ -77,10 +77,14 @@ export const DownloadAppModal: Component<Props> = (props) => {
     const query = createQuery({
         queryKey: () => ["latestRelease"],
         queryFn: () => fetchRelease(),
+        get enabled() {
+            return props.isOpen;
+        },
         refetchInterval: false,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
+        refetchIntervalInBackground: false,
     });
 
     const latestRelease = () => query.data;

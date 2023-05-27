@@ -7,7 +7,6 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { createSignal, JSX, Show } from "solid-js";
-import { useDraft } from "../../../context/DraftContext";
 import { Role } from "../../../lib/models/Role";
 import { Team } from "../../../lib/models/Team";
 import {
@@ -21,6 +20,7 @@ import { Table } from "../../common/Table";
 import { WinnerCell } from "../../common/WinnerCell";
 import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
 import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
+import { useDataset } from "../../../context/DatasetContext";
 
 interface Props {
     showAll: boolean;
@@ -31,7 +31,7 @@ interface Props {
 export function MatchupResultTable(
     props: Props & JSX.HTMLAttributes<HTMLDivElement>
 ) {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { allyDraftAnalysis } = useDraftAnalysis();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =

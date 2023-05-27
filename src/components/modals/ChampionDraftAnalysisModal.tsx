@@ -1,5 +1,4 @@
 import { Component } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
 import { displayNameByRole } from "../../lib/models/Role";
 import { Team } from "../../lib/models/Team";
 import Modal from "../common/Modal";
@@ -11,6 +10,7 @@ import { DuoResultTable } from "../views/analysis/DuoResultTable";
 import { Button } from "../common/Button";
 import { LOLALYTICS_ROLES } from "../../lib/data/lolalytics/roles";
 import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
+import { useDataset } from "../../context/DatasetContext";
 tooltip;
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
 };
 
 export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
 
     const {
         allyDraftAnalysis: allyDraftResult,

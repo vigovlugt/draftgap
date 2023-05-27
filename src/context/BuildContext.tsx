@@ -17,9 +17,11 @@ import { useDraft } from "./DraftContext";
 import { Team } from "../lib/models/Team";
 import { BuildEntity } from "../lib/models/build/BuildEntity";
 import { useDraftAnalysis } from "./DraftAnalysisContext";
+import { useDataset } from "./DatasetContext";
 
 export function createBuildContext() {
-    const { allyTeam, opponentTeam, dataset, dataset30Days } = useDraft();
+    const { allyTeam, opponentTeam } = useDraft();
+    const { dataset, dataset30Days } = useDataset();
     const { allyTeamComp, opponentTeamComp, draftAnalysisConfig } =
         useDraftAnalysis();
 

@@ -1,5 +1,4 @@
 import { Component, JSX } from "solid-js";
-import { useDraft } from "../../../context/DraftContext";
 import { useBuild } from "../../../context/BuildContext";
 import { SummaryCard } from "../analysis/SummaryCards";
 import {
@@ -8,11 +7,12 @@ import {
     user,
 } from "solid-heroicons/solid";
 import { capitalize } from "../../../utils/strings";
+import { useDataset } from "../../../context/DatasetContext";
 
 export const BuildSummaryCards: Component<
     JSX.HTMLAttributes<HTMLDivElement>
 > = (props) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { selectedEntity, buildAnalysisResult } = useBuild();
 
     const title = () =>

@@ -6,9 +6,11 @@ import { overflowEllipsis } from "../../../utils/strings";
 import { BuildView } from "./BuildView";
 import { useBuild } from "../../../context/BuildContext";
 import { BuildAnalysisModal } from "../../modals/BuildAnalysisModal";
+import { useDataset } from "../../../context/DatasetContext";
 
 export const BuildsViewTabs = (props: { team: Team }) => {
-    const { allyTeam, opponentTeam, dataset } = useDraft();
+    const { allyTeam, opponentTeam } = useDraft();
+    const { dataset } = useDataset();
     const { buildPick, setBuildPick } = useBuild();
 
     const team = () => (props.team === "ally" ? allyTeam : opponentTeam);

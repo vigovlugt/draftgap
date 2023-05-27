@@ -14,7 +14,6 @@ import { RoleFilter } from "./components/draft/RoleFilter";
 import { Search } from "./components/draft/Search";
 import { TeamSelector } from "./components/draft/TeamSelector";
 import { TeamSidebar } from "./components/draft/TeamSidebar";
-import { useDraft } from "./context/DraftContext";
 import { cog_6Tooth } from "solid-heroicons/solid";
 import SettingsModal from "./components/modals/SettingsModal";
 import AnalysisView from "./components/views/analysis/AnalysisView";
@@ -31,11 +30,13 @@ import { ViewTabs } from "./components/common/ViewTabs";
 import { BuildsView } from "./components/views/builds/BuildsView";
 import { useDraftView } from "./context/DraftViewContext";
 import { useConfig } from "./context/ConfigContext";
+import { useDataset } from "./context/DatasetContext";
+import { LoadingIcon } from "./components/icons/LoadingIcon";
 
 const App: Component = () => {
     const { config } = useConfig();
     const { currentDraftView, setCurrentDraftView } = useDraftView();
-    const { dataset, isLoaded } = useDraft();
+    const { dataset, isLoaded, datasetQuery } = useDataset();
     const { startLolClientIntegration, stopLolClientIntegration } =
         useLolClient();
 
@@ -67,18 +68,18 @@ const App: Component = () => {
                 }}
             >
                 <Switch>
-                    <Match when={dataset.state === "errored"}>
+                    <Match when={datasetQuery.error}>
                         <div class="flex justify-center items-center h-full text-2xl text-red-500">
                             Error
                         </div>
                     </Match>
-                    <Match when={dataset() === undefined}>
+                    <Match when={!isLoaded()}>
                         <div class="flex justify-center items-center h-full text-2xl">
-                            Loading...
+                            <LoadingIcon class="animate-spin h-10 w-10" />
                         </div>
                     </Match>
                     <Match when={isLoaded()}>
-                        <div class="flex flex-col overflow-hidden min-h-full flex-1">
+                        <div class="flex flex-col min-h-full flex-1">
                             <ViewTabs
                                 tabs={
                                     [
@@ -113,7 +114,7 @@ const App: Component = () => {
                                 <Match
                                     when={currentDraftView().type == "draft"}
                                 >
-                                    <div class="p-4 xl:px-8">
+                                    <div class="py-5 px-4 xl:px-8 h-full overflow-y-hidden flex flex-col">
                                         <div class="mb-4 flex gap-4">
                                             <Search />
                                             <TeamSelector />

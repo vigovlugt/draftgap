@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
 import { BuildEntity } from "../../lib/models/build/BuildEntity";
 import { overflowEllipsis } from "../../utils/strings";
+import { useDataset } from "../../context/DatasetContext";
 
 type Props = {
     entity: BuildEntity;
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const BuildEntityCell = (props: Props) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
 
     const name = () => {
         switch (props.entity.type) {

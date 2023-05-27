@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
 import { overflowEllipsis } from "../../utils/strings";
 import { ChampionIcon } from "../icons/ChampionIcon";
+import { useDataset } from "../../context/DatasetContext";
 
 interface Props {
     championKey: string;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function ChampionCell(props: Props) {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
 
     const name = () => dataset()!.championData[props.championKey].name;
 

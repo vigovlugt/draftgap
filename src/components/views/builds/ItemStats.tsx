@@ -2,9 +2,9 @@ import { Component, For } from "solid-js";
 import { Panel, PanelHeader } from "../../common/Panel";
 import { VerticalEntityStats } from "./EntityStats";
 import { useBuild } from "../../../context/BuildContext";
-import { useDraft } from "../../../context/DraftContext";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
 import { getRatingClass, formatPercentage } from "../../../utils/rating";
+import { useDataset } from "../../../context/DatasetContext";
 
 const ZERO_TO_FOUR = [0, 1, 2, 3, 4] as const;
 
@@ -61,7 +61,7 @@ export const ItemStats: Component = () => {
 };
 
 const Item: Component<{ order: number; itemId: number }> = (props) => {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { partialBuildDataset, buildAnalysisResult, setSelectedEntity } =
         useBuild();
 

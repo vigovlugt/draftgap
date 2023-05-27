@@ -17,6 +17,7 @@ import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
 import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
 import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
+import { useDataset } from "../../../context/DatasetContext";
 
 interface Props {
     team: Team;
@@ -28,7 +29,7 @@ interface Props {
 export function DuoResultTable(
     props: Props & JSX.HTMLAttributes<HTMLDivElement>
 ) {
-    const { dataset } = useDraft();
+    const { dataset } = useDataset();
     const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
