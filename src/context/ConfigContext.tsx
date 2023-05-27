@@ -32,7 +32,6 @@ function createConfigContext() {
     const [config, setConfig] = createStore<DraftGapConfig>(initialValue);
 
     createEffect(() => {
-        console.log("Saving config");
         localStorage.setItem("draftgap-config", JSON.stringify(config));
     });
 

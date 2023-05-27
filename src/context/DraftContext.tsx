@@ -1,6 +1,7 @@
 import {
     batch,
     createContext,
+    createEffect,
     createMemo,
     createResource,
     createSignal,
@@ -62,6 +63,7 @@ const fetchDataset = async (name: "30-days" | "current-patch") => {
 };
 
 export function createDraftContext() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isDesktop = (window as any).__TAURI__ !== undefined;
     const isMobileLayout = createMediaQuery("(max-width: 1023px)");
 
@@ -97,6 +99,34 @@ export function createDraftContext() {
 
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
+
+    const getLockedRoles = (team: Team) => {
+        if (!selection.team) return new Set();
+        const teamDraft = team === "ally" ? allyTeam : opponentTeam;
+
+        return new Set(teamDraft.map((p) => p.role));
+    };
+    const getFilledRoles = (team: Team) => {
+        if (!selection.team) return new Set();
+
+        const teamComp =
+            team === "ally"
+                ? allyTeamComps().at(0)?.[0]
+                : opponentTeamComps().at(0)?.[0];
+        if (!teamComp) return new Set();
+
+        return new Set(teamComp.keys());
+    };
+
+    createEffect(() => {
+        if (!selection.team) return;
+
+        const filledRoles = getFilledRoles(selection.team!);
+        if (roleFilter() !== undefined && filledRoles.has(roleFilter())) {
+            setRoleFilter(undefined);
+        }
+    });
+
     const [favouriteFilter, setFavouriteFilter] = createSignal(false);
 
     function getTeamCompsForTeam(team: Team) {
@@ -438,6 +468,8 @@ export function createDraftContext() {
         toggleFavourite,
         isLoaded,
         draftConfig,
+        getLockedRoles,
+        getFilledRoles,
     };
 }
 
