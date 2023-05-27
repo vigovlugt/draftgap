@@ -1,7 +1,7 @@
 import { For } from "solid-js";
 
 type Props<T extends any> = {
-    tabs: {
+    tabs: readonly {
         value: T;
         label: string;
     }[];

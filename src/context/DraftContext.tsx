@@ -23,6 +23,7 @@ import predictRoles, { getTeamComps } from "../lib/role/role-predictor";
 import { analyzeDraft, AnalyzeDraftConfig } from "../lib/draft/analysis";
 import { createStoredSignal } from "../utils/signals";
 import { getSuggestions } from "../lib/draft/suggestions";
+import { useDraftView } from "./DraftViewContext";
 
 type TeamPick = {
     championKey: string | undefined;
@@ -78,6 +79,8 @@ export function createDraftContext() {
     const isDesktop = (window as any).__TAURI__ !== undefined;
     const isMobileLayout = createMediaQuery("(max-width: 1023px)");
 
+    const { currentDraftView, setCurrentDraftView } = useDraftView();
+
     const [dataset] = createResource(() => fetchDataset("current-patch"));
     const [dataset30Days] = createResource(() => fetchDataset("30-days"));
 
@@ -104,10 +107,6 @@ export function createDraftContext() {
     const [ownedChampions, setOwnedChampions] = createSignal<Set<string>>(
         new Set()
     );
-
-    const [currentTab, setCurrentTab] = createSignal<
-        "analysis" | "builds" | "draft"
-    >("draft");
 
     const [search, setSearch] = createSignal("");
     const [roleFilter, setRoleFilter] = createSignal<Role>();
@@ -282,7 +281,10 @@ export function createDraftContext() {
                 }
             }
             setTeam(index, "role", role);
-            setMobileTab(team);
+            setCurrentDraftView({
+                type: "draft",
+                subType: team,
+            });
 
             if (updateSelection && !isMobileLayout()) {
                 let nextIndex = getNextPick(team);
@@ -300,7 +302,9 @@ export function createDraftContext() {
             }
 
             if (draftFinished()) {
-                setCurrentTab("analysis");
+                setCurrentDraftView({
+                    type: "analysis",
+                });
             }
 
             if (resetFilters) {
@@ -374,21 +378,16 @@ export function createDraftContext() {
             setFavouriteFilter(false);
         }
 
-        setCurrentTab("draft");
-
-        if (draftFinished() || isMobileLayout()) {
-            setMobileTab("draft");
-        }
+        setCurrentDraftView({
+            type: "draft",
+            subType: (draftFinished() ? "draft" : team) ?? "draft",
+        });
     };
 
     const draftFinished = () =>
         [...allyTeam, ...opponentTeam].every(
             (s) => s.championKey !== undefined
         );
-
-    const [mobileTab, setMobileTab] = createSignal<
-        "ally" | "opponent" | "draft"
-    >("ally");
 
     const [favouritePicks, setFavouritePicks] = createStoredSignal<
         Set<FavouritePick>
@@ -457,14 +456,10 @@ export function createDraftContext() {
         setRoleFilter,
         config,
         setConfig,
-        tab: mobileTab,
-        setTab: setMobileTab,
         draftFinished,
         isFavourite,
         toggleFavourite,
         isLoaded,
-        currentTab,
-        setCurrentTab,
     };
 }
 

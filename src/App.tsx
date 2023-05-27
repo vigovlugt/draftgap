@@ -8,6 +8,7 @@ import {
     For,
     Match,
     onCleanup,
+    Show,
     Switch,
 } from "solid-js";
 import DraftTable from "./components/draft/DraftTable";
@@ -30,17 +31,11 @@ import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
 import { ViewTabs } from "./components/common/ViewTabs";
 import { BuildsView } from "./components/views/builds/BuildsView";
+import { useDraftView } from "./context/DraftViewContext";
 
 const App: Component = () => {
-    const {
-        config,
-        dataset,
-        tab,
-        setTab,
-        isLoaded,
-        currentTab,
-        setCurrentTab,
-    } = useDraft();
+    const { currentDraftView, setCurrentDraftView } = useDraftView();
+    const { config, dataset, isLoaded } = useDraft();
     const { startLolClientIntegration, stopLolClientIntegration } =
         useLolClient();
 
@@ -67,10 +62,6 @@ const App: Component = () => {
               })
             : "";
 
-    const onChangeTab = (tab: "analysis" | "builds" | "draft") => {
-        setCurrentTab(tab);
-    };
-
     const MainView = () => {
         return (
             <div
@@ -93,30 +84,39 @@ const App: Component = () => {
                     <Match when={isLoaded()}>
                         <div class="flex flex-col overflow-hidden min-h-full flex-1">
                             <ViewTabs
-                                tabs={[
-                                    {
-                                        label: "Draft",
-                                        value: "draft",
-                                    },
-                                    {
-                                        label: "Draft Analysis",
-                                        value: "analysis",
-                                    },
-                                    ...(import.meta.env.DEV
-                                        ? ([
-                                              {
-                                                  label: "Builds",
-                                                  value: "builds",
-                                              },
-                                          ] as const)
-                                        : []),
-                                ]}
-                                selected={currentTab()}
-                                onChange={onChangeTab}
+                                tabs={
+                                    [
+                                        {
+                                            label: "Draft",
+                                            value: "draft",
+                                        },
+                                        {
+                                            label: "Draft Analysis",
+                                            value: "analysis",
+                                        },
+                                        ...(import.meta.env.DEV
+                                            ? ([
+                                                  {
+                                                      label: "Builds",
+                                                      value: "builds",
+                                                  },
+                                              ] as const)
+                                            : []),
+                                    ] as const
+                                }
+                                selected={currentDraftView().type}
+                                onChange={(type) =>
+                                    setCurrentDraftView({
+                                        type,
+                                        subType: "draft",
+                                    })
+                                }
                                 className="xl:px-8"
                             ></ViewTabs>
                             <Switch>
-                                <Match when={currentTab() == "draft"}>
+                                <Match
+                                    when={currentDraftView().type == "draft"}
+                                >
                                     <div class="p-4 xl:px-8">
                                         <div class="mb-4 flex gap-4">
                                             <Search />
@@ -133,12 +133,18 @@ const App: Component = () => {
                                         <DraftTable />
                                     </div>
                                 </Match>
-                                <Match when={currentTab() === "analysis"}>
+                                <Match
+                                    when={
+                                        currentDraftView().type === "analysis"
+                                    }
+                                >
                                     <div class="py-5 px-4 xl:px-8 h-full overflow-y-auto">
                                         <AnalysisView />
                                     </div>
                                 </Match>
-                                <Match when={currentTab() === "builds"}>
+                                <Match
+                                    when={currentDraftView().type === "builds"}
+                                >
                                     <BuildsView />
                                 </Match>
                             </Switch>
@@ -147,6 +153,14 @@ const App: Component = () => {
                 </Switch>
             </div>
         );
+    };
+
+    const mobileTab = () => {
+        const current = currentDraftView();
+        if (current.type === "draft") {
+            return current.subType;
+        }
+        return undefined;
     };
 
     return (
@@ -206,33 +220,44 @@ const App: Component = () => {
             {/* Mobile main */}
             <main class="h-full overflow-hidden lg:hidden">
                 <Switch>
-                    <Match when={tab() === "ally"}>
+                    <Match when={mobileTab() === "ally"}>
                         <TeamSidebar team="ally" />
                     </Match>
-                    <Match when={tab() === "draft"}>
-                        <MainView />
-                    </Match>
-                    <Match when={tab() === "opponent"}>
+                    <Match when={mobileTab() === "opponent"}>
                         <TeamSidebar team="opponent" />
+                    </Match>
+                    <Match when={true}>
+                        <MainView />
                     </Match>
                 </Switch>
             </main>
 
             {/* Mobile footers */}
-            <footer class="bg-primary px-4 py-2 border-t-2 border-neutral-700 flex justify-evenly lg:hidden gap-4">
-                <For each={["ally", "draft", "opponent"] as const}>
-                    {(view) => (
-                        <Badge
-                            as="button"
-                            onClick={() => setTab(view)}
-                            theme={tab() === view ? "primary" : "secondary"}
-                            class="w-1/3"
-                        >
-                            {view}
-                        </Badge>
-                    )}
-                </For>
-            </footer>
+            <Show when={mobileTab() !== undefined}>
+                <footer class="bg-primary px-4 py-2 border-t-2 border-neutral-700 flex justify-evenly lg:hidden gap-4">
+                    <For each={["ally", "draft", "opponent"] as const}>
+                        {(view) => (
+                            <Badge
+                                as="button"
+                                onClick={() =>
+                                    setCurrentDraftView({
+                                        type: "draft",
+                                        subType: view,
+                                    })
+                                }
+                                theme={
+                                    mobileTab() === view
+                                        ? "primary"
+                                        : "secondary"
+                                }
+                                class="w-1/3"
+                            >
+                                {view}
+                            </Badge>
+                        )}
+                    </For>
+                </footer>
+            </Show>
         </div>
     );
 };
