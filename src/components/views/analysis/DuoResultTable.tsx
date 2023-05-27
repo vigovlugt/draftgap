@@ -170,7 +170,7 @@ export function DuoResultTable(
 
     return (
         <>
-            <Table table={table} {...props} />;
+            <Table table={table} {...props} />
             <Show when={chosenResult() !== undefined}>
                 <WinrateDecompositionModal
                     isOpen={confidenceAnalysisModalIsOpen()}
