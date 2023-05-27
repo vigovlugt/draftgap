@@ -264,6 +264,7 @@ export function createDraftContext() {
         return favouritePicks().has(favouritePick);
     };
 
+    // TODO: Split up in filters and user favourites and owned champions
     return {
         allyTeam,
         opponentTeam,
