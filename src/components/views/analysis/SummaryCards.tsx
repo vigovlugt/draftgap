@@ -10,7 +10,7 @@ import { useDraft } from "../../../context/DraftContext";
 import { Team } from "../../../lib/models/Team";
 import { tooltip } from "../../../directives/tooltip";
 import { RatingText } from "../../common/RatingText";
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
 import { capitalize } from "../../../utils/strings";
 tooltip;
 
@@ -56,11 +56,12 @@ export const SummaryCard = (
                 </div>
                 <div class="flex items-baseline justify-between md:block lg:flex -mt-1">
                     <div class="flex items-baseline text-3xl">
-                        {props.rating ? (
-                            <RatingText rating={props.rating} />
-                        ) : (
-                            props.number
-                        )}
+                        <Show
+                            when={props.rating !== undefined}
+                            fallback={props.number}
+                        >
+                            <RatingText rating={props.rating!} />
+                        </Show>
                     </div>
                 </div>
             </div>
