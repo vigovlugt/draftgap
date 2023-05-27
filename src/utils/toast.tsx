@@ -1,4 +1,4 @@
-import { check, exclamationCircle, star, xMark } from "solid-heroicons/outline";
+import { check, exclamationCircle, star } from "solid-heroicons/outline";
 import toast from "solid-toast";
 import { Toast } from "../components/common/Toast";
 

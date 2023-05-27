@@ -6,7 +6,7 @@ import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
 import { useBuild } from "../../../context/BuildContext";
 
-export const RuneTable: Component = (props) => {
+export const RuneTable: Component = () => {
     const { dataset } = useDraft();
 
     const paths = () =>
@@ -121,7 +121,7 @@ export const PathTable: Component<PathTableProps> = (props) => {
     );
 };
 
-export const ShardTable: Component = (props) => {
+export const ShardTable: Component = () => {
     const { dataset } = useDraft();
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
 

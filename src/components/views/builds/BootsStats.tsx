@@ -1,4 +1,4 @@
-import { Component, For } from "solid-js";
+import { Component } from "solid-js";
 import { useBuild } from "../../../context/BuildContext";
 import { useDraft } from "../../../context/DraftContext";
 import { Panel, PanelHeader } from "../../common/Panel";
@@ -6,8 +6,7 @@ import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
 import { HorizontalEntityStats } from "./EntityStats";
 
-export const BootsStats: Component = (props) => {
-    const { dataset } = useDraft();
+export const BootsStats: Component = () => {
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
 
     return (

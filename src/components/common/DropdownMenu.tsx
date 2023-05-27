@@ -1,4 +1,4 @@
-import { Component, JSX, Show } from "solid-js";
+import { Component, JSX } from "solid-js";
 import { MenuItem } from "solid-headless";
 import { Icon } from "solid-heroicons";
 import { Popover } from "./Popover";
@@ -38,6 +38,7 @@ export const DropdownMenu: Component<Props> = (props: Props) => {
                 props.items.map((item) => (
                     <MenuItem
                         as={(item as LinkItem).href ? "a" : "button"}
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         href={(item as LinkItem).href}
                         target="_blank"

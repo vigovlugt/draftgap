@@ -1,4 +1,4 @@
-import { Accessor, Setter, Component } from "solid-js";
+import { Setter, Component } from "solid-js";
 import Modal from "../common/Modal";
 
 type Props = {

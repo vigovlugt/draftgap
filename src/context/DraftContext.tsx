@@ -1,7 +1,6 @@
 import {
     batch,
     createContext,
-    createEffect,
     createMemo,
     createResource,
     createSignal,
@@ -11,11 +10,7 @@ import {
 import { createStore } from "solid-js/store";
 import { createMediaQuery } from "../hooks/createMediaQuery";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
-import {
-    Dataset,
-    DATASET_VERSION,
-    getDeserializedDataset,
-} from "../lib/models/dataset/Dataset";
+import { Dataset, DATASET_VERSION } from "../lib/models/dataset/Dataset";
 import { PickData } from "../lib/models/dataset/PickData";
 import { displayNameByRole, Role } from "../lib/models/Role";
 import { Team } from "../lib/models/Team";
@@ -24,6 +19,7 @@ import { analyzeDraft, AnalyzeDraftConfig } from "../lib/draft/analysis";
 import { createStoredSignal } from "../utils/signals";
 import { getSuggestions } from "../lib/draft/suggestions";
 import { useDraftView } from "./DraftViewContext";
+import { useConfig } from "./ConfigContext";
 
 type TeamPick = {
     championKey: string | undefined;
@@ -65,21 +61,12 @@ const fetchDataset = async (name: "30-days" | "current-patch") => {
     return json as Dataset;
 };
 
-const fetchBinDataset = async (name: "30-days" | "current-patch") => {
-    const response = await fetch(
-        `https://bucket.draftgap.com/datasets/v${DATASET_VERSION}/${name}.json`
-    );
-    const arrayBuffer = await response.arrayBuffer();
-
-    const deserialized = getDeserializedDataset(arrayBuffer);
-    return deserialized;
-};
-
 export function createDraftContext() {
     const isDesktop = (window as any).__TAURI__ !== undefined;
     const isMobileLayout = createMediaQuery("(max-width: 1023px)");
 
-    const { currentDraftView, setCurrentDraftView } = useDraftView();
+    const { setCurrentDraftView } = useDraftView();
+    const { config } = useConfig();
 
     const [dataset] = createResource(() => fetchDataset("current-patch"));
     const [dataset30Days] = createResource(() => fetchDataset("30-days"));
@@ -112,20 +99,6 @@ export function createDraftContext() {
     const [roleFilter, setRoleFilter] = createSignal<Role>();
     const [favouriteFilter, setFavouriteFilter] = createSignal(false);
 
-    const [config, setConfig] = createStoredSignal<DraftGapConfig>(
-        "draftgap-config",
-        {
-            ignoreChampionWinrates: false,
-            riskLevel: "medium",
-            minGames: 1000,
-            disableLeagueClientIntegration: false,
-            showFavouritesAtTop: false,
-            banPlacement: "bottom",
-            unownedPlacement: "bottom",
-            defaultStatsSite: "lolalytics",
-        }
-    );
-
     function getTeamCompsForTeam(team: Team) {
         if (!isLoaded()) return [];
 
@@ -146,6 +119,12 @@ export function createDraftContext() {
     const allyRoles = createMemo(() => predictRoles(allyTeamComps()));
     const opponentRoles = createMemo(() => predictRoles(opponentTeamComps()));
 
+    const draftConfig = () => ({
+        ignoreChampionWinrates: config.ignoreChampionWinrates,
+        riskLevel: config.riskLevel,
+        minGames: config.minGames,
+    });
+
     const allyDraftResult = createMemo(() => {
         if (!isLoaded()) return undefined;
         return analyzeDraft(
@@ -153,7 +132,7 @@ export function createDraftContext() {
             dataset30Days()!,
             allyTeamComps()[0][0],
             opponentTeamComps()[0][0],
-            config()
+            draftConfig()
         );
     });
     const opponentDraftResult = createMemo(() => {
@@ -163,7 +142,7 @@ export function createDraftContext() {
             dataset30Days()!,
             opponentTeamComps()[0][0],
             allyTeamComps()[0][0],
-            config()
+            draftConfig()
         );
     });
 
@@ -214,7 +193,7 @@ export function createDraftContext() {
             dataset30Days()!,
             allyTeamComp,
             enemyTeamComp,
-            config()
+            draftConfig()
         );
     });
 
@@ -229,7 +208,7 @@ export function createDraftContext() {
             dataset30Days()!,
             enemyTeamComp,
             allyTeamComp,
-            config()
+            draftConfig()
         );
     });
 
@@ -454,12 +433,11 @@ export function createDraftContext() {
         setFavouriteFilter,
         setSearch,
         setRoleFilter,
-        config,
-        setConfig,
         draftFinished,
         isFavourite,
         toggleFavourite,
         isLoaded,
+        draftConfig,
     };
 }
 
@@ -467,6 +445,7 @@ const DraftContext = createContext<ReturnType<typeof createDraftContext>>();
 
 export function DraftProvider(props: { children: JSXElement }) {
     const ctx = createDraftContext();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const DRAFTGAP_DEBUG = ((window as any).DRAFTGAP_DEBUG = ctx) as any;
     DRAFTGAP_DEBUG.test = () => {
         batch(() => {

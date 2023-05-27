@@ -8,15 +8,14 @@ type Props = {
     setShowDownloadModal: (show: boolean) => void;
 };
 
-export const LolClientStatusBadge: Component<Props> = ({
-    setShowDownloadModal,
-}) => {
+export const LolClientStatusBadge: Component<Props> = (props) => {
     const { isDesktop } = useDraft();
     if (!isDesktop)
+        // eslint-disable-next-line solid/components-return-once
         return (
             <Badge
                 as="button"
-                onClick={() => setShowDownloadModal(true)}
+                onClick={() => props.setShowDownloadModal(true)}
                 theme="primary"
                 class="hidden md:block"
             >

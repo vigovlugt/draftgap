@@ -6,45 +6,47 @@ import { Team } from "../../lib/models/Team";
 import { DropdownMenu, PopoverItem } from "../common/DropdownMenu";
 import { Role } from "../../lib/models/Role";
 import { linkByStatsSite } from "../../utils/sites";
+import { useConfig } from "../../context/ConfigContext";
 
-export function PickOptions({ team, index }: { team: Team; index: number }) {
+export function PickOptions(props: { team: Team; index: number }) {
+    const { config } = useConfig();
     const {
         pickChampion,
         allyTeam,
         opponentTeam,
         dataset,
-        config,
         allyTeamComps,
         opponentTeamComps,
     } = useDraft();
 
-    const teamPicks = () => (team === "ally" ? allyTeam : opponentTeam);
+    const teamPicks = () => (props.team === "ally" ? allyTeam : opponentTeam);
     const teamComps = () =>
-        team === "ally" ? allyTeamComps() : opponentTeamComps();
+        props.team === "ally" ? allyTeamComps() : opponentTeamComps();
 
     const champion = () =>
-        teamPicks()[index].championKey
-            ? dataset()?.championData[teamPicks()[index].championKey!]
+        teamPicks()[props.index].championKey
+            ? dataset()?.championData[teamPicks()[props.index].championKey!]
             : undefined;
 
     const items = (): PopoverItem[] => [
         {
             icon: trash,
             content: "Reset",
-            onClick: () => pickChampion(team, index, undefined, undefined),
+            onClick: () =>
+                pickChampion(props.team, props.index, undefined, undefined),
             disabled: !champion(),
             key: "r",
         },
         {
             icon: user,
-            content: config().defaultStatsSite,
+            content: config.defaultStatsSite,
             href: champion()
                 ? linkByStatsSite(
-                      config().defaultStatsSite,
+                      config.defaultStatsSite,
                       champion()!.id.toLowerCase(),
                       [...teamComps()[0][0].entries()].find(
                           ([, value]) =>
-                              value === teamPicks()[index].championKey
+                              value === teamPicks()[props.index].championKey
                       )![0] as Role
                   )
                 : "#",
@@ -56,7 +58,7 @@ export function PickOptions({ team, index }: { team: Team; index: number }) {
     return (
         <div class="absolute right-0 top-0">
             <DropdownMenu items={items()}>
-                <Icon path={ellipsisVertical} class="h-7"></Icon>
+                <Icon path={ellipsisVertical} class="h-7" />
             </DropdownMenu>
         </div>
     );

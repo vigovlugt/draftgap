@@ -1,7 +1,7 @@
 import { Component, Setter } from "solid-js";
 import Modal from "../common/Modal";
 import { SummaryCard } from "../views/analysis/SummaryCards";
-import { hashtag, presentationChartLine, user } from "solid-heroicons/solid";
+import { hashtag, presentationChartLine } from "solid-heroicons/solid";
 import { winrateToRating } from "../../lib/rating/ratings";
 
 type Props = {

@@ -104,7 +104,7 @@ export const VerticalEntityStats = <T,>(props: Props<T>) => {
         <table class="bg-[#141414] rounded-md">
             <thead class="text-sm">
                 <tr>
-                    <th></th>
+                    <th />
                     <th class="text-left uppercase pt-3 font-normal">
                         <button
                             onClick={() => onSortClick("rating")}

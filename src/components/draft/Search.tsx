@@ -6,6 +6,7 @@ import { useDraft } from "../../context/DraftContext";
 export function Search() {
     const { search, setSearch } = useDraft();
 
+    // eslint-disable-next-line prefer-const -- solid js ref
     let inputEl: HTMLInputElement | undefined = undefined;
 
     onMount(() => {

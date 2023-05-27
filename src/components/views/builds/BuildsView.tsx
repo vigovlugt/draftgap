@@ -29,7 +29,7 @@ export const BuildsViewTabs = (props: { team: Team }) => {
             selected={buildPick()}
             onChange={setBuildPick}
             equals={(a, b) => a?.team === b?.team && a?.index === b?.index}
-            className="!w-auto !border-b-0"
+            class="!w-auto !border-b-0"
         />
     );
 };

@@ -39,6 +39,7 @@ export const SummaryCard = (
         <a
             {...props}
             class={`px-4 py-5 flex gap-4 items-center text-left ${props.class}`}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             use:tooltip={{
                 content: props.tooltip,

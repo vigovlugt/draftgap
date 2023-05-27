@@ -7,7 +7,7 @@ import {
     heart,
     questionMarkCircle,
 } from "solid-heroicons/solid-mini";
-import { Component, createSignal } from "solid-js";
+import { Component } from "solid-js";
 import { DropdownMenu, PopoverItem } from "./common/DropdownMenu";
 
 type Props = {
@@ -15,23 +15,20 @@ type Props = {
     setShowFAQ: (show: boolean) => void;
 };
 
-export const OptionsPopover: Component<Props> = ({
-    setShowSettings,
-    setShowFAQ,
-}) => {
+export const OptionsPopover: Component<Props> = (props) => {
     const items: PopoverItem[] = [
         {
             content: "Settings",
             icon: cog_6Tooth,
             onClick() {
-                setShowSettings(true);
+                props.setShowSettings(true);
             },
         },
         {
             content: "FAQ",
             icon: questionMarkCircle,
             onClick() {
-                setShowFAQ(true);
+                props.setShowFAQ(true);
             },
         },
         {

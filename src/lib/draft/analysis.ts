@@ -2,7 +2,7 @@ import { Dataset } from "../models/dataset/Dataset";
 import { Role } from "../models/Role";
 import { winrateToRating, ratingToWinrate } from "../rating/ratings";
 import { RiskLevel, priorGamesByRiskLevel } from "../risk/risk-level";
-import { addStats, averageStats, divideStats, removeBiasStats } from "../stats";
+import { addStats, averageStats } from "../stats";
 import { getStats } from "./utils";
 
 export type DraftResult = {

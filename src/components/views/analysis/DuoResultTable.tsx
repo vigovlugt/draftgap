@@ -37,8 +37,8 @@ export function DuoResultTable(
         rating: number;
     }>();
 
-    const draftResult =
-        props.team === "ally" ? allyDraftResult : opponentDraftResult;
+    const draftResult = () =>
+        props.team === "ally" ? allyDraftResult() : opponentDraftResult();
 
     const columns: ColumnDef<AnalyzeDuoResult>[] = [
         {
@@ -126,7 +126,7 @@ export function DuoResultTable(
                     games={info.row.original.games}
                 />
             ),
-            footer: (info) => <RatingText rating={rating() ?? 0} />,
+            footer: () => <RatingText rating={rating() ?? 0} />,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
@@ -146,6 +146,7 @@ export function DuoResultTable(
         table
             .getRowModel()
             .rows.map((r) => r.original.rating)
+            // eslint-disable-next-line solid/reactivity
             .reduce((a, b) => a + b / (props.halfDuoRating ? 2 : 1), 0);
 
     const [sorting, setSorting] = createSignal<SortingState>([]);
@@ -155,7 +156,7 @@ export function DuoResultTable(
                 return props.data();
             }
 
-            let data = draftResult()?.allyDuoRating?.duoResults;
+            const data = draftResult()?.allyDuoRating?.duoResults;
             if (!data) {
                 return [];
             }

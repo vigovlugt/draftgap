@@ -1,9 +1,4 @@
-import {
-    Component,
-    ComponentProps,
-    splitProps,
-    ValidComponent,
-} from "solid-js";
+import { Component, ComponentProps } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { Dynamic } from "solid-js/web";
 

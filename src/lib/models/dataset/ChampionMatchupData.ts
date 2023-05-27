@@ -1,8 +1,6 @@
 import {
     SerializationContext,
-    serializeString,
     DeserializationContext,
-    deserializeString,
     serializeVarUint,
     deserializeVarUint,
 } from "../../serialization/serialization";

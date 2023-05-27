@@ -8,21 +8,21 @@ interface Props {
     winrate?: number;
 }
 
-export function WinnerCell({ winner, winrate }: Props) {
+export function WinnerCell(props: Props) {
     return (
         <div class="flex justify-center items-center w-full relative">
             <Icon
-                path={winner ? arrowLeft : arrowRight}
+                path={props.winner ? arrowLeft : arrowRight}
                 class="absolute w-6"
                 classList={{
-                    "text-ally": winner,
-                    "text-opponent": !winner,
-                    "bottom-0": winrate !== undefined,
+                    "text-ally": props.winner,
+                    "text-opponent": !props.winner,
+                    "bottom-0": props.winrate !== undefined,
                 }}
             />
-            <Show when={winrate}>
+            <Show when={props.winrate}>
                 <span class="-bottom-7 absolute text-base text-neutral-500">
-                    {formatPercentage(winrate!)}
+                    {formatPercentage(props.winrate!)}
                 </span>
             </Show>
         </div>

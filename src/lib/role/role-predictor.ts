@@ -11,7 +11,7 @@ export function getTeamComps(champions: (ChampionData & { role?: Role })[]) {
     return getTeamCompsRecursive(
         [existingTeam, 1],
         champions.filter((c) => c.role === undefined)
-    ).sort(([_, a], [__, b]) => b - a);
+    ).sort(([, a], [, b]) => b - a);
 }
 
 function getTeamCompsRecursive(

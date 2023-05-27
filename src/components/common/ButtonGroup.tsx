@@ -1,4 +1,4 @@
-import { Accessor, For, JSX } from "solid-js";
+import { Accessor, For, JSX, mergeProps, splitProps } from "solid-js";
 
 export type ButtonGroupOption<T> = {
     label: JSX.Element;
@@ -7,37 +7,40 @@ export type ButtonGroupOption<T> = {
 
 interface Props<T> {
     options: readonly ButtonGroupOption<T>[];
-    selected: Accessor<T>;
+    selected: T;
     onChange: (value: T) => void;
     size?: "sm" | "md";
 }
 
-export function ButtonGroup<T>({
-    options,
-    selected,
-    onChange,
-    size = "md",
-    ...props
-}: Props<T> & Omit<JSX.HTMLAttributes<HTMLDivElement>, "onChange">) {
+export function ButtonGroup<T>(
+    _props: Props<T> & Omit<JSX.HTMLAttributes<HTMLDivElement>, "onChange">
+) {
+    const mergedProps = mergeProps({ size: "md" }, _props);
+    const [props, externalProps] = splitProps(mergedProps, [
+        "options",
+        "selected",
+        "onChange",
+        "size",
+    ]);
     return (
         <div
-            {...props}
-            class={`isolate inline-flex rounded-md shadow-sm ${props.class}`}
+            {...externalProps}
+            class={`isolate inline-flex rounded-md shadow-sm ${externalProps.class}`}
         >
-            <For each={options}>
+            <For each={props.options}>
                 {(option, i) => (
                     <button
                         type="button"
                         class="uppercase leading-4 relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 font-medium hover:bg-neutral-800 focus:z-10 py-3"
                         classList={{
-                            "rounded-r-md": i() === options.length - 1,
+                            "rounded-r-md": i() === props.options.length - 1,
                             "rounded-l-md": i() === 0,
                             "-ml-px": i() !== 0,
                             "text-white !bg-neutral-700":
-                                selected() === option.value,
-                            "!py-2": size === "sm",
+                                props.selected === option.value,
+                            "!py-2": props.size === "sm",
                         }}
-                        onClick={() => onChange(option.value)}
+                        onClick={() => props.onChange(option.value)}
                     >
                         {option.label}
                     </button>

@@ -22,6 +22,7 @@ export const RatingText: Component<Props> = (props) => {
             <Show when={props.games !== undefined && props.games < 1000}>
                 <div
                     class="absolute -top-1 -right-6"
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     use:tooltip={{
                         content:

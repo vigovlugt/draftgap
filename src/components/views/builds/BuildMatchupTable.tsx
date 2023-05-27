@@ -116,7 +116,7 @@ export const BuildMatchupTable = (
         {
             header: () => <div class="text-center w-full uppercase">VS</div>,
             id: "seperator",
-            cell: () => <div class="w-20"></div>,
+            cell: () => <div class="w-20" />,
             meta: {
                 headerClass: "w-1 text-center",
                 footerClass: "w-1",

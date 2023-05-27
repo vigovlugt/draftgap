@@ -2,7 +2,7 @@ export function setupAnalytics() {
     (window as any).dataLayer = (window as any).dataLayer || [];
 
     function gtag(...args: any[]) {
-        (window as any).dataLayer.push(arguments);
+        (window as any).dataLayer.push(args);
     }
     window.gtag = gtag;
 

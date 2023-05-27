@@ -1,10 +1,7 @@
 import { AnalyzeDraftConfig } from "../draft/analysis";
-import { Role } from "../models/Role";
 import {
     PartialBuildDataset,
     FullBuildDataset,
-    BuildMatchupData,
-    ItemsBuildData,
 } from "../models/build/BuildDataset";
 import { EntityAnalysisResult, analyzeEntity } from "./entity-analysis";
 

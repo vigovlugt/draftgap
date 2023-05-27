@@ -1,5 +1,5 @@
 import { Icon } from "solid-heroicons";
-import { Show } from "solid-js";
+import { For, Show } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { PickOptions } from "./PickOptions";
@@ -9,14 +9,16 @@ import { formatPercentage } from "../../utils/rating";
 import { tooltip } from "../../directives/tooltip";
 import { useTooltip } from "../../context/TooltipContext";
 import { linkByStatsSite } from "../../utils/sites";
+import { useConfig } from "../../context/ConfigContext";
 tooltip;
 
-interface IProps {
+type Props = {
     team: "ally" | "opponent";
     index: number;
-}
+};
 
-export function Pick({ team, index }: IProps) {
+export function Pick(props: Props) {
+    const { config } = useConfig();
     const {
         allyTeam,
         opponentTeam,
@@ -27,33 +29,33 @@ export function Pick({ team, index }: IProps) {
         pickChampion,
         allyTeamComps,
         opponentTeamComps,
-        config,
     } = useDraft();
     const { setPopoverVisible } = useTooltip();
-    const picks = team === "ally" ? allyTeam : opponentTeam;
-    const championData = team === "ally" ? allyTeamData : opponentTeamData;
+    const picks = () => (props.team === "ally" ? allyTeam : opponentTeam);
+    const championData = () =>
+        props.team === "ally" ? allyTeamData() : opponentTeamData();
     const teamComp = () =>
-        team === "ally" ? allyTeamComps()[0] : opponentTeamComps()[0];
+        props.team === "ally" ? allyTeamComps()[0] : opponentTeamComps()[0];
 
-    const pick = picks[index];
+    const pick = () => picks()[props.index];
     const teamCompRole = () =>
-        [...teamComp()[0]?.entries()].find(
-            (e) => e[1] === pick.championKey
+        [...(teamComp()[0]?.entries() ?? [])].find(
+            (e) => e[1] === pick().championKey
         )?.[0];
 
     const isSelected = () =>
-        selection.team === team && selection.index === index;
+        selection.team === props.team && selection.index === props.index;
 
     const champion = () => {
-        if (!pick.championKey) {
+        if (!pick().championKey) {
             return undefined;
         }
 
-        return championData().get(pick.championKey);
+        return championData().get(pick().championKey!);
     };
 
     function setRole(role: Role | undefined) {
-        pickChampion(team, index, pick.championKey, role);
+        pickChampion(props.team, props.index, pick().championKey, role);
     }
 
     const keyDownListener = (e: KeyboardEvent) => {
@@ -64,10 +66,10 @@ export function Pick({ team, index }: IProps) {
             e.preventDefault();
 
             const link = linkByStatsSite(
-                config().defaultStatsSite,
+                config.defaultStatsSite,
                 champion()!.id.toLowerCase(),
                 [...teamComp()[0].entries()].find(
-                    ([, value]) => value === picks[index].championKey
+                    ([, value]) => value === pick().championKey
                 )![0] as Role
             );
             window.open(link, "_blank");
@@ -77,7 +79,7 @@ export function Pick({ team, index }: IProps) {
             e.key === "Delete"
         ) {
             e.preventDefault();
-            pickChampion(team, index, undefined, undefined);
+            pickChampion(props.team, props.index, undefined, undefined);
         }
     };
 
@@ -96,13 +98,13 @@ export function Pick({ team, index }: IProps) {
                 "!bg-neutral-700": isSelected(),
                 "cursor-pointer ": champion() === undefined,
             }}
-            onClick={() => select(team, index)}
+            onClick={() => select(props.team, props.index)}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
         >
             <Show when={!champion()}>
                 <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
-                    PICK {index + 1}
+                    PICK {props.index + 1}
                 </span>
             </Show>
 
@@ -121,7 +123,7 @@ export function Pick({ team, index }: IProps) {
                                 "background-position": "center 20%",
                                 "background-size": "cover",
                             }}
-                        ></div>
+                        />
 
                         <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
                             {champion()!.name}
@@ -130,19 +132,25 @@ export function Pick({ team, index }: IProps) {
                         <div
                             class="absolute bottom-0 left-0 right-0 flex justify-end overflow-x-auto pt-1 overflow-y-hidden"
                             classList={{
-                                "bottom-1": pick.role !== undefined,
+                                "bottom-1": pick().role !== undefined,
                             }}
                         >
-                            {[...champion()!.probabilityByRole.entries()]
-                                .filter(([, prob]) => prob > 0.05)
-                                .sort(([, probA], [, probB]) => probB - probA)
-                                .map(([role, probability], i) => (
+                            <For
+                                each={[
+                                    ...champion()!.probabilityByRole.entries(),
+                                ]
+                                    .filter(([, prob]) => prob > 0.05)
+                                    .sort(
+                                        ([, probA], [, probB]) => probB - probA
+                                    )}
+                            >
+                                {([role, probability]) => (
                                     <div
                                         class="flex flex-col items-center relative group mx-[0.4rem] cursor-pointer"
                                         onClick={() => {
                                             setPopoverVisible(false);
                                             setRole(
-                                                pick.role === undefined
+                                                pick().role === undefined
                                                     ? role
                                                     : undefined
                                             );
@@ -151,7 +159,7 @@ export function Pick({ team, index }: IProps) {
                                         use:tooltip={{
                                             content: (
                                                 <>
-                                                    {pick.role !== undefined
+                                                    {pick().role !== undefined
                                                         ? "The champion is locked in this position, to choose an other position, click to unlock"
                                                         : "Click to lock the champion in this position, the current estimated position is highlighted"}
                                                 </>
@@ -168,7 +176,7 @@ export function Pick({ team, index }: IProps) {
                                                 }}
                                             />
                                         </div>
-                                        <Show when={pick.role === undefined}>
+                                        <Show when={pick().role === undefined}>
                                             <div
                                                 class="text-md"
                                                 classList={{
@@ -195,30 +203,31 @@ export function Pick({ team, index }: IProps) {
                                         </Show>
                                         <Icon
                                             path={
-                                                pick.role === undefined
+                                                pick().role === undefined
                                                     ? lockOpen
                                                     : lockClosed
                                             }
                                             class="absolute -top-1 -right-1 w-[20px]"
                                             classList={{
                                                 "opacity-0 group-hover:opacity-100 group-hover:text-neutral-300":
-                                                    pick.role === undefined,
+                                                    pick().role === undefined,
                                             }}
                                             style={{
                                                 filter:
-                                                    pick.role !== undefined
+                                                    pick().role !== undefined
                                                         ? "drop-shadow(2px 0 0 #191919) drop-shadow(-2px 0 0 #191919) drop-shadow(0 2px 0 #191919) drop-shadow(0 -2px 0 #191919)"
                                                         : undefined,
                                             }}
                                         />
                                     </div>
-                                ))}
+                                )}
+                            </For>
                         </div>
                     </>
                 )}
             </Show>
 
-            <PickOptions team={team} index={index} />
+            <PickOptions team={props.team} index={props.index} />
         </div>
     );
 }

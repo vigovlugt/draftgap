@@ -1,13 +1,13 @@
-import { Accessor, For, Setter } from "solid-js";
+import { For } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
-import { Role, ROLES } from "../../lib/models/Role";
+import { ROLES } from "../../lib/models/Role";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 
-export function RoleFilter({ className }: { className?: string }) {
+export function RoleFilter(props: { class?: string }) {
     const { roleFilter, setRoleFilter } = useDraft();
 
     return (
-        <span class={`isolate inline-flex rounded-md shadow-sm ${className}`}>
+        <span class={`isolate inline-flex rounded-md shadow-sm ${props.class}`}>
             <For each={ROLES}>
                 {(role, i) => (
                     <button

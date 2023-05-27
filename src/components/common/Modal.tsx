@@ -7,8 +7,8 @@ import {
     Button,
 } from "solid-headless";
 import { Icon } from "solid-heroicons";
-import { Accessor, JSX, Setter } from "solid-js";
 import { xMark } from "solid-heroicons/solid";
+import { JSX } from "solid-js/jsx-runtime";
 
 type Props = {
     isOpen: boolean;
@@ -21,14 +21,15 @@ type Props = {
 };
 
 export default function Modal(props: Props) {
-    const maxWClass = {
-        sm: "max-w-sm",
-        md: "max-w-md",
-        lg: "max-w-lg",
-        xl: "max-w-xl",
-        "2xl": "max-w-2xl",
-        "3xl": "max-w-3xl",
-    }[props.size ?? "md"];
+    const maxWClass = () =>
+        ({
+            sm: "max-w-sm",
+            md: "max-w-md",
+            lg: "max-w-lg",
+            xl: "max-w-xl",
+            "2xl": "max-w-2xl",
+            "3xl": "max-w-3xl",
+        }[props.size ?? "md"]);
 
     return (
         <>
@@ -46,7 +47,7 @@ export default function Modal(props: Props) {
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                         class="fixed inset-0 bg-black bg-opacity-40"
-                    ></TransitionChild>
+                    />
 
                     <div
                         class="fixed inset-0 overflow-y-auto"
@@ -72,7 +73,9 @@ export default function Modal(props: Props) {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <DialogPanel
-                                    class={`w-screen overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all ring-1 ring-white ring-opacity-10 ${maxWClass} ${props.className}`}
+                                    class={`w-screen overflow-hidden rounded-2xl bg-primary p-6 text-left align-middle shadow-xl transition-all ring-1 ring-white ring-opacity-10 ${maxWClass()} ${
+                                        props.className
+                                    }`}
                                 >
                                     <div
                                         class={`flex justify-between mb-4 ${props.titleContainerClass}`}

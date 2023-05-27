@@ -1,4 +1,4 @@
-import { createEffect, For } from "solid-js";
+import { For } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { ratingToWinrate } from "../../lib/rating/ratings";
 import { CountUp } from "../CountUp";
@@ -14,26 +14,28 @@ interface IProps {
     team: "ally" | "opponent";
 }
 
-export function TeamSidebar({ team }: IProps) {
+export function TeamSidebar(props: IProps) {
     const { allyDraftResult, opponentDraftResult } = useDraft();
 
     const rating = () =>
-        team === "ally"
+        props.team === "ally"
             ? allyDraftResult()?.totalRating
             : opponentDraftResult()?.totalRating;
 
     return (
         <div class="bg-primary flex flex-col h-full relative">
-            <DamageDistributionBar team={team} />
+            <DamageDistributionBar team={props.team} />
             <div class="flex-1 flex justify-center items-center bg-[#141414]">
                 <span
                     class="text-[2.5rem] text-center leading-tight"
                     // @ts-ignore
                     use:tooltip={{
-                        content: <>{capitalize(team)} estimated winrate</>,
+                        content: (
+                            <>{capitalize(props.team)} estimated winrate</>
+                        ),
                     }}
                 >
-                    {team.toUpperCase()}
+                    {props.team.toUpperCase()}
                     <br />
                     <CountUp
                         value={rating() ? ratingToWinrate(rating()!) : 0.5}
@@ -48,9 +50,9 @@ export function TeamSidebar({ team }: IProps) {
                 </span>
             </div>
             <For each={[0, 1, 2, 3, 4]}>
-                {(index) => <Pick team={team} index={index} />}
+                {(index) => <Pick team={props.team} index={index} />}
             </For>
-            <TeamOptions team={team} />
+            <TeamOptions team={props.team} />
         </div>
     );
 }

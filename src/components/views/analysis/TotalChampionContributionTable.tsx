@@ -20,6 +20,7 @@ import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
+import { useConfig } from "../../../context/ConfigContext";
 
 type Props = {
     team: Team;
@@ -35,15 +36,15 @@ type ChampionContribution = {
     totalRating: number;
 };
 
-export const TotalChampionContributionTable: Component<Props> = (props) => {
-    const [local, other] = splitProps(props, ["team"]);
+export const TotalChampionContributionTable: Component<Props> = (_props) => {
+    const [props, other] = splitProps(_props, ["team", "onClickChampion"]);
+    const { config } = useConfig();
     const {
         allyDraftResult,
         opponentDraftResult,
         dataset,
         allyTeamComps,
         opponentTeamComps,
-        config,
     } = useDraft();
 
     const draftResult = () =>
@@ -129,7 +130,7 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
             header: "Total",
             accessorFn: (result) => result.totalRating,
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
-            footer: (info) => (
+            footer: () => (
                 <RatingText
                     rating={table
                         .getRowModel()
@@ -240,7 +241,7 @@ export const TotalChampionContributionTable: Component<Props> = (props) => {
             },
             get columnVisibility() {
                 return {
-                    base: !config().ignoreChampionWinrates,
+                    base: !config.ignoreChampionWinrates,
                 };
             },
         },

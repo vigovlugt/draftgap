@@ -7,7 +7,6 @@ import { ratingToWinrate } from "../../../lib/rating/ratings";
 import { getRatingClass, formatPercentage } from "../../../utils/rating";
 
 export const StarterItemStats: Component = () => {
-    const { dataset } = useDraft();
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
 
     return (

@@ -1,30 +1,11 @@
-import {
-    Component,
-    Match,
-    Show,
-    Switch,
-    createEffect,
-    createMemo,
-    createSignal,
-} from "solid-js";
-import { useDraft } from "../../../context/DraftContext";
-import { createQuery, useQueryClient } from "@tanstack/solid-query";
-import { fetchBuildData } from "../../../lib/builds/data";
-import { analyzeBuild } from "../../../lib/builds/analysis";
-import {
-    FullBuildDataset,
-    PartialBuildDataset,
-} from "../../../lib/models/build/BuildDataset";
+import { Component, Match, Switch } from "solid-js";
 import { RuneTable } from "./RuneTable";
 import { useBuild } from "../../../context/BuildContext";
-import { RecommendedBuild } from "./RecommendedBuild";
 import { BootsStats } from "./BootsStats";
-import { ItemSetStats } from "./ItemSetStats";
 import { ItemStats } from "./ItemStats";
 import { StarterItemStats } from "./StarterItemStats";
-import { SummonerSpellsStats } from "./SummonerSpellsStats";
 
-export const BuildView: Component = (props) => {
+export const BuildView: Component = () => {
     const { query, buildAnalysisResult } = useBuild();
 
     return (

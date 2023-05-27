@@ -13,12 +13,13 @@ import { Suggestion } from "../../lib/draft/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
-import { createEffect, createSignal, onCleanup, onMount, Show } from "solid-js";
+import { createSignal, onCleanup, onMount, Show } from "solid-js";
 import { Icon } from "solid-heroicons";
 import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
 import { RatingText } from "../common/RatingText";
 import { createMustSelectToast } from "../../utils/toast";
+import { useConfig } from "../../context/ConfigContext";
 
 export default function DraftTable() {
     const {
@@ -34,10 +35,11 @@ export default function DraftTable() {
         isFavourite,
         toggleFavourite,
         select,
-        config,
         bans,
         ownedChampions,
     } = useDraft();
+
+    const { config } = useConfig();
 
     const suggestions = () =>
         selection.team === "opponent"
@@ -79,7 +81,7 @@ export default function DraftTable() {
             );
         }
 
-        if (config().showFavouritesAtTop) {
+        if (config.showFavouritesAtTop) {
             // Sort is normally in place, but then tanstack table does not see the update.
             filtered = [...filtered].sort((a, b) => {
                 const aFav = isFavourite(a.championKey, a.role);
@@ -94,9 +96,9 @@ export default function DraftTable() {
             });
         }
 
-        if (config().banPlacement === "hidden") {
+        if (config.banPlacement === "hidden") {
             filtered = filtered.filter((s) => !bans.includes(s.championKey));
-        } else if (config().banPlacement === "bottom") {
+        } else if (config.banPlacement === "bottom") {
             filtered = [...filtered].sort((a, b) => {
                 const aBanned = bans.includes(a.championKey);
                 const bBanned = bans.includes(b.championKey);
@@ -110,9 +112,9 @@ export default function DraftTable() {
             });
         }
 
-        if (config().unownedPlacement === "hidden") {
+        if (config.unownedPlacement === "hidden") {
             filtered = filtered.filter((s) => ownsChampion(s.championKey));
-        } else if (config().unownedPlacement === "bottom") {
+        } else if (config.unownedPlacement === "bottom") {
             filtered = [...filtered].sort((a, b) => {
                 const aUnowned = !ownsChampion(a.championKey);
                 const bUnowned = !ownsChampion(b.championKey);

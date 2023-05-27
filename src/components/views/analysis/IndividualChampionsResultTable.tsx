@@ -14,7 +14,7 @@ import ChampionCell from "../../common/ChampionCell";
 import { Table } from "../../common/Table";
 import { RoleCell } from "../../common/RoleCell";
 import { Team } from "../../../lib/models/Team";
-import { createSignal, Show } from "solid-js";
+import { createSignal, Show, splitProps } from "solid-js";
 import { RatingText } from "../../common/RatingText";
 import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
 
@@ -23,10 +23,13 @@ interface Props {
     onClickChampion?: (championKey: string) => void;
 }
 
-export function IndividualChampionsResultTable({
-    team,
-    ...props
-}: Props & JSX.HTMLAttributes<HTMLDivElement>) {
+export function IndividualChampionsResultTable(
+    _props: Props & JSX.HTMLAttributes<HTMLDivElement>
+) {
+    const [props, externalProps] = splitProps(_props, [
+        "team",
+        "onClickChampion",
+    ]);
     const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
@@ -37,7 +40,8 @@ export function IndividualChampionsResultTable({
         rating: number;
     }>();
 
-    const draftResult = team === "ally" ? allyDraftResult : opponentDraftResult;
+    const draftResult = () =>
+        props.team === "ally" ? allyDraftResult() : opponentDraftResult();
 
     const columns: ColumnDef<AnalyzeChampionResult>[] = [
         {
@@ -82,7 +86,7 @@ export function IndividualChampionsResultTable({
                     games={info.row.original.games}
                 />
             ),
-            footer: (info) => <RatingText rating={allyRating() ?? 0} />,
+            footer: () => <RatingText rating={allyRating() ?? 0} />,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
@@ -122,7 +126,7 @@ export function IndividualChampionsResultTable({
 
     return (
         <>
-            <Table table={table} {...props} />
+            <Table table={table} {...externalProps} />
             <Show when={chosenResult() !== undefined}>
                 <WinrateDecompositionModal
                     isOpen={confidenceAnalysisModalIsOpen()}

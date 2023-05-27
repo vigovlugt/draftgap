@@ -1,4 +1,4 @@
-import { Component, JSX, Show } from "solid-js";
+import { Component, JSX } from "solid-js";
 import {
     HeadlessDisclosureProperties,
     Menu,

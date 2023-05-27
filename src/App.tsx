@@ -3,11 +3,9 @@ import { Icon } from "solid-heroicons";
 import {
     Component,
     createEffect,
-    createMemo,
     createSignal,
     For,
     Match,
-    onCleanup,
     Show,
     Switch,
 } from "solid-js";
@@ -32,22 +30,20 @@ import { formatDistance } from "date-fns";
 import { ViewTabs } from "./components/common/ViewTabs";
 import { BuildsView } from "./components/views/builds/BuildsView";
 import { useDraftView } from "./context/DraftViewContext";
+import { useConfig } from "./context/ConfigContext";
 
 const App: Component = () => {
+    const { config } = useConfig();
     const { currentDraftView, setCurrentDraftView } = useDraftView();
-    const { config, dataset, isLoaded } = useDraft();
+    const { dataset, isLoaded } = useDraft();
     const { startLolClientIntegration, stopLolClientIntegration } =
         useLolClient();
 
-    const disableLeagueClientIntegration = createMemo(
-        () => config().disableLeagueClientIntegration
-    );
-
     createEffect(() => {
-        if (disableLeagueClientIntegration()) {
+        if (config.disableLeagueClientIntegration) {
             stopLolClientIntegration();
         } else {
-            onCleanup(startLolClientIntegration());
+            startLolClientIntegration();
         }
     });
 
@@ -111,8 +107,8 @@ const App: Component = () => {
                                         subType: "draft",
                                     })
                                 }
-                                className="xl:px-8"
-                            ></ViewTabs>
+                                class="xl:px-8"
+                            />
                             <Switch>
                                 <Match
                                     when={currentDraftView().type == "draft"}
@@ -121,13 +117,13 @@ const App: Component = () => {
                                         <div class="mb-4 flex gap-4">
                                             <Search />
                                             <TeamSelector />
-                                            <RoleFilter className="hidden lg:inline-flex" />
+                                            <RoleFilter class="hidden lg:inline-flex" />
                                             <div class="hidden lg:inline-flex">
                                                 <FilterMenu />
                                             </div>
                                         </div>
                                         <div class="flex justify-end mb-4 gap-4 lg:hidden">
-                                            <RoleFilter className="w-full" />
+                                            <RoleFilter class="w-full" />
                                             <FilterMenu />
                                         </div>
                                         <DraftTable />
@@ -174,7 +170,7 @@ const App: Component = () => {
                 isOpen={showSettings()}
                 setIsOpen={setShowSettings}
                 setFAQOpen={setShowFAQ}
-            ></SettingsModal>
+            />
             <UpdateModal />
             <FAQModal isOpen={showFAQ()} setIsOpen={setShowFAQ} />
             <DownloadAppModal

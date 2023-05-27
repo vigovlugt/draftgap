@@ -1,14 +1,14 @@
 import { Icon } from "solid-heroicons";
 import { funnel } from "solid-heroicons/solid";
 import { Component, JSX } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import { Popover } from "../common/Popover";
+import { useConfig } from "../../context/ConfigContext";
 
-type Props = {} & JSX.HTMLAttributes<HTMLDivElement>;
+type Props = JSX.HTMLAttributes<HTMLDivElement>;
 
 export const FilterMenu: Component<Props> = (props) => {
-    const { config, setConfig } = useDraft();
+    const { config, setConfig } = useConfig();
 
     const minGameCountOptions: ButtonGroupOption<number>[] = [
         500, 1000, 2500, 5000,
@@ -31,13 +31,12 @@ export const FilterMenu: Component<Props> = (props) => {
                     </span>
                     <ButtonGroup
                         options={minGameCountOptions}
-                        selected={() => config().minGames}
-                        onChange={(value: number) => {
+                        selected={config.minGames}
+                        onChange={(value: number) =>
                             setConfig({
-                                ...config(),
                                 minGames: value,
-                            });
-                        }}
+                            })
+                        }
                     />
                 </div>
             )}

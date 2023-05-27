@@ -36,7 +36,7 @@ export function ChampionIcon(
                     top: -props.size * 0.055 + "px",
                     left: -props.size * 0.055 + "px",
                 }}
-            ></img>
+             />
         </div>
     );
 }

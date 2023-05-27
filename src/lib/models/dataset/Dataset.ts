@@ -14,7 +14,6 @@ import {
     deserializeObject,
     deserializeVarUint,
 } from "../../serialization/serialization";
-import { deserializeRankData, RankData, serializeRankData } from "./RankData";
 import { deleteChampionRoleDataMatchupSynergyData } from "./ChampionRoleData";
 import { RuneData, RunePathData, StatShardData } from "./RuneData";
 import { ItemData } from "./ItemData";
@@ -55,6 +54,7 @@ export function deserializeDataset(ctx: SerializationContext): Dataset {
         deserializeChampionData
     );
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return {
         version,

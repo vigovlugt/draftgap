@@ -1,9 +1,9 @@
 import {
     batch,
     createContext,
-    createEffect,
     createSignal,
     JSX,
+    onCleanup,
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
@@ -79,7 +79,7 @@ export const ClientState = {
     Disabled: "Disabled",
 } as const;
 
-export type ClientState = typeof ClientState[keyof typeof ClientState];
+export type ClientState = (typeof ClientState)[keyof typeof ClientState];
 
 export const createLolClientContext = () => {
     const {
@@ -289,11 +289,12 @@ export const createLolClientContext = () => {
         setOwnedChampions(new Set(ownedChampions.map((c) => String(c))));
     };
 
-    let [integrationTimeout, setIntegrationTimeout] = createSignal<
+    const [integrationTimeout, setIntegrationTimeout] = createSignal<
         NodeJS.Timeout | undefined
     >();
 
     const startLolClientIntegration = () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         if (!isDesktop) return () => {};
 
         const update = async () => {
@@ -345,13 +346,6 @@ export const createLolClientContext = () => {
             setIntegrationTimeout(setTimeout(() => update(), timeoutMs));
         };
         update();
-
-        return () => {
-            setClientState(ClientState.NotFound);
-            if (integrationTimeout() != null) {
-                clearTimeout(integrationTimeout());
-            }
-        };
     };
 
     const stopLolClientIntegration = () => {
@@ -360,6 +354,11 @@ export const createLolClientContext = () => {
         }
         setClientState(ClientState.Disabled);
     };
+
+    onCleanup(() => {
+        stopLolClientIntegration();
+        setClientState(ClientState.NotFound);
+    });
 
     return {
         clientState,

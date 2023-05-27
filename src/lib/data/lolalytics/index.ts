@@ -1,7 +1,7 @@
 import { ChampionData } from "../../models/dataset/ChampionData";
 import { ChampionSynergyData } from "../../models/dataset/ChampionSynergyData";
 import { ChampionMatchupData } from "../../models/dataset/ChampionMatchupData";
-import { getRoleFromString, Role, ROLES } from "../../models/Role";
+import { getRoleFromString, Role } from "../../models/Role";
 import { getLolalyticsChampion } from "./champion";
 import { getLolalyticsChampion2 } from "./champion2";
 import {

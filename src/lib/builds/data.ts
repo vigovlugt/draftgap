@@ -38,7 +38,7 @@ function getRunesBuildData(
         for (const [i, rune] of runesArray.map(
             (rune, i) => [i, rune] as const
         )) {
-            const [_pickRate, winRate, games] = rune;
+            const [, winRate, games] = rune;
             const chosenAsSecondary = i === 1;
 
             const runeStats = {

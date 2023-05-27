@@ -12,8 +12,8 @@ import { capitalize } from "../../../utils/strings";
 export const BuildSummaryCards: Component<
     JSX.HTMLAttributes<HTMLDivElement>
 > = (props) => {
-    const { allyDraftResult, opponentDraftResult, dataset } = useDraft();
-    const { selectedEntity, buildPick, buildAnalysisResult } = useBuild();
+    const { dataset } = useDraft();
+    const { selectedEntity, buildAnalysisResult } = useBuild();
 
     const title = () =>
         ({

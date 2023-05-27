@@ -5,7 +5,6 @@ import {
     createEffect,
     createSignal,
     JSX,
-    Show,
     useContext,
 } from "solid-js";
 import usePopper from "solid-popper";
@@ -70,7 +69,7 @@ export function TooltipProvider(props: { children: JSX.Element }) {
                     <div class="rounded-md bg-neutral-800 shadow-lg px-4 py-2 font-body text-sm ring-1 ring-white ring-opacity-20">
                         {ctx.popoverContent}
                     </div>
-                    <div data-popper-arrow id="arrow"></div>
+                    <div data-popper-arrow id="arrow" />
                 </div>
             </Transition>
         </TooltipContext.Provider>

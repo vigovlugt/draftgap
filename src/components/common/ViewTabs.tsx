@@ -1,22 +1,21 @@
 import { For } from "solid-js";
 
-type Props<T extends any> = {
+type Props<T> = {
     tabs: readonly {
         value: T;
         label: string;
     }[];
     selected: T;
     onChange: (tab: T) => void;
-    className?: string;
+    class?: string;
     equals?: (a: T, b: T) => boolean;
 };
 
-export const ViewTabs = <T extends any>(props: Props<T>) => {
+export const ViewTabs = <T,>(props: Props<T>) => {
     return (
         <div
             class={
-                "bg-primary w-full border-b border-neutral-700 " +
-                props.className
+                "bg-primary w-full border-b border-neutral-700 " + props.class
             }
         >
             <For each={props.tabs}>

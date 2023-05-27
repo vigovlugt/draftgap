@@ -1,6 +1,6 @@
 import { Icon } from "solid-heroicons";
 import { questionMarkCircle } from "solid-heroicons/solid-mini";
-import { Accessor, Setter, Show } from "solid-js";
+import { Setter, Show } from "solid-js";
 import {
     DraftTablePlacement,
     StatsSite,
@@ -10,6 +10,7 @@ import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import Modal from "../common/Modal";
 import { Toggle } from "../common/Toggle";
 import { RiskLevel, displayNameByRiskLevel } from "../../lib/risk/risk-level";
+import { useConfig } from "../../context/ConfigContext";
 
 interface Props {
     isOpen: boolean;
@@ -18,7 +19,8 @@ interface Props {
 }
 
 export default function SettingsModal(props: Props) {
-    const { config, setConfig, isDesktop } = useDraft();
+    const { isDesktop } = useDraft();
+    const { config, setConfig } = useConfig();
 
     const riskLevelOptions: ButtonGroupOption<RiskLevel>[] = RiskLevel.map(
         (level) => ({
@@ -69,12 +71,11 @@ export default function SettingsModal(props: Props) {
                     Ignore indivdual champion winrates
                 </span>
                 <Toggle
-                    isChecked={() => config().ignoreChampionWinrates}
+                    isChecked={config.ignoreChampionWinrates}
                     onChange={() =>
                         setConfig({
-                            ...config(),
                             ignoreChampionWinrates:
-                                !config().ignoreChampionWinrates,
+                                !config.ignoreChampionWinrates,
                         })
                     }
                 />
@@ -101,14 +102,13 @@ export default function SettingsModal(props: Props) {
             </div>
             <ButtonGroup
                 options={riskLevelOptions}
-                selected={() => config().riskLevel}
+                selected={config.riskLevel}
                 size="sm"
-                onChange={(value: RiskLevel) => {
+                onChange={(value: RiskLevel) =>
                     setConfig({
-                        ...config(),
                         riskLevel: value,
-                    });
-                }}
+                    })
+                }
             />
             <h3 class="text-3xl uppercase mt-4">UI</h3>
             <div class="flex space-x-8 items-center justify-between mt-2">
@@ -116,11 +116,10 @@ export default function SettingsModal(props: Props) {
                     Place favourites at top of suggestions
                 </span>
                 <Toggle
-                    isChecked={() => config().showFavouritesAtTop}
+                    isChecked={config.showFavouritesAtTop}
                     onChange={() =>
                         setConfig({
-                            ...config(),
-                            showFavouritesAtTop: !config().showFavouritesAtTop,
+                            showFavouritesAtTop: !config.showFavouritesAtTop,
                         })
                     }
                 />
@@ -133,11 +132,10 @@ export default function SettingsModal(props: Props) {
                     </span>
                     <ButtonGroup
                         options={draftTablePlacementOptions}
-                        selected={() => config().banPlacement}
+                        selected={config.banPlacement}
                         size="sm"
                         onChange={(v) =>
                             setConfig({
-                                ...config(),
                                 banPlacement: v,
                             })
                         }
@@ -163,10 +161,9 @@ export default function SettingsModal(props: Props) {
                             },
                         ]}
                         size="sm"
-                        selected={() => config().unownedPlacement}
+                        selected={config.unownedPlacement}
                         onChange={(v) =>
                             setConfig({
-                                ...config(),
                                 unownedPlacement: v,
                             })
                         }
@@ -181,14 +178,11 @@ export default function SettingsModal(props: Props) {
                         Disable league client integration
                     </span>
                     <Toggle
-                        isChecked={() =>
-                            config().disableLeagueClientIntegration
-                        }
+                        isChecked={config.disableLeagueClientIntegration}
                         onChange={() =>
                             setConfig({
-                                ...config(),
                                 disableLeagueClientIntegration:
-                                    !config().disableLeagueClientIntegration,
+                                    !config.disableLeagueClientIntegration,
                             })
                         }
                     />
@@ -200,14 +194,13 @@ export default function SettingsModal(props: Props) {
                 <span class="text-lg uppercase">Favourite builds site</span>
                 <ButtonGroup
                     options={statsSiteOptions}
-                    selected={() => config().defaultStatsSite}
+                    selected={config.defaultStatsSite}
                     size="sm"
-                    onChange={(value: StatsSite) => {
+                    onChange={(value: StatsSite) =>
                         setConfig({
-                            ...config(),
                             defaultStatsSite: value,
-                        });
-                    }}
+                        })
+                    }
                 />
             </div>
         </Modal>

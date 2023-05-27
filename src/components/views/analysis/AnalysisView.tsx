@@ -1,5 +1,4 @@
 import { batch, createSignal, Show } from "solid-js";
-import { useDraft } from "../../../context/DraftContext";
 import { ButtonGroup } from "../../common/ButtonGroup";
 import { DuoResultTable } from "./DuoResultTable";
 import { IndividualChampionsResultTable } from "./IndividualChampionsResultTable";
@@ -9,11 +8,11 @@ import { TotalChampionContributionTable } from "./TotalChampionContributionTable
 import { tooltip } from "../../../directives/tooltip";
 import { ChampionDraftAnalysisModal } from "../../modals/ChampionDraftAnalysisModal";
 import { Team } from "../../../lib/models/Team";
+import { useConfig } from "../../../context/ConfigContext";
 tooltip;
 
 export default function AnalysisView() {
-    const { config } = useDraft();
-
+    const { config } = useConfig();
     const [showAllMatchups, setShowAllMatchups] = createSignal(false);
     const [showChampionDraftAnalysisModal, setShowChampionDraftAnalysisModal] =
         createSignal(false);
@@ -131,7 +130,7 @@ export default function AnalysisView() {
                 </div>
             </div>
 
-            <Show when={!config().ignoreChampionWinrates}>
+            <Show when={!config.ignoreChampionWinrates}>
                 <div
                     class="flex-col flex sm:flex-row gap-4 mb-8"
                     id="champions-result"
@@ -224,7 +223,7 @@ export default function AnalysisView() {
                         { label: "HEAD 2 HEAD", value: false },
                         { label: "ALL", value: true },
                     ]}
-                    selected={showAllMatchups}
+                    selected={showAllMatchups()}
                     onChange={setShowAllMatchups}
                 />
             </div>

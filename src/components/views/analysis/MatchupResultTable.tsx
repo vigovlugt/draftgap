@@ -85,7 +85,7 @@ export function MatchupResultTable(
                     games={info.row.original.games}
                 />
             ),
-            footer: (info) => <RatingText rating={allyRating() ?? 0} />,
+            footer: () => <RatingText rating={allyRating() ?? 0} />,
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
@@ -154,7 +154,7 @@ export function MatchupResultTable(
                     games={info.row.original.games}
                 />
             ),
-            footer: (info) => <RatingText rating={opponentRating()} />,
+            footer: () => <RatingText rating={opponentRating()} />,
             meta: {
                 onClickCell: (
                     e: MouseEvent,

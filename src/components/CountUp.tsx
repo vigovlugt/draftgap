@@ -1,4 +1,3 @@
-import { createRef } from "solid-headless/dist/types/utils/dynamic-prop";
 import {
     Component,
     createEffect,
@@ -15,7 +14,8 @@ type Props = {
 } & JSX.HTMLAttributes<HTMLSpanElement>;
 
 export const CountUp: Component<Props> = (props) => {
-    const [local, other] = splitProps(props, ["value", "formatFn"]);
+    const [, other] = splitProps(props, ["value", "formatFn"]);
+    // eslint-disable-next-line solid/reactivity
     const [currentValue, setCurrentValue] = createSignal(props.value);
     const [currentReqAnimFrame, setCurrentReqAnimFrame] = createSignal<
         number | null
@@ -30,7 +30,7 @@ export const CountUp: Component<Props> = (props) => {
                         cancelAnimationFrame(currentReqAnimFrame()!);
                     }
 
-                    let previousTime = performance.now();
+                    const previousTime = performance.now();
 
                     const targetValue = props.value;
 
@@ -57,7 +57,7 @@ export const CountUp: Component<Props> = (props) => {
                         const newValue = currentValue() + change;
                         setCurrentValue(newValue);
 
-                        let req = requestAnimationFrame(update);
+                        const req = requestAnimationFrame(update);
                         setCurrentReqAnimFrame(req);
                     };
 

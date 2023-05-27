@@ -51,6 +51,7 @@ export function serializeVarUint(ctx: SerializationContext, value: number) {
 export function deserializeVarUint(ctx: DeserializationContext): number {
     let value = 0;
     let shift = 0;
+    // eslint-disable-next-line no-constant-condition
     while (true) {
         const byte = ctx.dataView.getUint8(ctx.offset);
         ctx.offset += 1;

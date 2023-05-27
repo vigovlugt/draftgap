@@ -9,7 +9,6 @@ import { getRatingClass, formatPercentage } from "../../../utils/rating";
 const ZERO_TO_FOUR = [0, 1, 2, 3, 4] as const;
 
 export const ItemStats: Component = () => {
-    const { dataset } = useDraft();
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
 
     const getDataForOrder = (order: number) => {

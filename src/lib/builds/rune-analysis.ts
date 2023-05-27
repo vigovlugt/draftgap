@@ -1,5 +1,4 @@
 import { AnalyzeDraftConfig } from "../draft/analysis";
-import { Role } from "../models/Role";
 import {
     PartialBuildDataset,
     FullBuildDataset,

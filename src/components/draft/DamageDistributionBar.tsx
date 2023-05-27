@@ -1,12 +1,12 @@
-import { createEffect, Show } from "solid-js";
+import { Show } from "solid-js";
 import { useDraft } from "../../context/DraftContext";
 import { Team } from "../../lib/models/Team";
 
-export function DamageDistributionBar({ team }: { team: Team }) {
+export function DamageDistributionBar(props: { team: Team }) {
     const { allyDamageDistribution, opponentDamageDistribution } = useDraft();
 
     const damageDistribution = () =>
-        team === "ally"
+        props.team === "ally"
             ? allyDamageDistribution()
             : opponentDamageDistribution();
 
@@ -34,15 +34,15 @@ export function DamageDistributionBar({ team }: { team: Team }) {
                 <div
                     class="bg-red-500 transition-all duration-500"
                     style={{ width: physicalPercentage() * 100 + "%" }}
-                ></div>
+                />
                 <div
                     class="bg-blue-500 transition-all duration-500"
                     style={{ width: magicPercentage() * 100 + "%" }}
-                ></div>
+                />
                 <div
                     class="bg-neutral-100 transition-all duration-500"
                     style={{ width: truePercentage() * 100 + "%" }}
-                ></div>
+                />
             </div>
         </Show>
     );

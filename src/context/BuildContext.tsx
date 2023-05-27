@@ -25,7 +25,7 @@ export function createBuildContext() {
         dataset30Days,
         allyTeamComps,
         opponentTeamComps,
-        config,
+        draftConfig,
     } = useDraft();
 
     const [buildPick, _setBuildPick] = createSignal<{
@@ -66,7 +66,7 @@ export function createBuildContext() {
         if (championKey) return;
 
         _setBuildPick(undefined);
-    }, [allyTeam, opponentTeam]);
+    });
 
     const [selectedEntity, _setSelectedEntity] = createSignal<
         BuildEntity | undefined
@@ -158,7 +158,9 @@ export function createBuildContext() {
 
     const partialBuildDataset = () => query.data?.[0];
     const fullBuildDataset = () => query.data?.[1];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).DRAFTGAP_DEBUG.fullBuildDataset = fullBuildDataset;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).DRAFTGAP_DEBUG.partialBuildDataset = partialBuildDataset;
 
     const buildAnalysisResult = createMemo(() => {
@@ -169,7 +171,7 @@ export function createBuildContext() {
             dataset()!,
             dataset30Days()!,
             ...query.data,
-            config()
+            draftConfig()
         );
     });
 

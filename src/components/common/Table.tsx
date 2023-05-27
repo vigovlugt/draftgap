@@ -1,5 +1,5 @@
 import { Table as TanstackTable, flexRender, Row } from "@tanstack/solid-table";
-import { VirtualItem, createVirtualizer } from "@tanstack/solid-virtual";
+import { createVirtualizer } from "@tanstack/solid-virtual";
 import { For, JSX, Show, createMemo } from "solid-js";
 
 interface Props<T> {
@@ -11,10 +11,7 @@ interface Props<T> {
 export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
     let tableEl: HTMLTableElement | undefined;
 
-    const rows = createMemo(
-        () => props.table.getRowModel().rows,
-        [props.table.getRowModel().rows]
-    );
+    const rows = createMemo(() => props.table.getRowModel().rows);
 
     const rowVirtualizer = createVirtualizer({
         getScrollElement: () => tableEl!,
@@ -25,10 +22,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
         overscan: 10,
     });
 
-    const virtualRows = createMemo(
-        () => rowVirtualizer.getVirtualItems(),
-        [rowVirtualizer.getVirtualItems()]
-    );
+    const virtualRows = createMemo(() => rowVirtualizer.getVirtualItems());
 
     const paddingTop = () =>
         virtualRows().length > 0 ? virtualRows()?.[0]?.start || 0 : 0;
