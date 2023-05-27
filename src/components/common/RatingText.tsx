@@ -26,12 +26,14 @@ export const RatingText: Component<Props> = (props) => {
                     // @ts-ignore
                     use:tooltip={{
                         content:
-                            "This winrate might not be accurate due to the small sample size",
+                            "This winrate might not be accurate due to the small sample size of " +
+                            Math.ceil(props.games!) +
+                            " games",
                     }}
                 >
                     <Icon
                         path={exclamationTriangle}
-                        class="text-red-400 w-5 h-5"
+                        class="text-yellow-500 w-5 h-5"
                     />
                 </div>
             </Show>
