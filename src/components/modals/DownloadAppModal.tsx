@@ -119,8 +119,8 @@ export const DownloadAppModal: Component<Props> = (props) => {
             <p class="font-body">
                 DraftGap has a desktop app, which enables seamless integration
                 with the League client. DraftGap will automatically detect when
-                a champion has been picked in the client, and will update the
-                draft accordingly. Let DraftGap do the work for you.
+                a champion has been picked in champion select, and will update
+                the draft accordingly. Let DraftGap do the work for you.
             </p>
 
             <Show
