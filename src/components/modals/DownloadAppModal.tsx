@@ -8,6 +8,7 @@ import {
 } from "solid-js";
 import { Button } from "../common/Button";
 import Modal from "../common/Modal";
+import { createQuery } from "@tanstack/solid-query";
 
 type Props = {
     isOpen: boolean;
@@ -62,15 +63,34 @@ const Svg = () => {
 
 const fetchRelease = async () => {
     const response = await fetch(
-        "https://api.github.com/repos/vigovlugt/draftgap/releases/latest"
+        "https://gist.githubusercontent.com/vigovlugt/5d549f4fdd602eb22542ef55e7c881ec/raw"
     );
     const json = await response.json();
-    return json;
+    return json as {
+        version: string;
+        notes: string;
+        pub_date: string;
+        platforms: Record<
+            string,
+            {
+                url: string;
+                signature: string;
+            }
+        >;
+    };
 };
 
 export const DownloadAppModal: Component<Props> = (props) => {
-    const [latestRelease, setLatestRelease] = createSignal<any>(null);
-    const [isLoading, setIsLoading] = createSignal(false);
+    const query = createQuery({
+        queryKey: () => ["latestRelease"],
+        queryFn: () => fetchRelease(),
+        refetchInterval: false,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+    });
+
+    const latestRelease = () => query.data;
 
     const isMac =
         (
@@ -81,34 +101,10 @@ export const DownloadAppModal: Component<Props> = (props) => {
             .toUpperCase()
             .indexOf("MAC") >= 0;
 
-    createEffect(() => {
-        if (latestRelease() != null) {
-            return;
-        }
-        if (isLoading()) {
-            return;
-        }
-        if (!props.isOpen) {
-            return;
-        }
-
-        setIsLoading(true);
-        fetchRelease().then((release) => {
-            setLatestRelease(release);
-            setIsLoading(false);
-        });
-    });
-
-    const version = () => latestRelease()?.tag_name.replace("v", "");
-
     const windowsDownloadUrl = () =>
-        latestRelease()?.assets?.find(
-            (asset: any) => asset.name === `DraftGap_${version()}_x64_en-US.msi`
-        )?.browser_download_url;
+        latestRelease()?.platforms["windows-x86_64"].url;
     const macDownloadUrl = () =>
-        latestRelease()?.assets?.find(
-            (asset: any) => asset.name === `DraftGap.app.tar.gz`
-        )?.browser_download_url;
+        latestRelease()?.platforms["darwin-x86_64"].url;
 
     return (
         <Modal
@@ -137,7 +133,7 @@ export const DownloadAppModal: Component<Props> = (props) => {
                         <a
                             href={
                                 "https://www.virustotal.com/gui/search/" +
-                                encodeURI(encodeURIComponent(macDownloadUrl()))
+                                encodeURI(encodeURIComponent(macDownloadUrl()!))
                             }
                             class="text-blue-500"
                             target="_blank"
@@ -155,7 +151,7 @@ export const DownloadAppModal: Component<Props> = (props) => {
                     <a
                         href={
                             "https://www.virustotal.com/gui/search/" +
-                            encodeURI(encodeURIComponent(windowsDownloadUrl()))
+                            encodeURI(encodeURIComponent(windowsDownloadUrl()!))
                         }
                         class="text-blue-500"
                         target="_blank"
