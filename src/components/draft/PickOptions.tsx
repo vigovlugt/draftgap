@@ -6,12 +6,12 @@ import { Team } from "../../lib/models/Team";
 import { DropdownMenu, PopoverItem } from "../common/DropdownMenu";
 import { Role } from "../../lib/models/Role";
 import { linkByStatsSite } from "../../utils/sites";
-import { useConfig } from "../../contexts/ConfigContext";
+import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../contexts/DatasetContext";
 
 export function PickOptions(props: { team: Team; index: number }) {
-    const { config } = useConfig();
+    const { config } = useUser();
     const { dataset } = useDataset();
     const { pickChampion, allyTeam, opponentTeam } = useDraft();
 

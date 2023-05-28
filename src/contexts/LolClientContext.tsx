@@ -27,6 +27,7 @@ import {
 } from "../utils/toast";
 import { useDraft } from "./DraftContext";
 import { useMedia } from "../hooks/useMedia";
+import { useUser } from "./UserContext";
 
 const createChampSelectSession = (): LolChampSelectChampSelectSession => ({
     actions: [],
@@ -88,14 +89,13 @@ export const createLolClientContext = () => {
         pickChampion,
         select,
         resetAll,
-        isFavourite,
-        toggleFavourite,
         allyTeam,
         opponentTeam,
         bans,
         setBans,
         setOwnedChampions,
     } = useDraft();
+    const { isFavourite, setFavourite } = useUser();
 
     const [clientState, setClientState] = createSignal<ClientState>(
         ClientState.NotFound
@@ -250,34 +250,53 @@ export const createLolClientContext = () => {
     };
 
     const checkImportFavourites = async () => {
+        const DRAFTGAP_IMPORT_FAVOURITES_LAST_ASKED =
+            "draftgap-import-favourites-last-asked";
+        const lastAsked = localStorage.getItem(
+            DRAFTGAP_IMPORT_FAVOURITES_LAST_ASKED
+        );
+        if (lastAsked) {
+            const lastAskedDate = new Date(lastAsked);
+            const now = new Date();
+            const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
+            if (now.getTime() - lastAskedDate.getTime() < ONE_WEEK) {
+                return;
+            }
+        }
+
         const gridChampions = await getGridChampions();
         if (!gridChampions) {
             console.error("Failed to get grid champions");
             return;
         }
 
-        const favouritePicks = gridChampions?.flatMap((c) =>
+        const lolFavourites = gridChampions?.flatMap((c) =>
             c.positionsFavorited.map((p) => ({
                 championKey: c.id.toString(),
                 role: getRoleFromString(p as any),
             }))
         );
 
-        const nonFavouritePicks = favouritePicks.filter(
+        const nonFavouritePicks = lolFavourites.filter(
             (f) => !isFavourite(f.championKey, f.role)
         );
 
-        if (favouritePicks.every((f) => isFavourite(f.championKey, f.role))) {
+        if (!nonFavouritePicks.length) {
             return;
         }
 
         createImportFavouritePicksToast(() => {
             for (const nonFavourite of nonFavouritePicks) {
-                toggleFavourite(nonFavourite.championKey, nonFavourite.role);
+                setFavourite(nonFavourite.championKey, nonFavourite.role, true);
             }
 
             createImportFavouritePicksSuccessToast(nonFavouritePicks.length);
         });
+
+        localStorage.setItem(
+            DRAFTGAP_IMPORT_FAVOURITES_LAST_ASKED,
+            new Date().toISOString()
+        );
     };
 
     const updateUnownedChampions = async () => {

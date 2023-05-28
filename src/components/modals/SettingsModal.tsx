@@ -1,13 +1,13 @@
 import { Icon } from "solid-heroicons";
 import { questionMarkCircle } from "solid-heroicons/solid-mini";
 import { Setter, Show } from "solid-js";
-import { DraftTablePlacement, StatsSite } from "../../contexts/DraftContext";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import Modal from "../common/Modal";
 import { Toggle } from "../common/Toggle";
 import { RiskLevel, displayNameByRiskLevel } from "../../lib/risk/risk-level";
-import { useConfig } from "../../contexts/ConfigContext";
+import { useUser } from "../../contexts/UserContext";
 import { useMedia } from "../../hooks/useMedia";
+import { DraftTablePlacement, StatsSite } from "../../lib/models/user/Config";
 
 interface Props {
     isOpen: boolean;
@@ -17,7 +17,7 @@ interface Props {
 
 export default function SettingsModal(props: Props) {
     const { isDesktop } = useMedia();
-    const { config, setConfig } = useConfig();
+    const { config, setConfig } = useUser();
 
     const riskLevelOptions: ButtonGroupOption<RiskLevel>[] = RiskLevel.map(
         (level) => ({

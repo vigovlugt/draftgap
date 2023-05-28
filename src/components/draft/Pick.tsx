@@ -9,7 +9,7 @@ import { formatPercentage } from "../../utils/rating";
 import { tooltip } from "../../directives/tooltip";
 import { useTooltip } from "../../contexts/TooltipContext";
 import { linkByStatsSite } from "../../utils/sites";
-import { useConfig } from "../../contexts/ConfigContext";
+import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 tooltip;
 
@@ -19,7 +19,7 @@ type Props = {
 };
 
 export function Pick(props: Props) {
-    const { config } = useConfig();
+    const { config } = useUser();
     const { allyTeam, opponentTeam, selection, select, pickChampion } =
         useDraft();
 

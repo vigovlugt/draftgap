@@ -8,11 +8,11 @@ import { TotalChampionContributionTable } from "./TotalChampionContributionTable
 import { tooltip } from "../../../directives/tooltip";
 import { ChampionDraftAnalysisModal } from "../../modals/ChampionDraftAnalysisModal";
 import { Team } from "../../../lib/models/Team";
-import { useConfig } from "../../../contexts/ConfigContext";
+import { useUser } from "../../../contexts/UserContext";
 tooltip;
 
 export default function AnalysisView() {
-    const { config } = useConfig();
+    const { config } = useUser();
     const [showAllMatchups, setShowAllMatchups] = createSignal(false);
     const [showChampionDraftAnalysisModal, setShowChampionDraftAnalysisModal] =
         createSignal(false);

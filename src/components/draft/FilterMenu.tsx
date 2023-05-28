@@ -3,12 +3,12 @@ import { funnel } from "solid-heroicons/solid";
 import { Component, JSX } from "solid-js";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import { Popover } from "../common/Popover";
-import { useConfig } from "../../contexts/ConfigContext";
+import { useUser } from "../../contexts/UserContext";
 
 type Props = JSX.HTMLAttributes<HTMLDivElement>;
 
 export const FilterMenu: Component<Props> = (props) => {
-    const { config, setConfig } = useConfig();
+    const { config, setConfig } = useUser();
 
     const minGameCountOptions: ButtonGroupOption<number>[] = [
         500, 1000, 2500, 5000,

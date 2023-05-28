@@ -19,7 +19,7 @@ import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
-import { useConfig } from "../../../contexts/ConfigContext";
+import { useUser } from "../../../contexts/UserContext";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
 
@@ -39,7 +39,7 @@ type ChampionContribution = {
 
 export const TotalChampionContributionTable: Component<Props> = (_props) => {
     const [props, other] = splitProps(_props, ["team", "onClickChampion"]);
-    const { config } = useConfig();
+    const { config } = useUser();
     const { dataset } = useDataset();
     const {
         allyTeamComp,

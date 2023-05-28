@@ -1,6 +1,6 @@
 import { Role } from "../lib/models/Role";
-import { StatsSite } from "../contexts/DraftContext";
 import { LOLALYTICS_ROLES } from "../lib/data/lolalytics/roles";
+import { StatsSite } from "../lib/models/user/Config";
 
 const UGG_ROLES = ["top", "jungle", "mid", "adc", "support"] as const;
 const OP_GG_ROLES = ["top", "jungle", "mid", "adc", "support"] as const;

@@ -19,27 +19,21 @@ import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
 import { RatingText } from "../common/RatingText";
 import { createMustSelectToast } from "../../utils/toast";
-import { useConfig } from "../../contexts/ConfigContext";
+import { useUser } from "../../contexts/UserContext";
 import { useDraftSuggestions } from "../../contexts/DraftSuggestionsContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";
 
 export default function DraftTable() {
     const { dataset } = useDataset();
-    const {
-        selection,
-        pickChampion,
-        isFavourite,
-        toggleFavourite,
-        select,
-        bans,
-        ownedChampions,
-    } = useDraft();
+    const { selection, pickChampion, select, bans, ownedChampions } =
+        useDraft();
     const { search, roleFilter, favouriteFilter, setFavouriteFilter } =
         useDraftFilters();
     const { allySuggestions, opponentSuggestions } = useDraftSuggestions();
+    const { isFavourite, setFavourite } = useUser();
 
-    const { config } = useConfig();
+    const { config } = useUser();
 
     const suggestions = () =>
         selection.team === "opponent"
@@ -179,9 +173,13 @@ export default function DraftTable() {
                     info: CellContext<Suggestion, unknown>
                 ) => {
                     e.stopPropagation();
-                    toggleFavourite(
+                    setFavourite(
                         info.row.original.championKey,
-                        info.row.original.role
+                        info.row.original.role,
+                        !isFavourite(
+                            info.row.original.championKey,
+                            info.row.original.role
+                        )
                     );
                 },
             },

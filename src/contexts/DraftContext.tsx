@@ -27,26 +27,6 @@ type Selection = {
     index: number;
 };
 
-type FavouritePick = `${string}:${Role}`;
-
-export type StatsSite = "op.gg" | "u.gg" | "lolalytics";
-
-export const DraftTablePlacement = {
-    Bottom: "bottom",
-    Hidden: "hidden",
-    InPlace: "in-place",
-} as const;
-type DraftTablePlacement =
-    (typeof DraftTablePlacement)[keyof typeof DraftTablePlacement];
-
-export type DraftGapConfig = AnalyzeDraftConfig & {
-    disableLeagueClientIntegration: boolean;
-    showFavouritesAtTop: boolean;
-    banPlacement: DraftTablePlacement;
-    unownedPlacement: DraftTablePlacement;
-    defaultStatsSite: StatsSite;
-};
-
 export function createDraftContext() {
     const { dataset } = useDataset();
     const { setCurrentDraftView } = useDraftView();
@@ -226,38 +206,6 @@ export function createDraftContext() {
             (s) => s.championKey !== undefined
         );
 
-    const [favouritePicks, setFavouritePicks] = createStoredSignal<
-        Set<FavouritePick>
-    >(
-        "draftgap-favourite-picks",
-        new Set(),
-        {
-            equals: false,
-        },
-        undefined,
-        (value) => JSON.stringify([...value]),
-        (value) => new Set(JSON.parse(value))
-    );
-
-    const toggleFavourite = (championKey: string, role: Role) => {
-        const favouritePick: FavouritePick = `${championKey}:${role}`;
-
-        if (favouritePicks().has(favouritePick)) {
-            favouritePicks().delete(favouritePick);
-        } else {
-            favouritePicks().add(favouritePick);
-        }
-
-        setFavouritePicks(favouritePicks());
-    };
-
-    const isFavourite = (championKey: string, role: Role) => {
-        const favouritePick: FavouritePick = `${championKey}:${role}`;
-
-        return favouritePicks().has(favouritePick);
-    };
-
-    // TODO: Split up in filters and user favourites and owned champions
     return {
         allyTeam,
         opponentTeam,
@@ -272,8 +220,6 @@ export function createDraftContext() {
         selection,
         select,
         draftFinished,
-        isFavourite,
-        toggleFavourite,
     };
 }
 

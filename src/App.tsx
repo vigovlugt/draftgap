@@ -29,12 +29,12 @@ import { formatDistance } from "date-fns";
 import { ViewTabs } from "./components/common/ViewTabs";
 import { BuildsView } from "./components/views/builds/BuildsView";
 import { useDraftView } from "./contexts/DraftViewContext";
-import { useConfig } from "./contexts/ConfigContext";
+import { useUser } from "./contexts/UserContext";
 import { useDataset } from "./contexts/DatasetContext";
 import { LoadingIcon } from "./components/icons/LoadingIcon";
 
 const App: Component = () => {
-    const { config } = useConfig();
+    const { config } = useUser();
     const { currentDraftView, setCurrentDraftView } = useDraftView();
     const { dataset, isLoaded, datasetQuery } = useDataset();
     const { startLolClientIntegration, stopLolClientIntegration } =

@@ -6,7 +6,7 @@ import {
     useContext,
 } from "solid-js";
 import { useDraft } from "./DraftContext";
-import { useConfig } from "./ConfigContext";
+import { useUser } from "./UserContext";
 import { getTeamDamageDistribution } from "../lib/damage-distribution/damage-distribution";
 import { analyzeDraft } from "../lib/draft/analysis";
 import { Team } from "../lib/models/Team";
@@ -16,7 +16,7 @@ import { useDataset } from "./DatasetContext";
 import { useDraftFilters } from "./DraftFiltersContext";
 
 export function createDraftAnalysisContext() {
-    const { config } = useConfig();
+    const { config } = useUser();
     const { allyTeam, opponentTeam, selection } = useDraft();
     const { roleFilter, setRoleFilter } = useDraftFilters();
     const { isLoaded, dataset, dataset30Days } = useDataset();

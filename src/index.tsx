@@ -12,7 +12,7 @@ import { setupMobileVH } from "./utils/mobile";
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { BuildProvider } from "./contexts/BuildContext";
 import { DraftViewProvider } from "./contexts/DraftViewContext";
-import { ConfigProvider } from "./contexts/ConfigContext";
+import { UserProvider } from "./contexts/UserContext";
 import { DraftSuggestionsProvider } from "./contexts/DraftSuggestionsContext";
 import { DraftAnalysisProvider } from "./contexts/DraftAnalysisContext";
 import { DatasetProvider } from "./contexts/DatasetContext";
@@ -26,7 +26,7 @@ const queryClient = new QueryClient();
 render(
     () => (
         <QueryClientProvider client={queryClient}>
-            <ConfigProvider>
+            <UserProvider>
                 <DatasetProvider>
                     <TooltipProvider>
                         <DraftViewProvider>
@@ -52,7 +52,7 @@ render(
                         </DraftViewProvider>
                     </TooltipProvider>
                 </DatasetProvider>
-            </ConfigProvider>
+            </UserProvider>
         </QueryClientProvider>
     ),
     document.getElementById("root") as HTMLElement
