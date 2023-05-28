@@ -5,7 +5,7 @@
     "scripts": {
         "start": "vite",
         "dev": "vite",
-        "build": "vite build",
+        "build": "tsc && vite build",
         "serve": "vite preview",
         "test": "vitest",
         "lint": "eslint --ext .ts,.tsx src",
