@@ -13,6 +13,7 @@ import { createStoredSignal } from "../utils/signals";
 import { useDraftView } from "./DraftViewContext";
 import { useMedia } from "../hooks/useMedia";
 import { useDataset } from "./DatasetContext";
+import { useDraftFilters } from "./DraftFiltersContext";
 
 type TeamPick = {
     championKey: string | undefined;
@@ -50,6 +51,7 @@ export function createDraftContext() {
     const { dataset } = useDataset();
     const { setCurrentDraftView } = useDraftView();
     const { isMobileLayout } = useMedia();
+    const { resetDraftFilters } = useDraftFilters();
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
         { championKey: undefined, role: undefined },
@@ -71,11 +73,6 @@ export function createDraftContext() {
     const [ownedChampions, setOwnedChampions] = createSignal<Set<string>>(
         new Set()
     );
-
-    const [search, setSearch] = createSignal("");
-    const [roleFilter, setRoleFilter] = createSignal<Role>();
-
-    const [favouriteFilter, setFavouriteFilter] = createSignal(false);
 
     function getNextPick(team: Team) {
         const picks = team === "ally" ? allyTeam : opponentTeam;
@@ -152,9 +149,7 @@ export function createDraftContext() {
             }
 
             if (resetFilters) {
-                setSearch("");
-                setRoleFilter(undefined);
-                setFavouriteFilter(false);
+                resetDraftFilters();
             }
 
             if (reportEvent && championKey !== undefined) {
@@ -217,9 +212,7 @@ export function createDraftContext() {
         setSelection("team", team);
         setSelection("index", index ?? 0);
         if (resetFilters) {
-            setSearch("");
-            setRoleFilter(undefined);
-            setFavouriteFilter(false);
+            resetDraftFilters();
         }
 
         setCurrentDraftView({
@@ -278,12 +271,6 @@ export function createDraftContext() {
         resetAll,
         selection,
         select,
-        search,
-        roleFilter,
-        favouriteFilter,
-        setFavouriteFilter,
-        setSearch,
-        setRoleFilter,
         draftFinished,
         isFavourite,
         toggleFavourite,

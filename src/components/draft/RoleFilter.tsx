@@ -3,9 +3,11 @@ import { useDraft } from "../../context/DraftContext";
 import { ROLES } from "../../lib/models/Role";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
+import { useDraftFilters } from "../../context/DraftFiltersContext";
 
 export function RoleFilter(props: { class?: string }) {
-    const { roleFilter, setRoleFilter, selection } = useDraft();
+    const { selection } = useDraft();
+    const { roleFilter, setRoleFilter } = useDraftFilters();
     const { getFilledRoles } = useDraftAnalysis();
 
     const filledRoles = () =>

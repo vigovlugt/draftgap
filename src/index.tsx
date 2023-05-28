@@ -16,6 +16,7 @@ import { ConfigProvider } from "./context/ConfigContext";
 import { DraftSuggestionsProvider } from "./context/DraftSuggestionsContext";
 import { DraftAnalysisProvider } from "./context/DraftAnalysisContext";
 import { DatasetProvider } from "./context/DatasetContext";
+import { DraftFiltersProvider } from "./context/DraftFiltersContext";
 
 setupMobileVH();
 setupAnalytics();
@@ -29,23 +30,25 @@ render(
                 <DatasetProvider>
                     <TooltipProvider>
                         <DraftViewProvider>
-                            <DraftProvider>
-                                <DraftAnalysisProvider>
-                                    <DraftSuggestionsProvider>
-                                        <BuildProvider>
-                                            <LolClientProvider>
-                                                <App />
-                                                <Toaster
-                                                    position="bottom-right"
-                                                    toastOptions={{
-                                                        duration: Infinity,
-                                                    }}
-                                                />
-                                            </LolClientProvider>
-                                        </BuildProvider>
-                                    </DraftSuggestionsProvider>
-                                </DraftAnalysisProvider>
-                            </DraftProvider>
+                            <DraftFiltersProvider>
+                                <DraftProvider>
+                                    <DraftAnalysisProvider>
+                                        <DraftSuggestionsProvider>
+                                            <BuildProvider>
+                                                <LolClientProvider>
+                                                    <App />
+                                                    <Toaster
+                                                        position="bottom-right"
+                                                        toastOptions={{
+                                                            duration: Infinity,
+                                                        }}
+                                                    />
+                                                </LolClientProvider>
+                                            </BuildProvider>
+                                        </DraftSuggestionsProvider>
+                                    </DraftAnalysisProvider>
+                                </DraftProvider>
+                            </DraftFiltersProvider>
                         </DraftViewProvider>
                     </TooltipProvider>
                 </DatasetProvider>

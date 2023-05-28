@@ -13,11 +13,12 @@ import { Team } from "../lib/models/Team";
 import { PickData } from "../lib/models/dataset/PickData";
 import predictRoles, { getTeamComps } from "../lib/role/role-predictor";
 import { useDataset } from "./DatasetContext";
+import { useDraftFilters } from "./DraftFiltersContext";
 
 export function createDraftAnalysisContext() {
     const { config } = useConfig();
-    const { allyTeam, opponentTeam, selection, roleFilter, setRoleFilter } =
-        useDraft();
+    const { allyTeam, opponentTeam, selection } = useDraft();
+    const { roleFilter, setRoleFilter } = useDraftFilters();
     const { isLoaded, dataset, dataset30Days } = useDataset();
 
     function getTeamCompsForTeam(team: Team) {

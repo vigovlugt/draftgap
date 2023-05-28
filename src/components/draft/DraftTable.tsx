@@ -22,22 +22,21 @@ import { createMustSelectToast } from "../../utils/toast";
 import { useConfig } from "../../context/ConfigContext";
 import { useDraftSuggestions } from "../../context/DraftSuggestionsContext";
 import { useDataset } from "../../context/DatasetContext";
+import { useDraftFilters } from "../../context/DraftFiltersContext";
 
 export default function DraftTable() {
     const { dataset } = useDataset();
     const {
         selection,
-        search,
-        roleFilter,
         pickChampion,
-        favouriteFilter,
-        setFavouriteFilter,
         isFavourite,
         toggleFavourite,
         select,
         bans,
         ownedChampions,
     } = useDraft();
+    const { search, roleFilter, favouriteFilter, setFavouriteFilter } =
+        useDraftFilters();
     const { allySuggestions, opponentSuggestions } = useDraftSuggestions();
 
     const { config } = useConfig();

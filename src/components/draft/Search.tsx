@@ -1,10 +1,10 @@
 import { Icon } from "solid-heroicons";
 import { magnifyingGlass, xMark } from "solid-heroicons/outline";
 import { onCleanup, onMount, Show } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
+import { useDraftFilters } from "../../context/DraftFiltersContext";
 
 export function Search() {
-    const { search, setSearch } = useDraft();
+    const { search, setSearch } = useDraftFilters();
 
     // eslint-disable-next-line prefer-const -- solid js ref
     let inputEl: HTMLInputElement | undefined = undefined;
