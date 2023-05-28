@@ -1,14 +1,14 @@
 import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/outline";
 import { trash, user } from "solid-heroicons/solid-mini";
-import { useDraft } from "../../context/DraftContext";
+import { useDraft } from "../../contexts/DraftContext";
 import { Team } from "../../lib/models/Team";
 import { DropdownMenu, PopoverItem } from "../common/DropdownMenu";
 import { Role } from "../../lib/models/Role";
 import { linkByStatsSite } from "../../utils/sites";
-import { useConfig } from "../../context/ConfigContext";
-import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
-import { useDataset } from "../../context/DatasetContext";
+import { useConfig } from "../../contexts/ConfigContext";
+import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
+import { useDataset } from "../../contexts/DatasetContext";
 
 export function PickOptions(props: { team: Team; index: number }) {
     const { config } = useConfig();

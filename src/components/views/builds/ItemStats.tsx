@@ -1,10 +1,10 @@
 import { Component, For } from "solid-js";
 import { Panel, PanelHeader } from "../../common/Panel";
 import { VerticalEntityStats } from "./EntityStats";
-import { useBuild } from "../../../context/BuildContext";
+import { useBuild } from "../../../contexts/BuildContext";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
 import { getRatingClass, formatPercentage } from "../../../utils/rating";
-import { useDataset } from "../../../context/DatasetContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 
 const ZERO_TO_FOUR = [0, 1, 2, 3, 4] as const;
 

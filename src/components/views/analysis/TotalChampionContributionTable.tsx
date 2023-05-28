@@ -19,9 +19,9 @@ import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
-import { useConfig } from "../../../context/ConfigContext";
-import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
-import { useDataset } from "../../../context/DatasetContext";
+import { useConfig } from "../../../contexts/ConfigContext";
+import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 
 type Props = {
     team: Team;

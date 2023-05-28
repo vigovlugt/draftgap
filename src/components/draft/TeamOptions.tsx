@@ -1,7 +1,7 @@
 import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/outline";
 import { trash } from "solid-heroicons/solid-mini";
-import { useDraft } from "../../context/DraftContext";
+import { useDraft } from "../../contexts/DraftContext";
 import { Team } from "../../lib/models/Team";
 import { DropdownMenu, PopoverItem } from "../common/DropdownMenu";
 

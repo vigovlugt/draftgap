@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
+import { useDraft } from "../../contexts/DraftContext";
 import { Team } from "../../lib/models/Team";
 
 const TEAMS = ["ally", "opponent"] as const;

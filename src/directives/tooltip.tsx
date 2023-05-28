@@ -1,6 +1,6 @@
 import { Placement } from "@popperjs/core";
 import { Accessor, JSX, onCleanup, onMount } from "solid-js";
-import { useTooltip } from "../context/TooltipContext";
+import { useTooltip } from "../contexts/TooltipContext";
 
 type HelpPopoverParams = {
     content: JSX.Element;

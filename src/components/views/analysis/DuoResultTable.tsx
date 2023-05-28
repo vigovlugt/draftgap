@@ -7,7 +7,7 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { createSignal, JSX, Show } from "solid-js";
-import { useDraft } from "../../../context/DraftContext";
+import { useDraft } from "../../../contexts/DraftContext";
 import { Role } from "../../../lib/models/Role";
 import { Team } from "../../../lib/models/Team";
 import { AnalyzeDuoResult } from "../../../lib/draft/analysis";
@@ -16,8 +16,8 @@ import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
 import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
-import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
-import { useDataset } from "../../../context/DatasetContext";
+import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 
 interface Props {
     team: Team;

@@ -1,9 +1,9 @@
 import { For } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
+import { useDraft } from "../../contexts/DraftContext";
 import { ROLES } from "../../lib/models/Role";
 import { RoleIcon } from "../icons/roles/RoleIcon";
-import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
-import { useDraftFilters } from "../../context/DraftFiltersContext";
+import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
+import { useDraftFilters } from "../../contexts/DraftFiltersContext";
 
 export function RoleFilter(props: { class?: string }) {
     const { selection } = useDraft();

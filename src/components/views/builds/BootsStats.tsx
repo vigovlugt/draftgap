@@ -1,10 +1,10 @@
 import { Component } from "solid-js";
-import { useBuild } from "../../../context/BuildContext";
+import { useBuild } from "../../../contexts/BuildContext";
 import { Panel, PanelHeader } from "../../common/Panel";
 import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
 import { HorizontalEntityStats } from "./EntityStats";
-import { useDataset } from "../../../context/DatasetContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 
 export const BootsStats: Component = () => {
     const { buildAnalysisResult, partialBuildDataset } = useBuild();

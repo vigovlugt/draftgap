@@ -1,5 +1,5 @@
 import { JSX, splitProps } from "solid-js";
-import { useDataset } from "../../context/DatasetContext";
+import { useDataset } from "../../contexts/DatasetContext";
 
 export function ChampionIcon(
     props: {

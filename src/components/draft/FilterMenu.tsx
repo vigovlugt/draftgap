@@ -3,7 +3,7 @@ import { funnel } from "solid-heroicons/solid";
 import { Component, JSX } from "solid-js";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import { Popover } from "../common/Popover";
-import { useConfig } from "../../context/ConfigContext";
+import { useConfig } from "../../contexts/ConfigContext";
 
 type Props = JSX.HTMLAttributes<HTMLDivElement>;
 

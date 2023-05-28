@@ -1,5 +1,5 @@
 import { Component, JSX } from "solid-js";
-import { useBuild } from "../../../context/BuildContext";
+import { useBuild } from "../../../contexts/BuildContext";
 import { SummaryCard } from "../analysis/SummaryCards";
 import {
     arrowsRightLeft,
@@ -7,7 +7,7 @@ import {
     user,
 } from "solid-heroicons/solid";
 import { capitalize } from "../../../utils/strings";
-import { useDataset } from "../../../context/DatasetContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 
 export const BuildSummaryCards: Component<
     JSX.HTMLAttributes<HTMLDivElement>

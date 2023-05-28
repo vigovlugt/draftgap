@@ -1,6 +1,6 @@
 import { Component, Match, Switch } from "solid-js";
 import { RuneTable } from "./RuneTable";
-import { useBuild } from "../../../context/BuildContext";
+import { useBuild } from "../../../contexts/BuildContext";
 import { BootsStats } from "./BootsStats";
 import { ItemStats } from "./ItemStats";
 import { StarterItemStats } from "./StarterItemStats";

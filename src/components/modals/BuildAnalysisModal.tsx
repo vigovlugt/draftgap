@@ -1,11 +1,11 @@
 import { Component } from "solid-js";
 import Modal from "../common/Modal";
-import { useBuild } from "../../context/BuildContext";
+import { useBuild } from "../../contexts/BuildContext";
 import { displayNameByRole } from "../../lib/models/Role";
 import { BuildSummaryCards } from "../views/builds/BuildSummaryCards";
 import { BuildMatchupTable } from "../views/builds/BuildMatchupTable";
 import { tooltip } from "../../directives/tooltip";
-import { useDataset } from "../../context/DatasetContext";
+import { useDataset } from "../../contexts/DatasetContext";
 tooltip;
 
 type Props = {

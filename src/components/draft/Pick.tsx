@@ -1,16 +1,16 @@
 import { Icon } from "solid-heroicons";
 import { For, Show } from "solid-js";
-import { useDraft } from "../../context/DraftContext";
+import { useDraft } from "../../contexts/DraftContext";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { PickOptions } from "./PickOptions";
 import { lockOpen, lockClosed } from "solid-heroicons/solid-mini";
 import { Role } from "../../lib/models/Role";
 import { formatPercentage } from "../../utils/rating";
 import { tooltip } from "../../directives/tooltip";
-import { useTooltip } from "../../context/TooltipContext";
+import { useTooltip } from "../../contexts/TooltipContext";
 import { linkByStatsSite } from "../../utils/sites";
-import { useConfig } from "../../context/ConfigContext";
-import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
+import { useConfig } from "../../contexts/ConfigContext";
+import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 tooltip;
 
 type Props = {

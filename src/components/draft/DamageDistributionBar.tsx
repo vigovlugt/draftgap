@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 import { Team } from "../../lib/models/Team";
-import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
+import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 
 export function DamageDistributionBar(props: { team: Team }) {
     const { allyDamageDistribution, opponentDamageDistribution } =

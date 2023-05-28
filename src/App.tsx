@@ -18,7 +18,7 @@ import { cog_6Tooth } from "solid-heroicons/solid";
 import SettingsModal from "./components/modals/SettingsModal";
 import AnalysisView from "./components/views/analysis/AnalysisView";
 import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
-import { useLolClient } from "./context/LolClientContext";
+import { useLolClient } from "./contexts/LolClientContext";
 import { UpdateModal } from "./components/modals/UpdateModal";
 import { OptionsPopover } from "./components/OptionsMenu";
 import { FAQModal } from "./components/modals/FAQModal";
@@ -28,9 +28,9 @@ import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
 import { ViewTabs } from "./components/common/ViewTabs";
 import { BuildsView } from "./components/views/builds/BuildsView";
-import { useDraftView } from "./context/DraftViewContext";
-import { useConfig } from "./context/ConfigContext";
-import { useDataset } from "./context/DatasetContext";
+import { useDraftView } from "./contexts/DraftViewContext";
+import { useConfig } from "./contexts/ConfigContext";
+import { useDataset } from "./contexts/DatasetContext";
 import { LoadingIcon } from "./components/icons/LoadingIcon";
 
 const App: Component = () => {

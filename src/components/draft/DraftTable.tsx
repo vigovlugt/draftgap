@@ -7,7 +7,7 @@ import {
     Row,
     SortingState,
 } from "@tanstack/solid-table";
-import { useDraft } from "../../context/DraftContext";
+import { useDraft } from "../../contexts/DraftContext";
 import { Role } from "../../lib/models/Role";
 import { Suggestion } from "../../lib/draft/suggestions";
 import { Table } from "../common/Table";
@@ -19,10 +19,10 @@ import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
 import { RatingText } from "../common/RatingText";
 import { createMustSelectToast } from "../../utils/toast";
-import { useConfig } from "../../context/ConfigContext";
-import { useDraftSuggestions } from "../../context/DraftSuggestionsContext";
-import { useDataset } from "../../context/DatasetContext";
-import { useDraftFilters } from "../../context/DraftFiltersContext";
+import { useConfig } from "../../contexts/ConfigContext";
+import { useDraftSuggestions } from "../../contexts/DraftSuggestionsContext";
+import { useDataset } from "../../contexts/DatasetContext";
+import { useDraftFilters } from "../../contexts/DraftFiltersContext";
 
 export default function DraftTable() {
     const { dataset } = useDataset();

@@ -7,7 +7,7 @@ import { TeamOptions } from "./TeamOptions";
 import { tooltip } from "../../directives/tooltip";
 import { capitalize } from "../../utils/strings";
 import { getRatingClass } from "../../utils/rating";
-import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
+import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 tooltip;
 
 interface IProps {

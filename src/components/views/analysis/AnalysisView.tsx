@@ -8,7 +8,7 @@ import { TotalChampionContributionTable } from "./TotalChampionContributionTable
 import { tooltip } from "../../../directives/tooltip";
 import { ChampionDraftAnalysisModal } from "../../modals/ChampionDraftAnalysisModal";
 import { Team } from "../../../lib/models/Team";
-import { useConfig } from "../../../context/ConfigContext";
+import { useConfig } from "../../../contexts/ConfigContext";
 tooltip;
 
 export default function AnalysisView() {

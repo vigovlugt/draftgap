@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 import { BuildEntity } from "../../lib/models/build/BuildEntity";
 import { overflowEllipsis } from "../../utils/strings";
-import { useDataset } from "../../context/DatasetContext";
+import { useDataset } from "../../contexts/DatasetContext";
 
 type Props = {
     entity: BuildEntity;

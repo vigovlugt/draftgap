@@ -3,8 +3,8 @@ import { Panel, PanelHeader } from "../../common/Panel";
 import { RuneData, StatShardData } from "../../../lib/models/dataset/RuneData";
 import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "../../../lib/rating/ratings";
-import { useBuild } from "../../../context/BuildContext";
-import { useDataset } from "../../../context/DatasetContext";
+import { useBuild } from "../../../contexts/BuildContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 
 export const RuneTable: Component = () => {
     const { dataset } = useDataset();

@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 import { overflowEllipsis } from "../../utils/strings";
 import { ChampionIcon } from "../icons/ChampionIcon";
-import { useDataset } from "../../context/DatasetContext";
+import { useDataset } from "../../contexts/DatasetContext";
 
 interface Props {
     championKey: string;

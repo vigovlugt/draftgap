@@ -16,8 +16,8 @@ import { Team } from "../../../lib/models/Team";
 import { createSignal, Show, splitProps } from "solid-js";
 import { RatingText } from "../../common/RatingText";
 import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
-import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
-import { useDataset } from "../../../context/DatasetContext";
+import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 
 interface Props {
     team: Team;

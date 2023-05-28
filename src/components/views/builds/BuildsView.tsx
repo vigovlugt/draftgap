@@ -1,12 +1,12 @@
 import { Show } from "solid-js";
 import { Team } from "../../../lib/models/Team";
 import { ViewTabs } from "../../common/ViewTabs";
-import { useDraft } from "../../../context/DraftContext";
+import { useDraft } from "../../../contexts/DraftContext";
 import { overflowEllipsis } from "../../../utils/strings";
 import { BuildView } from "./BuildView";
-import { useBuild } from "../../../context/BuildContext";
+import { useBuild } from "../../../contexts/BuildContext";
 import { BuildAnalysisModal } from "../../modals/BuildAnalysisModal";
-import { useDataset } from "../../../context/DatasetContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 
 export const BuildsViewTabs = (props: { team: Team }) => {
     const { allyTeam, opponentTeam } = useDraft();

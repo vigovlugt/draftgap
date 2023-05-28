@@ -11,8 +11,8 @@ import { tooltip } from "../../../directives/tooltip";
 import { RatingText } from "../../common/RatingText";
 import { Component, Show } from "solid-js";
 import { capitalize } from "../../../utils/strings";
-import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
-import { useDataset } from "../../../context/DatasetContext";
+import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 tooltip;
 
 export const SummaryCard = (

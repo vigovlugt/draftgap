@@ -9,8 +9,8 @@ import { tooltip } from "../../directives/tooltip";
 import { DuoResultTable } from "../views/analysis/DuoResultTable";
 import { Button } from "../common/Button";
 import { LOLALYTICS_ROLES } from "../../lib/data/lolalytics/roles";
-import { useDraftAnalysis } from "../../context/DraftAnalysisContext";
-import { useDataset } from "../../context/DatasetContext";
+import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
+import { useDataset } from "../../contexts/DatasetContext";
 tooltip;
 
 type Props = {

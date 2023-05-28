@@ -1,12 +1,12 @@
 import { Icon } from "solid-heroicons";
 import { questionMarkCircle } from "solid-heroicons/solid-mini";
 import { Setter, Show } from "solid-js";
-import { DraftTablePlacement, StatsSite } from "../../context/DraftContext";
+import { DraftTablePlacement, StatsSite } from "../../contexts/DraftContext";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import Modal from "../common/Modal";
 import { Toggle } from "../common/Toggle";
 import { RiskLevel, displayNameByRiskLevel } from "../../lib/risk/risk-level";
-import { useConfig } from "../../context/ConfigContext";
+import { useConfig } from "../../contexts/ConfigContext";
 import { useMedia } from "../../hooks/useMedia";
 
 interface Props {

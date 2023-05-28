@@ -19,8 +19,8 @@ import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
 import { WinnerCell } from "../../common/WinnerCell";
 import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
-import { useDraftAnalysis } from "../../../context/DraftAnalysisContext";
-import { useDataset } from "../../../context/DatasetContext";
+import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 
 interface Props {
     showAll: boolean;

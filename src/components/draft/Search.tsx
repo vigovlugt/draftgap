@@ -1,7 +1,7 @@
 import { Icon } from "solid-heroicons";
 import { magnifyingGlass, xMark } from "solid-heroicons/outline";
 import { onCleanup, onMount, Show } from "solid-js";
-import { useDraftFilters } from "../../context/DraftFiltersContext";
+import { useDraftFilters } from "../../contexts/DraftFiltersContext";
 
 export function Search() {
     const { search, setSearch } = useDraftFilters();

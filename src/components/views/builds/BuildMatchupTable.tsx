@@ -8,14 +8,14 @@ import {
     getSortedRowModel,
 } from "@tanstack/solid-table";
 import { Role } from "../../../lib/models/Role";
-import { useBuild } from "../../../context/BuildContext";
+import { useBuild } from "../../../contexts/BuildContext";
 import { BuildEntityCell } from "../../common/BuildEntityCell";
 import { createSignal } from "solid-js";
 import { RoleCell } from "../../common/RoleCell";
 import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { formatPercentage } from "../../../utils/rating";
-import { useDataset } from "../../../context/DatasetContext";
+import { useDataset } from "../../../contexts/DatasetContext";
 
 export const BuildMatchupTable = (
     props: JSX.HTMLAttributes<HTMLDivElement>
