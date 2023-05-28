@@ -53,7 +53,7 @@ export const Popover: Component<Props> = (props: Props) => {
                         classList={{
                             "text-opacity-90": properties.isOpen(),
                         }}
-                        class={`bg-transparent p-2 px-1 rounded-md hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${props.buttonClass}`}
+                        class={`transition duration-100 bg-white bg-opacity-0 p-2 px-1 rounded-md hover:text-opacity-100 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${props.buttonClass}`}
                         onClick={(e: MouseEvent) => e.stopPropagation()}
                         ref={setAnchor}
                     >

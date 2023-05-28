@@ -1,12 +1,7 @@
-import { Setter, Component, Show } from "solid-js";
-import { Button } from "../common/Button";
-import Modal from "../common/Modal";
-import { createQuery } from "@tanstack/solid-query";
-
-type Props = {
-    isOpen: boolean;
-    setIsOpen: Setter<boolean>;
-};
+import { Show } from "solid-js";
+import { buttonVariants } from "../common/Button";
+import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
+import { cn } from "../../utils/style";
 
 const AppleLogo = () => {
     return (
@@ -59,7 +54,7 @@ const MAC_DOWNLOAD_URL =
 const WINDOWS_DOWNLOAD_URL =
     "https://bucket.draftgap.com/releases/DraftGap_latest_x64_en-US.msi";
 
-export const DownloadAppModal: Component<Props> = (props) => {
+export function DesktopAppDialog() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const nav = navigator as any;
     const isMac =
@@ -68,12 +63,10 @@ export const DownloadAppModal: Component<Props> = (props) => {
             .indexOf("MAC") >= 0;
 
     return (
-        <Modal
-            title="DraftGap desktop app"
-            isOpen={props.isOpen}
-            setIsOpen={props.setIsOpen}
-            size="xl"
-        >
+        <DialogContent class="max-w-xl">
+            <DialogHeader>
+                <DialogTitle>DraftGap desktop app</DialogTitle>
+            </DialogHeader>
             <div class="w-full flex justify-center">
                 <Svg />
             </div>
@@ -87,7 +80,7 @@ export const DownloadAppModal: Component<Props> = (props) => {
             <Show
                 when={!isMac}
                 fallback={
-                    <p class="font-body mt-3 text-neutral-400 text-sm">
+                    <p class="font-body text-neutral-400 text-sm">
                         You may get a 'macOS cannot verify that this app is free
                         from malware' warning, but you can safely ignore it
                         (check{" "}
@@ -106,7 +99,7 @@ export const DownloadAppModal: Component<Props> = (props) => {
                     </p>
                 }
             >
-                <p class="font-body mt-3 text-neutral-400 text-sm">
+                <p class="font-body text-neutral-400 text-sm">
                     You may get a 'Windows protected your PC' warning, but you
                     can safely ignore it (check{" "}
                     <a
@@ -123,36 +116,42 @@ export const DownloadAppModal: Component<Props> = (props) => {
                 </p>
             </Show>
             <div
-                class="flex justify-between mt-4 gap-6"
+                class="flex justify-between gap-6"
                 classList={{
                     "flex-row-reverse": isMac,
                 }}
             >
-                <Button
-                    as="a"
+                <a
                     href={WINDOWS_DOWNLOAD_URL}
-                    class="w-full text-lg flex justify-center"
-                    classList={{
-                        "border-neutral-700 text-neutral-300": isMac,
-                    }}
-                    theme={isMac ? "secondary" : "primary"}
+                    class={cn(
+                        buttonVariants({
+                            variant: !isMac ? "primary" : "secondary",
+                        }),
+                        "w-full text-lg flex justify-center",
+                        {
+                            "border-neutral-700 text-neutral-300": isMac,
+                        }
+                    )}
                 >
                     <WindowsLogo />
                     Download for windows
-                </Button>
-                <Button
-                    as="a"
+                </a>
+                <a
                     href={MAC_DOWNLOAD_URL}
-                    class="w-full text-lg flex justify-center"
-                    classList={{
-                        "border-neutral-700 text-neutral-300": !isMac,
-                    }}
-                    theme={isMac ? "primary" : "secondary"}
+                    class={cn(
+                        buttonVariants({
+                            variant: isMac ? "primary" : "secondary",
+                        }),
+                        "w-full text-lg flex justify-center",
+                        {
+                            "border-neutral-700 text-neutral-300": !isMac,
+                        }
+                    )}
                 >
                     <AppleLogo />
                     Download for mac
-                </Button>
+                </a>
             </div>
-        </Modal>
+        </DialogContent>
     );
-};
+}

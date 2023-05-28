@@ -1,31 +1,36 @@
-import { DynamicProps } from "solid-headless/dist/types/utils/dynamic-prop";
-import { splitProps, ValidComponent } from "solid-js";
-import { JSX } from "solid-js/jsx-runtime";
-import { Dynamic } from "solid-js/web";
+import { VariantProps, cva } from "class-variance-authority";
+import { JSX, splitProps } from "solid-js";
+import { cn } from "../../utils/style";
 
-export function Button<T extends ValidComponent>(
-    props: DynamicProps<T> & {
-        children?: JSX.Element;
-        as?: T;
-        theme: "primary" | "secondary";
+export const buttonVariants = cva(
+    "uppercase relative inline-flex items-center border font-medium rounded-md",
+    {
+        variants: {
+            variant: {
+                primary: "bg-white border-0 text-primary hover:bg-neutral-200",
+                secondary:
+                    "text-neutral-300 border-neutral-700 bg-primary hover:bg-neutral-800",
+            },
+            size: {
+                default: "px-4 py-1 text-xl",
+            },
+        },
+        defaultVariants: {
+            variant: "primary",
+            size: "default",
+        },
     }
-) {
-    const [local, other] = splitProps(props, ["children", "as", "theme"]);
-    const themeClasses = {
-        primary: "bg-white border-0 text-primary  hover:bg-neutral-200",
-        secondary:
-            "text-neutral-300 border-neutral-700 bg-primary hover:bg-neutral-800",
-    };
+);
+
+type Props = JSX.HTMLAttributes<HTMLButtonElement> &
+    VariantProps<typeof buttonVariants>;
+
+export function Button(props: Props) {
+    const [local, other] = splitProps(props, ["children", "variant", "size"]);
 
     return (
-        <Dynamic
-            component={local.as || "button"}
-            {...other}
-            class={`uppercase text-xl relative inline-flex items-center border px-4 py-1 font-medium focus:z-10 rounded-md ${
-                themeClasses[local.theme]
-            } ${props.class}`}
-        >
-            {props.children}
-        </Dynamic>
+        <button {...other} class={cn(buttonVariants(local), props.class)}>
+            {local.children}
+        </button>
     );
 }

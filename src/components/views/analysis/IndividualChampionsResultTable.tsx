@@ -15,9 +15,10 @@ import { RoleCell } from "../../common/RoleCell";
 import { Team } from "../../../lib/models/Team";
 import { createSignal, Show, splitProps } from "solid-js";
 import { RatingText } from "../../common/RatingText";
-import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
+import { Dialog } from "../../common/Dialog";
+import { WinrateDecompositionDialog } from "../../dialogs/WinrateDecompositionDialog";
 
 interface Props {
     team: Team;
@@ -130,11 +131,12 @@ export function IndividualChampionsResultTable(
         <>
             <Table table={table} {...externalProps} />
             <Show when={chosenResult() !== undefined}>
-                <WinrateDecompositionModal
-                    isOpen={confidenceAnalysisModalIsOpen()}
-                    setIsOpen={setConfidenceAnalysisModalIsOpen}
-                    data={chosenResult()!}
-                />
+                <Dialog
+                    open={confidenceAnalysisModalIsOpen()}
+                    onOpenChange={setConfidenceAnalysisModalIsOpen}
+                >
+                    <WinrateDecompositionDialog data={chosenResult()!} />
+                </Dialog>
             </Show>
         </>
     );

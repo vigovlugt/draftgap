@@ -1,12 +1,10 @@
-import { Component, Setter } from "solid-js";
-import Modal from "../common/Modal";
+import { Component } from "solid-js";
 import { SummaryCard } from "../views/analysis/SummaryCards";
 import { hashtag, presentationChartLine } from "solid-heroicons/solid";
 import { winrateToRating } from "../../lib/rating/ratings";
+import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
 
 type Props = {
-    isOpen: boolean;
-    setIsOpen: Setter<boolean>;
     data: {
         rating: number;
         games: number;
@@ -14,14 +12,12 @@ type Props = {
     };
 };
 
-export const WinrateDecompositionModal: Component<Props> = (props) => {
+export const WinrateDecompositionDialog: Component<Props> = (props) => {
     return (
-        <Modal
-            isOpen={props.isOpen}
-            setIsOpen={props.setIsOpen}
-            title="Winrate Decomposition"
-            size="3xl"
-        >
+        <DialogContent class="max-w-3xl">
+            <DialogHeader>
+                <DialogTitle>Winrate Decomposition</DialogTitle>
+            </DialogHeader>
             <div
                 class={`grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-3`}
             >
@@ -60,6 +56,6 @@ export const WinrateDecompositionModal: Component<Props> = (props) => {
                     }
                 />
             </div>
-        </Modal>
+        </DialogContent>
     );
 };

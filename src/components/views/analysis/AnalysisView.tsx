@@ -6,9 +6,10 @@ import { MatchupResultTable } from "./MatchupResultTable";
 import { DraftSummaryCards } from "./SummaryCards";
 import { TotalChampionContributionTable } from "./TotalChampionContributionTable";
 import { tooltip } from "../../../directives/tooltip";
-import { ChampionDraftAnalysisModal } from "../../modals/ChampionDraftAnalysisModal";
 import { Team } from "../../../lib/models/Team";
 import { useUser } from "../../../contexts/UserContext";
+import { ChampionDraftAnalysisDialog } from "../../dialogs/ChampionDraftAnalysisDialog";
+import { Dialog } from "../../common/Dialog";
 tooltip;
 
 export default function AnalysisView() {
@@ -42,15 +43,18 @@ export default function AnalysisView() {
                     championDraftAnalysisModalTeam() != undefined
                 }
             >
-                <ChampionDraftAnalysisModal
-                    isOpen={showChampionDraftAnalysisModal()}
-                    setIsOpen={setShowChampionDraftAnalysisModal}
-                    championKey={championDraftAnalysisModalChampionKey()!}
-                    team={championDraftAnalysisModalTeam()!}
-                    openChampionDraftAnalysisModal={
-                        openChampionDraftAnalysisModal
-                    }
-                />
+                <Dialog
+                    open={showChampionDraftAnalysisModal()}
+                    onOpenChange={setShowChampionDraftAnalysisModal}
+                >
+                    <ChampionDraftAnalysisDialog
+                        championKey={championDraftAnalysisModalChampionKey()!}
+                        team={championDraftAnalysisModalTeam()!}
+                        openChampionDraftAnalysisModal={
+                            openChampionDraftAnalysisModal
+                        }
+                    />
+                </Dialog>
             </Show>
 
             <DraftSummaryCards team="ally" />

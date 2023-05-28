@@ -1,11 +1,17 @@
 import { Component, createSignal, onMount } from "solid-js";
-import Modal from "../common/Modal";
 import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
 import { relaunch } from "@tauri-apps/api/process";
 import { Button } from "../common/Button";
 import { useMedia } from "../../hooks/useMedia";
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "../common/Dialog";
 
-export const UpdateModal: Component = () => {
+export const UpdateDialog: Component = () => {
     const { isDesktop } = useMedia();
     const [isOpen, setIsOpen] = createSignal(false);
 
@@ -30,19 +36,20 @@ export const UpdateModal: Component = () => {
     };
 
     return (
-        <Modal
-            title="Update available!"
-            isOpen={isOpen()}
-            setIsOpen={setIsOpen}
-        >
-            <p class="text-2xl">
-                A new version of DraftGap is available. Do you want to update?
-            </p>
-            <div class="flex justify-end mt-2">
-                <Button theme="primary" onClick={update}>
-                    Update
-                </Button>
-            </div>
-        </Modal>
+        <Dialog open={isOpen()}>
+            <DialogContent canClose={false}>
+                <DialogHeader>
+                    <DialogTitle>Update available!</DialogTitle>
+                </DialogHeader>
+                <p class="text-xl uppercase text-neutral-300">
+                    A new version of DraftGap is available.
+                </p>
+                <DialogFooter>
+                    <Button variant="primary" onClick={update}>
+                        Update
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 };

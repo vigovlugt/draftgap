@@ -1,4 +1,4 @@
-import { Accessor, For, JSX, mergeProps, splitProps } from "solid-js";
+import { For, JSX, mergeProps, splitProps } from "solid-js";
 
 export type ButtonGroupOption<T> = {
     label: JSX.Element;

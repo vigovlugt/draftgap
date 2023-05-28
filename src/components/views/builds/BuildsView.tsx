@@ -5,8 +5,9 @@ import { useDraft } from "../../../contexts/DraftContext";
 import { overflowEllipsis } from "../../../utils/strings";
 import { BuildView } from "./BuildView";
 import { useBuild } from "../../../contexts/BuildContext";
-import { BuildAnalysisModal } from "../../modals/BuildAnalysisModal";
 import { useDataset } from "../../../contexts/DatasetContext";
+import { Dialog } from "../../common/Dialog";
+import { BuildAnalysisDialog } from "../../dialogs/BuildAnalysisDialog";
 
 export const BuildsViewTabs = (props: { team: Team }) => {
     const { allyTeam, opponentTeam } = useDraft();
@@ -66,10 +67,12 @@ export const BuildsView = () => {
             <Show
                 when={selectedEntity() !== undefined && buildAnalysisResult()}
             >
-                <BuildAnalysisModal
-                    isOpen={showSelectedEntity()}
-                    setIsOpen={() => setSelectedEntity(undefined)}
-                />
+                <Dialog
+                    open={showSelectedEntity()}
+                    onOpenChange={() => setSelectedEntity(undefined)}
+                >
+                    <BuildAnalysisDialog />
+                </Dialog>
             </Show>
         </>
     );

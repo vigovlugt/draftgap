@@ -105,123 +105,115 @@ export function Pick(props: Props) {
             </Show>
 
             <Show when={champion()}>
-                {() => (
-                    <>
-                        <div
-                            class="absolute top-0 bottom-0 left-0 h-full w-full"
-                            style={{
-                                "background-image": `linear-gradient(to bottom, rgba(25, 25, 25, 0.8) 0%, rgba(0, 0, 0, 0) 50%, rgba(25, 25, 25, 0.8) 100%),
+                <>
+                    <div
+                        class="absolute top-0 bottom-0 left-0 h-full w-full"
+                        style={{
+                            "background-image": `linear-gradient(to bottom, rgba(25, 25, 25, 0.8) 0%, rgba(0, 0, 0, 0) 50%, rgba(25, 25, 25, 0.8) 100%),
                                 url(https://ddragon.leagueoflegends.com/cdn/img/champion/centered/${
                                     champion()!.id === "Fiddlesticks"
                                         ? "FiddleSticks"
                                         : champion()!.id
                                 }_0.jpg)`,
-                                "background-position": "center 20%",
-                                "background-size": "cover",
-                            }}
-                        />
+                            "background-position": "center 20%",
+                            "background-size": "cover",
+                        }}
+                    />
 
-                        <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
-                            {champion()!.name}
-                        </span>
+                    <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
+                        {champion()!.name}
+                    </span>
 
-                        <div
-                            class="absolute bottom-0 left-0 right-0 flex justify-end overflow-x-auto pt-1 overflow-y-hidden"
-                            classList={{
-                                "bottom-1": pick().role !== undefined,
-                            }}
+                    <div
+                        class="absolute bottom-0 left-0 right-0 flex justify-end overflow-x-auto pt-1 overflow-y-hidden"
+                        classList={{
+                            "bottom-1": pick().role !== undefined,
+                        }}
+                    >
+                        <For
+                            each={[
+                                ...(champion()?.probabilityByRole.entries() ??
+                                    []),
+                            ]
+                                .filter(([, prob]) => prob > 0.05)
+                                .sort(([, probA], [, probB]) => probB - probA)}
                         >
-                            <For
-                                each={[
-                                    ...(champion()?.probabilityByRole.entries() ??
-                                        []),
-                                ]
-                                    .filter(([, prob]) => prob > 0.05)
-                                    .sort(
-                                        ([, probA], [, probB]) => probB - probA
-                                    )}
-                            >
-                                {([role, probability]) => (
-                                    <div
-                                        class="flex flex-col items-center relative group mx-[0.4rem] cursor-pointer"
-                                        onClick={() => {
-                                            setPopoverVisible(false);
-                                            setRole(
-                                                pick().role === undefined
-                                                    ? role
-                                                    : undefined
-                                            );
-                                        }}
-                                        // @ts-ignore
-                                        use:tooltip={{
-                                            content: (
-                                                <>
-                                                    {pick().role !== undefined
-                                                        ? "The champion is locked in this position, to choose an other position, click to unlock"
-                                                        : "Click to lock the champion in this position, the current estimated position is highlighted"}
-                                                </>
-                                            ),
-                                        }}
-                                    >
-                                        <div class="text-md">
-                                            <RoleIcon
-                                                role={role}
-                                                class="h-8 lg:h-10"
-                                                classList={{
-                                                    "opacity-50":
-                                                        teamCompRole() !== role,
-                                                }}
-                                            />
-                                        </div>
-                                        <Show when={pick().role === undefined}>
-                                            <div
-                                                class="text-md"
-                                                classList={{
-                                                    "opacity-75":
-                                                        teamCompRole() !== role,
-                                                }}
-                                                // @ts-ignore
-                                                use:tooltip={{
-                                                    content: (
-                                                        <>
-                                                            The probability of
-                                                            this champion being
-                                                            played in this
-                                                            position
-                                                        </>
-                                                    ),
-                                                }}
-                                            >
-                                                {formatPercentage(
-                                                    probability,
-                                                    1
-                                                )}
-                                            </div>
-                                        </Show>
-                                        <Icon
-                                            path={
-                                                pick().role === undefined
-                                                    ? lockOpen
-                                                    : lockClosed
-                                            }
-                                            class="absolute -top-1 -right-1 w-[20px]"
+                            {([role, probability]) => (
+                                <div
+                                    class="flex flex-col items-center relative group mx-[0.4rem] cursor-pointer"
+                                    onClick={() => {
+                                        setPopoverVisible(false);
+                                        setRole(
+                                            pick().role === undefined
+                                                ? role
+                                                : undefined
+                                        );
+                                    }}
+                                    // @ts-ignore
+                                    use:tooltip={{
+                                        content: (
+                                            <>
+                                                {pick().role !== undefined
+                                                    ? "The champion is locked in this position, to choose an other position, click to unlock"
+                                                    : "Click to lock the champion in this position, the current estimated position is highlighted"}
+                                            </>
+                                        ),
+                                    }}
+                                >
+                                    <div class="text-md">
+                                        <RoleIcon
+                                            role={role}
+                                            class="h-8 lg:h-10"
                                             classList={{
-                                                "opacity-0 group-hover:opacity-100 group-hover:text-neutral-300":
-                                                    pick().role === undefined,
-                                            }}
-                                            style={{
-                                                filter:
-                                                    pick().role !== undefined
-                                                        ? "drop-shadow(2px 0 0 #191919) drop-shadow(-2px 0 0 #191919) drop-shadow(0 2px 0 #191919) drop-shadow(0 -2px 0 #191919)"
-                                                        : undefined,
+                                                "opacity-50":
+                                                    teamCompRole() !== role,
                                             }}
                                         />
                                     </div>
-                                )}
-                            </For>
-                        </div>
-                    </>
-                )}
+                                    <Show when={pick().role === undefined}>
+                                        <div
+                                            class="text-md"
+                                            classList={{
+                                                "opacity-75":
+                                                    teamCompRole() !== role,
+                                            }}
+                                            // @ts-ignore
+                                            use:tooltip={{
+                                                content: (
+                                                    <>
+                                                        The probability of this
+                                                        champion being played in
+                                                        this position
+                                                    </>
+                                                ),
+                                            }}
+                                        >
+                                            {formatPercentage(probability, 1)}
+                                        </div>
+                                    </Show>
+                                    <Icon
+                                        path={
+                                            pick().role === undefined
+                                                ? lockOpen
+                                                : lockClosed
+                                        }
+                                        class="absolute -top-1 -right-1 w-[20px]"
+                                        classList={{
+                                            "opacity-0 group-hover:opacity-100 group-hover:text-neutral-300":
+                                                pick().role === undefined,
+                                        }}
+                                        style={{
+                                            filter:
+                                                pick().role !== undefined
+                                                    ? "drop-shadow(2px 0 0 #191919) drop-shadow(-2px 0 0 #191919) drop-shadow(0 2px 0 #191919) drop-shadow(0 -2px 0 #191919)"
+                                                    : undefined,
+                                        }}
+                                    />
+                                </div>
+                            )}
+                        </For>
+                    </div>
+                </>
             </Show>
 
             <PickOptions team={props.team} index={props.index} />

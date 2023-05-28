@@ -1,27 +1,25 @@
-import { Component } from "solid-js";
 import { displayNameByRole } from "../../lib/models/Role";
 import { Team } from "../../lib/models/Team";
-import Modal from "../common/Modal";
 import { ChampionIcon } from "../icons/ChampionIcon";
 import { MatchupResultTable } from "../views/analysis/MatchupResultTable";
 import { ChampionSummaryCards } from "../views/analysis/SummaryCards";
 import { tooltip } from "../../directives/tooltip";
 import { DuoResultTable } from "../views/analysis/DuoResultTable";
-import { Button } from "../common/Button";
+import { buttonVariants } from "../common/Button";
 import { LOLALYTICS_ROLES } from "../../lib/data/lolalytics/roles";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../contexts/DatasetContext";
+import { DialogContent, DialogTitle } from "../common/Dialog";
+import { cn } from "../../utils/style";
 tooltip;
 
 type Props = {
     team: Team;
     championKey: string;
-    setIsOpen: (value: boolean) => void;
-    isOpen: boolean;
     openChampionDraftAnalysisModal: (team: Team, championKey: string) => void;
 };
 
-export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
+export function ChampionDraftAnalysisDialog(props: Props) {
     const { dataset } = useDataset();
 
     const {
@@ -44,15 +42,9 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
         )?.[0];
 
     return (
-        <Modal
-            isOpen={props.isOpen}
-            setIsOpen={props.setIsOpen}
-            title=""
-            titleContainerClass="!h-0 !m-0"
-            size="3xl"
-        >
+        <DialogContent class="max-w-3xl">
             <div class="h-24 bg-[#101010] -m-6 mb-0" />
-            <div class="flex gap-4 -mt-[62.5px] items-center">
+            <div class="flex gap-4 -mt-[78px] items-center">
                 <div class="rounded-full border-primary border-8">
                     <ChampionIcon
                         championKey={props.championKey}
@@ -61,29 +53,33 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                     />
                 </div>
                 <div class="flex flex-col justify-center">
-                    <h2 class="text-4xl uppercase mb-1">{name()}</h2>
+                    <DialogTitle>{name()}</DialogTitle>
                     <span class="text-xl text-neutral-300 uppercase mb-[16px]">
                         {props.team} {displayNameByRole[role()!]}
                     </span>
                 </div>
-                <Button
-                    as="a"
+                <a
+                    class={cn(
+                        buttonVariants({ variant: "secondary" }),
+                        "ml-auto mt-[64px]"
+                    )}
                     href={`https://lolalytics.com/lol/${champion().id.toLowerCase()}/build/?lane=${
                         LOLALYTICS_ROLES[role()!]
                     }`}
                     target="_blank"
-                    theme="secondary"
-                    class="ml-auto mt-[64px]"
                 >
                     Lolalytics
-                </Button>
+                </a>
             </div>
             <ChampionSummaryCards
                 team={props.team}
                 championKey={props.championKey}
             />
 
-            <div id="matchup-champion-result" class="mt-8">
+            <div
+                id="matchup-champion-result"
+                class="overflow-x-hidden -m-1 p-1"
+            >
                 <h3
                     class="text-3xl uppercase ml-4"
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -138,10 +134,11 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                             championKey
                         );
                     }}
+                    truncateChampionNames
                 />
             </div>
 
-            <div id="duo-champion-result" class="mt-4">
+            <div id="duo-champion-result" class="overflow-x-hidden -m-1 p-1">
                 <h3
                     class="text-3xl uppercase mb-1 ml-4"
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -188,6 +185,6 @@ export const ChampionDraftAnalysisModal: Component<Props> = (props) => {
                     }}
                 />
             </div>
-        </Modal>
+        </DialogContent>
     );
-};
+}

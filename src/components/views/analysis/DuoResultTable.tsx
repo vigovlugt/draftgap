@@ -7,7 +7,6 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { createSignal, JSX, Show } from "solid-js";
-import { useDraft } from "../../../contexts/DraftContext";
 import { Role } from "../../../lib/models/Role";
 import { Team } from "../../../lib/models/Team";
 import { AnalyzeDuoResult } from "../../../lib/draft/analysis";
@@ -15,9 +14,10 @@ import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";
 import { Table } from "../../common/Table";
-import { WinrateDecompositionModal } from "../../modals/WinrateDecompositionModal";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
+import { WinrateDecompositionDialog } from "../../dialogs/WinrateDecompositionDialog";
+import { Dialog } from "../../common/Dialog";
 
 interface Props {
     team: Team;
@@ -181,11 +181,12 @@ export function DuoResultTable(
         <>
             <Table table={table} {...props} />
             <Show when={chosenResult() !== undefined}>
-                <WinrateDecompositionModal
-                    isOpen={confidenceAnalysisModalIsOpen()}
-                    setIsOpen={setConfidenceAnalysisModalIsOpen}
-                    data={chosenResult()!}
-                />
+                <Dialog
+                    open={confidenceAnalysisModalIsOpen()}
+                    onOpenChange={setConfidenceAnalysisModalIsOpen}
+                >
+                    <WinrateDecompositionDialog data={chosenResult()!} />
+                </Dialog>
             </Show>
         </>
     );

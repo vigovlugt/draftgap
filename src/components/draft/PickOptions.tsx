@@ -9,6 +9,7 @@ import { linkByStatsSite } from "../../utils/sites";
 import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../contexts/DatasetContext";
+import AnyRoleIcon from "../icons/roles/AnyRoleIcon";
 
 export function PickOptions(props: { team: Team; index: number }) {
     const { config } = useUser();
@@ -51,6 +52,22 @@ export function PickOptions(props: { team: Team; index: number }) {
             disabled: !champion(),
             key: "b",
         },
+        // {
+        //     icon: { path: <AnyRoleIcon /> },
+        //     content: "Set role",
+        //     items: [
+        //         ...Object.entries(Role).map(([, value]) => ({
+        //             content: value,
+        //             onClick: () =>
+        //                 pickChampion(
+        //                     props.team,
+        //                     props.index,
+        //                     teamPicks()[props.index].championKey,
+        //                     value as Role
+        //                 ),
+        //         })),
+        //     ],
+        // },
     ];
 
     return (

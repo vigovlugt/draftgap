@@ -1,4 +1,3 @@
-import { Button } from "solid-headless";
 import { Icon } from "solid-heroicons";
 import {
     Component,
@@ -15,14 +14,10 @@ import { Search } from "./components/draft/Search";
 import { TeamSelector } from "./components/draft/TeamSelector";
 import { TeamSidebar } from "./components/draft/TeamSidebar";
 import { cog_6Tooth } from "solid-heroicons/solid";
-import SettingsModal from "./components/modals/SettingsModal";
 import AnalysisView from "./components/views/analysis/AnalysisView";
 import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
 import { useLolClient } from "./contexts/LolClientContext";
-import { UpdateModal } from "./components/modals/UpdateModal";
 import { OptionsPopover } from "./components/OptionsMenu";
-import { FAQModal } from "./components/modals/FAQModal";
-import { DownloadAppModal } from "./components/modals/DownloadAppModal";
 import { Badge } from "./components/common/Badge";
 import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
@@ -32,6 +27,11 @@ import { useDraftView } from "./contexts/DraftViewContext";
 import { useUser } from "./contexts/UserContext";
 import { useDataset } from "./contexts/DatasetContext";
 import { LoadingIcon } from "./components/icons/LoadingIcon";
+import { DialogTrigger, Dialog } from "./components/common/Dialog";
+import SettingsDialog from "./components/dialogs/SettingsDialog";
+import { FAQDialog } from "./components/dialogs/FAQDialog";
+import { DesktopAppDialog } from "./components/dialogs/DesktopAppDialog";
+import { UpdateDialog } from "./components/dialogs/UpdateDialog";
 
 const App: Component = () => {
     const { config } = useUser();
@@ -167,17 +167,10 @@ const App: Component = () => {
                 height: "calc(var(--vh, 1vh) * 100)",
             }}
         >
-            <SettingsModal
-                isOpen={showSettings()}
-                setIsOpen={setShowSettings}
-                setFAQOpen={setShowFAQ}
-            />
-            <UpdateModal />
-            <FAQModal isOpen={showFAQ()} setIsOpen={setShowFAQ} />
-            <DownloadAppModal
-                isOpen={showDownloadModal()}
-                setIsOpen={setShowDownloadModal}
-            />
+            <UpdateDialog />
+            <Dialog open={showFAQ()} onOpenChange={setShowFAQ}>
+                <FAQDialog />
+            </Dialog>
             <header class="bg-primary px-1 py-0 border-b-2 border-neutral-700 flex justify-between">
                 <h1 class="text-4xl sm:text-5xl mr-2 ml-1 mt-1 mb-[0.4rem] font-semibold tracking-wide">
                     DRAFTGAP
@@ -187,12 +180,24 @@ const App: Component = () => {
                         <span>Patch {dataset()?.version ?? ""}</span>
                         <span>Last updated {timeAgo()}</span>
                     </div>
+                    <Dialog
+                        open={showDownloadModal()}
+                        onOpenChange={setShowDownloadModal}
+                    >
+                        <DesktopAppDialog />
+                    </Dialog>
                     <LolClientStatusBadge
                         setShowDownloadModal={setShowDownloadModal}
                     />
-                    <Button onClick={() => setShowSettings(!showSettings())}>
-                        <Icon path={cog_6Tooth} class="w-7 -mr-2" />
-                    </Button>
+                    <Dialog
+                        open={showSettings()}
+                        onOpenChange={setShowSettings}
+                    >
+                        <DialogTrigger>
+                            <Icon path={cog_6Tooth} class="w-7 -mr-2" />
+                        </DialogTrigger>
+                        <SettingsDialog />
+                    </Dialog>
                     <OptionsPopover
                         setShowSettings={setShowSettings}
                         setShowFAQ={setShowFAQ}
