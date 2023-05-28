@@ -8,6 +8,7 @@ import {
     useContext,
 } from "solid-js";
 import usePopper from "solid-popper";
+import { Transition } from "solid-transition-group";
 
 export const createTooltipContext = () => {
     const [popoverContent, setPopoverContent] =
@@ -55,18 +56,29 @@ export function TooltipProvider(props: { children: JSX.Element }) {
     return (
         <TooltipContext.Provider value={ctx}>
             {props.children}
-            <Show when={ctx.popoverVisible()}>
-                <div
-                    ref={setPopper}
-                    id="tooltip"
-                    class="max-w-xs w-max absolute"
+            <div class="absolute z-[1000]">
+                <Transition
+                    enterActiveClass="transition-opacity duration-100 ease-out"
+                    enterClass="opacity-0"
+                    enterToClass="opacity-100"
+                    exitActiveClass="transition-opacity duration-75 ease-out"
+                    exitClass="opacity-100"
+                    exitToClass="opacity-0"
                 >
-                    <div class="rounded-md bg-neutral-800 shadow-lg px-4 py-2 font-body text-sm ring-1 ring-white ring-opacity-20">
-                        {ctx.popoverContent()}
-                    </div>
-                    <div data-popper-arrow id="arrow" />
-                </div>
-            </Show>
+                    <Show when={ctx.popoverVisible()}>
+                        <div
+                            ref={setPopper}
+                            id="tooltip"
+                            class="max-w-xs w-max"
+                        >
+                            <div class="rounded-md bg-neutral-800 shadow-lg px-4 py-2 font-body text-sm ring-1 ring-white ring-opacity-20">
+                                {ctx.popoverContent()}
+                            </div>
+                            <div data-popper-arrow id="arrow" />
+                        </div>
+                    </Show>
+                </Transition>
+            </div>
         </TooltipContext.Provider>
     );
 }

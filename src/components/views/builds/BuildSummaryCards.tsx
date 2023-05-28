@@ -8,6 +8,7 @@ import {
 } from "solid-heroicons/solid";
 import { capitalize } from "../../../utils/strings";
 import { useDataset } from "../../../contexts/DatasetContext";
+import { cn } from "../../../utils/style";
 
 export const BuildSummaryCards: Component<
     JSX.HTMLAttributes<HTMLDivElement>
@@ -107,7 +108,10 @@ export const BuildSummaryCards: Component<
     return (
         <div
             {...props}
-            class={`grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-3 ${props.class}`}
+            class={cn(
+                "grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-3",
+                props.class
+            )}
         >
             <SummaryCard
                 class="!py-2"

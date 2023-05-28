@@ -13,6 +13,7 @@ import { Component, Show } from "solid-js";
 import { capitalize } from "../../../utils/strings";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
+import { cn } from "../../../utils/style";
 tooltip;
 
 export const SummaryCard = (
@@ -39,7 +40,10 @@ export const SummaryCard = (
     return (
         <a
             {...props}
-            class={`px-4 py-5 flex gap-4 items-center text-left ${props.class}`}
+            class={cn(
+                "px-4 py-5 flex gap-4 items-center text-left",
+                props.class
+            )}
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             use:tooltip={{
@@ -83,7 +87,10 @@ export const DraftSummaryCards = (
     return (
         <div
             {...props}
-            class={`grid divide-neutral-700 overflow-hidden rounded-lg bg-[#191919] grid-cols-2 md:grid-cols-4 md:divide-x ${props.class}`}
+            class={cn(
+                "grid divide-neutral-700 overflow-hidden rounded-lg bg-[#191919] grid-cols-2 md:grid-cols-4 md:divide-x",
+                props.class
+            )}
         >
             <SummaryCard
                 team={props.team}
@@ -187,7 +194,10 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
     return (
         <div
             {...props}
-            class={`grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-4 ${props.class}`}
+            class={cn(
+                "grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-4",
+                props.class
+            )}
         >
             <SummaryCard
                 class="!py-2"

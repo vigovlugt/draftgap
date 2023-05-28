@@ -32,6 +32,7 @@ import SettingsDialog from "./components/dialogs/SettingsDialog";
 import { FAQDialog } from "./components/dialogs/FAQDialog";
 import { DesktopAppDialog } from "./components/dialogs/DesktopAppDialog";
 import { UpdateDialog } from "./components/dialogs/UpdateDialog";
+import { Transition } from "solid-transition-group";
 
 const App: Component = () => {
     const { config } = useUser();

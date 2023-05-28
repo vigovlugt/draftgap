@@ -3,6 +3,7 @@ import { ComponentProps, Show } from "solid-js";
 import { cn } from "../../utils/style";
 import { Icon } from "solid-heroicons";
 import { xMark } from "solid-heroicons/solid";
+import { Transition } from "solid-transition-group";
 
 export const Dialog = DialogPrimitives.Root;
 
@@ -37,11 +38,11 @@ export function DialogContent(
 ) {
     return (
         <DialogPortal>
-            <DialogOverlay />
+            <DialogOverlay class="ui-expanded:animate-enter animate-leave !scale-100" />
             <DialogPrimitives.Content
                 {...props}
                 class={cn(
-                    "fixed z-50 grid w-full gap-4 rounded-lg bg-primary p-6 shadow-lg max-w-lg sm:rounded-lg border border-white/10 max-h-[calc(100%-4rem)] overflow-y-auto",
+                    "fixed z-50 grid w-full gap-4 rounded-lg bg-primary p-6 shadow-lg max-w-lg sm:rounded-lg border border-white/10 max-h-[calc(100%-4rem)] overflow-y-auto animate-dialog-leave ui-expanded:animate-dialog-enter",
                     props.class
                 )}
             >

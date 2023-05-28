@@ -1,6 +1,7 @@
 import { Table as TanstackTable, flexRender, Row } from "@tanstack/solid-table";
 import { createVirtualizer } from "@tanstack/solid-virtual";
 import { For, JSX, Show, createMemo } from "solid-js";
+import { cn } from "../../utils/style";
 
 interface Props<T> {
     table: TanstackTable<T>;
@@ -36,7 +37,10 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
         <div
             ref={tableEl}
             {...props}
-            class={`rounded-md overflow-auto max-h-full max-w-full ${props.class}`}
+            class={cn(
+                "rounded-md overflow-auto max-h-full max-w-full",
+                props.class
+            )}
         >
             <table
                 class="min-w-full text-lg md:text-xl lg:text-2xl"
@@ -52,23 +56,23 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                     {(header, i) => (
                                         <th
                                             scope="col"
-                                            class="py-3 px-2 text-left font-normal uppercase w-full whitespace-nowrap"
-                                            classList={{
-                                                "pl-4": i() === 0,
-                                                "pr-4":
-                                                    i() ===
-                                                    headerGroup.headers.length -
-                                                        1,
-                                                [(
+                                            class={cn(
+                                                "py-3 px-2 text-left font-normal uppercase w-full whitespace-nowrap",
+                                                {
+                                                    "pl-4": i() === 0,
+                                                    "pr-4":
+                                                        i() ===
+                                                        headerGroup.headers
+                                                            .length -
+                                                            1,
+                                                    "cursor-pointer":
+                                                        header.column.getCanSort(),
+                                                },
+                                                (
                                                     header.column.columnDef
                                                         .meta as any
-                                                )?.headerClass]: (
-                                                    header.column.columnDef
-                                                        .meta as any
-                                                )?.headerClass,
-                                                "cursor-pointer":
-                                                    header.column.getCanSort(),
-                                            }}
+                                                )?.headerClass
+                                            )}
                                             onClick={header.column.getToggleSortingHandler()}
                                         >
                                             <div class="flex items-center gap-1">
@@ -201,22 +205,21 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                         {(footer, i) => (
                                             <th
                                                 scope="col"
-                                                class="py-3 px-2 text-left font-normal uppercase w-full"
-                                                classList={{
-                                                    "pl-4": i() === 0,
-                                                    "pr-4":
-                                                        i() ===
-                                                        footerGroup.headers
-                                                            .length -
-                                                            1,
-                                                    [(
+                                                class={cn(
+                                                    "py-3 px-2 text-left font-normal uppercase w-full",
+                                                    {
+                                                        "pl-4": i() === 0,
+                                                        "pr-4":
+                                                            i() ===
+                                                            footerGroup.headers
+                                                                .length -
+                                                                1,
+                                                    },
+                                                    (
                                                         footer.column.columnDef
                                                             .meta as any
-                                                    )?.footerClass]: (
-                                                        footer.column.columnDef
-                                                            .meta as any
-                                                    )?.footerClass,
-                                                }}
+                                                    )?.footerClass
+                                                )}
                                             >
                                                 {footer.isPlaceholder
                                                     ? null

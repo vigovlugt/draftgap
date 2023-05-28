@@ -1,5 +1,6 @@
 import { JSX, splitProps } from "solid-js";
 import { useDataset } from "../../contexts/DatasetContext";
+import { cn } from "../../utils/style";
 
 export function ChampionIcon(
     props: {
@@ -14,7 +15,7 @@ export function ChampionIcon(
     return (
         <div
             {...other}
-            class={`relative overflow-hidden rounded ${props.class}`}
+            class={cn("relative overflow-hidden rounded", props.class)}
             style={{
                 width: props.size + "px",
                 height: props.size + "px",

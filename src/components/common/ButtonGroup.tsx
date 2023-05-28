@@ -1,4 +1,5 @@
 import { For, JSX, mergeProps, splitProps } from "solid-js";
+import { cn } from "../../utils/style";
 
 export type ButtonGroupOption<T> = {
     label: JSX.Element;
@@ -25,21 +26,27 @@ export function ButtonGroup<T>(
     return (
         <div
             {...externalProps}
-            class={`isolate inline-flex rounded-md shadow-sm ${externalProps.class}`}
+            class={cn(
+                "isolate inline-flex rounded-md shadow-sm ",
+                externalProps.class
+            )}
         >
             <For each={props.options}>
                 {(option, i) => (
                     <button
                         type="button"
-                        class="uppercase leading-4 relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 font-medium hover:bg-neutral-800 focus:z-10 py-3"
-                        classList={{
-                            "rounded-r-md": i() === props.options.length - 1,
-                            "rounded-l-md": i() === 0,
-                            "-ml-px": i() !== 0,
-                            "text-white !bg-neutral-700":
-                                props.selected === option.value,
-                            "!py-2": props.size === "sm",
-                        }}
+                        class={cn(
+                            "uppercase leading-4 relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 font-medium hover:bg-neutral-800 focus:z-10 py-3",
+                            {
+                                "rounded-r-md":
+                                    i() === props.options.length - 1,
+                                "rounded-l-md": i() === 0,
+                                "-ml-px": i() !== 0,
+                                "text-white bg-neutral-700":
+                                    props.selected === option.value,
+                                "py-2": props.size === "sm",
+                            }
+                        )}
                         onClick={() => props.onChange(option.value)}
                     >
                         {option.label}

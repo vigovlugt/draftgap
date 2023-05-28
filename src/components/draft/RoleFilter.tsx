@@ -1,11 +1,12 @@
-import { For } from "solid-js";
+import { ComponentProps, For } from "solid-js";
 import { useDraft } from "../../contexts/DraftContext";
 import { ROLES } from "../../lib/models/Role";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";
+import { cn } from "../../utils/style";
 
-export function RoleFilter(props: { class?: string }) {
+export function RoleFilter(props: ComponentProps<"span">) {
     const { selection } = useDraft();
     const { roleFilter, setRoleFilter } = useDraftFilters();
     const { getFilledRoles } = useDraftAnalysis();
@@ -14,7 +15,10 @@ export function RoleFilter(props: { class?: string }) {
         (selection.team && getFilledRoles(selection.team)) ?? new Set();
 
     return (
-        <span class={`isolate inline-flex rounded-md shadow-sm ${props.class}`}>
+        <span
+            {...props}
+            class={cn("isolate inline-flex rounded-md shadow-sm", props.class)}
+        >
             <For each={ROLES}>
                 {(role, i) => (
                     <button
