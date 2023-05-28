@@ -1,13 +1,14 @@
-import { Component, JSX } from "solid-js";
+import { Component, JSX, createSignal } from "solid-js";
 import {
-    HeadlessDisclosureProperties,
     Menu,
     Popover as PopoverComponent,
     PopoverButton,
     PopoverPanel,
     Transition,
+    HeadlessDisclosureProperties,
 } from "solid-headless";
 import { Icon } from "solid-heroicons";
+import usePopper from "solid-popper";
 
 type Icon = {
     path: JSX.Element;
@@ -37,6 +38,13 @@ type Props = {
 };
 
 export const Popover: Component<Props> = (props: Props) => {
+    const [anchor, setAnchor] = createSignal<HTMLElement | null>(null);
+    const [popper, setPopper] = createSignal<HTMLElement | null>(null);
+
+    usePopper(anchor, popper, {
+        placement: "bottom-end",
+    });
+
     return (
         <PopoverComponent defaultOpen={false} class="relative">
             {(properties) => (
@@ -47,16 +55,16 @@ export const Popover: Component<Props> = (props: Props) => {
                         }}
                         class={`bg-transparent p-2 px-1 rounded-md hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${props.buttonClass}`}
                         onClick={(e: MouseEvent) => e.stopPropagation()}
+                        ref={setAnchor}
                     >
                         {props.buttonChildren}
                     </PopoverButton>
                     <Transition
                         show={properties.isOpen()}
-                        class="transition opacity-0 scale-95 isolate z-[2]"
                         style={{
-                            // Classes on Transtion are removed or something
                             position: "relative",
                         }}
+                        class="isolate z-[2] opacity-0"
                         enter="transition duration-100"
                         enterFrom="opacity-0 scale-95"
                         enterTo="opacity-100 scale-100"
@@ -66,7 +74,8 @@ export const Popover: Component<Props> = (props: Props) => {
                     >
                         <PopoverPanel
                             unmount={false}
-                            class="absolute px-4 right-[1px] sm:px-0 lg:max-w-3xl"
+                            class="px-4 sm:px-0 lg:max-w-3xl absolute z-10 transform -translate-x-1/2 left-1/2"
+                            ref={setPopper}
                         >
                             <Menu
                                 as="div"
