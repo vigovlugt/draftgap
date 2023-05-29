@@ -187,7 +187,7 @@ export default function AnalysisView() {
             </Show>
 
             <div
-                class="flex-col flex md:flex-row justify-between gap-2 md:items-end mb-2"
+                class="flex-col flex md:flex-row justify-between gap-2 md:items-end mb-2 items-end"
                 id="matchup-result"
             >
                 <div>

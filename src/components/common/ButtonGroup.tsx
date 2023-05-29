@@ -36,7 +36,7 @@ export function ButtonGroup<T>(
                     <button
                         type="button"
                         class={cn(
-                            "uppercase leading-4 relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 font-medium hover:bg-neutral-800 focus:z-10 py-3",
+                            "uppercase leading-4 relative inline-flex items-center border text-neutral-300 border-neutral-700 bg-primary px-3 font-medium hover:bg-neutral-600 focus:z-10 py-3",
                             {
                                 "rounded-r-md":
                                     i() === props.options.length - 1,

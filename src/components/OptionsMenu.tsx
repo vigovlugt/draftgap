@@ -19,6 +19,8 @@ import {
     DropdownMenuTrigger,
 } from "./common/DropdownMenu";
 import { As } from "@kobalte/core";
+import { cn } from "../utils/style";
+import { buttonVariants } from "./common/Button";
 
 type Props = {
     setShowSettings: (show: boolean) => void;
@@ -29,7 +31,13 @@ export const OptionsDropdownMenu: Component<Props> = (props) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <As component="button" class="px-1 py-2 rounded-md" />
+                <As
+                    component="button"
+                    class={cn(
+                        buttonVariants({ variant: "transparent" }),
+                        "px-1 py-2"
+                    )}
+                />
                 <Icon path={ellipsisVertical} class="w-7" />
             </DropdownMenuTrigger>
             <DropdownMenuContent class="w-56">

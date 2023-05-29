@@ -3,13 +3,14 @@ import { JSX, splitProps } from "solid-js";
 import { cn } from "../../utils/style";
 
 export const buttonVariants = cva(
-    "uppercase relative inline-flex items-center border font-medium rounded-md",
+    "uppercase inline-flex items-center font-medium rounded-md transition ease-in-out duration-150",
     {
         variants: {
             variant: {
-                primary: "bg-white border-0 text-primary hover:bg-neutral-200",
+                primary: "bg-white text-primary hover:bg-neutral-200",
                 secondary:
-                    "text-neutral-300 border-neutral-700 bg-primary hover:bg-neutral-800",
+                    "text-neutral-300 border border-neutral-700 bg-primary hover:bg-neutral-800",
+                transparent: "hover:bg-white/10 disabled:pointer-events-none",
             },
             size: {
                 default: "px-4 py-1 text-xl",

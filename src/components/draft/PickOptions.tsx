@@ -21,6 +21,8 @@ import {
     DropdownMenuTrigger,
 } from "../common/DropdownMenu";
 import { As } from "@kobalte/core";
+import { cn } from "../../utils/style";
+import { buttonVariants } from "../common/Button";
 
 export function PickOptions(props: { team: Team; index: number }) {
     const { config } = useUser();
@@ -59,7 +61,13 @@ export function PickOptions(props: { team: Team; index: number }) {
         <div class="absolute right-0 top-0">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <As component="button" class="px-1 py-2 rounded-md" />
+                    <As
+                        component="button"
+                        class={cn(
+                            buttonVariants({ variant: "transparent" }),
+                            "px-1 py-2"
+                        )}
+                    />
                     <Icon path={ellipsisVertical} class="h-7" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
