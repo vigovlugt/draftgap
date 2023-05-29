@@ -3,25 +3,43 @@ import { ellipsisVertical } from "solid-heroicons/outline";
 import { trash } from "solid-heroicons/solid-mini";
 import { useDraft } from "../../contexts/DraftContext";
 import { Team } from "../../lib/models/Team";
-import { DropdownMenu, PopoverItem } from "../common/DropdownMenu";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuIcon,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "../common/DropdownMenu";
+import { As } from "@kobalte/core";
 
-export function TeamOptions(props: { team: Team }) {
+type Props = {
+    team: Team;
+};
+export function TeamOptions(props: Props) {
     const { resetTeam } = useDraft();
-
-    const items = (): PopoverItem[] => [
-        {
-            icon: trash,
-            content: "Reset team",
-            onClick: () => {
-                resetTeam(props.team);
-            },
-        },
-    ];
 
     return (
         <div class="absolute right-1 top-0">
-            <DropdownMenu items={items()}>
-                <Icon path={ellipsisVertical} class="h-7" />
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <As component="button" class="px-1 py-2 rounded-md" />
+                    <Icon path={ellipsisVertical} class="h-7" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuLabel>{props.team} team</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem
+                            onSelect={() => resetTeam(props.team)}
+                        >
+                            <DropdownMenuIcon path={trash} />
+                            <span>Reset team</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
             </DropdownMenu>
         </div>
     );

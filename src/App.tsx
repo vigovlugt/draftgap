@@ -17,7 +17,6 @@ import { cog_6Tooth } from "solid-heroicons/solid";
 import AnalysisView from "./components/views/analysis/AnalysisView";
 import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
 import { useLolClient } from "./contexts/LolClientContext";
-import { OptionsPopover } from "./components/OptionsMenu";
 import { Badge } from "./components/common/Badge";
 import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
@@ -32,7 +31,7 @@ import SettingsDialog from "./components/dialogs/SettingsDialog";
 import { FAQDialog } from "./components/dialogs/FAQDialog";
 import { DesktopAppDialog } from "./components/dialogs/DesktopAppDialog";
 import { UpdateDialog } from "./components/dialogs/UpdateDialog";
-import { Transition } from "solid-transition-group";
+import { OptionsDropdownMenu } from "./components/OptionsMenu";
 
 const App: Component = () => {
     const { config } = useUser();
@@ -199,7 +198,7 @@ const App: Component = () => {
                         </DialogTrigger>
                         <SettingsDialog />
                     </Dialog>
-                    <OptionsPopover
+                    <OptionsDropdownMenu
                         setShowSettings={setShowSettings}
                         setShowFAQ={setShowFAQ}
                     />

@@ -40,8 +40,8 @@ module.exports = {
                 ],
             },
             animation: {
-                enter: "enter 0.2s ease-out",
-                leave: "leave 0.15s ease-in forwards",
+                enter: "enter 0.15s ease-out",
+                leave: "leave 0.1s ease-in forwards",
                 "dialog-enter": "enter 0.3s ease-out",
                 "dialog-leave": "leave 0.2s ease-in forwards",
             },

@@ -1,89 +1,190 @@
-import { Component, For, JSX } from "solid-js";
-import { MenuItem } from "solid-headless";
+import { DropdownMenu as DropdownMenuPrimitive } from "@kobalte/core";
+
+import { cn } from "../../utils/style";
+import { ComponentProps } from "solid-js";
 import { Icon } from "solid-heroicons";
-import { Popover } from "./Popover";
-import { chevronRight } from "solid-heroicons/solid-mini";
+import { chevronRight } from "solid-heroicons/outline";
+import { check, checkCircle } from "solid-heroicons/solid-mini";
 
-type Icon = {
-    path: JSX.Element;
-    outline?: boolean | undefined;
-    mini?: boolean | undefined;
-};
+export const DropdownMenu = DropdownMenuPrimitive.Root;
 
-type BaseItem = {
-    icon?: Icon;
-    content: JSX.Element;
-    disabled?: boolean | undefined;
-    key?: string;
-    items?: PopoverItem[];
-};
-type LinkItem = BaseItem & {
-    href: string;
-};
+export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
-type ButtonItem = BaseItem & {
-    onClick?: () => void;
-};
+export const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
-export type PopoverItem = LinkItem | ButtonItem;
+export const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 
-type Props = {
-    children: JSX.Element;
-    items: PopoverItem[];
-    buttonClass?: string;
-};
+export const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 
-export const DropdownMenu: Component<Props> = (props: Props) => {
+export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+
+export function DropdownMenuSubTrigger(
+    props: ComponentProps<typeof DropdownMenuPrimitive.SubTrigger> & {
+        inset?: boolean;
+    }
+) {
     return (
-        <Popover buttonChildren={props.children}>
-            {({ setState }) => (
-                <For each={props.items}>
-                    {(item) => (
-                        <MenuItem
-                            as={(item as LinkItem).href ? "a" : "button"}
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
-                            href={(item as LinkItem).href}
-                            target="_blank"
-                            class="text-lg uppercase p-2 py-1.5 text-left focus:outline-none flex items-center space-x-2 transition-colors duration-150 ease-in-out"
-                            classList={{
-                                "hover:bg-neutral-700": !item.disabled,
-                                "opacity-50 cursor-default": item.disabled,
-                            }}
-                            onClick={(e: MouseEvent) => {
-                                if (item.disabled) {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    return;
-                                }
-
-                                (item as ButtonItem).onClick?.();
-                                setState(false);
-                            }}
-                        >
-                            {item.icon ? (
-                                <Icon
-                                    path={item.icon}
-                                    class="w-5 mx-1 text-neutral-400"
-                                />
-                            ) : (
-                                <div class="w-5 mx-1" />
-                            )}
-                            <span>{item.content}</span>
-                            <div class="!ml-auto text-base text-neutral-400">
-                                {item.items ? (
-                                    <Icon
-                                        path={chevronRight}
-                                        class="w-5 h-5 pr-[0.1rem]"
-                                    />
-                                ) : (
-                                    <span class="pr-2">{item.key}</span>
-                                )}
-                            </div>
-                        </MenuItem>
-                    )}
-                </For>
+        <DropdownMenuPrimitive.SubTrigger
+            {...props}
+            class={cn(
+                "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-lg outline-none",
+                {
+                    "pl-8": props.inset,
+                },
+                props.class
             )}
-        </Popover>
+        >
+            {props.children}
+            <Icon path={chevronRight} class="ml-auto h-4 w-4" />
+        </DropdownMenuPrimitive.SubTrigger>
     );
-};
+}
+
+export function DropdownMenuSubContent(
+    props: ComponentProps<typeof DropdownMenuPrimitive.SubContent>
+) {
+    return (
+        <DropdownMenuPrimitive.SubContent
+            {...props}
+            class={cn(
+                "z-50 min-w-[8rem] overflow-hidden rounded-md border border-white/10 bg-popover p-1 text-popover-foreground shadow-md animate-in data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1",
+                props.class
+            )}
+        >
+            {props.children}
+        </DropdownMenuPrimitive.SubContent>
+    );
+}
+
+export function DropdownMenuContent(
+    props: ComponentProps<typeof DropdownMenuPrimitive.Content>
+) {
+    return (
+        <DropdownMenuPrimitive.Portal>
+            <DropdownMenuPrimitive.Content
+                {...props}
+                class={cn(
+                    "z-50 min-w-[8rem] overflow-hidden rounded-md border border-white/10 bg-neutral-800 py-1.5 animate-leave ui-expanded:animate-enter",
+                    props.class
+                )}
+            >
+                {props.children}
+            </DropdownMenuPrimitive.Content>
+        </DropdownMenuPrimitive.Portal>
+    );
+}
+
+export function DropdownMenuItem(
+    props: ComponentProps<typeof DropdownMenuPrimitive.Item> & {
+        inset?: boolean;
+    }
+) {
+    return (
+        <DropdownMenuPrimitive.Item
+            {...props}
+            class={cn(
+                "relative flex select-none items-center px-3 py-1.5 text-lg outline-none hover:bg-neutral-700 cursor-pointer transition-colors ui-disabled:pointer-events-none ui-disabled:opacity-50 uppercase",
+                {
+                    "pl-8": props.inset,
+                },
+                props.class
+            )}
+        >
+            {props.children}
+        </DropdownMenuPrimitive.Item>
+    );
+}
+
+export function DropdownMenuCheckboxItem(
+    props: ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>
+) {
+    return (
+        <DropdownMenuPrimitive.CheckboxItem
+            {...props}
+            class={cn(
+                "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-lg outline-none transition-colors focus:bg-accent focus:text-accent-foreground ui-disabled:pointer-events-none ui-disabled:opacity-50",
+                props.class
+            )}
+        >
+            <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                <DropdownMenuPrimitive.ItemIndicator>
+                    <Icon path={check} class="h-4 w-4" />
+                </DropdownMenuPrimitive.ItemIndicator>
+            </span>
+        </DropdownMenuPrimitive.CheckboxItem>
+    );
+}
+
+export function DropdownMenuRadioItem(
+    props: ComponentProps<typeof DropdownMenuPrimitive.RadioItem>
+) {
+    return (
+        <DropdownMenuPrimitive.RadioItem
+            {...props}
+            class={cn(
+                "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-lg outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                props.class
+            )}
+        >
+            <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                <DropdownMenuPrimitive.ItemIndicator>
+                    <Icon path={checkCircle} class="h-2 w-2 fill-current" />
+                </DropdownMenuPrimitive.ItemIndicator>
+            </span>
+            {props.children}
+        </DropdownMenuPrimitive.RadioItem>
+    );
+}
+
+export function DropdownMenuLabel(
+    props: ComponentProps<"label"> & {
+        inset?: boolean;
+    }
+) {
+    return (
+        <label
+            {...props}
+            class={cn(
+                "px-3 py-1.5 text-lg font-medium uppercase",
+                props.inset && "pl-8",
+                props.class
+            )}
+        >
+            {props.children}
+        </label>
+    );
+}
+
+export function DropdownMenuSeparator(
+    props: ComponentProps<typeof DropdownMenuPrimitive.Separator>
+) {
+    return (
+        <DropdownMenuPrimitive.Separator
+            {...props}
+            class={cn("my-1.5 h-px border-neutral-700", props.class)}
+        />
+    );
+}
+
+export function DropdownMenuShortcut(props: ComponentProps<"span">) {
+    return (
+        <span
+            {...props}
+            class={cn(
+                "pl-3 ml-auto text-base tracking-widest opacity-60",
+                props.class
+            )}
+        >
+            {props.children}
+        </span>
+    );
+}
+
+export function DropdownMenuIcon(props: ComponentProps<typeof Icon>) {
+    return (
+        <Icon
+            {...props}
+            class={cn("mr-3 h-5 w-5 text-neutral-400", props.class)}
+        />
+    );
+}
