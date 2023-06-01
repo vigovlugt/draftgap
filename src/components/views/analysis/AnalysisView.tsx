@@ -1,4 +1,4 @@
-import { batch, createSignal, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import { ButtonGroup } from "../../common/ButtonGroup";
 import { DuoResultTable } from "./DuoResultTable";
 import { IndividualChampionsResultTable } from "./IndividualChampionsResultTable";
@@ -8,55 +8,23 @@ import { TotalChampionContributionTable } from "./TotalChampionContributionTable
 import { tooltip } from "../../../directives/tooltip";
 import { Team } from "../../../lib/models/Team";
 import { useUser } from "../../../contexts/UserContext";
-import { ChampionDraftAnalysisDialog } from "../../dialogs/ChampionDraftAnalysisDialog";
-import { Dialog } from "../../common/Dialog";
+import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 tooltip;
 
 export default function AnalysisView() {
     const { config } = useUser();
+    const { setAnalysisPick } = useDraftAnalysis();
     const [showAllMatchups, setShowAllMatchups] = createSignal(false);
-    const [showChampionDraftAnalysisModal, setShowChampionDraftAnalysisModal] =
-        createSignal(false);
-    const [
-        championDraftAnalysisModalChampionKey,
-        setChampionDraftAnalysisModalChampionKey,
-    ] = createSignal<string>();
-    const [championDraftAnalysisModalTeam, setChampionDraftAnalysisModalTeam] =
-        createSignal<Team>();
 
     const openChampionDraftAnalysisModal = (
         team: Team,
         championKey: string
     ) => {
-        batch(() => {
-            setChampionDraftAnalysisModalChampionKey(championKey);
-            setChampionDraftAnalysisModalTeam(team);
-            setShowChampionDraftAnalysisModal(true);
-        });
+        setAnalysisPick({ team, championKey });
     };
 
     return (
         <div>
-            <Show
-                when={
-                    championDraftAnalysisModalChampionKey() != undefined &&
-                    championDraftAnalysisModalTeam() != undefined
-                }
-            >
-                <Dialog
-                    open={showChampionDraftAnalysisModal()}
-                    onOpenChange={setShowChampionDraftAnalysisModal}
-                >
-                    <ChampionDraftAnalysisDialog
-                        championKey={championDraftAnalysisModalChampionKey()!}
-                        team={championDraftAnalysisModalTeam()!}
-                        openChampionDraftAnalysisModal={
-                            openChampionDraftAnalysisModal
-                        }
-                    />
-                </Dialog>
-            </Show>
-
             <DraftSummaryCards team="ally" />
             <DraftSummaryCards team="opponent" class="mb-12 mt-6" />
 

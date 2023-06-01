@@ -3,6 +3,7 @@ import {
     createContext,
     createEffect,
     createMemo,
+    createSignal,
     useContext,
 } from "solid-js";
 import { useDraft } from "./DraftContext";
@@ -141,6 +142,23 @@ export function createDraftAnalysisContext() {
         }
     });
 
+    const [analysisPick, _setAnalysisPick] = createSignal<{
+        team: Team;
+        championKey: string;
+    }>();
+    const [showAnalysisPick, setShowAnalysisPick] = createSignal(false);
+
+    function setAnalysisPick(
+        pick: { team: Team; championKey: string } | undefined
+    ) {
+        if (!pick) {
+            setShowAnalysisPick(false);
+            return;
+        }
+        _setAnalysisPick(pick);
+        setShowAnalysisPick(true);
+    }
+
     return {
         allyTeamData,
         opponentTeamData,
@@ -157,6 +175,9 @@ export function createDraftAnalysisContext() {
         getLockedRoles,
         getFilledRoles,
         draftAnalysisConfig,
+        analysisPick,
+        showAnalysisPick,
+        setAnalysisPick,
     };
 }
 

@@ -3,7 +3,7 @@ import { DropdownMenu as DropdownMenuPrimitive } from "@kobalte/core";
 import { cn } from "../../utils/style";
 import { ComponentProps } from "solid-js";
 import { Icon } from "solid-heroicons";
-import { chevronRight } from "solid-heroicons/outline";
+import { chevronRight } from "solid-heroicons/solid";
 import { check, checkCircle } from "solid-heroicons/solid-mini";
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
@@ -27,7 +27,7 @@ export function DropdownMenuSubTrigger(
         <DropdownMenuPrimitive.SubTrigger
             {...props}
             class={cn(
-                "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-lg outline-none",
+                "relative flex select-none items-center px-3 py-1.5 text-lg outline-none hover:bg-neutral-700 cursor-pointer transition-colors ui-disabled:pointer-events-none ui-disabled:opacity-50 uppercase",
                 {
                     "pl-8": props.inset,
                 },
@@ -35,7 +35,12 @@ export function DropdownMenuSubTrigger(
             )}
         >
             {props.children}
-            <Icon path={chevronRight} class="ml-auto h-4 w-4" />
+            <Icon
+                path={chevronRight}
+                class="ml-auto h-4 w-4 -mr-[2px]"
+                stroke-width={2}
+                stroke="currentColor"
+            />
         </DropdownMenuPrimitive.SubTrigger>
     );
 }
@@ -44,15 +49,17 @@ export function DropdownMenuSubContent(
     props: ComponentProps<typeof DropdownMenuPrimitive.SubContent>
 ) {
     return (
-        <DropdownMenuPrimitive.SubContent
-            {...props}
-            class={cn(
-                "z-50 min-w-[8rem] overflow-hidden rounded-md border border-white/10 bg-popover p-1 text-popover-foreground shadow-md animate-in data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1",
-                props.class
-            )}
-        >
-            {props.children}
-        </DropdownMenuPrimitive.SubContent>
+        <DropdownMenuPrimitive.Portal>
+            <DropdownMenuPrimitive.SubContent
+                {...props}
+                class={cn(
+                    "z-50 min-w-[8rem] overflow-hidden rounded-md border border-white/10 bg-neutral-800 py-1.5 animate-leave ui-expanded:animate-enter",
+                    props.class
+                )}
+            >
+                {props.children}
+            </DropdownMenuPrimitive.SubContent>
+        </DropdownMenuPrimitive.Portal>
     );
 }
 

@@ -32,11 +32,15 @@ import { FAQDialog } from "./components/dialogs/FAQDialog";
 import { DesktopAppDialog } from "./components/dialogs/DesktopAppDialog";
 import { UpdateDialog } from "./components/dialogs/UpdateDialog";
 import { OptionsDropdownMenu } from "./components/OptionsMenu";
+import { useDraftAnalysis } from "./contexts/DraftAnalysisContext";
+import { ChampionDraftAnalysisDialog } from "./components/dialogs/ChampionDraftAnalysisDialog";
 
 const App: Component = () => {
     const { config } = useUser();
     const { currentDraftView, setCurrentDraftView } = useDraftView();
     const { dataset, isLoaded, datasetQuery } = useDataset();
+    const { analysisPick, setAnalysisPick, showAnalysisPick } =
+        useDraftAnalysis();
     const { startLolClientIntegration, stopLolClientIntegration } =
         useLolClient();
 
@@ -79,6 +83,21 @@ const App: Component = () => {
                         </div>
                     </Match>
                     <Match when={isLoaded()}>
+                        <Dialog
+                            open={showAnalysisPick()}
+                            onOpenChange={(open) => {
+                                if (!open) setAnalysisPick(undefined);
+                            }}
+                        >
+                            <ChampionDraftAnalysisDialog
+                                championKey={analysisPick()!.championKey}
+                                team={analysisPick()!.team}
+                                openChampionDraftAnalysisModal={(
+                                    team,
+                                    championKey
+                                ) => setAnalysisPick({ team, championKey })}
+                            />
+                        </Dialog>
                         <div class="flex flex-col min-h-full flex-1">
                             <ViewTabs
                                 tabs={

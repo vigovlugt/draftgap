@@ -23,8 +23,15 @@ export function Pick(props: Props) {
     const { allyTeam, opponentTeam, selection, select, pickChampion } =
         useDraft();
 
-    const { allyTeamComp, opponentTeamComp, allyTeamData, opponentTeamData } =
-        useDraftAnalysis();
+    const team = () => (props.team === "ally" ? allyTeam : opponentTeam);
+
+    const {
+        allyTeamComp,
+        opponentTeamComp,
+        allyTeamData,
+        opponentTeamData,
+        setAnalysisPick,
+    } = useDraftAnalysis();
 
     const { setPopoverVisible } = useTooltip();
     const picks = () => (props.team === "ally" ? allyTeam : opponentTeam);
@@ -76,6 +83,11 @@ export function Pick(props: Props) {
         ) {
             e.preventDefault();
             pickChampion(props.team, props.index, undefined, undefined);
+        } else if (e.key === "f") {
+            setAnalysisPick({
+                team: props.team,
+                championKey: team()[props.index].championKey!,
+            });
         }
     };
 
