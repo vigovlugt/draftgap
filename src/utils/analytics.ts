@@ -1,11 +1,21 @@
-export function setupAnalytics() {
-    (window as any).dataLayer = (window as any).dataLayer || [];
-
-    function gtag(...args: any[]) {
-        // eslint-disable-next-line prefer-rest-params
-        (window as any).dataLayer.push(arguments);
+declare global {
+    interface Window {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        dataLayer: any[];
     }
-    window.gtag = gtag;
+}
+
+export function setupAnalytics() {
+    window.dataLayer = window.dataLayer || [];
+
+    {
+        // eslint-disable-next-line no-inner-declarations
+        function gtag() {
+            // eslint-disable-next-line prefer-rest-params
+            window.dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+    }
 
     const isProd = import.meta.env.PROD;
     if (!isProd) return;

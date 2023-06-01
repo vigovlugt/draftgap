@@ -2,8 +2,10 @@ import { Icon } from "solid-heroicons";
 import { funnel } from "solid-heroicons/solid";
 import { Component, JSX } from "solid-js";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
-import { Popover } from "../common/Popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../common/Popover";
 import { useUser } from "../../contexts/UserContext";
+import { buttonVariants } from "../common/Button";
+import { cn } from "../../utils/style";
 
 type Props = JSX.HTMLAttributes<HTMLDivElement>;
 
@@ -18,28 +20,37 @@ export const FilterMenu: Component<Props> = (props) => {
     }));
 
     return (
-        <Popover
-            buttonChildren={<Icon path={funnel} class="w-6 text-neutral-300" />}
-            buttonClass="mr-4"
-            {...props}
-        >
-            {() => (
-                <div class="py-2 px-4">
-                    <span class="text-2xl uppercase block mb-1">Filters</span>
-                    <span class="text-lg uppercase block">
-                        Minimum game count (7d)
-                    </span>
-                    <ButtonGroup
-                        options={minGameCountOptions}
-                        selected={config.minGames}
-                        onChange={(value: number) =>
-                            setConfig({
-                                minGames: value,
-                            })
-                        }
-                    />
-                </div>
-            )}
+        <Popover>
+            <PopoverTrigger
+                class={cn(buttonVariants({ variant: "transparent" }), "px-1")}
+            >
+                <Icon path={funnel} class="w-6 text-neutral-300" />
+            </PopoverTrigger>
+            <PopoverContent>
+                <span class="text-2xl uppercase block mb-1 leading-none">
+                    Filters
+                </span>
+                <span class="text-lg uppercase block">
+                    Minimum game count (7d)
+                </span>
+                <ButtonGroup
+                    options={minGameCountOptions}
+                    selected={config.minGames}
+                    onChange={(value: number) =>
+                        setConfig({
+                            minGames: value,
+                        })
+                    }
+                />
+            </PopoverContent>
         </Popover>
+        // <Popover
+        //     buttonChildren={<Icon path={funnel} class="w-6 text-neutral-300" />}
+        //     buttonClass="mr-4"
+        //     {...props}
+        // >
+        //     {() => (
+        //     )}
+        // </Popover>
     );
 };

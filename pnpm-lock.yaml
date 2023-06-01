@@ -49,9 +49,6 @@ dependencies:
   dotenv:
     specifier: ^16.0.3
     version: 16.0.3
-  solid-headless:
-    specifier: ^0.13.0
-    version: 0.13.0(solid-js@1.7.5)
   solid-heroicons:
     specifier: ^3.1.1
     version: 3.1.1(solid-js@1.7.5)
@@ -3936,16 +3933,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /solid-headless@0.13.0(solid-js@1.7.5):
-    resolution: {integrity: sha512-N118iPl7W5lyug4K+4c0cwM8YR2yEVJ/3H4wq6tVijATHfXfLnB1ACFI5GGHSXlwu70PUzaGSKwcVqLlloUMyA==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      solid-js: ^1.2
-    dependencies:
-      solid-js: 1.7.5
-      solid-use: 0.5.0(solid-js@1.7.5)
-    dev: false
-
   /solid-heroicons@3.1.1(solid-js@1.7.5):
     resolution: {integrity: sha512-wfU/SqxqxWxInvfFlKJfCBPnJ94Zq1GQFiFL3M0KwZzT81lSF5yIC4HA/Czp3DYrn+dUumjO0qdrx8Ab3cy2sA==}
     peerDependencies:
@@ -3997,15 +3984,6 @@ packages:
     dependencies:
       '@solid-primitives/refs': 1.0.4(solid-js@1.7.5)
       '@solid-primitives/transition-group': 1.0.2(solid-js@1.7.5)
-      solid-js: 1.7.5
-    dev: false
-
-  /solid-use@0.5.0(solid-js@1.7.5):
-    resolution: {integrity: sha512-z1AaS99SL3gNP70K4+XIVKGXDRI56m3Q6Q4X63bfgw0kaN6cwT4SAyFZAmIRjHcvf5rOMRQfNgUV4YVDha+LcQ==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      solid-js: ^1.2
-    dependencies:
       solid-js: 1.7.5
     dev: false
 
