@@ -29,9 +29,11 @@ export function Chart<T extends keyof ChartTypeRegistry>(props: Props<T>) {
                     ...props.chart.options,
                     maintainAspectRatio: false,
                     plugins: {
+                        // @ts-ignore
                         ...props.chart.options?.plugins,
 
                         tooltip: {
+                            // @ts-ignore
                             ...props.chart.options?.plugins?.tooltip,
                             displayColors: false,
                         },

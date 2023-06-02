@@ -1,6 +1,6 @@
 {
     "name": "draftgap",
-    "version": "2.6.1",
+    "version": "2.6.2",
     "description": "",
     "scripts": {
         "start": "vite",
@@ -9,6 +9,7 @@
         "serve": "vite preview",
         "test": "vitest",
         "lint": "eslint --ext .ts,.tsx src",
+        "typecheck": "tsc --noEmit",
         "update:data": "node -r esbuild-register scripts/updateData.ts",
         "benchmark": "node -r esbuild-register scripts/benchmarkSerialization.ts",
         "bump:version": "node -r esbuild-register scripts/bumpVersion.ts",
