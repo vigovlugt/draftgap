@@ -9,6 +9,8 @@ import { tooltip } from "../../../directives/tooltip";
 import { Team } from "../../../lib/models/Team";
 import { useUser } from "../../../contexts/UserContext";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
+import { Chart } from "../../common/Chart";
+import { ChartConfiguration, ChartOptions } from "chart.js";
 tooltip;
 
 export default function AnalysisView() {
@@ -247,6 +249,74 @@ export default function AnalysisView() {
                     />
                 </div>
             </div>
+
+            {/* <div class="flex-col flex gap-2 mb-2">
+                <h3 class="text-3xl mb-1 uppercase ml-4">Scaling</h3>
+                <div class="p-4 rounded-md bg-[#191919] w-1/2 max-w-4xl h-64">
+                    <Chart
+                        chart={
+                            {
+                                type: "line",
+                                data: {
+                                    labels: [
+                                        { year: 2010, count: "0-15" },
+                                        { year: 2011, count: "15-20" },
+                                        { year: 2012, count: "20-25" },
+                                        { year: 2013, count: "25-30" },
+                                        { year: 2014, count: "30-35" },
+                                        { year: 2015, count: "30-40" },
+                                        { year: 2016, count: "40+" },
+                                    ].map((row) => row.count),
+                                    datasets: [
+                                        {
+                                            label: "ALLY".toUpperCase(),
+                                            data: [
+                                                { year: 2010, count: 10 },
+                                                { year: 2011, count: 20 },
+                                                { year: 2012, count: 15 },
+                                                { year: 2013, count: 25 },
+                                                { year: 2014, count: 22 },
+                                                { year: 2015, count: 30 },
+                                                { year: 2016, count: 28 },
+                                            ].map((row) => row.count),
+                                            borderColor: "#3c82f6",
+                                        },
+                                        {
+                                            label: "OPPONENT".toUpperCase(),
+                                            data: [
+                                                { year: 2010, count: 10 },
+                                                { year: 2011, count: 20 },
+                                                { year: 2012, count: 15 },
+                                                { year: 2013, count: 25 },
+                                                { year: 2014, count: 22 },
+                                                { year: 2015, count: 30 },
+                                                { year: 2016, count: 28 },
+                                            ]
+                                                .map((row) => row.count)
+                                                .reverse(),
+                                            borderColor: "#ef4444",
+                                        },
+                                    ],
+                                },
+                                options: {
+                                    pointStyle: false,
+                                    plugins: {
+                                        legend: {
+                                            display: false,
+                                        },
+                                        tooltip: {
+                                            backgroundColor: "#444444",
+                                        },
+                                    },
+                                    borderCapStyle: "round",
+                                    borderWidth: 4,
+                                    tension: 0.1,
+                                },
+                            } as ChartConfiguration
+                        }
+                    />
+                </div>
+            </div> */}
         </div>
     );
 }

@@ -48,6 +48,7 @@
         "@tanstack/solid-virtual": "3.0.0-beta.34",
         "@tauri-apps/api": "^1.2.0",
         "@thisbeyond/solid-dnd": "^0.7.3",
+        "chart.js": "^4.3.0",
         "class-variance-authority": "^0.6.0",
         "clsx": "^1.2.1",
         "date-fns": "^2.29.3",

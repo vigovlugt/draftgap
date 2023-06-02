@@ -56,7 +56,7 @@ export function TooltipProvider(props: { children: JSX.Element }) {
     return (
         <TooltipContext.Provider value={ctx}>
             {props.children}
-            <div class="absolute z-[1000]">
+            <div class="absolute z-[1000] top-0 left-0">
                 <Transition
                     enterActiveClass="transition-opacity duration-100 ease-out"
                     enterClass="opacity-0"

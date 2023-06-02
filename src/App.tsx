@@ -5,6 +5,7 @@ import {
     createSignal,
     For,
     Match,
+    onError,
     Show,
     Switch,
 } from "solid-js";
@@ -38,7 +39,7 @@ import { ChampionDraftAnalysisDialog } from "./components/dialogs/ChampionDraftA
 const App: Component = () => {
     const { config } = useUser();
     const { currentDraftView, setCurrentDraftView } = useDraftView();
-    const { dataset, isLoaded, datasetQuery } = useDataset();
+    const { dataset, isLoaded } = useDataset();
     const { analysisPick, setAnalysisPick, showAnalysisPick } =
         useDraftAnalysis();
     const { startLolClientIntegration, stopLolClientIntegration } =
@@ -72,9 +73,14 @@ const App: Component = () => {
                 }}
             >
                 <Switch>
-                    <Match when={datasetQuery.error}>
+                    <Match
+                        when={
+                            dataset.state === "ready" && dataset() === undefined
+                        }
+                    >
                         <div class="flex justify-center items-center h-full text-2xl text-red-500">
-                            Error
+                            An unexpected error occurred. Please try again
+                            later.
                         </div>
                     </Match>
                     <Match when={!isLoaded()}>
