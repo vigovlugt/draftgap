@@ -1,6 +1,5 @@
 import { S3Client } from "@aws-sdk/client-s3";
-import { config } from "dotenv";
-config();
+import "dotenv/config";
 
 if (!process.env.S3_ACCESS_KEY_ID) {
     throw new Error("S3_ACCESS_KEY_ID must be set");
