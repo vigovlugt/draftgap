@@ -1,16 +1,17 @@
-import { displayNameByRole } from "../../lib/models/Role";
-import { Team } from "../../lib/models/Team";
+import { displayNameByRole } from "draftgap-core/src/models/Role";
+import { Team } from "draftgap-core/src/models/Team";
 import { ChampionIcon } from "../icons/ChampionIcon";
 import { MatchupResultTable } from "../views/analysis/MatchupResultTable";
 import { ChampionSummaryCards } from "../views/analysis/SummaryCards";
 import { tooltip } from "../../directives/tooltip";
 import { DuoResultTable } from "../views/analysis/DuoResultTable";
 import { buttonVariants } from "../common/Button";
-import { LOLALYTICS_ROLES } from "../../lib/data/lolalytics/roles";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { DialogContent, DialogTitle } from "../common/Dialog";
 import { cn } from "../../utils/style";
+import { displayNameByStatsSite, linkByStatsSite } from "../../utils/sites";
+import { useUser } from "../../contexts/UserContext";
 tooltip;
 
 type Props = {
@@ -28,6 +29,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
         allyTeamComp,
         opponentTeamComp,
     } = useDraftAnalysis();
+    const { config } = useUser();
 
     const draftResult = () =>
         props.team === "ally" ? allyDraftResult() : opponentDraftResult();
@@ -63,12 +65,14 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                         buttonVariants({ variant: "secondary" }),
                         "ml-auto mt-[64px]"
                     )}
-                    href={`https://lolalytics.com/lol/${champion().id.toLowerCase()}/build/?lane=${
-                        LOLALYTICS_ROLES[role()!]
-                    }`}
+                    href={linkByStatsSite(
+                        config.defaultStatsSite,
+                        champion().id,
+                        role()!
+                    )}
                     target="_blank"
                 >
-                    Lolalytics
+                    {displayNameByStatsSite(config.defaultStatsSite)}
                 </a>
             </div>
             <ChampionSummaryCards

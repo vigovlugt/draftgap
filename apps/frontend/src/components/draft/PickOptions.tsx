@@ -2,8 +2,8 @@ import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/outline";
 import { presentationChartLine, trash, user } from "solid-heroicons/solid-mini";
 import { useDraft } from "../../contexts/DraftContext";
-import { Team } from "../../lib/models/Team";
-import { ROLES, Role } from "../../lib/models/Role";
+import { Team } from "draftgap-core/src/models/Team";
+import { ROLES, Role } from "draftgap-core/src/models/Role";
 import { linkByStatsSite } from "../../utils/sites";
 import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
@@ -83,7 +83,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                                     champion()
                                         ? linkByStatsSite(
                                               config.defaultStatsSite,
-                                              champion()!.id.toLowerCase(),
+                                              champion()!.id,
                                               [...teamComp().entries()].find(
                                                   ([, value]) =>
                                                       value ===

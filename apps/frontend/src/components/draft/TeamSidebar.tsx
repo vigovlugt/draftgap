@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import { ratingToWinrate } from "../../lib/rating/ratings";
+import { ratingToWinrate } from "draftgap-core/src/rating/ratings";
 import { CountUp } from "../CountUp";
 import { DamageDistributionBar } from "./DamageDistributionBar";
 import { Pick } from "./Pick";

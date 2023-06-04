@@ -13,8 +13,8 @@ import {
     getGridChampions,
     getPickableChampionIds,
 } from "../api/lcu-api";
-import { getRoleFromString, Role } from "../lib/models/Role";
-import { Team } from "../lib/models/Team";
+import { getRoleFromString, Role } from "draftgap-core/src/models/Role";
+import { Team } from "draftgap-core/src/models/Team";
 import {
     LolChampSelectChampSelectAction,
     LolChampSelectChampSelectPlayerSelection,
@@ -81,7 +81,7 @@ export const ClientState = {
     Disabled: "Disabled",
 } as const;
 
-export type ClientState = (typeof ClientState)[keyof typeof ClientState];
+export type ClientState = typeof ClientState[keyof typeof ClientState];
 
 export const createLolClientContext = () => {
     const { isDesktop } = useMedia();

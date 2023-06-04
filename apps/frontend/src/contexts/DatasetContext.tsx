@@ -4,7 +4,10 @@ import {
     createResource,
     useContext,
 } from "solid-js";
-import { DATASET_VERSION, Dataset } from "../lib/models/dataset/Dataset";
+import {
+    DATASET_VERSION,
+    Dataset,
+} from "draftgap-core/src/models/dataset/Dataset";
 
 const fetchDataset = async (name: "30-days" | "current-patch") => {
     try {

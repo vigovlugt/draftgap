@@ -7,7 +7,7 @@ import {
     getCoreRowModel,
     getSortedRowModel,
 } from "@tanstack/solid-table";
-import { Role } from "../../../lib/models/Role";
+import { Role } from "draftgap-core/src/models/Role";
 import { useBuild } from "../../../contexts/BuildContext";
 import { BuildEntityCell } from "../../common/BuildEntityCell";
 import { createSignal } from "solid-js";

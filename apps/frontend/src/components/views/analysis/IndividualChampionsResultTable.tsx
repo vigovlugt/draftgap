@@ -7,12 +7,12 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { JSX } from "solid-js/jsx-runtime";
-import { Role } from "../../../lib/models/Role";
-import { AnalyzeChampionResult } from "../../../lib/draft/analysis";
+import { Role } from "draftgap-core/src/models/Role";
+import { AnalyzeChampionResult } from "draftgap-core/src/draft/analysis";
 import ChampionCell from "../../common/ChampionCell";
 import { Table } from "../../common/Table";
 import { RoleCell } from "../../common/RoleCell";
-import { Team } from "../../../lib/models/Team";
+import { Team } from "draftgap-core/src/models/Team";
 import { createSignal, Show, splitProps } from "solid-js";
 import { RatingText } from "../../common/RatingText";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";

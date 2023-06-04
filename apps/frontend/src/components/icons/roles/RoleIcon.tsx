@@ -1,6 +1,6 @@
 import { Component, Match, Switch, splitProps } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
-import { Role } from "../../../lib/models/Role";
+import { Role } from "draftgap-core/src/models/Role";
 import BottomIcon from "./BottomIcon";
 import JungleIcon from "./JungleIcon";
 import MidIcon from "./MidIcon";

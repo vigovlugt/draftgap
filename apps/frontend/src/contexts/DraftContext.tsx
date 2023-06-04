@@ -6,9 +6,9 @@ import {
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { displayNameByRole, Role } from "../lib/models/Role";
-import { Team } from "../lib/models/Team";
-import { AnalyzeDraftConfig } from "../lib/draft/analysis";
+import { displayNameByRole, Role } from "draftgap-core/src/models/Role";
+import { Team } from "draftgap-core/src/models/Team";
+import { AnalyzeDraftConfig } from "draftgap-core/src/draft/analysis";
 import { createStoredSignal } from "../utils/signals";
 import { useDraftView } from "./DraftViewContext";
 import { useMedia } from "../hooks/useMedia";

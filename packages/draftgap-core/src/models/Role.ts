@@ -1,4 +1,4 @@
-import { LolalyticsRole } from "../data/lolalytics/roles";
+import { LolalyticsRole } from "../../../../apps/dataset/src/lolalytics/roles";
 
 export const Role = {
     Top: 0,
@@ -8,7 +8,7 @@ export const Role = {
     Support: 4,
 } as const;
 
-export type Role = (typeof ROLES)[number];
+export type Role = typeof ROLES[number];
 
 export const ROLES = [0, 1, 2, 3, 4] as const;
 

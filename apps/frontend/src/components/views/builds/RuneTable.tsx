@@ -1,8 +1,11 @@
 import { Component, For, Show, createMemo } from "solid-js";
 import { Panel, PanelHeader } from "../../common/Panel";
-import { RuneData, StatShardData } from "../../../lib/models/dataset/RuneData";
+import {
+    RuneData,
+    StatShardData,
+} from "draftgap-core/src/models/dataset/RuneData";
 import { formatPercentage, getRatingClass } from "../../../utils/rating";
-import { ratingToWinrate } from "../../../lib/rating/ratings";
+import { ratingToWinrate } from "draftgap-core/src/rating/ratings";
 import { useBuild } from "../../../contexts/BuildContext";
 import { useDataset } from "../../../contexts/DatasetContext";
 

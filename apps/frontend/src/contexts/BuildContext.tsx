@@ -7,15 +7,15 @@ import {
     createSignal,
     useContext,
 } from "solid-js";
-import { analyzeBuild } from "../lib/builds/analysis";
-import { fetchBuildData } from "../lib/builds/data";
+import { analyzeBuild } from "draftgap-core/src/builds/analysis";
+import { fetchBuildData } from "draftgap-core/src/builds/data";
 import {
     PartialBuildDataset,
     FullBuildDataset,
-} from "../lib/models/build/BuildDataset";
+} from "draftgap-core/src/models/build/BuildDataset";
 import { useDraft } from "./DraftContext";
-import { Team } from "../lib/models/Team";
-import { BuildEntity } from "../lib/models/build/BuildEntity";
+import { Team } from "draftgap-core/src/models/Team";
+import { BuildEntity } from "draftgap-core/src/models/build/BuildEntity";
 import { useDraftAnalysis } from "./DraftAnalysisContext";
 import { useDataset } from "./DatasetContext";
 

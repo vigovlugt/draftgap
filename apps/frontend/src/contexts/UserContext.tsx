@@ -7,8 +7,8 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import { createStoredSignal } from "../utils/signals";
-import { Role } from "../lib/models/Role";
-import { DraftGapConfig } from "../lib/models/user/Config";
+import { Role } from "draftgap-core/src/models/Role";
+import { DraftGapConfig } from "draftgap-core/src/models/user/Config";
 
 type FavouritePick = `${string}:${Role}`;
 

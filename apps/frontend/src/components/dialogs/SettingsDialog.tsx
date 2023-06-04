@@ -3,10 +3,16 @@ import { questionMarkCircle } from "solid-heroicons/solid-mini";
 import { Show } from "solid-js";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import { Switch } from "../common/Switch";
-import { RiskLevel, displayNameByRiskLevel } from "../../lib/risk/risk-level";
+import {
+    RiskLevel,
+    displayNameByRiskLevel,
+} from "draftgap-core/src/risk/risk-level";
 import { useUser } from "../../contexts/UserContext";
 import { useMedia } from "../../hooks/useMedia";
-import { DraftTablePlacement, StatsSite } from "../../lib/models/user/Config";
+import {
+    DraftTablePlacement,
+    StatsSite,
+} from "draftgap-core/src/models/user/Config";
 import {
     Dialog,
     DialogContent,

@@ -1,7 +1,7 @@
 import { Component } from "solid-js";
 import { SummaryCard } from "../views/analysis/SummaryCards";
 import { hashtag, presentationChartLine } from "solid-heroicons/solid";
-import { winrateToRating } from "../../lib/rating/ratings";
+import { winrateToRating } from "draftgap-core/src/rating/ratings";
 import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
 
 type Props = {

@@ -1,5 +1,5 @@
 import { Show } from "solid-js";
-import { Team } from "../../../lib/models/Team";
+import { Team } from "draftgap-core/src/models/Team";
 import { ViewTabs } from "../../common/ViewTabs";
 import { useDraft } from "../../../contexts/DraftContext";
 import { overflowEllipsis } from "../../../utils/strings";

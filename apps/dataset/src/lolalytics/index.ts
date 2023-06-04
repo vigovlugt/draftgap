@@ -1,13 +1,16 @@
-import { ChampionData } from "../../models/dataset/ChampionData";
-import { ChampionSynergyData } from "../../models/dataset/ChampionSynergyData";
-import { ChampionMatchupData } from "../../models/dataset/ChampionMatchupData";
-import { getRoleFromString, Role } from "../../models/Role";
+import { ChampionData } from "../../../../packages/draftgap-core/src/models/dataset/ChampionData";
+import { ChampionSynergyData } from "../../../../packages/draftgap-core/src/models/dataset/ChampionSynergyData";
+import { ChampionMatchupData } from "../../../../packages/draftgap-core/src/models/dataset/ChampionMatchupData";
+import {
+    getRoleFromString,
+    Role,
+} from "../../../../packages/draftgap-core/src/models/Role";
 import { getLolalyticsChampion } from "./champion";
 import { getLolalyticsChampion2 } from "./champion2";
 import {
     ChampionRoleData,
     defaultChampionRoleData,
-} from "../../models/dataset/ChampionRoleData";
+} from "../../../../packages/draftgap-core/src/models/dataset/ChampionRoleData";
 import { LOLALYTICS_ROLES, LolalyticsRole } from "./roles";
 
 export async function getChampionDataFromLolalytics(

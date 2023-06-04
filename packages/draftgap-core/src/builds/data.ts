@@ -1,8 +1,8 @@
 import {
     LolalyticsChampionResponse,
     getLolalyticsChampion,
-} from "../data/lolalytics/champion";
-import { LOLALYTICS_ROLES } from "../data/lolalytics/roles";
+} from "../../../../apps/dataset/src/lolalytics/champion";
+import { LOLALYTICS_ROLES } from "../../../../apps/dataset/src/lolalytics/roles";
 import { Role } from "../models/Role";
 import {
     FullBuildDataset,

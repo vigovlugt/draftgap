@@ -1,4 +1,4 @@
-import { retry } from "../../../utils/fetch";
+import { retry } from "../utils";
 import { LolalyticsRole } from "./roles";
 
 export interface LolalyticsChampionResponse {

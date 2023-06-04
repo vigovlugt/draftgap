@@ -3,9 +3,9 @@ import {
     PutObjectCommand,
     PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
-import { bytesToHumanReadable } from "../../../utils/bytes";
 import { client } from "./client";
-import { DATASET_VERSION, Dataset } from "../../models/dataset/Dataset";
+import { DATASET_VERSION, Dataset } from "draftgap-core/src/models/dataset/Dataset";
+import { bytesToHumanReadable } from "../utils";
 
 export async function storeDataset(
     dataset: Dataset,

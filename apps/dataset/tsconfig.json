@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "lib": ["es2023", "DOM"],
+        "module": "Node16",
+        "target": "es2022",
+
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node"
+    }
+}

@@ -8,8 +8,8 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { useDraft } from "../../contexts/DraftContext";
-import { Role } from "../../lib/models/Role";
-import { Suggestion } from "../../lib/draft/suggestions";
+import { Role } from "draftgap-core/src/models/Role";
+import { Suggestion } from "draftgap-core/src/draft/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
