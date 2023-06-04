@@ -1,4 +1,1 @@
-node_modules
-dist
-.env
-prisma/database.db
+node_modules/
