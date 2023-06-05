@@ -4,6 +4,10 @@ on:
         tags:
             - "v*"
     workflow_dispatch:
+    
+defaults:
+    run:
+        working-directory: apps/frontend
 
 jobs:
     release:
@@ -15,9 +19,6 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v3
-
-            - name: Cd into app
-              run: cd apps/frontend
 
             # - name: Install dependencies (ubuntu only)
             # if: matrix.platform == 'ubuntu-20.04'
