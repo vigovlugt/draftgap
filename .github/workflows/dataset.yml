@@ -15,9 +15,6 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
-            - name: Cd into app
-              run: cd apps/dataset
-
             - name: Install PNPM
               run: npm install -g pnpm
 
