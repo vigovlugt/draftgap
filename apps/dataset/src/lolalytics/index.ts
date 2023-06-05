@@ -114,6 +114,10 @@ export async function getChampionDataFromLolalytics(
                         )
                     ) as Record<Role, Record<string, ChampionSynergyData>>,
                     damageProfile: championData.header.damage,
+                    statsByTime: Array.from({ length: 7 }).map((_, i) => ({
+                        wins: championData.timeWin[i + 1],
+                        games: championData.time[i + 1],
+                    })),
                 };
 
                 return [getRoleFromString(role), championRoleData];
