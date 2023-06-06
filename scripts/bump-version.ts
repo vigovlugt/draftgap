@@ -22,13 +22,13 @@ function getNextVersion(currentVersion: string, versionType: string): string {
 
 function getPaths(dir: string, fileName: string): string[] {
     return readdirSync(dir)
-        .map((f) => [f, statSync(f)] as const)
-        .reduce((paths, [f, stat]) => {
-            const path = join(dir, f);
+        .map((f) => join(dir, f))
+        .reduce((paths, f) => {
+            const stat = statSync(f);
             if (stat.isDirectory()) {
-                return paths.concat(getPaths(path, fileName));
+                return paths.concat(getPaths(f, fileName));
             } else if (stat.isFile() && f === fileName) {
-                return paths.concat(path);
+                return paths.concat(f);
             }
 
             return paths;
@@ -61,11 +61,11 @@ export function main() {
 
     // Update tauri.conf.json
     const tauriConfJson = JSON.parse(
-        readFileSync("src-tauri/tauri.conf.json", "utf8")
+        readFileSync("apps/frontend/src-tauri/tauri.conf.json", "utf8")
     );
     tauriConfJson.package.version = nextVersion;
     writeFileSync(
-        "src-tauri/tauri.conf.json",
+        "apps/frontend/src-tauri/tauri.conf.json",
         JSON.stringify(tauriConfJson, null, 4)
     );
 

@@ -1,6 +1,6 @@
 {
     "name": "draftgap",
-    "version": "2.6.3",
+    "version": "2.9.0",
     "scripts": {
         "bump-version": "tsx scripts/bump-version.ts",
         "typecheck": "turbo typecheck"
