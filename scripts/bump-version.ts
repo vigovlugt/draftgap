@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
-import { join } from "path";
+import { join, basename } from "path";
 import { exec } from "child_process";
 
 function getNextVersion(currentVersion: string, versionType: string): string {
@@ -23,12 +23,17 @@ function getNextVersion(currentVersion: string, versionType: string): string {
 function getPaths(dir: string, fileName: string): string[] {
     return readdirSync(dir)
         .map((f) => join(dir, f))
-        .reduce((paths, f) => {
-            const stat = statSync(f);
+        .reduce((paths, path) => {
+            const file = basename(path);
+            if (file === "node_modules" || file === "target") {
+                return paths;
+            }
+
+            const stat = statSync(path);
             if (stat.isDirectory()) {
-                return paths.concat(getPaths(f, fileName));
-            } else if (stat.isFile() && f === fileName) {
-                return paths.concat(f);
+                return paths.concat(getPaths(path, fileName));
+            } else if (stat.isFile() && file === fileName) {
+                return paths.concat(path);
             }
 
             return paths;
