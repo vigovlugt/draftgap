@@ -140,21 +140,28 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                 <For each={row.getVisibleCells()}>
                                     {(cell, i) => (
                                         <td
-                                            class="whitespace-nowrap py-3 px-2 group/cell"
-                                            classList={{
-                                                "pl-4": i() === 0,
-                                                "pr-4":
-                                                    i() ===
-                                                    row.getVisibleCells()
-                                                        .length -
-                                                        1,
-                                                "cursor-pointer": Boolean(
-                                                    (
-                                                        cell.column.columnDef
-                                                            .meta as any
-                                                    )?.onClickCell
-                                                ),
-                                            }}
+                                            class={cn(
+                                                "whitespace-nowrap py-3 px-2 group/cell",
+                                                {
+                                                    "pl-4": i() === 0,
+                                                    "pr-4":
+                                                        i() ===
+                                                        row.getVisibleCells()
+                                                            .length -
+                                                            1,
+                                                    "cursor-pointer": Boolean(
+                                                        (
+                                                            cell.column
+                                                                .columnDef
+                                                                .meta as any
+                                                        )?.onClickCell
+                                                    ),
+                                                },
+                                                (
+                                                    cell.column.columnDef
+                                                        .meta as any
+                                                )?.cellClass
+                                            )}
                                             onClick={(e) =>
                                                 (
                                                     cell.column.columnDef

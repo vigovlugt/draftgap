@@ -13,7 +13,7 @@ import { Suggestion } from "draftgap-core/src/draft/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
-import { createSignal, onCleanup, onMount, Show } from "solid-js";
+import { batch, createSignal, onCleanup, onMount, Show } from "solid-js";
 import { Icon } from "solid-heroicons";
 import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
@@ -23,13 +23,22 @@ import { useUser } from "../../contexts/UserContext";
 import { useDraftSuggestions } from "../../contexts/DraftSuggestionsContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";
+import { informationCircle } from "solid-heroicons/solid-mini";
+import { Dialog } from "../common/Dialog";
+import { ChampionDraftAnalysisDialog } from "../dialogs/ChampionDraftAnalysisDialog";
+import { Team } from "draftgap-core/src/models/Team";
 
 export default function DraftTable() {
     const { dataset } = useDataset();
     const { selection, pickChampion, select, bans, ownedChampions } =
         useDraft();
-    const { search, roleFilter, favouriteFilter, setFavouriteFilter } =
-        useDraftFilters();
+    const {
+        search,
+        roleFilter,
+        setRoleFilter,
+        favouriteFilter,
+        setFavouriteFilter,
+    } = useDraftFilters();
     const { allySuggestions, opponentSuggestions } = useDraftSuggestions();
     const { isFavourite, setFavourite } = useUser();
 
@@ -125,6 +134,57 @@ export default function DraftTable() {
         return filtered;
     };
 
+    const [analysisPick, _setAnalysisPick] = createSignal<{
+        team: Team;
+        championKey: string;
+    }>();
+    const [showAnalysisPick, setShowAnalysisPick] = createSignal(false);
+    const [savedRoleFilter, setSavedRoleFilter] = createSignal<Role>();
+
+    function setAnalysisPick(
+        pick:
+            | { team: Team; championKey: string; role: Role | undefined }
+            | undefined
+    ) {
+        batch(() => {
+            if (!pick) {
+                pickChampion(
+                    selection.team!,
+                    selection.index,
+                    undefined,
+                    undefined,
+                    {
+                        updateSelection: false,
+                        resetFilters: false,
+                        reportEvent: false,
+                        updateView: false,
+                    }
+                );
+                setRoleFilter(savedRoleFilter());
+                setSavedRoleFilter(undefined);
+                setShowAnalysisPick(false);
+                return;
+            }
+            if (pick.role !== undefined) {
+                setSavedRoleFilter(roleFilter());
+                pickChampion(
+                    selection.team!,
+                    selection.index,
+                    pick.championKey,
+                    pick.role,
+                    {
+                        updateSelection: false,
+                        resetFilters: false,
+                        reportEvent: false,
+                        updateView: false,
+                    }
+                );
+            }
+            _setAnalysisPick(pick);
+            setShowAnalysisPick(true);
+        });
+    }
+
     const columns: ColumnDef<Suggestion>[] = [
         {
             id: "favourite",
@@ -211,6 +271,30 @@ export default function DraftTable() {
             header: "Winrate",
             accessorFn: (suggestion) => suggestion.draftResult.totalRating,
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
+            meta: {
+                cellClass: "flex justify-end",
+            },
+        },
+        {
+            id: "actions",
+            cell: (info) => (
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setAnalysisPick({
+                            team: selection.team!,
+                            championKey: info.row.original.championKey,
+                            role: info.row.original.role,
+                        });
+                    }}
+                    class="py-2"
+                >
+                    <Icon
+                        path={informationCircle}
+                        class="w-5 h-5 opacity-40 hover:opacity-80 transition duration-150 ease-in-out"
+                    />
+                </button>
+            ),
         },
     ];
 
@@ -299,16 +383,32 @@ export default function DraftTable() {
     });
 
     return (
-        <Table
-            table={table}
-            onClickRow={pick}
-            rowClassName={(r) =>
-                bans.find((b) => b === r.original.championKey) ||
-                !ownsChampion(r.original.championKey)
-                    ? "opacity-30"
-                    : ""
-            }
-            id="draft-table"
-        />
+        <>
+            <Table
+                table={table}
+                onClickRow={pick}
+                rowClassName={(r) =>
+                    bans.find((b) => b === r.original.championKey) ||
+                    !ownsChampion(r.original.championKey)
+                        ? "opacity-30"
+                        : ""
+                }
+                id="draft-table"
+            />
+            <Dialog
+                open={showAnalysisPick()}
+                onOpenChange={(open) => {
+                    if (!open) setAnalysisPick(undefined);
+                }}
+            >
+                <ChampionDraftAnalysisDialog
+                    championKey={analysisPick()!.championKey}
+                    team={analysisPick()!.team}
+                    openChampionDraftAnalysisModal={(team, championKey) =>
+                        setAnalysisPick({ team, championKey, role: undefined })
+                    }
+                />
+            </Dialog>
+        </>
     );
 }

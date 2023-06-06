@@ -65,7 +65,12 @@ export function createDraftContext() {
         index: number,
         championKey: string | undefined,
         role: Role | undefined,
-        { updateSelection = true, resetFilters = true, reportEvent = true } = {}
+        {
+            updateSelection = true,
+            resetFilters = true,
+            reportEvent = true,
+            updateView = true,
+        } = {}
     ) => {
         batch(() => {
             const teamPicks = team === "ally" ? allyTeam : opponentTeam;
@@ -102,12 +107,14 @@ export function createDraftContext() {
                 }
             }
             setTeam(index, "role", role);
-            setCurrentDraftView({
-                type: "draft",
-                subType: team,
-            });
+            if (updateView) {
+                setCurrentDraftView({
+                    type: "draft",
+                    subType: team,
+                });
+            }
 
-            if (updateSelection && !isMobileLayout()) {
+            if (updateSelection) {
                 let nextIndex = getNextPick(team);
                 if (nextIndex === -1) {
                     const otherTeam = team === "ally" ? "opponent" : "ally";
@@ -122,7 +129,7 @@ export function createDraftContext() {
                 }
             }
 
-            if (draftFinished()) {
+            if (draftFinished() && updateView) {
                 setCurrentDraftView({
                     type: "analysis",
                 });
