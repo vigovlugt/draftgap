@@ -17,6 +17,7 @@ import { DraftSuggestionsProvider } from "./contexts/DraftSuggestionsContext";
 import { DraftAnalysisProvider } from "./contexts/DraftAnalysisContext";
 import { DatasetProvider } from "./contexts/DatasetContext";
 import { DraftFiltersProvider } from "./contexts/DraftFiltersContext";
+import { ExtraDraftAnalysisProvider } from "./contexts/ExtraDraftAnalysisContext";
 
 setupMobileVH();
 setupAnalytics();
@@ -33,19 +34,22 @@ render(
                             <DraftFiltersProvider>
                                 <DraftProvider>
                                     <DraftAnalysisProvider>
-                                        <DraftSuggestionsProvider>
-                                            <BuildProvider>
-                                                <LolClientProvider>
-                                                    <App />
-                                                    <Toaster
-                                                        position="bottom-right"
-                                                        toastOptions={{
-                                                            duration: Infinity,
-                                                        }}
-                                                    />
-                                                </LolClientProvider>
-                                            </BuildProvider>
-                                        </DraftSuggestionsProvider>
+                                        <ExtraDraftAnalysisProvider>
+                                            <DraftSuggestionsProvider>
+                                                <BuildProvider>
+                                                    <LolClientProvider>
+                                                        <App />
+                                                        <Toaster
+                                                            position="bottom-right"
+                                                            toastOptions={{
+                                                                duration:
+                                                                    Infinity,
+                                                            }}
+                                                        />
+                                                    </LolClientProvider>
+                                                </BuildProvider>
+                                            </DraftSuggestionsProvider>
+                                        </ExtraDraftAnalysisProvider>
                                     </DraftAnalysisProvider>
                                 </DraftProvider>
                             </DraftFiltersProvider>

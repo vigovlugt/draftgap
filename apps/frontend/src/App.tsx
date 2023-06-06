@@ -5,7 +5,6 @@ import {
     createSignal,
     For,
     Match,
-    onError,
     Show,
     Switch,
 } from "solid-js";

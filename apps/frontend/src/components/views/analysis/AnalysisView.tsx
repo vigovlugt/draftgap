@@ -9,8 +9,7 @@ import { tooltip } from "../../../directives/tooltip";
 import { Team } from "draftgap-core/src/models/Team";
 import { useUser } from "../../../contexts/UserContext";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
-import { Chart } from "../../common/Chart";
-import { ChartConfiguration, ChartOptions } from "chart.js";
+import { ScalingChart } from "./ScalingChart";
 tooltip;
 
 export default function AnalysisView() {
@@ -212,7 +211,7 @@ export default function AnalysisView() {
             <div class="flex-col md:flex-row flex gap-4 mb-8" id="duo-result">
                 <div class="md:w-1/2">
                     <h3
-                        class="text-3xl mb-1 uppercase ml-4"
+                        class="text-3xl uppercase ml-4"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
@@ -222,6 +221,22 @@ export default function AnalysisView() {
                     >
                         Ally duos
                     </h3>
+                    <p
+                        class="text-neutral-500 uppercase ml-4 mb-2"
+                        // @ts-ignore
+                        use:tooltip={{
+                            content: (
+                                <>
+                                    The individual champion winrates have been
+                                    normalized (removed) before calculating the
+                                    duo winrates, this to remove the current
+                                    meta bias of the duo.
+                                </>
+                            ),
+                        }}
+                    >
+                        Champion winrates normalized
+                    </p>
                     <DuoResultTable
                         team="ally"
                         onClickChampion={(key) =>
@@ -231,7 +246,7 @@ export default function AnalysisView() {
                 </div>
                 <div class="md:w-1/2">
                     <h3
-                        class="text-3xl mb-1 uppercase ml-4"
+                        class="text-3xl uppercase ml-4"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
@@ -241,6 +256,22 @@ export default function AnalysisView() {
                     >
                         Opponent duos
                     </h3>
+                    <p
+                        class="text-neutral-500 uppercase ml-4 mb-2"
+                        // @ts-ignore
+                        use:tooltip={{
+                            content: (
+                                <>
+                                    The individual champion winrates have been
+                                    normalized (removed) before calculating the
+                                    duo winrates, this to remove the current
+                                    meta bias of the duo.
+                                </>
+                            ),
+                        }}
+                    >
+                        Champion winrates normalized
+                    </p>
                     <DuoResultTable
                         team="opponent"
                         onClickChampion={(key) =>
@@ -250,73 +281,37 @@ export default function AnalysisView() {
                 </div>
             </div>
 
-            {/* <div class="flex-col flex gap-2 mb-2">
-                <h3 class="text-3xl mb-1 uppercase ml-4">Scaling</h3>
-                <div class="p-4 rounded-md bg-[#191919] w-1/2 max-w-4xl h-64">
-                    <Chart
-                        chart={
-                            {
-                                type: "line",
-                                data: {
-                                    labels: [
-                                        { year: 2010, count: "0-15" },
-                                        { year: 2011, count: "15-20" },
-                                        { year: 2012, count: "20-25" },
-                                        { year: 2013, count: "25-30" },
-                                        { year: 2014, count: "30-35" },
-                                        { year: 2015, count: "30-40" },
-                                        { year: 2016, count: "40+" },
-                                    ].map((row) => row.count),
-                                    datasets: [
-                                        {
-                                            label: "ALLY".toUpperCase(),
-                                            data: [
-                                                { year: 2010, count: 10 },
-                                                { year: 2011, count: 20 },
-                                                { year: 2012, count: 15 },
-                                                { year: 2013, count: 25 },
-                                                { year: 2014, count: 22 },
-                                                { year: 2015, count: 30 },
-                                                { year: 2016, count: 28 },
-                                            ].map((row) => row.count),
-                                            borderColor: "#3c82f6",
-                                        },
-                                        {
-                                            label: "OPPONENT".toUpperCase(),
-                                            data: [
-                                                { year: 2010, count: 10 },
-                                                { year: 2011, count: 20 },
-                                                { year: 2012, count: 15 },
-                                                { year: 2013, count: 25 },
-                                                { year: 2014, count: 22 },
-                                                { year: 2015, count: 30 },
-                                                { year: 2016, count: 28 },
-                                            ]
-                                                .map((row) => row.count)
-                                                .reverse(),
-                                            borderColor: "#ef4444",
-                                        },
-                                    ],
-                                },
-                                options: {
-                                    pointStyle: false,
-                                    plugins: {
-                                        legend: {
-                                            display: false,
-                                        },
-                                        tooltip: {
-                                            backgroundColor: "#444444",
-                                        },
-                                    },
-                                    borderCapStyle: "round",
-                                    borderWidth: 4,
-                                    tension: 0.1,
-                                },
-                            } as ChartConfiguration
-                        }
-                    />
-                </div>
+            {/* <div class="mb-2 mt-16 flex justify-center items-center gap-2">
+                <div class="h-[3px] bg-neutral-700 w-24" />
+
+                <h2 class="text-4xl uppercase text-neutral-500 text-center">
+                    Misc
+                </h2>
+
+                <div class="h-[3px] bg-neutral-700 w-24" />
             </div> */}
+
+            <div>
+                <h3 class="text-3xl uppercase ml-4">Scaling</h3>
+                <p
+                    class="text-neutral-500 uppercase ml-4 mb-2"
+                    // @ts-ignore
+                    use:tooltip={{
+                        content: (
+                            <>
+                                The overall team winrate has been normalized
+                                (removed) before calculating the team winrate
+                                over time.
+                            </>
+                        ),
+                    }}
+                >
+                    Team winrate normalized
+                </p>
+                <div class="p-4 rounded-md bg-[#191919] w-1/2 max-w-xl h-64">
+                    <ScalingChart />
+                </div>
+            </div>
         </div>
     );
 }

@@ -114,10 +114,30 @@ export async function getChampionDataFromLolalytics(
                         )
                     ) as Record<Role, Record<string, ChampionSynergyData>>,
                     damageProfile: championData.header.damage,
-                    statsByTime: Array.from({ length: 7 }).map((_, i) => ({
-                        wins: championData.timeWin[i + 1],
-                        games: championData.time[i + 1],
-                    })),
+                    statsByTime: Array.from({ length: 5 }).map((_, i) => {
+                        if (i === 0) {
+                            return {
+                                games:
+                                    championData.time[1] + championData.time[2],
+                                wins:
+                                    championData.timeWin[1] +
+                                    championData.timeWin[2],
+                            };
+                        } else if (i === 4) {
+                            return {
+                                games:
+                                    championData.time[5] + championData.time[6],
+                                wins:
+                                    championData.timeWin[5] +
+                                    championData.timeWin[6],
+                            };
+                        } else {
+                            return {
+                                games: championData.time[i + 2],
+                                wins: championData.timeWin[i + 2],
+                            };
+                        }
+                    }),
                 };
 
                 return [getRoleFromString(role), championRoleData];

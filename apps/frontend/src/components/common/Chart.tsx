@@ -22,28 +22,30 @@ export function Chart<T extends keyof ChartTypeRegistry>(props: Props<T>) {
 
     createEffect(() => {
         if (!canvas()) return;
-        if (!chart()) {
-            const chart = new ChartJs(canvas()!, {
-                ...props.chart,
-                options: {
-                    ...props.chart.options,
-                    maintainAspectRatio: false,
-                    plugins: {
+
+        const config = {
+            ...props.chart,
+            options: {
+                ...props.chart.options,
+                maintainAspectRatio: false,
+                plugins: {
+                    // @ts-ignore
+                    ...props.chart.options?.plugins,
+
+                    tooltip: {
+                        backgroundColor: "#444444",
+                        displayColors: false,
                         // @ts-ignore
-                        ...props.chart.options?.plugins,
-
-                        tooltip: {
-                            // @ts-ignore
-                            ...props.chart.options?.plugins?.tooltip,
-                            displayColors: false,
-                        },
+                        ...props.chart.options?.plugins?.tooltip,
                     },
-                } as ChartOptions<T>,
-            });
-            setChart(chart);
-        }
+                },
+            } as ChartOptions<T>,
+        };
 
-        chart()?.update();
+        setChart((current) => {
+            current?.destroy();
+            return new ChartJs(canvas()!, config);
+        });
     });
 
     onCleanup(() => {

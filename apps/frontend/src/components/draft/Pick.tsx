@@ -62,6 +62,10 @@ export function Pick(props: Props) {
     }
 
     const keyDownListener = (e: KeyboardEvent) => {
+        if (e.ctrlKey || e.altKey || e.metaKey) {
+            return;
+        }
+
         if (e.key === "b") {
             if (!champion()) {
                 return;

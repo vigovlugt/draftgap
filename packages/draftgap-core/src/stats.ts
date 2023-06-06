@@ -38,19 +38,3 @@ export function divideStats(
 export function averageStats(...stats: { wins: number; games: number }[]) {
     return divideStats(addStats(...stats), stats.length);
 }
-
-export function removeBiasStats(
-    stats: {
-        wins: number;
-        games: number;
-    },
-    biasRating: number
-) {
-    return {
-        wins:
-            ratingToWinrate(
-                winrateToRating(stats.wins / stats.games) - biasRating
-            ) * stats.games,
-        games: stats.games - biasRating,
-    };
-}

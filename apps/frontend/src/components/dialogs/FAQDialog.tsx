@@ -53,12 +53,12 @@ export function FAQDialog() {
                     keep in mind. The overall team comp identity is not taken
                     into account. The synergy of duos within a team are used in
                     the calculations, but the tool does not know about team comp
-                    identity like 'engage' or 'poke'. We also do not look at the
-                    damage composition (but it is shown, above the team
+                    identity like 'engage' or 'poke'. Damage composition is also
+                    not used in the calculation (but it is shown, above the team
                     winrate), so you need to keep this in mind on you own.
                     <br />
                     These shortcomings result from the fact that there is not
-                    enough data to make a perfect prediction. And I do not want
+                    enough data to make a perfect prediction. And we do not want
                     to incorporate opinions like 'malphite is an engage
                     champion' into the tool, as using just data is the most
                     objective way to make a decision.

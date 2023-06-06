@@ -83,6 +83,15 @@ export function removeRankBias(dataset: Dataset) {
                     );
                 }
             }
+
+            // Fix time stats
+            for (const timeStats of Object.values(roleData.statsByTime)) {
+                timeStats.wins = getNewWins(
+                    timeStats.wins,
+                    timeStats.games,
+                    rankRating
+                );
+            }
         }
     }
 }

@@ -9,6 +9,10 @@ export interface ChampionRoleData {
     matchup: Record<Role, Record<string, ChampionMatchupData>>;
     synergy: Record<Role, Record<string, ChampionSynergyData>>;
     damageProfile: ChampionDamageProfile;
+    statsByTime: {
+        wins: number;
+        games: number;
+    }[];
 }
 
 export function defaultChampionRoleData(): ChampionRoleData {
@@ -28,6 +32,10 @@ export function defaultChampionRoleData(): ChampionRoleData {
             physical: 0,
             true: 0,
         },
+        statsByTime: Array.from({ length: 7 }, () => ({
+            wins: 0,
+            games: 0,
+        })),
     };
 }
 
