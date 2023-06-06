@@ -196,6 +196,7 @@ export default function AnalysisView() {
                         { label: "HEAD 2 HEAD", value: false },
                         { label: "ALL", value: true },
                     ]}
+                    size="sm"
                     selected={showAllMatchups()}
                     onChange={setShowAllMatchups}
                 />
@@ -293,7 +294,7 @@ export default function AnalysisView() {
 
             <div>
                 <h3 class="text-3xl uppercase ml-4">Scaling</h3>
-                <p
+                <span
                     class="text-neutral-500 uppercase ml-4 mb-2"
                     // @ts-ignore
                     use:tooltip={{
@@ -307,8 +308,8 @@ export default function AnalysisView() {
                     }}
                 >
                     Team winrate normalized
-                </p>
-                <div class="p-4 rounded-md bg-[#191919] w-1/2 max-w-xl h-64">
+                </span>
+                <div class="p-4 rounded-md bg-[#191919] w-1/2 max-w-2xl h-64">
                     <ScalingChart />
                 </div>
             </div>
