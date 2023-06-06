@@ -4,7 +4,7 @@ on:
         tags:
             - "v*"
     workflow_dispatch:
-    
+
 defaults:
     run:
         working-directory: apps/frontend
@@ -83,7 +83,7 @@ jobs:
               run: pnpm install
 
             - name: Update tauri-update gist
-              run: pnpm publish:tauri-update
+              run: pnpm publish-tauri-update
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   GIST_TOKEN: ${{ secrets.GIST_TOKEN }}

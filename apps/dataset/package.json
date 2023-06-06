@@ -1,6 +1,6 @@
 {
     "name": "draftgap-dataset",
-    "version": "2.6.3",
+    "version": "2.9.1",
     "scripts": {
         "start": "tsx src/index.ts",
         "typecheck": "tsc --noEmit"
