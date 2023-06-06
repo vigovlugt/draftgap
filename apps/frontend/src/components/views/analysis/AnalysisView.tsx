@@ -182,8 +182,8 @@ export default function AnalysisView() {
                                 <>
                                     The individual champion winrates have been
                                     normalized (removed) before calculating the
-                                    matchup winrates, this to remove the current
-                                    meta bias of the matchup.
+                                    matchup winrates to remove the current meta
+                                    bias of the matchup.
                                 </>
                             ),
                         }}
@@ -230,8 +230,7 @@ export default function AnalysisView() {
                                 <>
                                     The individual champion winrates have been
                                     normalized (removed) before calculating the
-                                    duo winrates, this to remove the current
-                                    meta bias of the duo.
+                                    duo winrates.
                                 </>
                             ),
                         }}
@@ -265,8 +264,7 @@ export default function AnalysisView() {
                                 <>
                                     The individual champion winrates have been
                                     normalized (removed) before calculating the
-                                    duo winrates, this to remove the current
-                                    meta bias of the duo.
+                                    duo winrates.
                                 </>
                             ),
                         }}

@@ -166,8 +166,7 @@ export function BuildAnalysisDialog() {
                             <>
                                 The individual champion winrates have been
                                 normalized (removed) before calculating the
-                                matchup winrates, this to remove the current
-                                meta bias of the matchup.
+                                matchup winrates.
                             </>
                         ),
                     }}
