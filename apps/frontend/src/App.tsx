@@ -34,6 +34,8 @@ import { UpdateDialog } from "./components/dialogs/UpdateDialog";
 import { OptionsDropdownMenu } from "./components/OptionsMenu";
 import { useDraftAnalysis } from "./contexts/DraftAnalysisContext";
 import { ChampionDraftAnalysisDialog } from "./components/dialogs/ChampionDraftAnalysisDialog";
+import { AnalyzeHoverToggle } from "./components/draft/AnalyzeHoverToggle";
+import { useMedia } from "./hooks/useMedia";
 
 const App: Component = () => {
     const { config } = useUser();
@@ -43,6 +45,7 @@ const App: Component = () => {
         useDraftAnalysis();
     const { startLolClientIntegration, stopLolClientIntegration } =
         useLolClient();
+    const { isDesktop } = useMedia();
 
     createEffect(() => {
         if (config.disableLeagueClientIntegration) {
@@ -143,13 +146,17 @@ const App: Component = () => {
                                             <Search />
                                             <TeamSelector />
                                             <RoleFilter class="hidden lg:inline-flex" />
-                                            <div class="hidden lg:inline-flex">
+                                            <div class="hidden lg:inline-flex gap-3">
                                                 <FilterMenu />
+                                                <Show when={isDesktop}>
+                                                    <AnalyzeHoverToggle />
+                                                </Show>
                                             </div>
                                         </div>
                                         <div class="flex justify-end mb-4 gap-4 lg:hidden">
                                             <RoleFilter class="w-full" />
                                             <FilterMenu />
+                                            <AnalyzeHoverToggle />
                                         </div>
                                         <DraftTable />
                                     </div>

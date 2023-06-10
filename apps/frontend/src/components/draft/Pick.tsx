@@ -31,6 +31,7 @@ export function Pick(props: Props) {
         allyTeamData,
         opponentTeamData,
         setAnalysisPick,
+        analyzeHovers,
     } = useDraftAnalysis();
 
     const { setPopoverVisible } = useTooltip();
@@ -51,6 +52,10 @@ export function Pick(props: Props) {
 
     const champion = () => {
         if (!pick().championKey) {
+            return undefined;
+        }
+
+        if (pick().hover && !analyzeHovers()) {
             return undefined;
         }
 
@@ -133,6 +138,7 @@ export function Pick(props: Props) {
                                 }_0.jpg)`,
                             "background-position": "center 20%",
                             "background-size": "cover",
+                            filter: pick().hover ? "grayscale(1)" : undefined,
                         }}
                     />
 

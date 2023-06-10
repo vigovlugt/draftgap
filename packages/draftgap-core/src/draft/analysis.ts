@@ -288,7 +288,6 @@ export function analyzeMatchups(
                 allyRole,
                 allyChampionKey
             );
-
             const enemyLosses =
                 enemyMatchupStats.games - enemyMatchupStats.wins;
 

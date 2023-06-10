@@ -1,15 +1,12 @@
 import { Icon } from "solid-heroicons";
 import { funnel } from "solid-heroicons/solid";
-import { Component, JSX } from "solid-js";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import { Popover, PopoverContent, PopoverTrigger } from "../common/Popover";
 import { useUser } from "../../contexts/UserContext";
 import { buttonVariants } from "../common/Button";
 import { cn } from "../../utils/style";
 
-type Props = JSX.HTMLAttributes<HTMLDivElement>;
-
-export const FilterMenu: Component<Props> = (props) => {
+export function FilterMenu() {
     const { config, setConfig } = useUser();
 
     const minGameCountOptions: ButtonGroupOption<number>[] = [
@@ -44,13 +41,5 @@ export const FilterMenu: Component<Props> = (props) => {
                 />
             </PopoverContent>
         </Popover>
-        // <Popover
-        //     buttonChildren={<Icon path={funnel} class="w-6 text-neutral-300" />}
-        //     buttonClass="mr-4"
-        //     {...props}
-        // >
-        //     {() => (
-        //     )}
-        // </Popover>
     );
-};
+}

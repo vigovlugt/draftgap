@@ -8,8 +8,6 @@ import {
 import { createStore } from "solid-js/store";
 import { displayNameByRole, Role } from "draftgap-core/src/models/Role";
 import { Team } from "draftgap-core/src/models/Team";
-import { AnalyzeDraftConfig } from "draftgap-core/src/draft/analysis";
-import { createStoredSignal } from "../utils/signals";
 import { useDraftView } from "./DraftViewContext";
 import { useMedia } from "../hooks/useMedia";
 import { useDataset } from "./DatasetContext";
@@ -18,6 +16,7 @@ import { useDraftFilters } from "./DraftFiltersContext";
 type TeamPick = {
     championKey: string | undefined;
     role: Role | undefined;
+    hover: boolean;
 };
 
 type TeamPicks = [TeamPick, TeamPick, TeamPick, TeamPick, TeamPick];
@@ -34,18 +33,18 @@ export function createDraftContext() {
     const { resetDraftFilters } = useDraftFilters();
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
-        { championKey: undefined, role: undefined },
-        { championKey: undefined, role: undefined },
-        { championKey: undefined, role: undefined },
-        { championKey: undefined, role: undefined },
-        { championKey: undefined, role: undefined },
+        { championKey: undefined, role: undefined, hover: true },
+        { championKey: undefined, role: undefined, hover: false },
+        { championKey: undefined, role: undefined, hover: false },
+        { championKey: undefined, role: undefined, hover: false },
+        { championKey: undefined, role: undefined, hover: false },
     ]);
     const [opponentTeam, setOpponentTeam] = createStore<TeamPicks>([
-        { championKey: undefined, role: undefined },
-        { championKey: undefined, role: undefined },
-        { championKey: undefined, role: undefined },
-        { championKey: undefined, role: undefined },
-        { championKey: undefined, role: undefined },
+        { championKey: undefined, role: undefined, hover: false },
+        { championKey: undefined, role: undefined, hover: false },
+        { championKey: undefined, role: undefined, hover: false },
+        { championKey: undefined, role: undefined, hover: false },
+        { championKey: undefined, role: undefined, hover: false },
     ]);
 
     const [bans, setBans] = createStore<string[]>([]);
@@ -60,7 +59,32 @@ export function createDraftContext() {
         return picks.findIndex((pick) => pick.championKey === undefined);
     }
 
-    const pickChampion = (
+    function fixClashes(championKey: string, index: number) {
+        const allyClashingChampion = allyTeam.findIndex(
+            (p) => p.championKey === championKey
+        );
+        if (allyClashingChampion !== -1 && allyClashingChampion !== index) {
+            resetChampion("ally", allyClashingChampion);
+        }
+        const opponentClashingChampion = opponentTeam.findIndex(
+            (p) => p.championKey === championKey
+        );
+        if (opponentClashingChampion !== -1 && allyClashingChampion !== index) {
+            resetChampion("opponent", opponentClashingChampion);
+        }
+    }
+
+    function fixRoleClashes(team: Team, role: Role, index: number) {
+        const teamPicks = team === "ally" ? allyTeam : opponentTeam;
+        const setTeam = team === "ally" ? setAllyTeam : setOpponentTeam;
+
+        const clashingRole = teamPicks.findIndex((p) => p.role === role);
+        if (clashingRole !== -1 && clashingRole !== index) {
+            setTeam(clashingRole, "role", undefined);
+        }
+    }
+
+    function pickChampion(
         team: "ally" | "opponent",
         index: number,
         championKey: string | undefined,
@@ -71,42 +95,23 @@ export function createDraftContext() {
             reportEvent = true,
             updateView = true,
         } = {}
-    ) => {
+    ) {
         batch(() => {
-            const teamPicks = team === "ally" ? allyTeam : opponentTeam;
             const setTeam = team === "ally" ? setAllyTeam : setOpponentTeam;
 
             if (championKey !== undefined) {
-                const allyClashingChampion = allyTeam.findIndex(
-                    (p) => p.championKey === championKey
-                );
-                if (
-                    allyClashingChampion !== -1 &&
-                    allyClashingChampion !== index
-                ) {
-                    resetChampion("ally", allyClashingChampion);
-                }
-                const opponentClashingChampion = opponentTeam.findIndex(
-                    (p) => p.championKey === championKey
-                );
-                if (
-                    opponentClashingChampion !== -1 &&
-                    allyClashingChampion !== index
-                ) {
-                    resetChampion("opponent", opponentClashingChampion);
-                }
+                fixClashes(championKey, index);
             }
-            setTeam(index, "championKey", championKey);
+            if (championKey !== undefined && role !== undefined) {
+                fixRoleClashes(team, role, index);
+            }
 
-            if (championKey !== undefined) {
-                const clashingRole = teamPicks.findIndex(
-                    (p) => p.role === role
-                );
-                if (clashingRole !== -1 && clashingRole !== index) {
-                    setTeam(clashingRole, "role", undefined);
-                }
-            }
-            setTeam(index, "role", role);
+            setTeam(index, {
+                championKey,
+                role,
+                hover: false,
+            });
+
             if (updateView) {
                 setCurrentDraftView({
                     type: "draft",
@@ -149,7 +154,32 @@ export function createDraftContext() {
                 });
             }
         });
-    };
+    }
+
+    function hoverChampion(
+        team: "ally" | "opponent",
+        index: number,
+        championKey: string | undefined,
+        role: Role | undefined
+    ) {
+        batch(() => {
+            const setTeam = team === "ally" ? setAllyTeam : setOpponentTeam;
+
+            if (championKey !== undefined) {
+                fixClashes(championKey, index);
+            }
+
+            if (championKey !== undefined && role !== undefined) {
+                fixRoleClashes(team, role, index);
+            }
+
+            setTeam(index, {
+                championKey,
+                role,
+                hover: true,
+            });
+        });
+    }
 
     const resetChampion = (team: "ally" | "opponent", index: number) => {
         pickChampion(team, index, undefined, undefined, {
@@ -221,6 +251,7 @@ export function createDraftContext() {
         ownedChampions,
         setOwnedChampions,
         pickChampion,
+        hoverChampion,
         resetChampion,
         resetTeam,
         resetAll,

@@ -30,7 +30,9 @@ export function createDraftAnalysisContext() {
         const picks = team === "ally" ? allyTeam : opponentTeam;
 
         const championData = picks
-            .filter((pick) => pick.championKey)
+            .filter(
+                (pick) => pick.championKey && (!pick.hover || analyzeHovers())
+            )
             .map((pick) => ({
                 ...dataset()!.championData[pick.championKey!],
                 role: pick.role,
@@ -161,6 +163,8 @@ export function createDraftAnalysisContext() {
         setShowAnalysisPick(true);
     }
 
+    const [analyzeHovers, setAnalyzeHovers] = createSignal(false);
+
     return {
         allyTeamData,
         opponentTeamData,
@@ -180,6 +184,8 @@ export function createDraftAnalysisContext() {
         analysisPick,
         showAnalysisPick,
         setAnalysisPick,
+        analyzeHovers,
+        setAnalyzeHovers,
     };
 }
 

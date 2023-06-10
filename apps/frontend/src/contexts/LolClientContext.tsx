@@ -87,6 +87,7 @@ export const createLolClientContext = () => {
     const { isDesktop } = useMedia();
     const {
         pickChampion,
+        hoverChampion,
         select,
         resetAll,
         allyTeam,
@@ -173,16 +174,15 @@ export const createLolClientContext = () => {
             if (!selection.championId) {
                 return false;
             }
-            if (!completedCellIds.has(selection.cellId)) {
-                return false;
-            }
 
             const championId = String(selection.championId);
+            const isHover = !completedCellIds.has(selection.cellId);
 
             const teamPicks = team === "ally" ? allyTeam : opponentTeam;
             if (
                 teamPicks[index] &&
-                teamPicks[index].championKey === championId
+                teamPicks[index].championKey === championId &&
+                teamPicks[index].hover === isHover
             ) {
                 return false;
             }
@@ -193,12 +193,19 @@ export const createLolClientContext = () => {
             const resetFilters =
                 hasCurrentSummoner() &&
                 currentSummoner.summonerId === selection.summonerId;
-            pickChampion(team, index, championId, role, {
-                updateSelection: false,
-                resetFilters,
-            });
 
-            return true;
+            if (isHover) {
+                hoverChampion(team, index, championId, role);
+
+                return false;
+            } else {
+                pickChampion(team, index, championId, role, {
+                    updateSelection: false,
+                    resetFilters,
+                });
+
+                return true;
+            }
         };
 
         batch(() => {

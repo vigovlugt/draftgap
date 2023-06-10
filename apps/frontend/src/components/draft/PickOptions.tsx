@@ -30,17 +30,22 @@ export function PickOptions(props: { team: Team; index: number }) {
     const { dataset } = useDataset();
     const { pickChampion, allyTeam, opponentTeam } = useDraft();
 
-    const { allyTeamComp, opponentTeamComp, setAnalysisPick } =
+    const { allyTeamComp, opponentTeamComp, setAnalysisPick, analyzeHovers } =
         useDraftAnalysis();
 
     const teamPicks = () => (props.team === "ally" ? allyTeam : opponentTeam);
     const teamComp = () =>
         props.team === "ally" ? allyTeamComp() : opponentTeamComp();
 
-    const champion = () =>
-        teamPicks()[props.index].championKey
-            ? dataset()?.championData[teamPicks()[props.index].championKey!]
-            : undefined;
+    const champion = () => {
+        const pick = teamPicks()[props.index];
+        if (pick.championKey && (!pick.hover || analyzeHovers())) {
+            return dataset()?.championData[
+                teamPicks()[props.index].championKey!
+            ];
+        }
+        return undefined;
+    };
 
     return (
         <div class="absolute right-0 top-0">

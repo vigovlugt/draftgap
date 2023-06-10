@@ -1,6 +1,7 @@
 import {
     JSXElement,
     createContext,
+    createEffect,
     createResource,
     useContext,
 } from "solid-js";
@@ -28,6 +29,12 @@ function createDatasetContext() {
 
     const isLoaded = () =>
         dataset() !== undefined && dataset30Days() !== undefined;
+
+    createEffect(() => {
+        (window as any).DRAFTGAP_DEBUG = (window as any).DRAFTGAP_DEBUG || {};
+        (window as any).DRAFTGAP_DEBUG.dataset = dataset;
+        (window as any).DRAFTGAP_DEBUG.dataset30Days = dataset30Days;
+    });
 
     return {
         dataset,
