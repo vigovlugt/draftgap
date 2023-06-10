@@ -16,7 +16,7 @@ import { useDraftFilters } from "./DraftFiltersContext";
 type TeamPick = {
     championKey: string | undefined;
     role: Role | undefined;
-    hover: boolean;
+    hoverKey: string | undefined;
 };
 
 type TeamPicks = [TeamPick, TeamPick, TeamPick, TeamPick, TeamPick];
@@ -33,18 +33,18 @@ export function createDraftContext() {
     const { resetDraftFilters } = useDraftFilters();
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
-        { championKey: undefined, role: undefined, hover: true },
-        { championKey: undefined, role: undefined, hover: false },
-        { championKey: undefined, role: undefined, hover: false },
-        { championKey: undefined, role: undefined, hover: false },
-        { championKey: undefined, role: undefined, hover: false },
+        { championKey: undefined, role: undefined, hoverKey: undefined },
+        { championKey: undefined, role: undefined, hoverKey: undefined },
+        { championKey: undefined, role: undefined, hoverKey: undefined },
+        { championKey: undefined, role: undefined, hoverKey: undefined },
+        { championKey: undefined, role: undefined, hoverKey: undefined },
     ]);
     const [opponentTeam, setOpponentTeam] = createStore<TeamPicks>([
-        { championKey: undefined, role: undefined, hover: false },
-        { championKey: undefined, role: undefined, hover: false },
-        { championKey: undefined, role: undefined, hover: false },
-        { championKey: undefined, role: undefined, hover: false },
-        { championKey: undefined, role: undefined, hover: false },
+        { championKey: undefined, role: undefined, hoverKey: undefined },
+        { championKey: undefined, role: undefined, hoverKey: undefined },
+        { championKey: undefined, role: undefined, hoverKey: undefined },
+        { championKey: undefined, role: undefined, hoverKey: undefined },
+        { championKey: undefined, role: undefined, hoverKey: undefined },
     ]);
 
     const [bans, setBans] = createStore<string[]>([]);
@@ -109,7 +109,7 @@ export function createDraftContext() {
             setTeam(index, {
                 championKey,
                 role,
-                hover: false,
+                hoverKey: undefined,
             });
 
             if (updateView) {
@@ -174,9 +174,9 @@ export function createDraftContext() {
             }
 
             setTeam(index, {
-                championKey,
+                championKey: undefined,
                 role,
-                hover: true,
+                hoverKey: championKey,
             });
         });
     }

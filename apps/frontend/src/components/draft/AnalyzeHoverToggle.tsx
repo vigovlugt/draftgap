@@ -18,7 +18,7 @@ export function AnalyzeHoverToggle() {
             onClick={() => setAnalyzeHovers((v) => !v)}
             class={cn(
                 buttonVariants({ variant: "transparent" }),
-                "px-1",
+                "px-1 text-neutral-50",
                 !analyzeHovers() && "text-neutral-700"
             )}
         >

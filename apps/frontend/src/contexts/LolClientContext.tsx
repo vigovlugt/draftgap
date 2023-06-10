@@ -16,7 +16,6 @@ import {
 import { getRoleFromString, Role } from "draftgap-core/src/models/Role";
 import { Team } from "draftgap-core/src/models/Team";
 import {
-    LolChampSelectChampSelectAction,
     LolChampSelectChampSelectPlayerSelection,
     LolChampSelectChampSelectSession,
     LolSummonerSummoner,
@@ -28,6 +27,7 @@ import {
 import { useDraft } from "./DraftContext";
 import { useMedia } from "../hooks/useMedia";
 import { useUser } from "./UserContext";
+import { LolalyticsRole } from "../../../dataset/src/lolalytics/roles";
 
 const createChampSelectSession = (): LolChampSelectChampSelectSession => ({
     actions: [],
@@ -134,23 +134,6 @@ export const createLolClientContext = () => {
         session: LolChampSelectChampSelectSession,
         firstTime = false
     ) => {
-        const getCompletedCellIds = (
-            actions: LolChampSelectChampSelectAction[]
-        ) => {
-            const set = new Set<number>();
-            for (const action of actions) {
-                if (action.type !== "pick") {
-                    continue;
-                }
-                if (!action.completed) {
-                    continue;
-                }
-                set.add(action.actorCellId);
-            }
-            return set;
-        };
-        const completedCellIds = getCompletedCellIds(session.actions.flat());
-
         const nextPick = session.actions
             .flat()
             .find((a) => a.type === "pick" && !a.completed);
@@ -170,59 +153,48 @@ export const createLolClientContext = () => {
             team: Team,
             index: number
         ) => {
-            // In blind we do not know the opponent championId
-            if (!selection.championId) {
-                return false;
-            }
-
-            const championId = String(selection.championId);
-            const isHover = !completedCellIds.has(selection.cellId);
-
             const teamPicks = team === "ally" ? allyTeam : opponentTeam;
-            if (
-                teamPicks[index] &&
-                teamPicks[index].championKey === championId &&
-                teamPicks[index].hover === isHover
-            ) {
-                return false;
-            }
 
             const role = selection.assignedPosition
                 ? getRole(selection.assignedPosition)
                 : undefined;
-            const resetFilters =
-                hasCurrentSummoner() &&
-                currentSummoner.summonerId === selection.summonerId;
 
-            if (isHover) {
-                hoverChampion(team, index, championId, role);
-
-                return false;
-            } else {
-                pickChampion(team, index, championId, role, {
+            if (selection.championId) {
+                const championKey = selection.championId.toString();
+                if (teamPicks[index].championKey === championKey) {
+                    return false;
+                }
+                const resetFilters =
+                    hasCurrentSummoner() &&
+                    currentSummoner.summonerId === selection.summonerId;
+                pickChampion(team, index, championKey, role, {
                     updateSelection: false,
                     resetFilters,
                 });
 
                 return true;
+            } else if (selection.championPickIntent) {
+                const championKey = selection.championPickIntent.toString();
+                hoverChampion(team, index, championKey, role);
             }
+
+            return false;
         };
 
         batch(() => {
             let draftChanged = firstTime;
-            for (const [selection, i] of session.myTeam.map(
-                (s, i) => [s, i] as const
-            )) {
+            for (let i = 0; i < session.myTeam.length; i++) {
+                const selection = session.myTeam[i];
                 draftChanged =
                     processSelection(selection, "ally", i) || draftChanged;
             }
-            for (const [selection, i] of session.theirTeam.map(
-                (s, i) => [s, i] as const
-            )) {
+            for (let i = 0; i < session.theirTeam.length; i++) {
+                const selection = session.theirTeam[i];
                 draftChanged =
                     processSelection(selection, "opponent", i) || draftChanged;
             }
 
+            // Handle bans
             const bannedChampions = session.actions
                 .flat()
                 .map((a) =>
@@ -238,6 +210,7 @@ export const createLolClientContext = () => {
                 setBans(bannedChampions);
             }
 
+            // Set next pick if draft has changed
             if (nextPick && draftChanged) {
                 const nextPickTeamSelection = nextPick.isAllyAction
                     ? session.myTeam
@@ -280,7 +253,7 @@ export const createLolClientContext = () => {
         const lolFavourites = gridChampions?.flatMap((c) =>
             c.positionsFavorited.map((p) => ({
                 championKey: c.id.toString(),
-                role: getRoleFromString(p as any),
+                role: getRoleFromString(p as LolalyticsRole),
             }))
         );
 

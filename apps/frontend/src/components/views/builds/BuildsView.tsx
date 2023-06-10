@@ -21,10 +21,7 @@ export const BuildsViewTabs = (props: { team: Team }) => {
             tabs={new Array(5)
                 .fill(null)
                 .map((_, i) => i)
-                .filter(
-                    (i) =>
-                        team()[i].championKey !== undefined && !team()[i].hover
-                )
+                .filter((i) => team()[i].championKey !== undefined)
                 .map((i) => ({
                     value: { team: props.team, index: i },
                     label: overflowEllipsis(

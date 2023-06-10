@@ -39,11 +39,14 @@ export function PickOptions(props: { team: Team; index: number }) {
 
     const champion = () => {
         const pick = teamPicks()[props.index];
-        if (pick.championKey && (!pick.hover || analyzeHovers())) {
-            return dataset()?.championData[
-                teamPicks()[props.index].championKey!
-            ];
+
+        if (pick.championKey) {
+            return dataset()?.championData[pick.championKey!];
         }
+        if (pick.hoverKey && analyzeHovers()) {
+            return dataset()?.championData[pick.hoverKey!];
+        }
+
         return undefined;
     };
 

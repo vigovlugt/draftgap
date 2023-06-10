@@ -51,15 +51,15 @@ export function Pick(props: Props) {
         selection.team === props.team && selection.index === props.index;
 
     const champion = () => {
-        if (!pick().championKey) {
-            return undefined;
+        if (pick().championKey) {
+            return championData().get(pick().championKey!);
         }
 
-        if (pick().hover && !analyzeHovers()) {
-            return undefined;
+        if (pick().hoverKey && analyzeHovers()) {
+            return championData().get(pick().hoverKey!);
         }
 
-        return championData().get(pick().championKey!);
+        return undefined;
     };
 
     function setRole(role: Role | undefined) {
@@ -138,7 +138,9 @@ export function Pick(props: Props) {
                                 }_0.jpg)`,
                             "background-position": "center 20%",
                             "background-size": "cover",
-                            filter: pick().hover ? "grayscale(1)" : undefined,
+                            filter: pick().hoverKey
+                                ? "grayscale(1)"
+                                : undefined,
                         }}
                     />
 

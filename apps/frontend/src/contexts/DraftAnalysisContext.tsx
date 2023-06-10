@@ -24,6 +24,8 @@ export function createDraftAnalysisContext() {
     const { roleFilter, setRoleFilter } = useDraftFilters();
     const { isLoaded, dataset, dataset30Days } = useDataset();
 
+    const [analyzeHovers, setAnalyzeHovers] = createSignal(false);
+
     function getTeamCompsForTeam(team: Team) {
         if (!isLoaded()) return [];
 
@@ -31,10 +33,10 @@ export function createDraftAnalysisContext() {
 
         const championData = picks
             .filter(
-                (pick) => pick.championKey && (!pick.hover || analyzeHovers())
+                (pick) => pick.championKey || (pick.hoverKey && analyzeHovers())
             )
             .map((pick) => ({
-                ...dataset()!.championData[pick.championKey!],
+                ...dataset()!.championData[pick.championKey || pick.hoverKey!],
                 role: pick.role,
             }));
         return getTeamComps(championData);
@@ -103,11 +105,15 @@ export function createDraftAnalysisContext() {
 
         const teamData = new Map<string, PickData>();
 
-        for (const { championKey } of picks) {
-            if (!championKey) continue;
-            const championData = dataset()!.championData[championKey];
-            const probabilityByRole = roles.get(championKey)!;
-            teamData.set(championKey, {
+        for (const pick of picks) {
+            if (!pick.championKey && (!pick.hoverKey || !analyzeHovers()))
+                continue;
+
+            const key = pick.championKey ?? pick.hoverKey!;
+
+            const championData = dataset()!.championData[key];
+            const probabilityByRole = roles.get(key)!;
+            teamData.set(key, {
                 ...championData,
                 probabilityByRole,
             });
@@ -162,8 +168,6 @@ export function createDraftAnalysisContext() {
         _setAnalysisPick(pick);
         setShowAnalysisPick(true);
     }
-
-    const [analyzeHovers, setAnalyzeHovers] = createSignal(false);
 
     return {
         allyTeamData,
