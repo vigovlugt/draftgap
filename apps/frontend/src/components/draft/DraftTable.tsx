@@ -279,6 +279,7 @@ export default function DraftTable() {
             id: "actions",
             cell: (info) => (
                 <button
+                    tabIndex={-1}
                     onClick={(e) => {
                         e.stopPropagation();
                         setAnalysisPick({
