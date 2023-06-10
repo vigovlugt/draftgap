@@ -153,6 +153,7 @@ export const createLolClientContext = () => {
             team: Team,
             index: number
         ) => {
+            console.log(selection, team, index);
             const teamPicks = team === "ally" ? allyTeam : opponentTeam;
 
             const role = selection.assignedPosition
@@ -160,10 +161,12 @@ export const createLolClientContext = () => {
                 : undefined;
 
             if (selection.championId) {
+                console.log("2", selection, team, index);
                 const championKey = selection.championId.toString();
                 if (teamPicks[index].championKey === championKey) {
                     return false;
                 }
+                console.log("3", selection, team, index);
                 const resetFilters =
                     hasCurrentSummoner() &&
                     currentSummoner.summonerId === selection.summonerId;
@@ -173,9 +176,15 @@ export const createLolClientContext = () => {
                 });
 
                 return true;
-            } else if (selection.championPickIntent) {
-                const championKey = selection.championPickIntent.toString();
-                hoverChampion(team, index, championKey, role);
+            }
+
+            {
+                const championKey = selection.championPickIntent
+                    ? selection.championPickIntent.toString()
+                    : undefined;
+                if (teamPicks[index].hoverKey !== championKey) {
+                    hoverChampion(team, index, championKey, role);
+                }
             }
 
             return false;
