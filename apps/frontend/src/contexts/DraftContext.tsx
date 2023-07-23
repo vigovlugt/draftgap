@@ -97,6 +97,13 @@ export function createDraftContext() {
         } = {}
     ) {
         batch(() => {
+            if (
+                championKey &&
+                dataset()?.championData[championKey] === undefined
+            ) {
+                return;
+            }
+
             const setTeam = team === "ally" ? setAllyTeam : setOpponentTeam;
 
             if (championKey !== undefined) {
@@ -163,6 +170,13 @@ export function createDraftContext() {
         role: Role | undefined
     ) {
         batch(() => {
+            if (
+                championKey &&
+                dataset()?.championData[championKey] === undefined
+            ) {
+                return;
+            }
+
             const setTeam = team === "ally" ? setAllyTeam : setOpponentTeam;
 
             if (championKey !== undefined) {
