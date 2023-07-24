@@ -75,7 +75,7 @@ export async function getLolalyticsChampion2(
     }
 
     const res = await retry(() =>
-        fetch(`https://axe.lolalytics.com/mega/?${queryParams.toString()}`)
+        fetch(`https://ax.lolalytics.com/mega/?${queryParams.toString()}`)
     );
 
     const json = (await res.json()) as LolalyticsChampion2Response;

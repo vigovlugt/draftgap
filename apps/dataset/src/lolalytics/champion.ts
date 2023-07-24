@@ -246,7 +246,7 @@ export async function getLolalyticsChampion(
         queryParams.append("vslane", matchupRole);
     }
 
-    const url = `https://axe.lolalytics.com/mega/?${queryParams.toString()}`;
+    const url = `https://ax.lolalytics.com/mega/?${queryParams.toString()}`;
     const res = await retry(() => fetch(url));
 
     const text = await res.text();
