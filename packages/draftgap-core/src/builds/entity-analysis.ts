@@ -23,6 +23,8 @@ export type EntityMatchupAnalysisResult = {
     championKey: string;
     role: Role;
     rating: number;
+    wins: number;
+    games: number;
 };
 
 export type EntityMatchupsAnalysisResult = {
@@ -160,17 +162,11 @@ export function analyzeEntityMatchup<T>(
     );
 
     const rawMatchupWithEntityStats = getStats(matchup, entity);
-    const percentageOfPriorGames =
-        rawMatchupWithEntityStats.games < priorGames
-            ? rawMatchupWithEntityStats.games / priorGames
-            : 1;
-    const matchupWithEntityStats = addStats(
-        multiplyStats(rawMatchupWithEntityStats, percentageOfPriorGames),
-        {
-            wins: priorGames * expectedWithEntityMatchupWinrate,
-            games: priorGames,
-        }
-    );
+
+    const matchupWithEntityStats = addStats(rawMatchupWithEntityStats, {
+        wins: priorGames * expectedWithEntityMatchupWinrate,
+        games: priorGames,
+    });
     const matchupWithEntityWinrate =
         matchupWithEntityStats.wins / matchupWithEntityStats.games;
     const matchupWithEntityRating = winrateToRating(matchupWithEntityWinrate);
@@ -183,6 +179,14 @@ export function analyzeEntityMatchup<T>(
         championKey: matchup.championKey,
         role: matchup.role,
         rating: isNaN(rating) ? 0 : rating,
+        games: rawMatchupWithEntityStats.games,
+        wins:
+            ratingToWinrate(
+                winrateToRating(
+                    rawMatchupWithEntityStats.wins /
+                        rawMatchupWithEntityStats.games
+                ) - expectedWithEntityMatchupRating
+            ) * rawMatchupWithEntityStats.games,
         raw: {
             games: rawMatchupWithEntityStats.games,
             wins: rawMatchupWithEntityStats.wins,

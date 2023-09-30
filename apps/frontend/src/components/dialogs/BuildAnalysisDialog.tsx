@@ -5,6 +5,7 @@ import { BuildMatchupTable } from "../views/builds/BuildMatchupTable";
 import { tooltip } from "../../directives/tooltip";
 import { useDataset } from "../../contexts/DatasetContext";
 import { DialogContent, DialogTitle } from "../common/Dialog";
+import { Show } from "solid-js";
 tooltip;
 
 export function BuildAnalysisDialog() {
@@ -50,6 +51,14 @@ export function BuildAnalysisDialog() {
                         .join(" + ");
                 }
                 return dataset()!.itemData[selected.id as any].name;
+            case "summonerSpells": {
+                const [id1, id2] = selected.id.split("_");
+                return (
+                    dataset()!.summonerSpellData[+id1].name +
+                    " + " +
+                    dataset()!.summonerSpellData[+id2].name
+                );
+            }
         }
     };
     const subTitle = () =>
@@ -91,29 +100,27 @@ export function BuildAnalysisDialog() {
                 return `https://ddragon.leagueoflegends.com/cdn/${
                     dataset()!.version
                 }/img/item/${selectedEntity()!.id}.png`;
+            case "summonerSpells": {
+                const id = selected.id.split("_")[0];
+                const spell = dataset()!.summonerSpellData[+id];
+                return `https://ddragon.leagueoflegends.com/cdn/${
+                    dataset()!.version
+                }/img/spell/${spell.id}.png`;
+            }
         }
     };
 
-    const imageAlt = () => {
+    const imageSrc2 = () => {
         const selected = selectedEntity()!;
-        switch (selected.type) {
-            case "rune":
-                if (selected.runeType.startsWith("shard-")) {
-                    return dataset()!.statShardData[selected.id].name;
-                }
-                return dataset()!.runeData[selected.id].name;
-            case "item":
-                if (
-                    selected.itemType === "sets" ||
-                    selected.itemType === "startingSets"
-                ) {
-                    return selected.id
-                        .split("_")
-                        .map((id) => parseInt(id))
-                        .join(" + ");
-                }
 
-                return dataset()!.itemData[selected.id as number].name;
+        switch (selected.type) {
+            case "summonerSpells": {
+                const id = selected.id.split("_")[1];
+                const spell = dataset()!.summonerSpellData[+id];
+                return `https://ddragon.leagueoflegends.com/cdn/${
+                    dataset()!.version
+                }/img/spell/${spell.id}.png`;
+            }
         }
     };
 
@@ -121,11 +128,11 @@ export function BuildAnalysisDialog() {
         <DialogContent class="max-w-3xl">
             <div class="h-24 bg-[#101010] -m-6 mb-0" />
             <div class="flex gap-4 -mt-[62px] items-center">
-                <div class="rounded-full border-primary border-8 bg-primary shrink-0">
+                <div class="rounded-full border-primary border-8 bg-primary shrink-0 relative">
                     <img
                         src={imageSrc()}
                         class="rounded-full w-20 h-20"
-                        alt={imageAlt()}
+                        alt={title()}
                         style={{
                             "image-rendering": (() => {
                                 const selected = selectedEntity()!;
@@ -137,8 +144,32 @@ export function BuildAnalysisDialog() {
                                 }
                                 return undefined;
                             })(),
+                            "clip-path": imageSrc2()
+                                ? "polygon(0% 0%, 100% 0%, 0% 100%, 0% 100%)"
+                                : undefined,
                         }}
                     />
+                    <Show when={imageSrc2()}>
+                        <img
+                            src={imageSrc2()}
+                            class="rounded-full w-20 h-20 absolute top-0 left-0"
+                            alt={title()}
+                            style={{
+                                "image-rendering": (() => {
+                                    const selected = selectedEntity()!;
+                                    if (
+                                        selected.type === "rune" &&
+                                        selected.runeType.startsWith("shard")
+                                    ) {
+                                        return "pixelated";
+                                    }
+                                    return undefined;
+                                })(),
+                                "clip-path":
+                                    "polygon(100% 0%, 100% 100%, 0% 100%, 0% 100%)",
+                            }}
+                        />
+                    </Show>
                 </div>
                 <div class="flex flex-col justify-center w-full min-w-0">
                     <DialogTitle class="mb-1 truncate">{title()}</DialogTitle>

@@ -1,6 +1,7 @@
 import { JSX } from "solid-js/jsx-runtime";
 import { Table } from "../../common/Table";
 import {
+    CellContext,
     ColumnDef,
     SortingState,
     createSolidTable,
@@ -16,6 +17,9 @@ import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { formatPercentage } from "../../../utils/rating";
 import { useDataset } from "../../../contexts/DatasetContext";
+import { Dialog } from "../../common/Dialog";
+import { WinrateDecompositionDialog } from "../../dialogs/WinrateDecompositionDialog";
+import { EntityMatchupAnalysisResult } from "draftgap-core/src/builds/entity-analysis";
 
 export const BuildMatchupTable = (
     props: JSX.HTMLAttributes<HTMLDivElement>
@@ -24,59 +28,74 @@ export const BuildMatchupTable = (
     const { selectedEntity, buildAnalysisResult, partialBuildDataset } =
         useBuild();
 
+    const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
+        createSignal(false);
+    const [chosenResult, setChosenResult] = createSignal<{
+        games: number;
+        wins: number;
+        rating: number;
+    }>();
+
     const title = () =>
         ({
             rune: "Rune",
             item: "Item",
+            summonerSpells: "Spells",
         }[selectedEntity()!.type]);
 
     const data = () => {
         const selected = selectedEntity();
-        if (selected?.type === "rune") {
-            switch (selected.runeType) {
-                case "primary":
-                    return buildAnalysisResult()?.runes.primary[selected.id]
-                        .matchupResult;
-                case "secondary":
-                    return buildAnalysisResult()?.runes.secondary[selected.id]
-                        .matchupResult;
-                case "shard-offense":
-                    return buildAnalysisResult()?.runes.shards.offense[
-                        selected.id
-                    ].matchupResult;
-                case "shard-flex":
-                    return buildAnalysisResult()?.runes.shards.flex[selected.id]
-                        .matchupResult;
-                case "shard-defense":
-                    return buildAnalysisResult()?.runes.shards.defense[
-                        selected.id
-                    ].matchupResult;
+        switch (selected?.type) {
+            case "rune": {
+                switch (selected.runeType) {
+                    case "primary":
+                        return buildAnalysisResult()?.runes.primary[selected.id]
+                            .matchupResult;
+                    case "secondary":
+                        return buildAnalysisResult()?.runes.secondary[
+                            selected.id
+                        ].matchupResult;
+                    case "shard-offense":
+                        return buildAnalysisResult()?.runes.shards.offense[
+                            selected.id
+                        ].matchupResult;
+                    case "shard-flex":
+                        return buildAnalysisResult()?.runes.shards.flex[
+                            selected.id
+                        ].matchupResult;
+                    case "shard-defense":
+                        return buildAnalysisResult()?.runes.shards.defense[
+                            selected.id
+                        ].matchupResult;
+                }
+                break;
             }
-        } else if (selected?.type === "item") {
-            if (selected.itemType === "boots") {
-                return buildAnalysisResult()?.items.boots[selected.id]
+            case "item": {
+                switch (selected.itemType) {
+                    case "startingSets":
+                        return buildAnalysisResult()?.items.startingSets[
+                            selected.id
+                        ].matchupResult;
+                    case "sets":
+                        return buildAnalysisResult()?.items.sets[selected.id]
+                            .matchupResult;
+                    case "boots":
+                        return buildAnalysisResult()?.items.boots[selected.id]
+                            .matchupResult;
+                    default:
+                        return buildAnalysisResult()?.items.statsByOrder[
+                            selected.itemType
+                        ][selected.id].matchupResult;
+                }
+            }
+            case "summonerSpells": {
+                return buildAnalysisResult()?.summonerSpells[selected.id]
                     .matchupResult;
             }
-            if (selected.itemType === "startingSets") {
-                return buildAnalysisResult()?.items.startingSets[selected.id]
-                    .matchupResult;
-            }
-            if (selected.itemType === "sets") {
-                return buildAnalysisResult()?.items.sets[selected.id]
-                    .matchupResult;
-            }
-
-            return buildAnalysisResult()?.items.statsByOrder[selected.itemType][
-                selected.id
-            ].matchupResult;
         }
     };
 
-    const columns: ColumnDef<{
-        championKey: string;
-        role: Role;
-        rating: number;
-    }>[] = [
+    const columns: ColumnDef<EntityMatchupAnalysisResult>[] = [
         {
             header: "Role",
             accessorFn: () => partialBuildDataset()!.role,
@@ -151,7 +170,22 @@ export const BuildMatchupTable = (
             header: "Winrate",
             id: "rating",
             accessorFn: (result) => result.rating,
-            cell: (info) => <RatingText rating={info.getValue<number>()} />,
+            cell: (info) => (
+                <RatingText
+                    rating={info.getValue<number>()}
+                    games={info.row.original.games}
+                />
+            ),
+            meta: {
+                onClickCell: (
+                    e: MouseEvent,
+                    info: CellContext<EntityMatchupAnalysisResult, unknown>
+                ) => {
+                    e.stopPropagation();
+                    setChosenResult(info.row.original);
+                    setConfidenceAnalysisModalIsOpen(true);
+                },
+            },
         },
         ...(import.meta.env.DEV
             ? ([
@@ -209,5 +243,15 @@ export const BuildMatchupTable = (
         getSortedRowModel: getSortedRowModel(),
     });
 
-    return <Table table={table} {...props} />;
+    return (
+        <>
+            <Table table={table} {...props} />
+            <Dialog
+                open={confidenceAnalysisModalIsOpen()}
+                onOpenChange={setConfidenceAnalysisModalIsOpen}
+            >
+                <WinrateDecompositionDialog data={chosenResult()!} />
+            </Dialog>
+        </>
+    );
 };

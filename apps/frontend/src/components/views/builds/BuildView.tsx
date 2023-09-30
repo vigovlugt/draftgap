@@ -4,6 +4,7 @@ import { useBuild } from "../../../contexts/BuildContext";
 import { BootsStats } from "./BootsStats";
 import { ItemStats } from "./ItemStats";
 import { StarterItemStats } from "./StarterItemStats";
+import { SummonerSpellsStats } from "./SummonerSpellsStats";
 
 export const BuildView: Component = () => {
     const { query, buildAnalysisResult } = useBuild();
@@ -25,7 +26,7 @@ export const BuildView: Component = () => {
                     <div class="flex flex-col gap-8">
                         {/* <RecommendedBuild /> */}
                         <RuneTable />
-                        {/* <SummonerSpellsStats /> */}
+                        <SummonerSpellsStats />
                         <StarterItemStats />
                         {/* <ItemSetStats /> */}
                         <BootsStats />

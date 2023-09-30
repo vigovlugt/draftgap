@@ -20,6 +20,7 @@ export const BuildSummaryCards: Component<
         ({
             rune: "Rune",
             item: "Item",
+            summonerSpells: "Summoner Spell",
         }[selectedEntity()!.type]);
     const name = () => {
         const selected = selectedEntity()!;
@@ -38,6 +39,12 @@ export const BuildSummaryCards: Component<
                     default:
                         return dataset()!.itemData[selected.id].name;
                 }
+            case "summonerSpells": {
+                const spells = selected.id.split("_");
+                return spells
+                    .map((id) => dataset()!.summonerSpellData[+id].name)
+                    .join(" + ");
+            }
         }
     };
 
@@ -78,31 +85,34 @@ export const BuildSummaryCards: Component<
         ];
     };
 
-    const baseRating = () => {
+    const summonerSpellAnalysisResult = () => {
+        const selected = selectedEntity();
+        if (selected?.type !== "summonerSpells") return undefined;
+
+        return buildAnalysisResult()!.summonerSpells[selected.id];
+    };
+
+    const analysisResult = () => {
         switch (selectedEntity()!.type) {
             case "rune":
-                return runeAnalysisResult()!.baseResult.rating;
+                return runeAnalysisResult();
             case "item":
-                return itemAnalysisResult()!.baseResult.rating;
+                return itemAnalysisResult();
+            case "summonerSpells":
+                return summonerSpellAnalysisResult();
         }
+    };
+
+    const baseRating = () => {
+        return analysisResult()!.baseResult.rating;
     };
 
     const matchupRating = () => {
-        switch (selectedEntity()!.type) {
-            case "rune":
-                return runeAnalysisResult()!.matchupResult.totalRating;
-            case "item":
-                return itemAnalysisResult()!.matchupResult.totalRating;
-        }
+        return analysisResult()!.matchupResult.totalRating;
     };
 
     const totalRating = () => {
-        switch (selectedEntity()!.type) {
-            case "rune":
-                return runeAnalysisResult()!.totalRating;
-            case "item":
-                return itemAnalysisResult()!.totalRating;
-        }
+        return analysisResult()!.totalRating;
     };
 
     return (

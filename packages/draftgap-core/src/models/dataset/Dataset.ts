@@ -3,6 +3,7 @@ import { deleteChampionRoleDataMatchupSynergyData } from "./ChampionRoleData";
 import { RuneData, RunePathData, StatShardData } from "./RuneData";
 import { ItemData } from "./ItemData";
 import { ratingToWinrate, winrateToRating } from "../../rating/ratings";
+import { SummonerSpellData } from "./SummonerSpellData";
 
 export const DATASET_VERSION = "4";
 
@@ -15,6 +16,7 @@ export interface Dataset {
     runeData: Record<number, RuneData>;
     runePathData: Record<number, RunePathData>;
     statShardData: Record<number, StatShardData>;
+    summonerSpellData: Record<number, SummonerSpellData>;
 }
 
 export function deleteDatasetMatchupSynergyData(dataset: Dataset) {

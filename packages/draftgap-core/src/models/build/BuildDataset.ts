@@ -8,6 +8,7 @@ export type PartialBuildDataset = {
 
     runes: RunesBuildData;
     items: ItemsBuildData;
+    summonerSpells: SummonerSpellsBuildData;
 };
 
 export type FullBuildDataset = PartialBuildDataset & {
@@ -22,6 +23,7 @@ export type BuildMatchupData = {
 
     runes: RunesBuildData;
     items: ItemsBuildData;
+    summonerSpells: SummonerSpellsBuildData;
 };
 
 export type RunesBuildData = {
@@ -52,6 +54,13 @@ export type SetStats = {
 };
 
 export type ItemStats = {
+    wins: number;
+    games: number;
+};
+
+export type SummonerSpellsBuildData = Record<string, SummonerSpellStats>;
+
+export type SummonerSpellStats = {
     wins: number;
     games: number;
 };

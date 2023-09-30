@@ -18,6 +18,10 @@ export type BuildEntity =
           type: "item";
           itemType: "startingSets" | "sets";
           id: string;
+      }
+    | {
+          type: "summonerSpells";
+          id: string;
       };
 
 export type BuildEntityType = BuildEntity["type"];

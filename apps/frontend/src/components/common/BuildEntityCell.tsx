@@ -28,6 +28,12 @@ export const BuildEntityCell = (props: Props) => {
                 }
 
                 return dataset()!.itemData[props.entity.id as number].name;
+            case "summonerSpells": {
+                const spells = props.entity.id.split("_");
+                return spells
+                    .map((id) => dataset()!.summonerSpellData[+id].name)
+                    .join(" + ");
+            }
         }
     };
 
@@ -65,6 +71,30 @@ export const BuildEntityCell = (props: Props) => {
                 return `https://ddragon.leagueoflegends.com/cdn/${
                     dataset()!.version
                 }/img/item/${props.entity.id}.png`;
+            case "summonerSpells": {
+                const spell =
+                    dataset()!.summonerSpellData[
+                        +props.entity.id.split("_")[0]
+                    ];
+                return `https://ddragon.leagueoflegends.com/cdn/${
+                    dataset()!.version
+                }/img/spell/${spell.id}.png`;
+            }
+        }
+    };
+
+    const imageSrc2 = () => {
+        switch (props.entity.type) {
+            case "summonerSpells": {
+                const spell =
+                    dataset()!.summonerSpellData[
+                        +props.entity.id.split("_")[1]
+                    ];
+
+                return `https://ddragon.leagueoflegends.com/cdn/${
+                    dataset()!.version
+                }/img/spell/${spell.id}.png`;
+            }
         }
     };
 
@@ -75,6 +105,13 @@ export const BuildEntityCell = (props: Props) => {
                 alt={name()}
                 class="h-[36px] w-36px] rounded"
             />
+            <Show when={imageSrc2()}>
+                <img
+                    src={imageSrc2()!}
+                    alt={name()}
+                    class="h-[36px] w-36px] rounded"
+                />
+            </Show>
             <Show when={!props.hideName}>
                 <span class="uppercase">
                     {props.nameMaxLength

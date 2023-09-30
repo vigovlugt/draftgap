@@ -10,6 +10,8 @@ import {
     PartialBuildDataset,
     RuneStats,
     RunesBuildData,
+    SummonerSpellStats,
+    SummonerSpellsBuildData,
 } from "../models/build/BuildDataset";
 import { Dataset } from "../models/dataset/Dataset";
 
@@ -139,6 +141,30 @@ function getItemsBuildData(championData: LolalyticsChampionResponse) {
     return items;
 }
 
+function getSummonerSpellsBuildData(
+    championData: LolalyticsChampionResponse
+) {
+    const summonerSpells = {} as SummonerSpellsBuildData;
+
+    const parseSummonerSpellSet = (summonerSpellData: LolalyticsChampionResponse["spells"][number]) => {
+        const id = summonerSpellData[0];
+        const winrate = summonerSpellData[1] / 100;
+        const games = summonerSpellData[3];
+        const wins = Math.round(games * winrate);
+
+        return [id, { wins, games }] as const;
+    };
+
+    for (const spellSetData of championData.spells) {
+        const [spellSet, stats] = parseSummonerSpellSet(spellSetData);
+        // Sort the spell set so that the order of the spells doesn't matter.
+        const spellSetNormalized = spellSet.split("_").sort().join("_");
+        summonerSpells[spellSetNormalized] = stats;
+    }
+
+    return summonerSpells;
+}
+
 function partialDatasetFromLolalyticsData(
     dataset: Dataset,
     championKey: string,
@@ -154,6 +180,7 @@ function partialDatasetFromLolalyticsData(
         games: championData.header.n,
         runes: getRunesBuildData(dataset, championData),
         items: getItemsBuildData(championData),
+        summonerSpells: getSummonerSpellsBuildData(championData),
     };
 
     return partialDataset;
@@ -190,6 +217,7 @@ function fullDatasetFromLolalyticsData(
             games: matchup.championData.header.n,
             runes: getRunesBuildData(dataset, matchup.championData),
             items: getItemsBuildData(matchup.championData),
+            summonerSpells: getSummonerSpellsBuildData(matchup.championData),
         })),
     };
 
