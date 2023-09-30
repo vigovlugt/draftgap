@@ -71,3 +71,19 @@ export async function getItems(version: string) {
 
     return json.data;
 }
+
+export type RiotSummonerSpell = {
+    name: string;
+    key: string;
+};
+
+export async function getSummonerSpells(version: string) {
+    const res = await fetch(
+        `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/summoner.json`
+    );
+    const json = (await res.json()) as {
+        data: Record<string, RiotSummonerSpell>;
+    };
+
+    return json.data;
+}

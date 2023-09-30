@@ -4,7 +4,8 @@ import { deleteDatasetMatchupSynergyData, Dataset, removeRankBias } from "draftg
 import { ItemData } from "draftgap-core/src/models/dataset/ItemData";
 import { RuneData, RunePathData } from "draftgap-core/src/models/dataset/RuneData";
 import { storeDataset } from "./storage/storage";
-import { getVersions, getChampions, getRunes, getItems, RiotRunePath, RiotItem, RiotChampion } from "./riot";
+import { getVersions, getChampions, getRunes, getItems, RiotRunePath, RiotItem, RiotChampion, getSummonerSpells, RiotSummonerSpell } from "./riot";
+import { SummonerSpellData } from "draftgap-core/src/models/dataset/SummonerSpellData";
 
 const BATCH_SIZE = 10;
 
@@ -61,19 +62,21 @@ async function main() {
     const currentVersion = (await getVersions())[0];
     console.log("Patch:", currentVersion);
 
-    const [champions, runes, items] = await Promise.all([
+    const [champions, runes, items, summonerSpells] = await Promise.all([
         getChampions(currentVersion),
         getRunes(currentVersion),
         getItems(currentVersion),
+        getSummonerSpells(currentVersion),
     ]);
 
     const datasetCurrentPatch = await getDataset(
         currentVersion,
         champions,
         runes,
-        items
+        items,
+        summonerSpells
     );
-    const dataset30days = await getDataset("30", champions, runes, items);
+    const dataset30days = await getDataset("30", champions, runes, items, summonerSpells);
 
     deleteDatasetMatchupSynergyData(datasetCurrentPatch);
 
@@ -145,11 +148,30 @@ function riotItemsToItemData(
     );
 }
 
+function riotSummonerSpellsToSummonerSpellData(
+    summonerSpells: Record<string, RiotSummonerSpell>
+): Record<string, SummonerSpellData> {
+    return Object.fromEntries(
+        Object.entries(summonerSpells).map(
+            ([id, spell]) =>
+                [
+                    spell.key,
+                    {
+                        id,
+                        key: +spell.key,
+                        name: spell.name,
+                    },
+                ] as const
+        )
+    );
+}
+
 async function getDataset(
     version: string,
     champions: RiotChampion[],
     runes: RiotRunePath[],
-    items: Record<string, RiotItem>
+    items: Record<string, RiotItem>,
+    summonerSpells: Record<string, RiotSummonerSpell>
 ) {
     console.log("Getting dataset for version", version);
     const dataset: Dataset = {
@@ -158,6 +180,7 @@ async function getDataset(
         championData: {},
         ...riotRunesToRuneData(runes),
         itemData: riotItemsToItemData(items),
+        summonerSpellData: riotSummonerSpellsToSummonerSpellData(summonerSpells)
     };
 
     for (let i = 0; i < champions.length; i += BATCH_SIZE) {

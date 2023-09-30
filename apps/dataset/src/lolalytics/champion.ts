@@ -20,7 +20,7 @@ export interface LolalyticsChampionResponse {
     runes: LolalyticsChampionResponseRunes;
     objective: { [key: string]: Objective };
     spell: Array<number[]>;
-    spells: Array<Array<number | string>>;
+    spells: Array<[string, number, number, number]>;
     itemSets: ItemSets;
     startItem: Array<number[]>;
     startSet: Array<[string, number, number, number]>;
@@ -235,7 +235,7 @@ export async function getLolalyticsChampion(
     queryParams.append("ep", "champion");
     queryParams.append("p", "d");
     queryParams.append("v", "1");
-    queryParams.append("tier", "platinum_plus");
+    queryParams.append("tier", "emerald_plus");
     queryParams.append("queue", "420");
     queryParams.append("region", "all");
     queryParams.append("patch", patch);
