@@ -221,9 +221,7 @@ export const Rune: Component<RuneProps> = (props) => {
     const imgUrl = () =>
         isRune()
             ? `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${rune().icon.toLowerCase()}`
-            : `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/statmods/statmods${shard().key.toLocaleLowerCase()}icon${
-                  shard().key === "MagicRes" ? ".magicresist_fix" : ""
-              }.png`;
+            : `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/statmods/statmods${shard().key.toLocaleLowerCase()}icon.png`;
 
     return (
         <button
