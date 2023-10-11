@@ -327,6 +327,8 @@ export default function DraftTable() {
             row.original.championKey,
             row.original.role
         );
+
+        document.getElementById("draftTableSearch")?.focus();
     }
 
     onMount(() => {

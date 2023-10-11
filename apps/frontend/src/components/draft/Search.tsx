@@ -49,6 +49,7 @@ export function Search() {
                 </div>
                 <input
                     ref={inputEl}
+                    id="draftTableSearch"
                     class="text-lg py-1 block w-full rounded-md rounded-l-md border-gray-301 pl-10 bg-neutral-800 placeholder:text-neutral-500 text-neutral-100"
                     placeholder="SEARCH"
                     value={search()}
