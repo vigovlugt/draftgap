@@ -71,6 +71,10 @@ export function Pick(props: Props) {
             return;
         }
 
+        if ((e.target as HTMLElement).tagName === "INPUT") {
+            return;
+        }
+
         if (e.key === "b") {
             if (!champion()) {
                 return;
