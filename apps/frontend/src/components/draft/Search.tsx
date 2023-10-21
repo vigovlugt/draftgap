@@ -2,12 +2,23 @@ import { Icon } from "solid-heroicons";
 import { magnifyingGlass, xMark } from "solid-heroicons/outline";
 import { onCleanup, onMount, Show } from "solid-js";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";
+import { useUser } from "../../contexts/UserContext";
 
 export function Search() {
     const { search, setSearch } = useDraftFilters();
+    const { setConfig } = useUser();
 
     // eslint-disable-next-line prefer-const -- solid js ref
     let inputEl: HTMLInputElement | undefined = undefined;
+
+    function onInput(e: Event) {
+        const input = e.currentTarget as HTMLInputElement;
+        setSearch(input.value);
+        if (input.value === "DANGEROUSLY_ENABLE_BETA_FEATURES") {
+            setConfig((config) => ({ ...config, enableBetaFeatures: true }));
+            input.value = "";
+        }
+    }
 
     onMount(() => {
         if (!inputEl) return;
@@ -53,7 +64,7 @@ export function Search() {
                     class="text-lg py-1 block w-full rounded-md rounded-l-md border-gray-301 pl-10 bg-neutral-800 placeholder:text-neutral-500 text-neutral-100"
                     placeholder="SEARCH"
                     value={search()}
-                    onInput={(e) => setSearch(e.currentTarget.value)}
+                    onInput={onInput}
                 />
                 <Show when={search().length}>
                     <button

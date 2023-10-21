@@ -23,6 +23,7 @@ export type DraftGapConfig = {
 
     // MISC
     defaultStatsSite: StatsSite;
+    isBetaUser: boolean;
 
     // LOL CLIENT
     disableLeagueClientIntegration: boolean;

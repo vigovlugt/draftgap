@@ -118,7 +118,8 @@ const App: Component = () => {
                                             label: "Draft Analysis",
                                             value: "analysis",
                                         },
-                                        ...(import.meta.env.DEV
+                                        ...(import.meta.env.DEV ||
+                                        config.isBetaUser
                                             ? ([
                                                   {
                                                       label: "Builds",

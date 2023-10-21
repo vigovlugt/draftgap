@@ -25,6 +25,7 @@ const DEFAULT_CONFIG: DraftGapConfig = {
 
     // MISC
     defaultStatsSite: "lolalytics",
+    isBetaUser: false,
 
     // LOL CLIENT
     disableLeagueClientIntegration: false,
