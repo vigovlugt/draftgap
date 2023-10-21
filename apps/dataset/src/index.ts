@@ -22,8 +22,8 @@ const STAT_SHARD_DATA = {
         key: "Armor",
         name: "Armor",
         positions: [
-            { slot: 1, index: 2 },
-            { slot: 2, index: 2 },
+            { slot: 1, index: 1 },
+            { slot: 2, index: 1 },
         ],
     },
     5003: {
@@ -31,8 +31,8 @@ const STAT_SHARD_DATA = {
         key: "MagicRes",
         name: "Magic Resist",
         positions: [
-            { slot: 1, index: 1 },
-            { slot: 2, index: 1 },
+            { slot: 1, index: 2 },
+            { slot: 2, index: 2 },
         ],
     },
     5005: {
@@ -204,8 +204,8 @@ async function getDataset(
             if (!champion) {
                 console.log(
                     "Skipping champion " +
-                        c.name +
-                        " as it lolalytics has no data for it"
+                    c.name +
+                    " as it lolalytics has no data for it"
                 );
                 continue;
             }
