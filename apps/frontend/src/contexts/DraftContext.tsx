@@ -28,7 +28,7 @@ type Selection = {
 
 export function createDraftContext() {
     const { dataset } = useDataset();
-    const { setCurrentDraftView } = useDraftView();
+    const { setCurrentDraftView, currentDraftView } = useDraftView();
     const { isMobileLayout } = useMedia();
     const { resetDraftFilters } = useDraftFilters();
 
@@ -119,7 +119,7 @@ export function createDraftContext() {
                 hoverKey: undefined,
             });
 
-            if (updateView) {
+            if (updateView && currentDraftView().type === "draft") {
                 setCurrentDraftView({
                     type: "draft",
                     subType: team,
@@ -141,7 +141,11 @@ export function createDraftContext() {
                 }
             }
 
-            if (draftFinished() && updateView) {
+            if (
+                draftFinished() &&
+                updateView &&
+                currentDraftView().type === "draft"
+            ) {
                 setCurrentDraftView({
                     type: "analysis",
                 });
