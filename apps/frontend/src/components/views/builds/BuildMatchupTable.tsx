@@ -219,11 +219,7 @@ export const BuildMatchupTable = (
                       accessorFn: (result) =>
                           formatPercentage((result as any).expected),
                   },
-              ] as ColumnDef<{
-                  championKey: string;
-                  role: Role;
-                  rating: number;
-              }>[])
+              ] as ColumnDef<EntityMatchupAnalysisResult>[])
             : []),
     ];
 
