@@ -20,10 +20,11 @@ export type DraftGapConfig = {
     showFavouritesAtTop: boolean;
     banPlacement: DraftTablePlacement;
     unownedPlacement: DraftTablePlacement;
+    showAdvancedWinrates: boolean;
 
     // MISC
     defaultStatsSite: StatsSite;
-    isBetaUser: boolean;
+    enableBetaFeatures: boolean;
 
     // LOL CLIENT
     disableLeagueClientIntegration: boolean;
