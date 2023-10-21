@@ -21,6 +21,7 @@ const DEFAULT_CONFIG: DraftGapConfig = {
     showFavouritesAtTop: false,
     banPlacement: "bottom",
     unownedPlacement: "bottom",
+    showAdvancedWinrates: false,
 
     // MISC
     defaultStatsSite: "lolalytics",

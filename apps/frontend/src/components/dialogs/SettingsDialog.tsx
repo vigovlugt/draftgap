@@ -169,6 +169,21 @@ export default function SettingsDialog() {
                         />
                     </div>
                 </Show>
+
+                <div class="flex space-x-8 items-center justify-between mt-2">
+                    <span class="text-lg uppercase">
+                        Show advanced winrates
+                    </span>
+                    <Switch
+                        checked={config.showAdvancedWinrates}
+                        onChange={() =>
+                            setConfig({
+                                showAdvancedWinrates:
+                                    !config.showAdvancedWinrates,
+                            })
+                        }
+                    />
+                </div>
             </div>
 
             <Show when={isDesktop}>

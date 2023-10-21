@@ -40,9 +40,7 @@ export default function DraftTable() {
         setFavouriteFilter,
     } = useDraftFilters();
     const { allySuggestions, opponentSuggestions } = useDraftSuggestions();
-    const { isFavourite, setFavourite } = useUser();
-
-    const { config } = useUser();
+    const { isFavourite, setFavourite, config } = useUser();
 
     const suggestions = () =>
         selection.team === "opponent"
@@ -185,7 +183,7 @@ export default function DraftTable() {
         });
     }
 
-    const columns: ColumnDef<Suggestion>[] = [
+    const columns: () => ColumnDef<Suggestion>[] = () => [
         {
             id: "favourite",
             header: () => (
@@ -267,13 +265,48 @@ export default function DraftTable() {
                     dataset()!.championData[b.getValue<string>(id)].name
                 ),
         },
+        ...(config.showAdvancedWinrates
+            ? ([
+                  {
+                      header: "Champions",
+                      accessorFn: (suggestion) =>
+                          suggestion.draftResult.allyChampionRating.totalRating,
+                      cell: (info) => (
+                          <div class="flex justify-end">
+                              <RatingText rating={info.getValue<number>()} />
+                          </div>
+                      ),
+                  },
+                  {
+                      header: "Matchups",
+                      accessorFn: (suggestion) =>
+                          suggestion.draftResult.matchupRating.totalRating,
+                      cell: (info) => (
+                          <div class="flex justify-end">
+                              <RatingText rating={info.getValue<number>()} />
+                          </div>
+                      ),
+                  },
+                  {
+                      header: "Duos",
+                      accessorFn: (suggestion) =>
+                          suggestion.draftResult.allyDuoRating.totalRating,
+                      cell: (info) => (
+                          <div class="flex justify-end">
+                              <RatingText rating={info.getValue<number>()} />
+                          </div>
+                      ),
+                  },
+              ] as ColumnDef<Suggestion>[])
+            : []),
         {
             header: "Winrate",
             accessorFn: (suggestion) => suggestion.draftResult.totalRating,
-            cell: (info) => <RatingText rating={info.getValue<number>()} />,
-            meta: {
-                cellClass: "flex justify-end",
-            },
+            cell: (info) => (
+                <div class="flex justify-end">
+                    <RatingText rating={info.getValue<number>()} />
+                </div>
+            ),
         },
         {
             id: "actions",
@@ -304,7 +337,9 @@ export default function DraftTable() {
         get data() {
             return filteredSuggestions();
         },
-        columns,
+        get columns() {
+            return columns();
+        },
         state: {
             get sorting() {
                 return sorting();
