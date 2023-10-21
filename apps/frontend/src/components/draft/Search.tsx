@@ -15,8 +15,12 @@ export function Search() {
         const input = e.currentTarget as HTMLInputElement;
         setSearch(input.value);
         if (input.value === "DANGEROUSLY_ENABLE_BETA_FEATURES") {
-            setConfig((config) => ({ ...config, isBetaUser: true }));
-            input.value = "";
+            setConfig((config) => ({ ...config, enableBetaFeatures: true }));
+            setSearch("");
+        }
+        if (input.value === "DANGEROUSLY_DISABLE_BETA_FEATURES") {
+            setConfig((config) => ({ ...config, enableBetaFeatures: false }));
+            setSearch("");
         }
     }
 

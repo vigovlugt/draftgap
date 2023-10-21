@@ -6,7 +6,6 @@ import {
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { createStoredSignal } from "../utils/signals";
 import { Role } from "draftgap-core/src/models/Role";
 import { DraftGapConfig } from "draftgap-core/src/models/user/Config";
 
