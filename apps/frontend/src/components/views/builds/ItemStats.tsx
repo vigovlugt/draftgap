@@ -50,7 +50,7 @@ export const ItemStats: Component = () => {
                                     ][id].totalRating
                                 }
                             >
-                                {(item) => <Item order={i} itemId={item} />}
+                                {([item]) => <Item order={i} itemId={item} />}
                             </VerticalEntityStats>
                         </div>
                     )}

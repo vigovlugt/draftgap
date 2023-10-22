@@ -59,6 +59,14 @@ export function BuildAnalysisDialog() {
                     dataset()!.summonerSpellData[+id2].name
                 );
             }
+            case "skills": {
+                switch (selected.skillsType) {
+                    case "order":
+                        return selected.id.split("").join(" > ");
+                    case "level":
+                        return `${selected.id} level ${selected.level + 1}`;
+                }
+            }
         }
     };
     const subTitle = () =>
@@ -105,6 +113,8 @@ export function BuildAnalysisDialog() {
                     dataset()!.version
                 }/img/spell/${spell.id}.png`;
             }
+            case "skills":
+                return null;
         }
     };
 
@@ -126,31 +136,11 @@ export function BuildAnalysisDialog() {
         <DialogContent class="max-w-3xl">
             <div class="h-24 bg-[#101010] -m-6 mb-0" />
             <div class="flex gap-4 -mt-[62px] items-center">
-                <div class="rounded-full border-primary border-8 bg-primary shrink-0 relative">
-                    <img
-                        src={imageSrc()}
-                        class="rounded-full w-20 h-20"
-                        alt={title()}
-                        style={{
-                            "image-rendering": (() => {
-                                const selected = selectedEntity()!;
-                                if (
-                                    selected.type === "rune" &&
-                                    selected.runeType.startsWith("shard")
-                                ) {
-                                    return "pixelated";
-                                }
-                                return undefined;
-                            })(),
-                            "clip-path": imageSrc2()
-                                ? "polygon(0% 0%, 100% 0%, 0% 100%, 0% 100%)"
-                                : undefined,
-                        }}
-                    />
-                    <Show when={imageSrc2()}>
+                <Show when={imageSrc()}>
+                    <div class="rounded-full border-primary border-8 bg-primary shrink-0 relative">
                         <img
-                            src={imageSrc2()}
-                            class="rounded-full w-20 h-20 absolute top-0 left-0"
+                            src={imageSrc()!}
+                            class="rounded-full w-20 h-20"
                             alt={title()}
                             style={{
                                 "image-rendering": (() => {
@@ -163,12 +153,36 @@ export function BuildAnalysisDialog() {
                                     }
                                     return undefined;
                                 })(),
-                                "clip-path":
-                                    "polygon(100% 0%, 100% 100%, 0% 100%, 0% 100%)",
+                                "clip-path": imageSrc2()
+                                    ? "polygon(0% 0%, 100% 0%, 0% 100%, 0% 100%)"
+                                    : undefined,
                             }}
                         />
-                    </Show>
-                </div>
+                        <Show when={imageSrc2()}>
+                            <img
+                                src={imageSrc2()}
+                                class="rounded-full w-20 h-20 absolute top-0 left-0"
+                                alt={title()}
+                                style={{
+                                    "image-rendering": (() => {
+                                        const selected = selectedEntity()!;
+                                        if (
+                                            selected.type === "rune" &&
+                                            selected.runeType.startsWith(
+                                                "shard"
+                                            )
+                                        ) {
+                                            return "pixelated";
+                                        }
+                                        return undefined;
+                                    })(),
+                                    "clip-path":
+                                        "polygon(100% 0%, 100% 100%, 0% 100%, 0% 100%)",
+                                }}
+                            />
+                        </Show>
+                    </div>
+                </Show>
                 <div class="flex flex-col justify-center w-full min-w-0">
                     <DialogTitle class="mb-1 truncate">{title()}</DialogTitle>
                     <span class="text-xl text-neutral-300 uppercase mb-[16px]">

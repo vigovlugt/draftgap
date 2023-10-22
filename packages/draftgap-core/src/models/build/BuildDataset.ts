@@ -9,6 +9,12 @@ export type PartialBuildDataset = {
     runes: RunesBuildData;
     items: ItemsBuildData;
     summonerSpells: SummonerSpellsBuildData;
+    skills: SkillsBuildData;
+};
+
+export type EntityStats = {
+    wins: number;
+    games: number;
 };
 
 export type FullBuildDataset = PartialBuildDataset & {
@@ -24,38 +30,25 @@ export type BuildMatchupData = {
     runes: RunesBuildData;
     items: ItemsBuildData;
     summonerSpells: SummonerSpellsBuildData;
+    skills: SkillsBuildData;
 };
 
 export type RunesBuildData = {
-    primary: Record<string, RuneStats>;
-    secondary: Record<string, RuneStats>;
+    primary: Record<string, EntityStats>;
+    secondary: Record<string, EntityStats>;
     shards: {
-        offense: Record<string, RuneStats>;
-        defense: Record<string, RuneStats>;
-        flex: Record<string, RuneStats>;
+        offense: Record<string, EntityStats>;
+        defense: Record<string, EntityStats>;
+        flex: Record<string, EntityStats>;
     };
 };
 
-export type RuneStats = {
-    wins: number;
-    games: number;
-};
 
 export type ItemsBuildData = {
-    boots: Record<string, ItemStats>;
-    statsByOrder: Record<string, ItemStats>[];
-    startingSets: Record<string, SetStats>;
-    sets: Record<string, SetStats>;
-};
-
-export type SetStats = {
-    wins: number;
-    games: number;
-};
-
-export type ItemStats = {
-    wins: number;
-    games: number;
+    boots: Record<string, EntityStats>;
+    statsByOrder: Record<string, EntityStats>[];
+    startingSets: Record<string, EntityStats>;
+    sets: Record<string, EntityStats>;
 };
 
 export type SummonerSpellsBuildData = Record<string, SummonerSpellStats>;
@@ -64,3 +57,11 @@ export type SummonerSpellStats = {
     wins: number;
     games: number;
 };
+
+export type Skill = "Q" | "W" | "E" | "R";
+export type SkillOrder = "QWE" | "QEW" | "WQE" | "WEQ" | "EQW" | "EWQ";
+
+export type SkillsBuildData = {
+    order: Record<SkillOrder, EntityStats>;
+    level: Record<Skill, EntityStats>[];
+}

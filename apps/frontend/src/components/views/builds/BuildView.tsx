@@ -5,6 +5,7 @@ import { BootsStats } from "./BootsStats";
 import { ItemStats } from "./ItemStats";
 import { StarterItemStats } from "./StarterItemStats";
 import { SummonerSpellsStats } from "./SummonerSpellsStats";
+import { SkillStats } from "./SkillStats";
 
 export const BuildView: Component = () => {
     const { query, buildAnalysisResult } = useBuild();
@@ -37,6 +38,7 @@ export const BuildView: Component = () => {
                                 In-game
                             </h2>
                             <StarterItemStats />
+                            <SkillStats />
                             {/* <ItemSetStats /> */}
                             <BootsStats />
                             <ItemStats />

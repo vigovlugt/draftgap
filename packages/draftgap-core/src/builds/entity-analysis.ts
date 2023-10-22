@@ -7,7 +7,7 @@ import {
 } from "../models/build/BuildDataset";
 import { ratingToWinrate, winrateToRating } from "../rating/ratings";
 import { buildPriorGamesByRiskLevel } from "../risk/risk-level";
-import { addStats, multiplyStats } from "../stats";
+import { addStats } from "../stats";
 
 export type EntityAnalysisResult = {
     baseResult: BaseEntityAnalysisResult;
@@ -184,7 +184,7 @@ export function analyzeEntityMatchup<T>(
             ratingToWinrate(
                 winrateToRating(
                     rawMatchupWithEntityStats.wins /
-                        rawMatchupWithEntityStats.games
+                    rawMatchupWithEntityStats.games
                 ) - expectedWithEntityMatchupRating
             ) * rawMatchupWithEntityStats.games,
         raw: {

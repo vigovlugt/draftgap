@@ -9,6 +9,7 @@ import {
     RunesAnalysisResult as RunesAnalysisResult,
     analyzeRunes,
 } from "./rune-analysis";
+import { SkillsAnalysisResult, analyzeSkills } from "./skill-analysis";
 import {
     SummonerSpellsAnalysisResult,
     analyzeSummonerSpells,
@@ -18,6 +19,7 @@ export type BuildAnalysisResult = {
     runes: RunesAnalysisResult;
     items: ItemsAnalysisResult;
     summonerSpells: SummonerSpellsAnalysisResult;
+    skills: SkillsAnalysisResult;
 };
 
 export function analyzeBuild(
@@ -31,6 +33,11 @@ export function analyzeBuild(
         runes: analyzeRunes(partialBuildDataset, fullBuildDatset, config),
         items: analyzeItems(partialBuildDataset, fullBuildDatset, config),
         summonerSpells: analyzeSummonerSpells(
+            partialBuildDataset,
+            fullBuildDatset,
+            config
+        ),
+        skills: analyzeSkills(
             partialBuildDataset,
             fullBuildDatset,
             config

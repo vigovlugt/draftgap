@@ -21,6 +21,7 @@ export const BuildSummaryCards: Component<
             rune: "Rune",
             item: "Item",
             summonerSpells: "Summoner Spell",
+            skills: "Skills",
         }[selectedEntity()!.type]);
     const name = () => {
         const selected = selectedEntity()!;
@@ -44,6 +45,14 @@ export const BuildSummaryCards: Component<
                 return spells
                     .map((id) => dataset()!.summonerSpellData[+id].name)
                     .join(" + ");
+            }
+            case "skills": {
+                switch (selected.skillsType) {
+                    case "order":
+                        return "Skill Priority";
+                    case "level":
+                        return "Skills";
+                }
             }
         }
     };
@@ -92,14 +101,31 @@ export const BuildSummaryCards: Component<
         return buildAnalysisResult()!.summonerSpells[selected.id];
     };
 
+    const skillAnalysisResult = () => {
+        const selected = selectedEntity();
+        if (selected?.type !== "skills") return undefined;
+
+        switch (selected.skillsType) {
+            case "order":
+                return buildAnalysisResult()!.skills.order[selected.id];
+            case "level":
+                return buildAnalysisResult()!.skills.levels[selected.level][selected.id];
+        }
+    }
+
     const analysisResult = () => {
-        switch (selectedEntity()!.type) {
+        const selected = selectedEntity()!;
+        switch (selected.type) {
             case "rune":
                 return runeAnalysisResult();
             case "item":
                 return itemAnalysisResult();
             case "summonerSpells":
                 return summonerSpellAnalysisResult();
+            case "skills":
+                return skillAnalysisResult();
+            default:
+                selected satisfies never;
         }
     };
 

@@ -24,7 +24,7 @@ export const BootsStats: Component = () => {
                     buildAnalysisResult()!.items.boots[id].totalRating
                 }
             >
-                {(id) => <Boot itemId={parseInt(id)} />}
+                {([id]) => <Boot itemId={parseInt(id)} />}
             </HorizontalEntityStats>
         </Panel>
     );

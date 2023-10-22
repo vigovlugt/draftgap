@@ -1,11 +1,17 @@
-import { Component, JSX } from "solid-js";
+import { Component, ComponentProps, JSX, splitProps } from "solid-js";
+import { cn } from "../../utils/style";
 
 type Props = {
     children: JSX.Element;
 };
 
-export const Panel: Component<Props> = (props) => {
-    return <div class="rounded-md bg-[#191919] p-4">{props.children}</div>;
+export const Panel: Component<Props & ComponentProps<"div">> = (props) => {
+    const [local, other] = splitProps(props, ["children", "class"]);
+    return (
+        <div {...other} class={cn("rounded-md bg-[#191919] p-4", local.class)}>
+            {local.children}
+        </div>
+    );
 };
 
 export const PanelHeader: Component<Props> = (props) => {

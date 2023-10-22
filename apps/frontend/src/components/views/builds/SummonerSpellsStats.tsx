@@ -25,9 +25,8 @@ export const SummonerSpellsStats: Component = () => {
                     buildAnalysisResult()!.summonerSpells[id].totalRating
                 }
             >
-                {(id) => <SummonerSpells setId={id} />}
+                {([id]) => <SummonerSpells setId={id} />}
             </HorizontalEntityStats>
-            {}
         </Panel>
     );
 };

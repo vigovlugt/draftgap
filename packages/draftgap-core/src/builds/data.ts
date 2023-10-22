@@ -8,12 +8,14 @@ import {
     FullBuildDataset,
     ItemsBuildData,
     PartialBuildDataset,
-    RuneStats,
     RunesBuildData,
-    SummonerSpellStats,
+    Skill,
+    SkillOrder,
+    SkillsBuildData,
     SummonerSpellsBuildData,
 } from "../models/build/BuildDataset";
 import { Dataset } from "../models/dataset/Dataset";
+import { EntityStats } from "./entity-analysis";
 
 function getRunesBuildData(
     dataset: Dataset,
@@ -46,7 +48,7 @@ function getRunesBuildData(
             const runeStats = {
                 wins: Math.round(games * (winRate / 100)),
                 games,
-            } satisfies RuneStats;
+            } satisfies EntityStats;
 
             if (dataset.runeData[runeId]) {
                 if (chosenAsSecondary) {
@@ -165,6 +167,49 @@ function getSummonerSpellsBuildData(
     return summonerSpells;
 }
 
+function getSkillsBuildData(championData: LolalyticsChampionResponse) {
+    const skills = {
+        order: {},
+        level: {},
+    } as SkillsBuildData;
+
+    const parseSkillOrder = (skillOrderData: LolalyticsChampionResponse["skills"]["skillOrder"][number]) => {
+        const skillOrder = skillOrderData[0] as SkillOrder;
+        const games = skillOrderData[1];
+        const wins = skillOrderData[2];
+
+        return [skillOrder, { wins, games }] as const;
+    };
+
+    for (const skillOrderData of championData.skills.skillOrder) {
+        const [skillOrder, stats] = parseSkillOrder(skillOrderData);
+        skills.order[skillOrder] = stats;
+    }
+
+    const parseSkillLevel = (skillLevelData: LolalyticsChampionResponse["skills"]["skillEarly"][number]) => {
+        return skillLevelData.map(parseSkillLevelItem);
+    }
+
+    const parseSkillLevelItem = (skillLevelItemData: LolalyticsChampionResponse["skills"]["skillEarly"][number][number], i: number) => {
+        const skill = ["Q", "W", "E", "R"][i] as Skill;
+        const games = skillLevelItemData[0];
+        const wins = skillLevelItemData[1];
+
+        return [skill, { wins, games }] as const;
+    }
+
+    skills.level = Array.from({ length: championData.skills.skillEarly.length }).map(() => ({}) as Record<Skill, EntityStats>);
+    for (let i = 0; i < championData.skills.skillEarly.length; i++) {
+        const skillLevelData = championData.skills.skillEarly[i];
+        const skillStatsForLevel = parseSkillLevel(skillLevelData);
+        for (const [skill, stats] of skillStatsForLevel) {
+            skills.level[i][skill] = stats;
+        }
+    }
+
+    return skills;
+}
+
 function partialDatasetFromLolalyticsData(
     dataset: Dataset,
     championKey: string,
@@ -181,6 +226,7 @@ function partialDatasetFromLolalyticsData(
         runes: getRunesBuildData(dataset, championData),
         items: getItemsBuildData(championData),
         summonerSpells: getSummonerSpellsBuildData(championData),
+        skills: getSkillsBuildData(championData),
     };
 
     return partialDataset;
@@ -212,12 +258,13 @@ function fullDatasetFromLolalyticsData(
             wins: Math.round(
                 (matchup.championData.header.n *
                     matchup.championData.header.wr) /
-                    100
+                100
             ),
             games: matchup.championData.header.n,
             runes: getRunesBuildData(dataset, matchup.championData),
             items: getItemsBuildData(matchup.championData),
             summonerSpells: getSummonerSpellsBuildData(matchup.championData),
+            skills: getSkillsBuildData(matchup.championData),
         })),
     };
 

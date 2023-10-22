@@ -41,6 +41,7 @@ export const BuildMatchupTable = (
             rune: "Rune",
             item: "Item",
             summonerSpells: "Spells",
+            skills: "Skills",
         }[selectedEntity()!.type]);
 
     const data = () => {
@@ -91,6 +92,17 @@ export const BuildMatchupTable = (
             case "summonerSpells": {
                 return buildAnalysisResult()?.summonerSpells[selected.id]
                     .matchupResult;
+            }
+            case "skills": {
+                switch (selected.skillsType) {
+                    case "order":
+                        return buildAnalysisResult()?.skills.order[selected.id]
+                            .matchupResult;
+                    case "level":
+                        return buildAnalysisResult()?.skills.levels[
+                            selected.level
+                        ][selected.id].matchupResult;
+                }
             }
         }
     };

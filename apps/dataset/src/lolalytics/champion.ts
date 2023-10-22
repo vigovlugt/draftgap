@@ -127,10 +127,10 @@ export interface LolalyticsChampionResponseRunes {
 }
 
 export interface Skills {
-    skillEarly: Array<Array<number[]>>;
+    skillEarly: Array<Array<[number, number]>>;
     skill6Pick: number;
     skill10Pick: number;
-    skillOrder: Array<Array<number | string>>;
+    skillOrder: Array<[string, number, number]>;
 }
 
 export interface Summary {
@@ -261,9 +261,9 @@ export async function getLolalyticsChampion(
     } catch (e) {
         throw new Error(
             "Error parsing JSON for lolalytics champion " +
-                championKey +
-                " url: " +
-                url,
+            championKey +
+            " url: " +
+            url,
             {
                 cause: e,
             }

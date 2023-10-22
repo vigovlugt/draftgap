@@ -34,6 +34,16 @@ export const BuildEntityCell = (props: Props) => {
                     .map((id) => dataset()!.summonerSpellData[+id].name)
                     .join(" + ");
             }
+            case "skills": {
+                switch (props.entity.skillsType) {
+                    case "order":
+                        return props.entity.id.split("").join(" > ");
+                    case "level":
+                        return `${props.entity.id} lvl ${
+                            props.entity.level + 1
+                        }`;
+                }
+            }
         }
     };
 
@@ -78,6 +88,8 @@ export const BuildEntityCell = (props: Props) => {
                     dataset()!.version
                 }/img/spell/${spell.id}.png`;
             }
+            case "skills":
+                return null;
         }
     };
 
@@ -98,11 +110,13 @@ export const BuildEntityCell = (props: Props) => {
 
     return (
         <div class="flex gap-2">
-            <img
-                src={imageSrc()}
-                alt={name()}
-                class="h-[36px] w-36px] rounded"
-            />
+            <Show when={imageSrc()}>
+                <img
+                    src={imageSrc()!}
+                    alt={name()}
+                    class="h-[36px] w-36px] rounded"
+                />
+            </Show>
             <Show when={imageSrc2()}>
                 <img
                     src={imageSrc2()!}
@@ -110,7 +124,7 @@ export const BuildEntityCell = (props: Props) => {
                     class="h-[36px] w-36px] rounded"
                 />
             </Show>
-            <Show when={!props.hideName}>
+            <Show when={!props.hideName || !imageSrc()}>
                 <span class="uppercase">
                     {props.nameMaxLength
                         ? overflowEllipsis(name(), props.nameMaxLength)

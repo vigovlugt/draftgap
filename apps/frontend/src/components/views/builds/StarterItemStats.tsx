@@ -28,7 +28,7 @@ export const StarterItemStats: Component = () => {
                     buildAnalysisResult()!.items.startingSets[id].totalRating
                 }
             >
-                {(id) => <StarterItem setId={id} />}
+                {([id]) => <StarterItem setId={id} />}
             </HorizontalEntityStats>
         </Panel>
     );

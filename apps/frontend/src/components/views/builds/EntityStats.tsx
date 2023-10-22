@@ -4,7 +4,7 @@ type Props<T> = {
     data: T[];
     getGames: (item: T) => number;
     getRating: (item: T) => number;
-    children: (item: T) => JSX.Element;
+    children: (data: readonly [T, number, number]) => JSX.Element;
 };
 
 export const useEntityStats = <T,>(props: Props<T>) => {
@@ -91,7 +91,14 @@ export const HorizontalEntityStats = <T,>(props: Props<T>) => {
                 </button>
             </div>
             <div class="flex gap-4 overflow-x-auto w-full">
-                <For each={data()}>{props.children}</For>
+                <For
+                    each={data().map(
+                        (d) =>
+                            [d, props.getGames(d), props.getRating(d)] as const
+                    )}
+                >
+                    {props.children}
+                </For>
             </div>
         </div>
     );
@@ -148,7 +155,14 @@ export const VerticalEntityStats = <T,>(props: Props<T>) => {
                 </tr>
             </thead>
             <tbody>
-                <For each={data()}>{props.children}</For>
+                <For
+                    each={data().map(
+                        (d) =>
+                            [d, props.getGames(d), props.getRating(d)] as const
+                    )}
+                >
+                    {props.children}
+                </For>
             </tbody>
         </table>
     );
