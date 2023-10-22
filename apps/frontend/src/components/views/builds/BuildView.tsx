@@ -23,14 +23,24 @@ export const BuildView: Component = () => {
                     </div>
                 </Match>
                 <Match when={query.isSuccess && buildAnalysisResult}>
-                    <div class="flex flex-col gap-8">
-                        {/* <RecommendedBuild /> */}
-                        <RuneTable />
-                        <SummonerSpellsStats />
-                        <StarterItemStats />
-                        {/* <ItemSetStats /> */}
-                        <BootsStats />
-                        <ItemStats />
+                    <div class="flex flex-col gap-20">
+                        <div class="flex flex-col gap-8">
+                            <h2 class="uppercase text-2xl font-semibold leading-none text-center">
+                                Pre-game
+                            </h2>
+                            {/* <RecommendedBuild /> */}
+                            <RuneTable />
+                            <SummonerSpellsStats />
+                        </div>
+                        <div class="flex flex-col gap-8">
+                            <h2 class="uppercase text-2xl font-semibold leading-none text-center">
+                                In-game
+                            </h2>
+                            <StarterItemStats />
+                            {/* <ItemSetStats /> */}
+                            <BootsStats />
+                            <ItemStats />
+                        </div>
                     </div>
                 </Match>
             </Switch>

@@ -3,7 +3,9 @@
     "version": "2.12.1",
     "scripts": {
         "bump-version": "tsx scripts/bump-version.ts",
-        "typecheck": "turbo typecheck"
+        "typecheck": "turbo typecheck",
+        "dev": "pnpm run --filter @draftgap/frontend dev",
+        "tauri": "pnpm run --filter @draftgap/frontend tauri"
     },
     "devDependencies": {
         "@types/node": "^20.4.4",

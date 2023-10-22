@@ -71,10 +71,8 @@ export function BuildAnalysisDialog() {
         switch (selected.type) {
             case "rune":
                 if (selected.runeType.startsWith("shard-")) {
-                    const shard = () => dataset()!.statShardData[selected.id];
-                    return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/statmods/statmods${shard().key.toLocaleLowerCase()}icon${
-                        shard().key === "MagicRes" ? ".magicresist_fix" : ""
-                    }.png`;
+                    const shard = dataset()!.statShardData[selected.id];
+                    return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/statmods/statmods${shard.key.toLocaleLowerCase()}icon.png`;
                 }
                 return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${dataset()!.runeData[
                     selectedEntity()!.id as any

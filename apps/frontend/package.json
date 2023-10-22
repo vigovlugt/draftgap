@@ -1,5 +1,5 @@
 {
-    "name": "draftgap",
+    "name": "@draftgap/frontend",
     "version": "2.12.1",
     "scripts": {
         "start": "vite",

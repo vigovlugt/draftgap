@@ -1,5 +1,5 @@
 {
-    "name": "draftgap-dataset",
+    "name": "@draftgap/dataset",
     "version": "2.12.1",
     "scripts": {
         "start": "tsx src/index.ts",

@@ -42,9 +42,7 @@ export const BuildEntityCell = (props: Props) => {
             case "rune":
                 if (props.entity.runeType.startsWith("shard-")) {
                     const shard = dataset()!.statShardData[props.entity.id];
-                    return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/statmods/statmods${shard.key.toLocaleLowerCase()}icon${
-                        shard.key === "MagicRes" ? ".magicresist_fix" : ""
-                    }.png`;
+                    return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/statmods/statmods${shard.key.toLocaleLowerCase()}icon.png`;
                 }
                 return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/${dataset()!.runeData[
                     props.entity.id as number
