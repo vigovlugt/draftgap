@@ -1,5 +1,5 @@
 import { JSXElement, createContext, createMemo, useContext } from "solid-js";
-import { analyzeDraftExtra } from "draftgap-core/src/draft/extra-analysis";
+import { analyzeDraftExtra } from "@draftgap/core/src/draft/extra-analysis";
 import { useDataset } from "./DatasetContext";
 import { useUser } from "./UserContext";
 import { useDraftAnalysis } from "./DraftAnalysisContext";

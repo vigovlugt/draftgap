@@ -1,6 +1,6 @@
 import { For } from "solid-js";
 import { useDraft } from "../../contexts/DraftContext";
-import { Team } from "draftgap-core/src/models/Team";
+import { Team } from "@draftgap/core/src/models/Team";
 
 const TEAMS = ["ally", "opponent"] as const;
 

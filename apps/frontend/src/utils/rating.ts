@@ -1,4 +1,4 @@
-import { ratingToWinrate } from "draftgap-core/src/rating/ratings";
+import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
 
 export function formatRating(rating: number): string {
     return formatPercentage(ratingToWinrate(rating));

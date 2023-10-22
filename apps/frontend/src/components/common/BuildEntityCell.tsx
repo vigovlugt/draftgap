@@ -1,5 +1,5 @@
 import { Show } from "solid-js";
-import { BuildEntity } from "draftgap-core/src/models/build/BuildEntity";
+import { BuildEntity } from "@draftgap/core/src/models/build/BuildEntity";
 import { overflowEllipsis } from "../../utils/strings";
 import { useDataset } from "../../contexts/DatasetContext";
 

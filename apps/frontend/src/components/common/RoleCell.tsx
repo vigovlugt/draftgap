@@ -1,4 +1,4 @@
-import { Role } from "draftgap-core/src/models/Role";
+import { Role } from "@draftgap/core/src/models/Role";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 
 export function RoleCell(props: { role: Role }) {

@@ -6,7 +6,7 @@ import {
     presentationChartLine,
 } from "solid-heroicons/solid";
 import { JSX } from "solid-js/jsx-runtime";
-import { Team } from "draftgap-core/src/models/Team";
+import { Team } from "@draftgap/core/src/models/Team";
 import { tooltip } from "../../../directives/tooltip";
 import { RatingText } from "../../common/RatingText";
 import { Component, Show } from "solid-js";

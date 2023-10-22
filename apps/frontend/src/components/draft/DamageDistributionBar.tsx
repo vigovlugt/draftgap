@@ -1,5 +1,5 @@
 import { Show } from "solid-js";
-import { Team } from "draftgap-core/src/models/Team";
+import { Team } from "@draftgap/core/src/models/Team";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 
 export function DamageDistributionBar(props: { team: Team }) {

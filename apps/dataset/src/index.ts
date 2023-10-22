@@ -1,11 +1,11 @@
 import "dotenv/config";
 import { getChampionDataFromLolalytics } from "./lolalytics";
-import { deleteDatasetMatchupSynergyData, Dataset, removeRankBias } from "draftgap-core/src/models/dataset/Dataset";
-import { ItemData } from "draftgap-core/src/models/dataset/ItemData";
-import { RuneData, RunePathData } from "draftgap-core/src/models/dataset/RuneData";
+import { deleteDatasetMatchupSynergyData, Dataset, removeRankBias } from "@draftgap/core/src/models/dataset/Dataset";
+import { ItemData } from "@draftgap/core/src/models/dataset/ItemData";
+import { RuneData, RunePathData } from "@draftgap/core/src/models/dataset/RuneData";
 import { storeDataset } from "./storage/storage";
 import { getVersions, getChampions, getRunes, getItems, RiotRunePath, RiotItem, RiotChampion, getSummonerSpells, RiotSummonerSpell } from "./riot";
-import { SummonerSpellData } from "draftgap-core/src/models/dataset/SummonerSpellData";
+import { SummonerSpellData } from "@draftgap/core/src/models/dataset/SummonerSpellData";
 
 const BATCH_SIZE = 10;
 

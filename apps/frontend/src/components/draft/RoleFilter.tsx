@@ -1,6 +1,6 @@
 import { ComponentProps, For } from "solid-js";
 import { useDraft } from "../../contexts/DraftContext";
-import { ROLES } from "draftgap-core/src/models/Role";
+import { ROLES } from "@draftgap/core/src/models/Role";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";

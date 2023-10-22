@@ -4,7 +4,7 @@ import { useDraft } from "../../contexts/DraftContext";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { PickOptions } from "./PickOptions";
 import { lockOpen, lockClosed } from "solid-heroicons/solid-mini";
-import { Role } from "draftgap-core/src/models/Role";
+import { Role } from "@draftgap/core/src/models/Role";
 import { formatPercentage } from "../../utils/rating";
 import { tooltip } from "../../directives/tooltip";
 import { useTooltip } from "../../contexts/TooltipContext";

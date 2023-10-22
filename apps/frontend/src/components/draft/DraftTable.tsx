@@ -8,8 +8,8 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { useDraft } from "../../contexts/DraftContext";
-import { Role } from "draftgap-core/src/models/Role";
-import { Suggestion } from "draftgap-core/src/draft/suggestions";
+import { Role } from "@draftgap/core/src/models/Role";
+import { Suggestion } from "@draftgap/core/src/draft/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
@@ -26,7 +26,7 @@ import { useDraftFilters } from "../../contexts/DraftFiltersContext";
 import { informationCircle } from "solid-heroicons/solid-mini";
 import { Dialog } from "../common/Dialog";
 import { ChampionDraftAnalysisDialog } from "../dialogs/ChampionDraftAnalysisDialog";
-import { Team } from "draftgap-core/src/models/Team";
+import { Team } from "@draftgap/core/src/models/Team";
 
 export default function DraftTable() {
     const { dataset } = useDataset();

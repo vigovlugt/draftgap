@@ -1,4 +1,4 @@
-import { ratingToWinrate } from "draftgap-core/src/rating/ratings";
+import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
 import { useExtraDraftAnalysis } from "../../../contexts/ExtraDraftAnalysisContext";
 import { Chart } from "../../common/Chart";
 import { ChartConfiguration } from "chart.js";

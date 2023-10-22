@@ -5,7 +5,7 @@ import {
     createSignal,
     useContext,
 } from "solid-js";
-import { Role } from "draftgap-core/src/models/Role";
+import { Role } from "@draftgap/core/src/models/Role";
 
 export function createDraftFiltersContext() {
     const [search, setSearch] = createSignal("");

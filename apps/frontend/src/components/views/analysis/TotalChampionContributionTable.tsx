@@ -8,13 +8,13 @@ import {
 } from "@tanstack/solid-table";
 import { Component, createSignal, splitProps } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
-import { Role } from "draftgap-core/src/models/Role";
-import { Team } from "draftgap-core/src/models/Team";
+import { Role } from "@draftgap/core/src/models/Role";
+import { Team } from "@draftgap/core/src/models/Team";
 import {
     AnalyzeChampionResult,
     AnalyzeDuoResult,
     AnalyzeMatchupResult,
-} from "draftgap-core/src/draft/analysis";
+} from "@draftgap/core/src/draft/analysis";
 import ChampionCell from "../../common/ChampionCell";
 import { RatingText } from "../../common/RatingText";
 import { RoleCell } from "../../common/RoleCell";

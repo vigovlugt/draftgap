@@ -14,7 +14,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
 
     const rows = createMemo(() => props.table.getRowModel().rows);
 
-    const rowVirtualizer = createVirtualizer({
+    const rowVirtualizer = createVirtualizer<Element, Element>({
         getScrollElement: () => tableEl!,
         estimateSize: () => 57,
         get count() {
@@ -117,8 +117,8 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                     <For
                         each={rowVirtualizer
                             .getVirtualItems()
-                            .map((i) => rows()[i.index])
-                            .filter((r) => r)}
+                            .map((i: any) => rows()[i.index])
+                            .filter((r: any) => r)}
                     >
                         {(row) => (
                             <tr

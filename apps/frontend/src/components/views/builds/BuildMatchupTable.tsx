@@ -8,7 +8,7 @@ import {
     getCoreRowModel,
     getSortedRowModel,
 } from "@tanstack/solid-table";
-import { Role } from "draftgap-core/src/models/Role";
+import { Role } from "@draftgap/core/src/models/Role";
 import { useBuild } from "../../../contexts/BuildContext";
 import { BuildEntityCell } from "../../common/BuildEntityCell";
 import { createSignal } from "solid-js";
@@ -19,7 +19,7 @@ import { formatPercentage } from "../../../utils/rating";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { Dialog } from "../../common/Dialog";
 import { WinrateDecompositionDialog } from "../../dialogs/WinrateDecompositionDialog";
-import { EntityMatchupAnalysisResult } from "draftgap-core/src/builds/entity-analysis";
+import { EntityMatchupAnalysisResult } from "@draftgap/core/src/builds/entity-analysis";
 
 export const BuildMatchupTable = (
     props: JSX.HTMLAttributes<HTMLDivElement>

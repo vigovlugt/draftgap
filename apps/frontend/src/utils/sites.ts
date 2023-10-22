@@ -1,5 +1,5 @@
-import { Role } from "draftgap-core/src/models/Role";
-import { StatsSite } from "draftgap-core/src/models/user/Config";
+import { Role } from "@draftgap/core/src/models/Role";
+import { StatsSite } from "@draftgap/core/src/models/user/Config";
 
 const UGG_ROLES = ["top", "jungle", "mid", "adc", "support"] as const;
 const OP_GG_ROLES = ["top", "jungle", "mid", "adc", "support"] as const;

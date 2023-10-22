@@ -6,13 +6,13 @@ import { Switch } from "../common/Switch";
 import {
     RiskLevel,
     displayNameByRiskLevel,
-} from "draftgap-core/src/risk/risk-level";
+} from "@draftgap/core/src/risk/risk-level";
 import { useUser } from "../../contexts/UserContext";
 import { useMedia } from "../../hooks/useMedia";
 import {
     DraftTablePlacement,
     StatsSite,
-} from "draftgap-core/src/models/user/Config";
+} from "@draftgap/core/src/models/user/Config";
 import {
     Dialog,
     DialogContent,

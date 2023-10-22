@@ -6,8 +6,8 @@ import {
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { displayNameByRole, Role } from "draftgap-core/src/models/Role";
-import { Team } from "draftgap-core/src/models/Team";
+import { displayNameByRole, Role } from "@draftgap/core/src/models/Role";
+import { Team } from "@draftgap/core/src/models/Team";
 import { useDraftView } from "./DraftViewContext";
 import { useMedia } from "../hooks/useMedia";
 import { useDataset } from "./DatasetContext";

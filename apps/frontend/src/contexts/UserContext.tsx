@@ -6,8 +6,8 @@ import {
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { Role } from "draftgap-core/src/models/Role";
-import { DraftGapConfig } from "draftgap-core/src/models/user/Config";
+import { Role } from "@draftgap/core/src/models/Role";
+import { DraftGapConfig } from "@draftgap/core/src/models/user/Config";
 
 type FavouritePick = `${string}:${Role}`;
 

@@ -8,7 +8,7 @@ import {
 import {
     DATASET_VERSION,
     Dataset,
-} from "draftgap-core/src/models/dataset/Dataset";
+} from "@draftgap/core/src/models/dataset/Dataset";
 
 const fetchDataset = async (name: "30-days" | "current-patch") => {
     try {

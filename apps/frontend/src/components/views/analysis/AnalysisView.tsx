@@ -6,7 +6,7 @@ import { MatchupResultTable } from "./MatchupResultTable";
 import { DraftSummaryCards } from "./SummaryCards";
 import { TotalChampionContributionTable } from "./TotalChampionContributionTable";
 import { tooltip } from "../../../directives/tooltip";
-import { Team } from "draftgap-core/src/models/Team";
+import { Team } from "@draftgap/core/src/models/Team";
 import { useUser } from "../../../contexts/UserContext";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { ScalingChart } from "./ScalingChart";

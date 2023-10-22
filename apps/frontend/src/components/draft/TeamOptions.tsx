@@ -2,7 +2,7 @@ import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/outline";
 import { trash } from "solid-heroicons/solid-mini";
 import { useDraft } from "../../contexts/DraftContext";
-import { Team } from "draftgap-core/src/models/Team";
+import { Team } from "@draftgap/core/src/models/Team";
 import {
     DropdownMenu,
     DropdownMenuContent,

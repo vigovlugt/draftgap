@@ -8,13 +8,13 @@ import {
 } from "solid-js";
 import { useDraft } from "./DraftContext";
 import { useUser } from "./UserContext";
-import { getTeamDamageDistribution } from "draftgap-core/src/damage-distribution/damage-distribution";
-import { analyzeDraft } from "draftgap-core/src/draft/analysis";
-import { Team } from "draftgap-core/src/models/Team";
-import { PickData } from "draftgap-core/src/models/dataset/PickData";
+import { getTeamDamageDistribution } from "@draftgap/core/src/damage-distribution/damage-distribution";
+import { analyzeDraft } from "@draftgap/core/src/draft/analysis";
+import { Team } from "@draftgap/core/src/models/Team";
+import { PickData } from "@draftgap/core/src/models/dataset/PickData";
 import predictRoles, {
     getTeamComps,
-} from "draftgap-core/src/role/role-predictor";
+} from "@draftgap/core/src/role/role-predictor";
 import { useDataset } from "./DatasetContext";
 import { useDraftFilters } from "./DraftFiltersContext";
 

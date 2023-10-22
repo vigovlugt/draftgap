@@ -1,5 +1,5 @@
 import { useBuild } from "../../contexts/BuildContext";
-import { displayNameByRole } from "draftgap-core/src/models/Role";
+import { displayNameByRole } from "@draftgap/core/src/models/Role";
 import { BuildSummaryCards } from "../views/builds/BuildSummaryCards";
 import { BuildMatchupTable } from "../views/builds/BuildMatchupTable";
 import { tooltip } from "../../directives/tooltip";

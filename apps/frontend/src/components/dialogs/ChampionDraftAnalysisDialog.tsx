@@ -1,5 +1,5 @@
-import { displayNameByRole } from "draftgap-core/src/models/Role";
-import { Team } from "draftgap-core/src/models/Team";
+import { displayNameByRole } from "@draftgap/core/src/models/Role";
+import { Team } from "@draftgap/core/src/models/Team";
 import { ChampionIcon } from "../icons/ChampionIcon";
 import { MatchupResultTable } from "../views/analysis/MatchupResultTable";
 import { ChampionSummaryCards } from "../views/analysis/SummaryCards";

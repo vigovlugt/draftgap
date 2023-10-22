@@ -7,23 +7,25 @@ import {
     createSignal,
     useContext,
 } from "solid-js";
-import { analyzeBuild } from "draftgap-core/src/builds/analysis";
-import { fetchBuildData } from "draftgap-core/src/builds/data";
+import { analyzeBuild } from "@draftgap/core/src/builds/analysis";
+import { fetchBuildData } from "@draftgap/core/src/builds/data";
 import {
     PartialBuildDataset,
     FullBuildDataset,
-} from "draftgap-core/src/models/build/BuildDataset";
+} from "@draftgap/core/src/models/build/BuildDataset";
 import { useDraft } from "./DraftContext";
-import { Team } from "draftgap-core/src/models/Team";
-import { BuildEntity } from "draftgap-core/src/models/build/BuildEntity";
+import { Team } from "@draftgap/core/src/models/Team";
+import { BuildEntity } from "@draftgap/core/src/models/build/BuildEntity";
 import { useDraftAnalysis } from "./DraftAnalysisContext";
 import { useDataset } from "./DatasetContext";
+import { useDraftView } from "./DraftViewContext";
 
 export function createBuildContext() {
     const { allyTeam, opponentTeam } = useDraft();
     const { dataset, dataset30Days } = useDataset();
     const { allyTeamComp, opponentTeamComp, draftAnalysisConfig } =
         useDraftAnalysis();
+    const { currentDraftView } = useDraftView();
 
     const [buildPick, _setBuildPick] = createSignal<{
         team: Team;
@@ -100,20 +102,22 @@ export function createBuildContext() {
     };
 
     const queryClient = useQueryClient();
-    const query = createQuery(
-        () => [
+    const query = createQuery(() => ({
+        queryKey: [
             "build",
             championKey(),
             championRole(),
             theirTeamComp() ? Object.fromEntries(theirTeamComp()!) : undefined,
             dataset(),
         ],
-        async (ctx) => {
+        queryFn: async (ctx) => {
             if (championKey() === undefined || !theirTeamComp() || !dataset()) {
                 return null;
             }
 
-            const cached = queryClient.getQueryCache().find(ctx.queryKey);
+            const cached = queryClient.getQueryCache().find({
+                queryKey: ctx.queryKey,
+            });
             if (cached?.state?.data && cached.state.error == null) {
                 return cached.state.data as [
                     PartialBuildDataset,
@@ -128,17 +132,15 @@ export function createBuildContext() {
                 theirTeamComp()!
             );
         },
-        {
-            refetchInterval: false,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false,
-            retry: 1,
-            get enabled() {
-                return buildPick() != null;
-            },
-        }
-    );
+        refetchInterval: false,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        retry: 1,
+        get enabled() {
+            return buildPick() != null && currentDraftView().type === "builds";
+        },
+    }));
     createEffect(() => {
         if (query.isError) {
             console.error("Error while fetching build data", query.error);

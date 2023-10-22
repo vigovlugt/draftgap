@@ -2,7 +2,7 @@ import { Component } from "solid-js";
 import { useBuild } from "../../../contexts/BuildContext";
 import { Panel, PanelHeader } from "../../common/Panel";
 import { formatPercentage, getRatingClass } from "../../../utils/rating";
-import { ratingToWinrate } from "draftgap-core/src/rating/ratings";
+import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
 import { HorizontalEntityStats } from "./EntityStats";
 import { useDataset } from "../../../contexts/DatasetContext";
 

@@ -13,8 +13,8 @@ import {
     getGridChampions,
     getPickableChampionIds,
 } from "../api/lcu-api";
-import { getRoleFromString, Role } from "draftgap-core/src/models/Role";
-import { Team } from "draftgap-core/src/models/Team";
+import { getRoleFromString, Role } from "@draftgap/core/src/models/Role";
+import { Team } from "@draftgap/core/src/models/Team";
 import {
     LolChampSelectChampSelectPlayerSelection,
     LolChampSelectChampSelectSession,
