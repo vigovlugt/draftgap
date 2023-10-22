@@ -126,6 +126,7 @@ export function createBuildContext() {
             }
 
             return await fetchBuildData(
+                queryClient,
                 dataset()!,
                 championKey()!,
                 championRole()!,

@@ -22,7 +22,7 @@ importers:
         version: 3.374.0
       '@draftgap/core':
         specifier: workspace:*
-        version: link:../../packages/draftgap-core
+        version: link:../../packages/core
       '@types/node':
         specifier: ^20.4.4
         version: 20.4.4
@@ -44,7 +44,7 @@ importers:
         version: 3.433.0
       '@draftgap/core':
         specifier: workspace:*
-        version: link:../../packages/draftgap-core
+        version: link:../../packages/core
       '@formkit/auto-animate':
         specifier: 0.8.0
         version: 0.8.0
@@ -160,6 +160,16 @@ importers:
       vitest:
         specifier: ^0.34.6
         version: 0.34.6
+
+  packages/core:
+    dependencies:
+      '@tanstack/query-core':
+        specifier: ^5.0.0
+        version: 5.0.0
+    devDependencies:
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
 
   packages/draftgap-core:
     devDependencies:
