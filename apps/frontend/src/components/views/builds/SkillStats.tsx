@@ -56,10 +56,7 @@ export function SkillStats() {
                                 })
                             }
                         >
-                            <td
-                                class="py-3 pl-3 text-3xl flex gap-1 items-center"
-                                style={{ "font-family": "monospace" }}
-                            >
+                            <td class="py-3 pl-3 text-3xl flex gap-1 items-center">
                                 <For
                                     each={id
                                         .split("")
