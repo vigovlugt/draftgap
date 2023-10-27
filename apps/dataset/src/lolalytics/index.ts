@@ -1,16 +1,16 @@
-import { ChampionData } from "../../../../packages/draftgap-core/src/models/dataset/ChampionData";
-import { ChampionSynergyData } from "../../../../packages/draftgap-core/src/models/dataset/ChampionSynergyData";
-import { ChampionMatchupData } from "../../../../packages/draftgap-core/src/models/dataset/ChampionMatchupData";
+import { ChampionData } from "@draftgap/core/src/models/dataset/ChampionData";
+import { ChampionSynergyData } from "@draftgap/core/src/models/dataset/ChampionSynergyData";
+import { ChampionMatchupData } from "@draftgap/core/src/models/dataset/ChampionMatchupData";
 import {
     getRoleFromString,
     Role,
-} from "../../../../packages/draftgap-core/src/models/Role";
+} from "@draftgap/core/src/models/Role";
 import { getLolalyticsChampion } from "./champion";
 import { getLolalyticsChampion2 } from "./champion2";
 import {
     ChampionRoleData,
     defaultChampionRoleData,
-} from "../../../../packages/draftgap-core/src/models/dataset/ChampionRoleData";
+} from "@draftgap/core/src/models/dataset/ChampionRoleData";
 import { LOLALYTICS_ROLES, LolalyticsRole } from "./roles";
 
 export async function getChampionDataFromLolalytics(
@@ -99,12 +99,12 @@ export async function getChampionDataFromLolalytics(
                                     Object.fromEntries(
                                         data.map((d) => {
                                             const synergy: ChampionSynergyData =
-                                                {
-                                                    championKey:
-                                                        d[0].toString(),
-                                                    games: d[1],
-                                                    wins: d[2],
-                                                };
+                                            {
+                                                championKey:
+                                                    d[0].toString(),
+                                                games: d[1],
+                                                wins: d[2],
+                                            };
 
                                             return [d[0], synergy];
                                         })
