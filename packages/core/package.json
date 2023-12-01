@@ -5,9 +5,9 @@
         "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
-        "typescript": "^5.2.2"
+        "typescript": "^5.3.2"
     },
     "dependencies": {
-        "@tanstack/query-core": "^5.0.0"
+        "@tanstack/query-core": "^5.12.0"
     }
 }
