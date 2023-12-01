@@ -1,8 +1,8 @@
 {
     "name": "draftgap",
-    "version": "2.12.2",
+    "version": "2.12.3",
     "scripts": {
-        "bump-version": "tsx scripts/bump-version.ts",
+        "bump-version": "pnpm typecheck && tsx scripts/bump-version.ts",
         "typecheck": "turbo typecheck",
         "dev": "pnpm run --filter @draftgap/frontend dev",
         "tauri": "pnpm run --filter @draftgap/frontend tauri"
