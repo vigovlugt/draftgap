@@ -103,22 +103,6 @@ export default function AnalysisView() {
                 </div>
             </div>
 
-            <div class="flex flex-col items-center mb-8 gap-1">
-                <span class="text-sm text-neutral-500 uppercase">
-                    Sponsored by
-                </span>
-                <a
-                    href="https://coachify.gg/?utm_source=draftgap&utm_campaign=draftgap_post_draft"
-                    target="_blank"
-                >
-                    <img
-                        src="/images/sponsors/coachify-tools-for-esport-coaching.webp"
-                        width={582}
-                        height={72}
-                    />
-                </a>
-            </div>
-
             <Show when={!config.ignoreChampionWinrates}>
                 <div
                     class="flex-col flex sm:flex-row gap-4 mb-8"
