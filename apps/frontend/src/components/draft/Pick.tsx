@@ -117,7 +117,6 @@ export function Pick(props: Props) {
             class="flex-1 relative border-t-2 border-neutral-700 hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
             classList={{
                 "!bg-neutral-700": isSelected(),
-                "cursor-pointer ": champion() === undefined,
             }}
             onClick={() => select(props.team, props.index)}
             onMouseOver={onMouseOver}
@@ -168,7 +167,7 @@ export function Pick(props: Props) {
                         >
                             {([role, probability]) => (
                                 <div
-                                    class="flex flex-col items-center relative group mx-[0.4rem] cursor-pointer"
+                                    class="flex flex-col items-center relative group mx-[0.4rem]"
                                     onClick={() => {
                                         setPopoverVisible(false);
                                         setRole(

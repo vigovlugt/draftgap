@@ -7,9 +7,9 @@ export function Switch(props: ComponentProps<typeof SwitchPrimitives.Root>) {
         <SwitchPrimitives.Root
             {...props}
             class={cn(
-                "relative inline-flex h-6 w-11 bg-neutral-700 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out",
+                "relative inline-flex h-6 w-11 bg-neutral-700 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out hover:bg-neutral-600",
                 {
-                    "bg-secondary": props.checked,
+                    "bg-secondary hover:bg-secondary": props.checked,
                 },
                 props.class
             )}

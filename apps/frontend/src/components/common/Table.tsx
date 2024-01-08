@@ -57,7 +57,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                         <th
                                             scope="col"
                                             class={cn(
-                                                "py-3 px-2 text-left font-normal uppercase w-full whitespace-nowrap",
+                                                "py-3 px-2 text-left font-normal uppercase w-full whitespace-nowrap transition-colors",
                                                 {
                                                     "pl-4": i() === 0,
                                                     "pr-4":
@@ -65,7 +65,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                                         headerGroup.headers
                                                             .length -
                                                             1,
-                                                    "cursor-pointer":
+                                                    "hover:bg-neutral-800 cursor-default":
                                                         header.column.getCanSort(),
                                                 },
                                                 (
@@ -124,8 +124,9 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                             <tr
                                 class="transition duration-200 ease-out group/row"
                                 classList={{
-                                    "cursor-pointer hover:bg-neutral-800":
-                                        Boolean(props.onClickRow),
+                                    "hover:bg-neutral-800": Boolean(
+                                        props.onClickRow
+                                    ),
                                     [props.rowClassName?.(row) ?? ""]: true,
                                 }}
                                 onClick={() => props.onClickRow?.(row)}
@@ -141,7 +142,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                     {(cell, i) => (
                                         <td
                                             class={cn(
-                                                "whitespace-nowrap py-3 px-2 group/cell",
+                                                "whitespace-nowrap py-3 px-2 group/cell transition-colors",
                                                 {
                                                     "pl-4": i() === 0,
                                                     "pr-4":
@@ -149,13 +150,14 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                                         row.getVisibleCells()
                                                             .length -
                                                             1,
-                                                    "cursor-pointer": Boolean(
-                                                        (
-                                                            cell.column
-                                                                .columnDef
-                                                                .meta as any
-                                                        )?.onClickCell
-                                                    ),
+                                                    "hover:bg-neutral-800 cursor-default":
+                                                        Boolean(
+                                                            (
+                                                                cell.column
+                                                                    .columnDef
+                                                                    .meta as any
+                                                            )?.onClickCell
+                                                        ),
                                                 },
                                                 (
                                                     cell.column.columnDef

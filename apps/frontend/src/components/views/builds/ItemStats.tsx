@@ -72,7 +72,6 @@ const Item: Component<{ order: number; itemId: number }> = (props) => {
 
     return (
         <tr
-            class="cursor-pointer"
             onClick={() =>
                 setSelectedEntity({
                     type: "item",

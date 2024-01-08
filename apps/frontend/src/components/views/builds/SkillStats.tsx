@@ -47,7 +47,6 @@ export function SkillStats() {
                 >
                     {([id, games, rating]) => (
                         <tr
-                            class="cursor-pointer"
                             onClick={() =>
                                 setSelectedEntity({
                                     type: "skills",
@@ -124,7 +123,7 @@ export function SkillStats() {
                                         {(skill) => (
                                             <td
                                                 class={
-                                                    "text-center p-1.5 cursor-pointer " +
+                                                    "text-center p-1.5 " +
                                                     (skill === "E"
                                                         ? "pr-3"
                                                         : "")

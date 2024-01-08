@@ -36,6 +36,8 @@ import { useDraftAnalysis } from "./contexts/DraftAnalysisContext";
 import { ChampionDraftAnalysisDialog } from "./components/dialogs/ChampionDraftAnalysisDialog";
 import { AnalyzeHoverToggle } from "./components/draft/AnalyzeHoverToggle";
 import { useMedia } from "./hooks/useMedia";
+import { buttonVariants } from "./components/common/Button";
+import { cn } from "./utils/style";
 
 const App: Component = () => {
     const { config } = useUser();
@@ -220,19 +222,28 @@ const App: Component = () => {
                     <LolClientStatusBadge
                         setShowDownloadModal={setShowDownloadModal}
                     />
-                    <Dialog
-                        open={showSettings()}
-                        onOpenChange={setShowSettings}
-                    >
-                        <DialogTrigger>
-                            <Icon path={cog_6Tooth} class="w-7 -mr-2" />
-                        </DialogTrigger>
-                        <SettingsDialog />
-                    </Dialog>
-                    <OptionsDropdownMenu
-                        setShowSettings={setShowSettings}
-                        setShowFAQ={setShowFAQ}
-                    />
+                    <div class="flex gap-1">
+                        <Dialog
+                            open={showSettings()}
+                            onOpenChange={setShowSettings}
+                        >
+                            <DialogTrigger
+                                class={cn(
+                                    buttonVariants({
+                                        variant: "transparent",
+                                    }),
+                                    "px-1 py-2"
+                                )}
+                            >
+                                <Icon path={cog_6Tooth} class="w-7" />
+                            </DialogTrigger>
+                            <SettingsDialog />
+                        </Dialog>
+                        <OptionsDropdownMenu
+                            setShowSettings={setShowSettings}
+                            setShowFAQ={setShowFAQ}
+                        />
+                    </div>
                 </div>
             </header>
             {/* Desktop main */}

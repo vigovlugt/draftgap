@@ -27,7 +27,7 @@ export function DropdownMenuSubTrigger(
         <DropdownMenuPrimitive.SubTrigger
             {...props}
             class={cn(
-                "relative flex select-none items-center px-3 py-1.5 text-lg outline-none hover:bg-neutral-700 cursor-pointer transition-colors ui-disabled:pointer-events-none ui-disabled:opacity-50 uppercase",
+                "relative flex select-none items-center px-3 py-1.5 text-lg outline-none hover:bg-neutral-700 transition-colors ui-disabled:pointer-events-none ui-disabled:opacity-50 uppercase",
                 {
                     "pl-8": props.inset,
                 },
@@ -90,7 +90,7 @@ export function DropdownMenuItem(
         <DropdownMenuPrimitive.Item
             {...props}
             class={cn(
-                "relative flex select-none items-center px-3 py-1.5 text-lg outline-none hover:bg-neutral-700 cursor-pointer transition-colors ui-disabled:pointer-events-none ui-disabled:opacity-50 uppercase",
+                "relative flex select-none items-center px-3 py-1.5 text-lg outline-none hover:bg-neutral-700 transition-colors ui-disabled:pointer-events-none ui-disabled:opacity-50 uppercase",
                 {
                     "pl-8": props.inset,
                 },

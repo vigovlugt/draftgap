@@ -3,7 +3,6 @@ import { ComponentProps, Show } from "solid-js";
 import { cn } from "../../utils/style";
 import { Icon } from "solid-heroicons";
 import { xMark } from "solid-heroicons/solid";
-import { Transition } from "solid-transition-group";
 
 export const Dialog = DialogPrimitives.Root;
 

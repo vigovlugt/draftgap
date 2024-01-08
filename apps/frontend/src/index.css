@@ -11,6 +11,11 @@
     body {
         scroll-behavior: smooth;
     }
+
+    button,
+    [role="button"] {
+        cursor: default;
+    }
 }
 
 :root {

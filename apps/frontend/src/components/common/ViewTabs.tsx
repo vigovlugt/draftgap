@@ -24,11 +24,15 @@ export const ViewTabs = <T,>(props: Props<T>) => {
                 {(tab) => (
                     <button
                         class={cn(
-                            "px-4 py-3 text-neutral-500 uppercase font-semibold",
+                            "px-4 py-3 text-neutral-500 uppercase font-semibold hover:text-neutral-400",
                             {
-                                "text-neutral-50": props.equals
-                                    ? props.equals(tab.value, props.selected)
-                                    : tab.value === props.selected,
+                                "text-neutral-50 hover:text-neutral-50":
+                                    props.equals
+                                        ? props.equals(
+                                              tab.value,
+                                              props.selected
+                                          )
+                                        : tab.value === props.selected,
                             }
                         )}
                         onClick={() => props.onChange(tab.value)}
