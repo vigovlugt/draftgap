@@ -1,11 +1,27 @@
 import {
+    GetObjectCommand,
+    GetObjectCommandInput,
     PutBucketCorsCommand,
     PutObjectCommand,
     PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
 import { client } from "./client";
-import { DATASET_VERSION, Dataset } from "@draftgap/core/src/models/dataset/Dataset";
+import {
+    DATASET_VERSION,
+    Dataset,
+} from "@draftgap/core/src/models/dataset/Dataset";
 import { bytesToHumanReadable } from "../utils";
+
+export async function getDataset({ name }: { name: string }) {
+    const params = {
+        Bucket: process.env.S3_BUCKET || "draftgap",
+        Key: `datasets/v${DATASET_VERSION}/${name}.json`,
+    } satisfies GetObjectCommandInput;
+    const command = new GetObjectCommand(params);
+    const response = await client.send(command);
+    const body = await response.Body?.transformToString()!;
+    return JSON.parse(body) as Dataset;
+}
 
 export async function storeDataset(
     dataset: Dataset,
@@ -24,7 +40,8 @@ export async function storeDataset(
         byteLength: params.Body.length,
     };
     console.log(
-        `Stored dataset ${params.Bucket}/${params.Key
+        `Stored dataset ${params.Bucket}/${
+            params.Key
         } of size ${bytesToHumanReadable(serialized.byteLength)}`
     );
 

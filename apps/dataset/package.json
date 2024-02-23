@@ -2,7 +2,7 @@
     "name": "@draftgap/dataset",
     "version": "2.12.4",
     "scripts": {
-        "start": "tsx src/index.ts",
+        "start": "tsx src/temp-index.ts",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
@@ -10,6 +10,7 @@
         "@draftgap/core": "workspace:*",
         "@types/node": "^20.10.1",
         "dotenv": "^16.3.1",
+        "playwright": "^1.41.2",
         "tsx": "^4.6.1"
     },
     "devDependencies": {
