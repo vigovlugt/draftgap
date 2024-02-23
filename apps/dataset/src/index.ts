@@ -1,10 +1,27 @@
 import "dotenv/config";
 import { getChampionDataFromLolalytics } from "./lolalytics";
-import { deleteDatasetMatchupSynergyData, Dataset, removeRankBias } from "@draftgap/core/src/models/dataset/Dataset";
+import {
+    deleteDatasetMatchupSynergyData,
+    Dataset,
+    removeRankBias,
+} from "@draftgap/core/src/models/dataset/Dataset";
 import { ItemData } from "@draftgap/core/src/models/dataset/ItemData";
-import { RuneData, RunePathData } from "@draftgap/core/src/models/dataset/RuneData";
+import {
+    RuneData,
+    RunePathData,
+} from "@draftgap/core/src/models/dataset/RuneData";
 import { storeDataset } from "./storage/storage";
-import { getVersions, getChampions, getRunes, getItems, RiotRunePath, RiotItem, RiotChampion, getSummonerSpells, RiotSummonerSpell } from "./riot";
+import {
+    getVersions,
+    getChampions,
+    getRunes,
+    getItems,
+    RiotRunePath,
+    RiotItem,
+    RiotChampion,
+    getSummonerSpells,
+    RiotSummonerSpell,
+} from "./riot";
 import { SummonerSpellData } from "@draftgap/core/src/models/dataset/SummonerSpellData";
 
 const BATCH_SIZE = 10;
@@ -14,22 +31,7 @@ const STAT_SHARD_DATA = {
     5001: {
         id: 5001,
         key: "HealthScaling",
-        name: "Health",
-        positions: [{ slot: 2, index: 0 }],
-    },
-    5002: {
-        id: 5002,
-        key: "Armor",
-        name: "Armor",
-        positions: [
-            { slot: 1, index: 1 },
-            { slot: 2, index: 1 },
-        ],
-    },
-    5003: {
-        id: 5003,
-        key: "MagicRes",
-        name: "Magic Resist",
+        name: "Health Scaling",
         positions: [
             { slot: 1, index: 2 },
             { slot: 2, index: 2 },
@@ -56,6 +58,24 @@ const STAT_SHARD_DATA = {
             { slot: 1, index: 0 },
         ],
     },
+    5010: {
+        id: 5011,
+        key: "Flex",
+        name: "Flex",
+        positions: [{ slot: 1, index: 1 }],
+    },
+    5011: {
+        id: 5011,
+        key: "Health",
+        name: "Health",
+        positions: [{ slot: 2, index: 0 }],
+    },
+    5013: {
+        id: 5013,
+        key: "TenacityAndSlowResist",
+        name: "Tenactiy and Slow Resist",
+        positions: [{ slot: 2, index: 1 }],
+    },
 };
 
 async function main() {
@@ -76,7 +96,13 @@ async function main() {
         items,
         summonerSpells
     );
-    const dataset30days = await getDataset("30", champions, runes, items, summonerSpells);
+    const dataset30days = await getDataset(
+        "30",
+        champions,
+        runes,
+        items,
+        summonerSpells
+    );
 
     deleteDatasetMatchupSynergyData(datasetCurrentPatch);
 
@@ -180,7 +206,8 @@ async function getDataset(
         championData: {},
         ...riotRunesToRuneData(runes),
         itemData: riotItemsToItemData(items),
-        summonerSpellData: riotSummonerSpellsToSummonerSpellData(summonerSpells)
+        summonerSpellData:
+            riotSummonerSpellsToSummonerSpellData(summonerSpells),
     };
 
     for (let i = 0; i < champions.length; i += BATCH_SIZE) {
@@ -204,8 +231,8 @@ async function getDataset(
             if (!champion) {
                 console.log(
                     "Skipping champion " +
-                    c.name +
-                    " as it lolalytics has no data for it"
+                        c.name +
+                        " as it lolalytics has no data for it"
                 );
                 continue;
             }
