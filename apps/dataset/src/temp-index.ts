@@ -80,9 +80,7 @@ async function scrapePage(browser: Browser, role: string) {
 }
 
 async function main() {
-    const browser = await chromium.launch({
-        headless: false,
-    });
+    const browser = await chromium.launch();
 
     const currentVersion = (await getVersions())[0];
     const champions = await getChampions(currentVersion);
