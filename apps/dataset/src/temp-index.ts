@@ -5,6 +5,7 @@ import {
 import { getChampions, getVersions } from "./riot";
 import { getDataset, storeDataset } from "./storage/storage";
 import { Browser, chromium } from "playwright";
+import { defaultChampionRoleData } from "@draftgap/core/src/models/dataset/ChampionRoleData";
 
 // TO REVERT: DELETE THIS FILE
 // SET PACKAGE JSON start back to index.ts
@@ -136,46 +137,25 @@ async function main() {
     const currentDataset = await getDataset({ name: "current-patch" });
 
     for (const stat of data) {
-        let obj =
+        if (!currentDataset.championData[stat.championId]) {
+            currentDataset.championData[stat.championId] = {
+                id: stat.championId,
+                key: champions.find((c) => c.key === stat.championId)!.key,
+                name: champions.find((c) => c.key === stat.championId)!.name,
+                statsByRole: {
+                    0: defaultChampionRoleData(),
+                    1: defaultChampionRoleData(),
+                    2: defaultChampionRoleData(),
+                    3: defaultChampionRoleData(),
+                    4: defaultChampionRoleData(),
+                },
+            };
+        }
+
+        const obj =
             currentDataset.championData[stat.championId]?.statsByRole[
                 stat.role as 0 | 1 | 2 | 3 | 4
             ];
-
-        if (!obj) {
-            obj = {
-                games: 0,
-                wins: 0,
-                matchup: {
-                    0: {},
-                    1: {},
-                    2: {},
-                    3: {},
-                    4: {},
-                },
-                synergy: {
-                    0: {},
-                    1: {},
-                    2: {},
-                    3: {},
-                    4: {},
-                },
-                damageProfile: {
-                    magic: 0,
-                    physical: 0,
-                    true: 0,
-                },
-                statsByTime: Array.from({ length: 7 }, () => ({
-                    wins: 0,
-                    games: 0,
-                })),
-            };
-
-            currentDataset.championData[stat.championId].statsByRole[
-                stat.role as 0 | 1 | 2 | 3 | 4
-            ] = obj;
-            // console.log("No data for", stat.championId, stat.role);
-            // continue;
-        }
 
         obj.wins = stat.wins;
         obj.games = stat.games;
