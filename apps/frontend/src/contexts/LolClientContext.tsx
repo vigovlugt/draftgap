@@ -81,7 +81,7 @@ export const ClientState = {
     Disabled: "Disabled",
 } as const;
 
-export type ClientState = typeof ClientState[keyof typeof ClientState];
+export type ClientState = (typeof ClientState)[keyof typeof ClientState];
 
 export const createLolClientContext = () => {
     const { isDesktop } = useMedia();
@@ -226,11 +226,16 @@ export const createLolClientContext = () => {
                 const index = nextPickTeamSelection.findIndex(
                     (s) => s.cellId === nextPick.actorCellId
                 );
-                select(
-                    nextPick.isAllyAction ? "ally" : "opponent",
-                    index,
-                    false
-                );
+
+                // Only update next pick if ally
+                // Irritating to have it update when opponent picks
+                if (nextPick.isAllyAction) {
+                    select(
+                        nextPick.isAllyAction ? "ally" : "opponent",
+                        index,
+                        false
+                    );
+                }
             }
 
             setChampSelectSession(session);
