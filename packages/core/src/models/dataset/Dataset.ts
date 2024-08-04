@@ -5,7 +5,7 @@ import { ItemData } from "./ItemData";
 import { ratingToWinrate, winrateToRating } from "../../rating/ratings";
 import { SummonerSpellData } from "./SummonerSpellData";
 
-export const DATASET_VERSION = "4";
+export const DATASET_VERSION = "5";
 
 export interface Dataset {
     version: string;
