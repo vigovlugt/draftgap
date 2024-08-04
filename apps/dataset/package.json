@@ -1,6 +1,6 @@
 {
     "name": "@draftgap/dataset",
-    "version": "2.12.4",
+    "version": "2.12.5",
     "scripts": {
         "start": "tsx src/temp-index.ts",
         "typecheck": "tsc --noEmit"
