@@ -128,7 +128,9 @@ export function analyzeChampion(
     };
     const fullChampionRoleData = fullChampionData.statsByRole[role];
     const fullChampionRoleWinrate =
-        fullChampionRoleData.wins / fullChampionRoleData.games;
+        fullChampionRoleData.games === 0
+            ? 0.5
+            : fullChampionRoleData.wins / fullChampionRoleData.games;
 
     const stats = addStats(
         {
@@ -187,9 +189,15 @@ export function analyzeDuos(
             const roleStats = getStats(dataset, championKey, role);
             const champion2RoleStats = getStats(dataset, championKey2, role2);
             const expectedRating =
-                winrateToRating(roleStats.wins / roleStats.games) +
                 winrateToRating(
-                    champion2RoleStats.wins / champion2RoleStats.games
+                    roleStats.games === 0
+                        ? 0.5
+                        : roleStats.wins / roleStats.games
+                ) +
+                winrateToRating(
+                    champion2RoleStats.games === 0
+                        ? 0.5
+                        : champion2RoleStats.wins / champion2RoleStats.games
                 );
             const expectedWinrate = ratingToWinrate(expectedRating);
 
@@ -278,8 +286,16 @@ export function analyzeMatchups(
             );
 
             const expectedRating =
-                winrateToRating(roleStats.wins / roleStats.games) -
-                winrateToRating(enemyRoleStats.wins / enemyRoleStats.games);
+                winrateToRating(
+                    roleStats.games === 0
+                        ? 0.5
+                        : roleStats.wins / roleStats.games
+                ) -
+                winrateToRating(
+                    enemyRoleStats.games === 0
+                        ? 0.5
+                        : enemyRoleStats.wins / enemyRoleStats.games
+                );
             const expectedWinrate = ratingToWinrate(expectedRating);
 
             const matchupStats = getStats(

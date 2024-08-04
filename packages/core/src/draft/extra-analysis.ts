@@ -1,3 +1,4 @@
+import { defaultChampionRoleData } from "../models/dataset/ChampionRoleData";
 import { Dataset } from "../models/dataset/Dataset";
 import { Role } from "../models/Role";
 import { winrateToRating } from "../rating/ratings";
@@ -17,7 +18,8 @@ export function analyzeDraftExtra(
     const ally = [...team.entries()];
     const teamChampions = ally.map(
         ([role, champion]) =>
-            fullDataset.championData[champion].statsByRole[role]
+            fullDataset.championData[champion]?.statsByRole[role] ??
+            defaultChampionRoleData()
     );
 
     return {
