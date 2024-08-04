@@ -169,6 +169,10 @@ async function main() {
                     games: 0,
                 })),
             };
+
+            currentDataset.championData[stat.championId].statsByRole[
+                stat.role as 0 | 1 | 2 | 3 | 4
+            ] = obj;
             // console.log("No data for", stat.championId, stat.role);
             // continue;
         }
