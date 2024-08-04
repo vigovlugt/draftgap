@@ -136,14 +136,41 @@ async function main() {
     const currentDataset = await getDataset({ name: "current-patch" });
 
     for (const stat of data) {
-        const obj =
+        let obj =
             currentDataset.championData[stat.championId]?.statsByRole[
                 stat.role as 0 | 1 | 2 | 3 | 4
             ];
 
         if (!obj) {
-            console.log("No data for", stat.championId, stat.role);
-            continue;
+            obj = {
+                games: 0,
+                wins: 0,
+                matchup: {
+                    0: {},
+                    1: {},
+                    2: {},
+                    3: {},
+                    4: {},
+                },
+                synergy: {
+                    0: {},
+                    1: {},
+                    2: {},
+                    3: {},
+                    4: {},
+                },
+                damageProfile: {
+                    magic: 0,
+                    physical: 0,
+                    true: 0,
+                },
+                statsByTime: Array.from({ length: 7 }, () => ({
+                    wins: 0,
+                    games: 0,
+                })),
+            };
+            // console.log("No data for", stat.championId, stat.role);
+            // continue;
         }
 
         obj.wins = stat.wins;
