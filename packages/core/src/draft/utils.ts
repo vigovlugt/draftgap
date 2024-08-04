@@ -32,7 +32,7 @@ export function getStats(
 ) {
     if (!type) {
         return (
-            dataset.championData[championKey].statsByRole[role] ?? {
+            dataset.championData[championKey]?.statsByRole[role] ?? {
                 wins: 0,
                 games: 0,
             }
