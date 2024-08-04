@@ -1,3 +1,4 @@
+import { defaultChampionRoleData } from "../models/dataset/ChampionRoleData";
 import { Dataset } from "../models/dataset/Dataset";
 import { Role } from "../models/Role";
 import { winrateToRating, ratingToWinrate } from "../rating/ratings";
@@ -115,7 +116,16 @@ export function analyzeChampion(
     const roleData = championData.statsByRole[role];
 
     // Get stats for the full dataset (30days)
-    const fullChampionData = fullDataset.championData[championKey];
+    const fullChampionData = fullDataset.championData[championKey] ?? {
+        ...championData,
+        statsByRole: {
+            0: defaultChampionRoleData(),
+            1: defaultChampionRoleData(),
+            2: defaultChampionRoleData(),
+            3: defaultChampionRoleData(),
+            4: defaultChampionRoleData(),
+        },
+    };
     const fullChampionRoleData = fullChampionData.statsByRole[role];
     const fullChampionRoleWinrate =
         fullChampionRoleData.wins / fullChampionRoleData.games;

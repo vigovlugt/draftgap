@@ -43,7 +43,7 @@ export function getStats(
         matchupDuoRole = matchupDuoRole!;
         matchupDuoChampionKey = matchupDuoChampionKey!;
         return (
-            dataset.championData[championKey].statsByRole[role]?.matchup[
+            dataset.championData[championKey]?.statsByRole[role]?.matchup[
                 matchupDuoRole
             ][matchupDuoChampionKey] ?? {
                 wins: 0,
@@ -55,7 +55,7 @@ export function getStats(
         matchupDuoChampionKey = matchupDuoChampionKey!;
 
         return (
-            dataset.championData[championKey].statsByRole[role].synergy[
+            dataset.championData[championKey]?.statsByRole[role].synergy[
                 matchupDuoRole
             ][matchupDuoChampionKey] ?? {
                 wins: 0,

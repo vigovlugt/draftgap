@@ -137,9 +137,12 @@ async function main() {
     const currentDataset = await getDataset({ name: "current-patch" });
 
     for (const stat of data) {
+        if (stat.championId === "893") {
+            currentDataset.championData[stat.championId].id = "Aurora";
+        }
         if (!currentDataset.championData[stat.championId]) {
             currentDataset.championData[stat.championId] = {
-                id: stat.championId,
+                id: champions.find((c) => c.key === stat.championId)!.id,
                 key: champions.find((c) => c.key === stat.championId)!.key,
                 name: champions.find((c) => c.key === stat.championId)!.name,
                 statsByRole: {
