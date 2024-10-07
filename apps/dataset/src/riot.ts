@@ -11,11 +11,12 @@ export type RiotChampion = {
     id: string;
     key: string;
     name: string;
+    i18n: Record<string, { name: string }>;
 };
 
-export async function getChampions(version: string) {
+export async function getChampions(version: string, locale = "en_US") {
     const res = await fetch(
-        `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/champion.json`
+        `https://ddragon.leagueoflegends.com/cdn/${version}/data/${locale}/champion.json`
     );
     const json = (await res.json()) as { data: Record<string, RiotChampion> };
 

@@ -228,7 +228,7 @@ export async function getLolalyticsChampion(
     matchup?: string,
     matchupRole?: LolalyticsRole
 ) {
-    // convert patch from 12.21.1 to 12.21
+    // convert patch from ex. 12.21.1 to 12.21
     patch = patch.split(".").slice(0, 2).join(".");
 
     const queryParams = new URLSearchParams();
@@ -261,9 +261,9 @@ export async function getLolalyticsChampion(
     } catch (e) {
         throw new Error(
             "Error parsing JSON for lolalytics champion " +
-            championKey +
-            " url: " +
-            url,
+                championKey +
+                " url: " +
+                url,
             {
                 cause: e,
             }

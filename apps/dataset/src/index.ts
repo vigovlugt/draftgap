@@ -82,12 +82,25 @@ async function main() {
     const currentVersion = (await getVersions())[0];
     console.log("Patch:", currentVersion);
 
-    const [champions, runes, items, summonerSpells] = await Promise.all([
-        getChampions(currentVersion),
-        getRunes(currentVersion),
-        getItems(currentVersion),
-        getSummonerSpells(currentVersion),
-    ]);
+    const [championsData, runes, items, summonerSpells, championsDataCn] =
+        await Promise.all([
+            getChampions(currentVersion),
+            getRunes(currentVersion),
+            getItems(currentVersion),
+            getSummonerSpells(currentVersion),
+            getChampions(currentVersion, "zh_CN"),
+        ]);
+
+    const champions = championsData
+        .map((c) => ({
+            ...c,
+            i18n: {
+                zh_CN: {
+                    name: championsDataCn.find((c2) => c2.key === c.key)?.name,
+                },
+            },
+        }))
+        .slice(0, 10);
 
     const datasetCurrentPatch = await getDataset(
         currentVersion,

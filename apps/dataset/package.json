@@ -2,7 +2,7 @@
     "name": "@draftgap/dataset",
     "version": "2.12.6",
     "scripts": {
-        "start": "tsx src/temp-index.ts",
+        "start": "tsx src/index.ts",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {

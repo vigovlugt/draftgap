@@ -1,29 +1,27 @@
 import { ChampionData } from "@draftgap/core/src/models/dataset/ChampionData";
 import { ChampionSynergyData } from "@draftgap/core/src/models/dataset/ChampionSynergyData";
 import { ChampionMatchupData } from "@draftgap/core/src/models/dataset/ChampionMatchupData";
-import {
-    getRoleFromString,
-    Role,
-} from "@draftgap/core/src/models/Role";
-import { getLolalyticsChampion } from "./champion";
-import { getLolalyticsChampion2 } from "./champion2";
+import { getRoleFromString, Role } from "@draftgap/core/src/models/Role";
 import {
     ChampionRoleData,
     defaultChampionRoleData,
 } from "@draftgap/core/src/models/dataset/ChampionRoleData";
 import { LOLALYTICS_ROLES, LolalyticsRole } from "./roles";
+import { getLolalyticsQwikChampion } from "./qwik";
+import { getLolalyticsQwikChampion2 } from "./qwik-champion2";
+import { RiotChampion } from "../riot";
 
 export async function getChampionDataFromLolalytics(
     version: string,
-    champion: { id: string; key: string; name: string }
+    champion: RiotChampion
 ) {
     const [championData, champion2Data] = await Promise.all([
-        getLolalyticsChampion(version, champion.key),
-        getLolalyticsChampion2(version, champion.key),
+        getLolalyticsQwikChampion(version, champion.id),
+        getLolalyticsQwikChampion2(version, champion.id),
     ]);
 
     // If data is not available, throw
-    if (!championData.skills) {
+    if (!championData.skill6) {
         return undefined;
         //throw new Error("No data available for this champion and patch");
     }
@@ -35,8 +33,8 @@ export async function getChampionDataFromLolalytics(
 
     const rolePromises = remainingRoles.map((role) =>
         Promise.all([
-            getLolalyticsChampion(version, champion.key, role),
-            getLolalyticsChampion2(version, champion.key, role),
+            getLolalyticsQwikChampion(version, champion.key, role),
+            getLolalyticsQwikChampion2(version, champion.key, role),
         ])
     );
     const roleDataResults = await Promise.allSettled(rolePromises);
@@ -67,7 +65,7 @@ export async function getChampionDataFromLolalytics(
                     ),
                     matchup: Object.fromEntries(
                         LOLALYTICS_ROLES.map((role) => {
-                            const data = championData[`enemy_${role}`];
+                            const data = championData.enemy[role];
                             if (!data) {
                                 console.log(championData);
                             }
@@ -76,10 +74,18 @@ export async function getChampionDataFromLolalytics(
                                 getRoleFromString(role),
                                 Object.fromEntries(
                                     data.map((d) => {
+                                        const [
+                                            championKey,
+                                            winRate,
+                                            ,
+                                            ,
+                                            ,
+                                            games,
+                                        ] = d;
                                         const matchup: ChampionMatchupData = {
-                                            championKey: d[0].toString(),
-                                            games: d[1],
-                                            wins: d[2],
+                                            championKey: championKey.toString(),
+                                            games,
+                                            wins: games * (winRate / 100),
                                         };
 
                                         return [d[0], matchup];
@@ -91,20 +97,28 @@ export async function getChampionDataFromLolalytics(
                     synergy: Object.fromEntries(
                         LOLALYTICS_ROLES.filter((r) => r !== role).map(
                             (synergyRole) => {
-                                const data =
-                                    champion2Data[`team_${synergyRole}`]!;
+                                const data = champion2Data.team[synergyRole]!;
 
                                 return [
                                     getRoleFromString(synergyRole),
                                     Object.fromEntries(
                                         data.map((d) => {
+                                            const [
+                                                championKey,
+                                                winRate,
+                                                ,
+                                                ,
+                                                ,
+                                                games,
+                                            ] = d;
                                             const synergy: ChampionSynergyData =
-                                            {
-                                                championKey:
-                                                    d[0].toString(),
-                                                games: d[1],
-                                                wins: d[2],
-                                            };
+                                                {
+                                                    championKey:
+                                                        championKey.toString(),
+                                                    games,
+                                                    wins:
+                                                        games * (winRate / 100),
+                                                };
 
                                             return [d[0], synergy];
                                         })
@@ -118,23 +132,25 @@ export async function getChampionDataFromLolalytics(
                         if (i === 0) {
                             return {
                                 games:
-                                    championData.time[1] + championData.time[2],
+                                    championData.sidebar.time.time[1] +
+                                    championData.sidebar.time.time[2],
                                 wins:
-                                    championData.timeWin[1] +
-                                    championData.timeWin[2],
+                                    championData.sidebar.time.timeWin[1] +
+                                    championData.sidebar.time.timeWin[2],
                             };
                         } else if (i === 4) {
                             return {
                                 games:
-                                    championData.time[5] + championData.time[6],
+                                    championData.sidebar.time.time[5] +
+                                    championData.sidebar.time.time[6],
                                 wins:
-                                    championData.timeWin[5] +
-                                    championData.timeWin[6],
+                                    championData.sidebar.time.timeWin[5] +
+                                    championData.sidebar.time.timeWin[6],
                             };
                         } else {
                             return {
-                                games: championData.time[i + 2],
-                                wins: championData.timeWin[i + 2],
+                                games: championData.sidebar.time.time[i + 2],
+                                wins: championData.sidebar.time.timeWin[i + 2],
                             };
                         }
                     }),
