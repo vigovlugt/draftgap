@@ -10,7 +10,6 @@
         "@draftgap/core": "workspace:*",
         "@types/node": "^20.10.1",
         "dotenv": "^16.3.1",
-        "playwright": "^1.41.2",
         "tsx": "^4.6.1"
     },
     "devDependencies": {

@@ -33,8 +33,8 @@ export async function getChampionDataFromLolalytics(
 
     const rolePromises = remainingRoles.map((role) =>
         Promise.all([
-            getLolalyticsQwikChampion(version, champion.key, role),
-            getLolalyticsQwikChampion2(version, champion.key, role),
+            getLolalyticsQwikChampion(version, champion.id, role),
+            getLolalyticsQwikChampion2(version, champion.id, role),
         ])
     );
     const roleDataResults = await Promise.allSettled(rolePromises);
@@ -43,6 +43,11 @@ export async function getChampionDataFromLolalytics(
         if (result.status === "fulfilled") {
             return [remainingRoles[i], result.value] as const;
         }
+
+        console.log(
+            `No data for ${champion.id} in role ${remainingRoles[i]}`,
+            result.reason
+        );
 
         return [remainingRoles[i], undefined] as const;
     });
