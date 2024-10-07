@@ -91,16 +91,14 @@ async function main() {
             getChampions(currentVersion, "zh_CN"),
         ]);
 
-    const champions = championsData
-        .map((c) => ({
-            ...c,
-            i18n: {
-                zh_CN: {
-                    name: championsDataCn.find((c2) => c2.key === c.key)?.name,
-                },
+    const champions = championsData.map((c) => ({
+        ...c,
+        i18n: {
+            zh_CN: {
+                name: championsDataCn.find((c2) => c2.key === c.key)?.name,
             },
-        }))
-        .slice(0, 10);
+        },
+    }));
 
     const datasetCurrentPatch = await getDataset(
         currentVersion,
