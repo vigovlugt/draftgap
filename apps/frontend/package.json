@@ -1,6 +1,6 @@
 {
     "name": "@draftgap/frontend",
-    "version": "2.12.6",
+    "version": "2.13.0",
     "type": "module",
     "scripts": {
         "start": "vite",
