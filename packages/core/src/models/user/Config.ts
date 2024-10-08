@@ -8,7 +8,7 @@ export const DraftTablePlacement = {
     InPlace: "in-place",
 } as const;
 type DraftTablePlacement =
-    typeof DraftTablePlacement[keyof typeof DraftTablePlacement];
+    (typeof DraftTablePlacement)[keyof typeof DraftTablePlacement];
 
 export type DraftGapConfig = {
     // DRAFT ANALYSIS
@@ -21,6 +21,7 @@ export type DraftGapConfig = {
     banPlacement: DraftTablePlacement;
     unownedPlacement: DraftTablePlacement;
     showAdvancedWinrates: boolean;
+    language: string;
 
     // MISC
     defaultStatsSite: StatsSite;

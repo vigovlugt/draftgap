@@ -11,6 +11,7 @@ import { useTooltip } from "../../contexts/TooltipContext";
 import { linkByStatsSite } from "../../utils/sites";
 import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
+import { championName } from "../../utils/i18n";
 tooltip;
 
 type Props = {
@@ -148,7 +149,7 @@ export function Pick(props: Props) {
                     />
 
                     <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
-                        {champion()!.name}
+                        {championName(champion()!, config)}
                     </span>
 
                     <div

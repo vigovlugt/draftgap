@@ -38,6 +38,7 @@ import { AnalyzeHoverToggle } from "./components/draft/AnalyzeHoverToggle";
 import { useMedia } from "./hooks/useMedia";
 import { buttonVariants } from "./components/common/Button";
 import { cn } from "./utils/style";
+import { LanguageDropdownMenu } from "./components/LanguageMenu";
 
 const App: Component = () => {
     const { config } = useUser();
@@ -223,6 +224,7 @@ const App: Component = () => {
                         setShowDownloadModal={setShowDownloadModal}
                     />
                     <div class="flex gap-1">
+                        <LanguageDropdownMenu />
                         <Dialog
                             open={showSettings()}
                             onOpenChange={setShowSettings}

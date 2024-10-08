@@ -22,6 +22,7 @@ const DEFAULT_CONFIG: DraftGapConfig = {
     banPlacement: "bottom",
     unownedPlacement: "bottom",
     showAdvancedWinrates: false,
+    language: "en_US",
 
     // MISC
     defaultStatsSite: "lolalytics",

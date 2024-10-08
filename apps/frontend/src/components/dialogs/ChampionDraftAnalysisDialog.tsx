@@ -12,6 +12,7 @@ import { DialogContent, DialogTitle } from "../common/Dialog";
 import { cn } from "../../utils/style";
 import { displayNameByStatsSite, linkByStatsSite } from "../../utils/sites";
 import { useUser } from "../../contexts/UserContext";
+import { championName } from "../../utils/i18n";
 tooltip;
 
 type Props = {
@@ -37,7 +38,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
         props.team === "ally" ? allyTeamComp() : opponentTeamComp();
 
     const champion = () => dataset()!.championData[props.championKey];
-    const name = () => champion().name;
+    const name = () => championName(champion(), config);
     const role = () =>
         [...teamComp()].find(
             ([, championKey]) => championKey === props.championKey

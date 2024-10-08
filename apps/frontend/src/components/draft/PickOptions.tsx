@@ -24,6 +24,7 @@ import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
 import { For, Show } from "solid-js";
 import { RoleIcon } from "../icons/roles/RoleIcon";
+import { championName } from "../../utils/i18n";
 
 export function PickOptions(props: { team: Team; index: number }) {
     const { config } = useUser();
@@ -65,7 +66,9 @@ export function PickOptions(props: { team: Team; index: number }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>
-                        {champion()?.name ?? `Pick ${props.index + 1}`}
+                        {champion()
+                            ? championName(champion()!, config)
+                            : `Pick ${props.index + 1}`}
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
