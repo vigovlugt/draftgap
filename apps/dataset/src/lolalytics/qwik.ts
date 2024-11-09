@@ -230,6 +230,7 @@ function getDataId(objs: any) {
     return objs
         .findIndex(
             (obj: any) =>
+                obj != undefined &&
                 obj["analysed"] !== undefined &&
                 obj["avgWr"] !== undefined &&
                 obj["enemy"] !== undefined
