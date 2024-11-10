@@ -250,6 +250,10 @@ function parseObj(objs: any[], id: string): any {
         return obj.map((value) => parseObj(objs, value));
     }
 
+    if (obj === null) {
+        return null;
+    }
+
     if (typeof obj === "object") {
         return Object.fromEntries(
             Object.entries(obj).map(([key, value]) => [

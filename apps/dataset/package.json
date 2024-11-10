@@ -6,13 +6,13 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@aws-sdk/client-s3": "^3.462.0",
+        "@aws-sdk/client-s3": "^3.688.0",
         "@draftgap/core": "workspace:*",
-        "@types/node": "^20.10.1",
-        "dotenv": "^16.3.1",
-        "tsx": "^4.6.1"
+        "@types/node": "^22.9.0",
+        "dotenv": "^16.4.5",
+        "tsx": "^4.19.2"
     },
     "devDependencies": {
-        "typescript": "^5.3.2"
+        "typescript": "^5.6.3"
     }
 }
