@@ -72,7 +72,7 @@ export default function SettingsDialog() {
                 <h3 class="text-3xl uppercase">Draft</h3>
                 <div class="flex space-x-16 items-center justify-between mt-2">
                     <span class="text-lg uppercase">
-                        Ignore indivdual champion winrates
+                        Ignore individual champion winrates
                     </span>
                     <Switch
                         checked={config.ignoreChampionWinrates}
