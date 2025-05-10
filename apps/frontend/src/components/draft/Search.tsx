@@ -26,11 +26,12 @@ export function Search() {
 
     onMount(() => {
         if (!inputEl) return;
+        const el = inputEl as HTMLInputElement;
 
         const onControlF = (e: KeyboardEvent) => {
             if (e.ctrlKey && (e.key === "f" || e.key == "k")) {
                 e.preventDefault();
-                inputEl!.focus();
+                el.focus();
             }
         };
         window.addEventListener("keydown", onControlF);
@@ -45,9 +46,9 @@ export function Search() {
             }
         };
 
-        inputEl.addEventListener("keydown", onTabOrEnter);
+        el.addEventListener("keydown", onTabOrEnter);
         onCleanup(() => {
-            inputEl!.removeEventListener("keydown", onTabOrEnter);
+            el.removeEventListener("keydown", onTabOrEnter);
             window.removeEventListener("keydown", onControlF);
         });
     });
