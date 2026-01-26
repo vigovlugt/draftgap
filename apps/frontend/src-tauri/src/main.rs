@@ -53,8 +53,8 @@ struct LcuData {
 fn get_league_lcu_data() -> Result<LcuData, String> {
     #[cfg(not(target_os = "windows"))]
     let output = std::process::Command::new("sh")
-        .arg("-c")
-        .arg("ps x -o args | grep 'LeagueClientUx'")
+        .arg("-lc")
+        .arg("ps axww -o args | grep -F 'LeagueClientUx ' | grep -v grep | head -n 1")
         .output()
         .map_err(|_| "Could not run command")?;
 
@@ -123,32 +123,49 @@ async fn get_lcu_response(
     let lcu_data = lcu_data_mutex.as_ref().unwrap();
 
     let res = state
-        .client
-        .get(format!("https://127.0.0.1:{}/{}", lcu_data.port, path))
-        .basic_auth(lcu_data.username.clone(), Some(lcu_data.password.clone()))
-        .send()
-        .await;
+    .client
+    .get(format!("https://127.0.0.1:{}/{}", lcu_data.port, path))
+    .basic_auth(&lcu_data.username, Some(&lcu_data.password))
+    .send()
+    .await;
 
-    let res = match res {
-        Ok(res) => res,
-        Err(e) => {
-            *lcu_data_mutex = None;
-            return Err("Could not get response".to_owned() + &e.to_string());
-        }
-    };
+let res = match res {
+    Ok(res) => res,
+    Err(e) => {
+        *lcu_data_mutex = None;
+        return Err("Could not get response: ".to_owned() + &e.to_string());
+    }
+};
 
-    if res.status() == 404 {
+    let status = res.status();
+    let body = res
+        .text()
+        .await
+        .map_err(|e| format!("Could not read response body: {e}"))?;
+
+    // 404/403: Endpoint gerade nicht verfügbar (z.B. nicht im Champ Select)
+    if status == reqwest::StatusCode::NOT_FOUND || status == reqwest::StatusCode::FORBIDDEN {
         return Ok(serde_json::Value::Null);
     }
 
-    if res.status() == 401 {
+    if status == reqwest::StatusCode::UNAUTHORIZED {
         *lcu_data_mutex = None;
         return Err("Unauthorized".to_owned());
     }
 
-    let json = res.json().await.map_err(|_| "Could not parse json")?;
+    if !status.is_success() {
+        return Err(format!("LCU returned {status}: {body}"));
+    }
 
-    return Ok(json);
+    let json = serde_json::from_str(&body).map_err(|e| {
+        format!(
+            "Could not parse json: {e}; body={}",
+            body.chars().take(300).collect::<String>()
+        )
+    })?;
+
+    Ok(json)
+
 }
 
 #[tauri::command]
@@ -175,7 +192,7 @@ async fn get_pickable_champion_ids(state: tauri::State<'_, AppState>) -> Result<
 
 fn main() {
     let client = Client::builder()
-        .add_root_certificate(Certificate::from_pem(RIOT_GAMES_CERTIFICATE.as_bytes()).unwrap())
+        .danger_accept_invalid_certs(true)
         .build()
         .expect("Could not build client");
 
