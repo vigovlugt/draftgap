@@ -3,39 +3,12 @@
     windows_subsystem = "windows"
 )]
 #[cfg(target_os = "windows")]
-use std::{env, os::windows::process::CommandExt};
+use std::os::windows::process::CommandExt;
 
-use reqwest::{Certificate, Client};
+use reqwest::Client;
 use serde::Serialize;
 use serde_json::Value;
 use tauri::async_runtime::Mutex;
-
-const RIOT_GAMES_CERTIFICATE: &str = "-----BEGIN CERTIFICATE-----
-MIIEIDCCAwgCCQDJC+QAdVx4UDANBgkqhkiG9w0BAQUFADCB0TELMAkGA1UEBhMC
-VVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFTATBgNVBAcTDFNhbnRhIE1vbmljYTET
-MBEGA1UEChMKUmlvdCBHYW1lczEdMBsGA1UECxMUTG9MIEdhbWUgRW5naW5lZXJp
-bmcxMzAxBgNVBAMTKkxvTCBHYW1lIEVuZ2luZWVyaW5nIENlcnRpZmljYXRlIEF1
-dGhvcml0eTEtMCsGCSqGSIb3DQEJARYeZ2FtZXRlY2hub2xvZ2llc0ByaW90Z2Ft
-ZXMuY29tMB4XDTEzMTIwNDAwNDgzOVoXDTQzMTEyNzAwNDgzOVowgdExCzAJBgNV
-BAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRUwEwYDVQQHEwxTYW50YSBNb25p
-Y2ExEzARBgNVBAoTClJpb3QgR2FtZXMxHTAbBgNVBAsTFExvTCBHYW1lIEVuZ2lu
-ZWVyaW5nMTMwMQYDVQQDEypMb0wgR2FtZSBFbmdpbmVlcmluZyBDZXJ0aWZpY2F0
-ZSBBdXRob3JpdHkxLTArBgkqhkiG9w0BCQEWHmdhbWV0ZWNobm9sb2dpZXNAcmlv
-dGdhbWVzLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKoJemF/
-6PNG3GRJGbjzImTdOo1OJRDI7noRwJgDqkaJFkwv0X8aPUGbZSUzUO23cQcCgpYj
-21ygzKu5dtCN2EcQVVpNtyPuM2V4eEGr1woodzALtufL3Nlyh6g5jKKuDIfeUBHv
-JNyQf2h3Uha16lnrXmz9o9wsX/jf+jUAljBJqsMeACOpXfuZy+YKUCxSPOZaYTLC
-y+0GQfiT431pJHBQlrXAUwzOmaJPQ7M6mLfsnpHibSkxUfMfHROaYCZ/sbWKl3lr
-ZA9DbwaKKfS1Iw0ucAeDudyuqb4JntGU/W0aboKA0c3YB02mxAM4oDnqseuKV/CX
-8SQAiaXnYotuNXMCAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAf3KPmddqEqqC8iLs
-lcd0euC4F5+USp9YsrZ3WuOzHqVxTtX3hR1scdlDXNvrsebQZUqwGdZGMS16ln3k
-WObw7BbhU89tDNCN7Lt/IjT4MGRYRE+TmRc5EeIXxHkQ78bQqbmAI3GsW+7kJsoO
-q3DdeE+M+BUJrhWorsAQCgUyZO166SAtKXKLIcxa+ddC49NvMQPJyzm3V+2b1roP
-SvD2WV8gRYUnGmy/N0+u6ANq5EsbhZ548zZc+BI4upsWChTLyxt2RxR7+uGlS1+5
-EcGfKZ+g024k/J32XP4hdho7WYAS2xMiV83CfLR/MNi8oSMaVQTdKD8cpgiWJk3L
-XWehWA==
------END CERTIFICATE-----
-";
 
 struct AppState {
     lcu_data: Mutex<Option<LcuData>>,
@@ -49,22 +22,22 @@ struct LcuData {
     username: String,
 }
 
-#[tauri::command]
 fn get_league_lcu_data() -> Result<LcuData, String> {
     #[cfg(not(target_os = "windows"))]
     let output = std::process::Command::new("sh")
-        .arg("-c")
-        .arg("ps x -o args | grep 'LeagueClientUx'")
+        .arg("-lc")
+        .arg("ps axww -o args | grep -F 'LeagueClientUx ' | grep -v grep | head -n 1")
         .output()
         .map_err(|_| "Could not run command")?;
 
     #[cfg(target_os = "windows")]
     let output = {
         match std::process::Command::new("powershell")
-        .arg("/C")
-        .arg("Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name LIKE 'LeagueClientUx.exe'\" | Select-Object -ExpandProperty CommandLine")
-        .creation_flags(0x08000000) // CREATE_NO_WINDOW
-        .output() {
+            .arg("/C")
+            .arg("Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name LIKE 'LeagueClientUx.exe'\" | Select-Object -ExpandProperty CommandLine")
+            .creation_flags(0x08000000) // CREATE_NO_WINDOW
+            .output()
+        {
             Ok(output) => Ok(output),
             Err(_) => {
                 std::process::Command::new("C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell")
@@ -74,7 +47,8 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
                     .output()
             }
         }
-    }.map_err(|e| "Could not run command:".to_owned() + &e.to_string())?;
+    }
+    .map_err(|e| "Could not run command:".to_owned() + &e.to_string())?;
 
     let output_str = String::from_utf8_lossy(&output.stdout);
 
@@ -84,7 +58,9 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
     let port: u16 = regex::Regex::new(port_regex)
         .expect("Could not create port regex")
         .captures(&output_str)
-        .ok_or_else(|| "Could not find process, powershell output: \"".to_owned() + &output_str + "\"")?
+        .ok_or_else(|| {
+            "Could not find process, powershell output: \"".to_owned() + &output_str + "\""
+        })?
         .get(1)
         .ok_or_else(|| "Could not find port")?
         .as_str()
@@ -100,13 +76,11 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
         .as_str()
         .to_owned();
 
-    let lcu_data = LcuData {
+    Ok(LcuData {
         port,
         password,
         username: "riot".to_owned(),
-    };
-
-    return Ok(lcu_data);
+    })
 }
 
 async fn get_lcu_response(
@@ -125,7 +99,7 @@ async fn get_lcu_response(
     let res = state
         .client
         .get(format!("https://127.0.0.1:{}/{}", lcu_data.port, path))
-        .basic_auth(lcu_data.username.clone(), Some(lcu_data.password.clone()))
+        .basic_auth(&lcu_data.username, Some(&lcu_data.password))
         .send()
         .await;
 
@@ -133,49 +107,70 @@ async fn get_lcu_response(
         Ok(res) => res,
         Err(e) => {
             *lcu_data_mutex = None;
-            return Err("Could not get response".to_owned() + &e.to_string());
+            return Err("Could not get response: ".to_owned() + &e.to_string());
         }
     };
 
-    if res.status() == 404 {
+    let status = res.status();
+    let body = res
+        .text()
+        .await
+        .map_err(|e| format!("Could not read response body: {e}"))?;
+
+    // 404: endpoint not found
+    // 403: champ-select endpoints can be forbidden when not currently in champion select
+    let is_champ_select_endpoint = path.starts_with("lol-champ-select/");
+
+    if status == reqwest::StatusCode::NOT_FOUND
+        || (is_champ_select_endpoint && status == reqwest::StatusCode::FORBIDDEN)
+    {
         return Ok(serde_json::Value::Null);
     }
 
-    if res.status() == 401 {
+    if status == reqwest::StatusCode::UNAUTHORIZED {
         *lcu_data_mutex = None;
         return Err("Unauthorized".to_owned());
     }
 
-    let json = res.json().await.map_err(|_| "Could not parse json")?;
+    if !status.is_success() {
+        return Err(format!("LCU returned {status}: {body}"));
+    }
 
-    return Ok(json);
+    let json = serde_json::from_str(&body).map_err(|e| {
+        format!(
+            "Could not parse json: {e}; body={}",
+            body.chars().take(300).collect::<String>()
+        )
+    })?;
+
+    Ok(json)
 }
 
 #[tauri::command]
 async fn get_champ_select_session(
     state: tauri::State<'_, AppState>,
 ) -> Result<serde_json::Value, String> {
-    return get_lcu_response(&state, "lol-champ-select/v1/session").await;
+    get_lcu_response(&state, "lol-champ-select/v1/session").await
 }
 
 #[tauri::command]
 async fn get_current_summoner(state: tauri::State<'_, AppState>) -> Result<Value, String> {
-    return get_lcu_response(&state, "lol-summoner/v1/current-summoner").await;
+    get_lcu_response(&state, "lol-summoner/v1/current-summoner").await
 }
 
 #[tauri::command]
 async fn get_grid_champions(state: tauri::State<'_, AppState>) -> Result<Value, String> {
-    return get_lcu_response(&state, "lol-champ-select/v1/all-grid-champions").await;
+    get_lcu_response(&state, "lol-champ-select/v1/all-grid-champions").await
 }
 
 #[tauri::command]
 async fn get_pickable_champion_ids(state: tauri::State<'_, AppState>) -> Result<Value, String> {
-    return get_lcu_response(&state, "lol-champ-select/v1/pickable-champion-ids").await;
+    get_lcu_response(&state, "lol-champ-select/v1/pickable-champion-ids").await
 }
 
 fn main() {
     let client = Client::builder()
-        .add_root_certificate(Certificate::from_pem(RIOT_GAMES_CERTIFICATE.as_bytes()).unwrap())
+        .danger_accept_invalid_certs(true)
         .build()
         .expect("Could not build client");
 
