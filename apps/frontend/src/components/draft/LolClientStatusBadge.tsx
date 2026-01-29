@@ -28,7 +28,7 @@ export const LolClientStatusBadge: Component<Props> = (props) => {
                     as="button"
                     onClick={() => props.setShowDownloadModal(true)}
                     theme="primary"
-                    class="hidden md:block"
+                    class="hidden md:block hover:opacity-70 transition"
                 >
                     Sync with league client
                 </Badge>

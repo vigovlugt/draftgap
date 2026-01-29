@@ -1,6 +1,6 @@
 import { Component, createSignal, onMount } from "solid-js";
-import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
-import { relaunch } from "@tauri-apps/api/process";
+import { check, Update } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 import { Button } from "../common/Button";
 import { useMedia } from "../../hooks/useMedia";
 import {
@@ -14,23 +14,23 @@ import {
 export const UpdateDialog: Component = () => {
     const { isDesktop } = useMedia();
     const [isOpen, setIsOpen] = createSignal(false);
+    const [update, setUpdate] = createSignal<Update | null>(null);
 
-    onMount(() => {
+    onMount(async () => {
         if (isDesktop) {
-            (async () => {
-                const update = await checkUpdate();
-                if (update.shouldUpdate) {
-                    setIsOpen(true);
-                    console.log("Update available, manifest:", update.manifest);
-                }
-            })();
+            const update = await check();
+            if (update) {
+                setIsOpen(true);
+                console.log("Update available:", update);
+                setUpdate(update);
+            }
         }
     });
 
-    const update = async () => {
+    const doUpdate = async () => {
         setIsOpen(false);
         // display dialog
-        await installUpdate();
+        await update()?.downloadAndInstall();
         // install complete, restart the app
         await relaunch();
     };
@@ -45,7 +45,7 @@ export const UpdateDialog: Component = () => {
                     A new version of DraftGap is available.
                 </p>
                 <DialogFooter>
-                    <Button variant="primary" onClick={update}>
+                    <Button variant="primary" onClick={doUpdate}>
                         Update
                     </Button>
                 </DialogFooter>

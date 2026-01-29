@@ -59,7 +59,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                         component="button"
                         class={cn(
                             buttonVariants({ variant: "transparent" }),
-                            "px-1 py-2"
+                            "px-1 py-2",
                         )}
                     />
                     <Icon path={ellipsisVertical} class="h-7" />
@@ -79,7 +79,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                                     props.team,
                                     props.index,
                                     undefined,
-                                    undefined
+                                    undefined,
                                 )
                             }
                         >
@@ -87,10 +87,11 @@ export function PickOptions(props: { team: Team; index: number }) {
                             <span>Reset</span>
                             <DropdownMenuShortcut>R</DropdownMenuShortcut>
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                            disabled={!champion()}
-                            onSelect={() =>
-                                window.open(
+                        <DropdownMenuItem disabled={!champion()} asChild>
+                            <As
+                                component="a"
+                                target="_blank"
+                                href={
                                     champion()
                                         ? linkByStatsSite(
                                               config.defaultStatsSite,
@@ -99,16 +100,16 @@ export function PickOptions(props: { team: Team; index: number }) {
                                                   ([, value]) =>
                                                       value ===
                                                       teamPicks()[props.index]
-                                                          .championKey
-                                              )![0] as Role
+                                                          .championKey,
+                                              )![0] as Role,
                                           )
                                         : "#"
-                                )
-                            }
-                        >
-                            <DropdownMenuIcon path={user} />
-                            <span>{config.defaultStatsSite}</span>
-                            <DropdownMenuShortcut>B</DropdownMenuShortcut>
+                                }
+                            >
+                                <DropdownMenuIcon path={user} />
+                                <span>{config.defaultStatsSite}</span>
+                                <DropdownMenuShortcut>B</DropdownMenuShortcut>
+                            </As>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             disabled={!champion()}
@@ -133,7 +134,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                                             buttonVariants({
                                                 variant: "transparent",
                                             }),
-                                            "px-1.5 relative"
+                                            "px-1.5 relative",
                                         )}
                                         onClick={() =>
                                             pickChampion(
@@ -141,7 +142,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                                                 props.index,
                                                 teamPicks()[props.index]
                                                     .championKey,
-                                                role
+                                                role,
                                             )
                                         }
                                     >
@@ -153,7 +154,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                                                     "text-white":
                                                         teamPicks()[props.index]
                                                             .role === role,
-                                                }
+                                                },
                                             )}
                                         />
                                         <Show
