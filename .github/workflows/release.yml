@@ -57,7 +57,8 @@ jobs:
                   tagName: ${{ github.ref_name }} # This only works if your workflow triggers on new tags.
                   releaseName: "DraftGap v__VERSION__" # tauri-action replaces \_\_VERSION\_\_ with the app version.
                   releaseBody: "# Download DraftGap\n[Windows](https://github.com/vigovlugt/draftgap/releases/download/v__VERSION__/DraftGap___VERSION___x64_en-US.msi)\n[Mac](https://github.com/vigovlugt/draftgap/releases/download/v__VERSION__/DraftGap.app.tar.gz)"
-                  projectPath: "./apps/frontend"
+                  projectPath: apps/frontend
+                  tauriScript: pnpm tauri
 
     publish:
         runs-on: ubuntu-latest
