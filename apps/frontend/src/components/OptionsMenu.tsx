@@ -1,3 +1,4 @@
+import { openUrl } from '@tauri-apps/plugin-opener';
 import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/solid";
 import {
@@ -54,31 +55,23 @@ export const OptionsDropdownMenu: Component<Props> = (props) => {
                         <DropdownMenuIcon path={questionMarkCircle} />
                         <span>FAQ</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                        onSelect={() =>
-                            window.open("mailto:vigovlugt+draftgap@gmail.com")
-                        }
-                    >
-                        <DropdownMenuIcon path={envelope} />
-                        <span>Contact</span>
+                    <DropdownMenuItem asChild>
+                        <As component="a" href="mailto:vigovlugt+draftgap@gmail.com" target="_blank">
+                            <DropdownMenuIcon path={envelope} />
+                            <span>Contact</span>
+                        </As>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                        onSelect={() =>
-                            window.open("https://leagueofitems.com")
-                        }
-                    >
-                        <DropdownMenuIcon path={globeAlt} />
-                        <span>LeagueOfItems</span>
+                    <DropdownMenuItem asChild>
+                        <As component="a" href="https://leagueofitems.com" target="_blank" >
+                            <DropdownMenuIcon path={globeAlt} />
+                            <span>LeagueOfItems</span>
+                        </As>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                        onSelect={() =>
-                            window.open(
-                                "https://www.buymeacoffee.com/vigovlugt"
-                            )
-                        }
-                    >
-                        <DropdownMenuIcon path={heart} />
-                        <span>Donate</span>
+                    <DropdownMenuItem asChild>
+                        <As component="a" href="https://www.buymeacoffee.com/vigovlugt" target="_blank" >
+                            <DropdownMenuIcon path={heart} />
+                            <span>Donate</span>
+                        </As>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
             </DropdownMenuContent>

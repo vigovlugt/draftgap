@@ -28,27 +28,6 @@ const WindowsLogo = () => {
     );
 };
 
-const Svg = () => {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 750 500"
-            class="w-1/2 my-4"
-        >
-            <path
-                fill="#f4f4f4"
-                d="M684 19H424v-6H306v6H44a18 18 0 0 0-17 17v357a18 18 0 0 0 17 17h640a18 18 0 0 0 17-17V36a18 18 0 0 0-17-17Z"
-            />
-            <path d="M498 404H50V50l448 354z" opacity=".1" />
-            <path
-                fill="#f4f4f4"
-                d="M651 93h-30V63h30Zm-29-1h27V64h-27ZM719 397h-61v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0 0 1v4h-14v-4a1 1 0 0 0 0-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1H277a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0 0 1v4h-14v-4a1 1 0 0 0 0-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1h-21a1 1 0 0 0-1 1v4h-13v-4a1 1 0 0 0-1-1H98a1 1 0 0 0-1 1v4H84v-4a1 1 0 0 0-1-1H62a1 1 0 0 0-1 1v4H21a21 21 0 0 0-21 21v10a21 21 0 0 0 21 21h698a21 21 0 0 0 21-21v-10a21 21 0 0 0-21-21ZM163 355a76 76 0 1 1 76-76 76 76 0 0 1-76 76Zm0-150a74 74 0 1 0 74 74 74 74 0 0 0-74-74Z"
-            />
-            <path fill="#101010" d="M50 50h628v354H50z" />
-        </svg>
-    );
-};
-
 const MAC_DOWNLOAD_URL =
     "https://bucket.draftgap.com/releases/DraftGap_latest_x64.dmg";
 const WINDOWS_DOWNLOAD_URL =
@@ -67,9 +46,6 @@ export function DesktopAppDialog() {
             <DialogHeader>
                 <DialogTitle>DraftGap desktop app</DialogTitle>
             </DialogHeader>
-            <div class="w-full flex justify-center">
-                <Svg />
-            </div>
             <p class="font-body">
                 DraftGap has a desktop app, which enables seamless integration
                 with the League client. DraftGap will automatically detect when

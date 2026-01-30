@@ -1,4 +1,5 @@
 import { Icon } from "solid-heroicons";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { For, Show } from "solid-js";
 import { useDraft } from "../../contexts/DraftContext";
 import { RoleIcon } from "../icons/roles/RoleIcon";
@@ -12,6 +13,7 @@ import { linkByStatsSite } from "../../utils/sites";
 import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { championName } from "../../utils/i18n";
+import { useMedia } from "../../hooks/useMedia";
 tooltip;
 
 type Props = {
@@ -23,6 +25,8 @@ export function Pick(props: Props) {
     const { config } = useUser();
     const { allyTeam, opponentTeam, selection, select, pickChampion } =
         useDraft();
+
+    const {isDesktop} = useMedia();
 
     const team = () => (props.team === "ally" ? allyTeam : opponentTeam);
 
@@ -89,7 +93,11 @@ export function Pick(props: Props) {
                     ([, value]) => value === pick().championKey
                 )![0] as Role
             );
-            window.open(link, "_blank");
+            if (isDesktop) {
+                openUrl(link);
+            } else {
+                window.open(link, "_blank");
+            }
         } else if (
             e.key === "r" ||
             e.key === "Backspace" ||
