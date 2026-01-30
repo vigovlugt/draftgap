@@ -131,6 +131,17 @@ export async function storeReleaseAssetsInS3(
 
         const command = new PutObjectCommand(params);
         await client.send(command);
+
+        // TEMP: REMOVE AFTER NEXT UPDATE
+        const params1 = {
+            Bucket: S3_BUCKET,
+            Key: `releases/${assetName}`,
+            Body: new Uint8Array(assetBinary),
+            ContentType: asset.content_type,
+        } satisfies PutObjectCommandInput;
+
+        const command1 = new PutObjectCommand(params1);
+        await client.send(command1);
     }
 }
 
