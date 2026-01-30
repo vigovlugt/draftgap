@@ -12,15 +12,18 @@ rust-version = "1.59"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.2.1", features = [] }
+tauri-build = { version = "2", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.8.3", features = [ "updater", "shell-open"] }
+tauri = { version = "2", features = [] }
 regex = "1.7.0"
 color-eyre = "0.6.2"
 reqwest = { version = "0.13.1", features = ["json"] }
+tauri-plugin-process = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-opener = "2"
 
 [features]
 # by default Tauri runs in production mode
@@ -29,3 +32,6 @@ default = ["custom-protocol"]
 # this feature is used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
 custom-protocol = ["tauri/custom-protocol"]
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-updater = "2"
