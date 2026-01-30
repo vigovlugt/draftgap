@@ -7,12 +7,12 @@ import {
 } from "@aws-sdk/client-s3";
 config();
 
+const VERSION = 3;
+
 const errors: string[] = [];
 
 const [
     GITHUB_TOKEN,
-    GIST_TOKEN,
-    GIST_ID,
     REPOSITORY_NAME,
     REPOSITORY_OWNER,
     S3_ACCESS_KEY_ID,
@@ -22,8 +22,6 @@ const [
 ] = (
     [
         "GITHUB_TOKEN",
-        "GIST_TOKEN",
-        "GIST_ID",
         "REPOSITORY_NAME",
         "REPOSITORY_OWNER",
         "S3_ACCESS_KEY_ID",
@@ -91,20 +89,17 @@ export async function main() {
             .split("/")
             .at(-1)!
             .replace(latestJson.version, "latest");
-        platform.url = `${S3_PUBLIC_URL}/releases/${fileName}`;
+        platform.url = `${S3_PUBLIC_URL}/releases/v${VERSION}/${fileName}`;
     }
 
-    const gistOctokit = new Octokit({
-        auth: GIST_TOKEN,
+    console.log(`Storing latest.json in S3`);
+    const command = new PutObjectCommand({
+        Bucket: S3_BUCKET,
+        Key: `releases/v${VERSION}/latest.json`,
+        Body: JSON.stringify(latestJson, null, 4),
+        ContentType: "application/json",
     });
-    await gistOctokit.gists.update({
-        gist_id: GIST_ID,
-        files: {
-            "draftgap-tauri-update.json": {
-                content: JSON.stringify(latestJson, null, 4),
-            },
-        },
-    });
+    await client.send(command);
 
     console.log("Updated tauri update json");
 }
@@ -129,7 +124,7 @@ export async function storeReleaseAssetsInS3(
 
         const params = {
             Bucket: S3_BUCKET,
-            Key: `releases/${assetName}`,
+            Key: `releases/v${VERSION}/${assetName}`,
             Body: new Uint8Array(assetBinary),
             ContentType: asset.content_type,
         } satisfies PutObjectCommandInput;
