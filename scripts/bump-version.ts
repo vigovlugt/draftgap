@@ -68,7 +68,7 @@ export function main() {
     const tauriConfJson = JSON.parse(
         readFileSync("apps/frontend/src-tauri/tauri.conf.json", "utf8")
     );
-    tauriConfJson.package.version = nextVersion;
+    tauriConfJson.version = nextVersion;
     writeFileSync(
         "apps/frontend/src-tauri/tauri.conf.json",
         JSON.stringify(tauriConfJson, null, 4)
