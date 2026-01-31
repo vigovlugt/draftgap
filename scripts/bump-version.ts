@@ -50,7 +50,10 @@ export function main() {
 
     const mainPackage = JSON.parse(readFileSync("package.json", "utf8"));
     const currentVersion = mainPackage.version;
-    const nextVersion = getNextVersion(currentVersion, versionType);
+    let nextVersion = versionType;
+    if (!versionType.includes(".")){
+        nextVersion = getNextVersion(currentVersion, versionType);
+    }
 
     // Update package.json
     const files = [
