@@ -87,8 +87,8 @@ export async function main() {
         const url = new URL(platform.url);
         const fileName = url.pathname
             .split("/")
-            .at(-1)!
-            .replace(latestJson.version, "latest");
+            .at(-1)!;
+            // .replace(latestJson.version, "latest");
         platform.url = `${S3_PUBLIC_URL}/releases/v${VERSION}/${fileName}`;
     }
 
