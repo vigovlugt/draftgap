@@ -1,6 +1,6 @@
 {
     "name": "draftgap",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "scripts": {
         "bump-version": "pnpm typecheck && tsx scripts/bump-version.ts",
         "typecheck": "turbo typecheck",
