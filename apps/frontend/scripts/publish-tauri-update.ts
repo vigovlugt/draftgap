@@ -120,7 +120,7 @@ export async function storeReleaseAssetsInS3(
         });
 
         const assetBinary = res.data as unknown as ArrayBuffer;
-        const assetName = asset.name.replace(latestJson.version, "latest");
+        const assetName = asset.name; //.replace(latestJson.version, "latest");
 
         const params = {
             Bucket: S3_BUCKET,
