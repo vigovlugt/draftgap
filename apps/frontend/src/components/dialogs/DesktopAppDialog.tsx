@@ -1,7 +1,10 @@
-import { Show } from "solid-js";
+import { Show, Switch, Match } from "solid-js";
+import { createQuery } from "@tanstack/solid-query";
+import { LoadingIcon } from "../icons/LoadingIcon";
 import { buttonVariants } from "../common/Button";
 import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
 import { cn } from "../../utils/style";
+import { Octokit } from "@octokit/rest";
 
 const AppleLogo = () => {
     return (
@@ -28,12 +31,23 @@ const WindowsLogo = () => {
     );
 };
 
-const MAC_DOWNLOAD_URL =
-    "https://bucket.draftgap.com/releases/DraftGap_latest_x64.dmg";
-const WINDOWS_DOWNLOAD_URL =
-    "https://bucket.draftgap.com/releases/DraftGap_latest_x64_en-US.msi";
-
 export function DesktopAppDialog() {
+    const releaseQuery = createQuery(() => ({
+        queryKey: ["latest-release"],
+        queryFn: async () => {
+            const octokit = new Octokit();
+            const response = await octokit.rest.repos.getLatestRelease({ owner: "vigovlugt", repo: "draftgap" });
+
+            const macAsset = response.data.assets.find((a) => a.name.endsWith("aarch64.dmg"));
+            const windowsAsset = response.data.assets.find((a) => a.name.endsWith("x64_en-US.msi"));
+
+            return {
+                macUrl: macAsset?.browser_download_url,
+                windowsUrl: windowsAsset?.browser_download_url,
+            };
+        },
+    }));
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const nav = navigator as any;
     const isMac =
@@ -53,81 +67,118 @@ export function DesktopAppDialog() {
                 the draft accordingly. Let DraftGap do the work for you.
             </p>
 
-            <Show
-                when={!isMac}
-                fallback={
+            <Switch>
+                <Match when={releaseQuery.data && !releaseQuery.error}>
+                    <Show
+                        when={!isMac}
+                        fallback={
+                            <p class="font-body text-neutral-400 text-sm">
+                                You may get a 'macOS cannot verify that this app is free
+                                from malware' warning, but you can safely ignore it
+                                (check{" "}
+                                <a
+                                    href={
+                                        "https://www.virustotal.com/gui/search/" +
+                                        encodeURI(
+                                            encodeURIComponent(
+                                                releaseQuery.data?.macUrl ?? ""
+                                            )
+                                        )
+                                    }
+                                    class="text-blue-500"
+                                    target="_blank"
+                                >
+                                    VirusTotal
+                                </a>
+                                ) by using command+click in finder on the app and
+                                clicking 'Open' and then 'Open' again.
+                            </p>
+                        }
+                    >
+                        <p class="font-body text-neutral-400 text-sm">
+                            You may get a 'Windows protected your PC' warning, but you
+                            can safely ignore it (check{" "}
+                            <a
+                                href={
+                                    "https://www.virustotal.com/gui/search/" +
+                                    encodeURI(
+                                        encodeURIComponent(
+                                            releaseQuery.data?.windowsUrl ?? ""
+                                        )
+                                    )
+                                }
+                                class="text-blue-500"
+                                target="_blank"
+                            >
+                                VirusTotal
+                            </a>
+                            ) by clicking 'More info' and then 'Run anyway'.
+                        </p>
+                    </Show>
+
+                    <div
+                        class="flex justify-between gap-6"
+                        classList={{
+                            "flex-row-reverse": isMac,
+                        }}
+                    >
+                        <Show when={releaseQuery.data?.windowsUrl}>
+                            <a
+                                href={releaseQuery.data!.windowsUrl}
+                                class={cn(
+                                    buttonVariants({
+                                        variant: !isMac ? "primary" : "secondary",
+                                    }),
+                                    "w-full text-lg flex justify-center",
+                                    {
+                                        "border-neutral-700 text-neutral-300": isMac,
+                                    }
+                                )}
+                            >
+                                <WindowsLogo />
+                                Download for windows
+                            </a>
+                        </Show>
+                        <Show when={releaseQuery.data?.macUrl}>
+                            <a
+                                href={releaseQuery.data!.macUrl}
+                                class={cn(
+                                    buttonVariants({
+                                        variant: isMac ? "primary" : "secondary",
+                                    }),
+                                    "w-full text-lg flex justify-center",
+                                    {
+                                        "border-neutral-700 text-neutral-300": !isMac,
+                                    }
+                                )}
+                            >
+                                <AppleLogo />
+                                Download for mac
+                            </a>
+                        </Show>
+                    </div>
+                </Match>
+
+                <Match when={releaseQuery.isLoading}>
+                    <div class="flex justify-center">
+                        <LoadingIcon class="animate-spin h-6 w-6" />
+                    </div>
+                </Match>
+
+                <Match when={releaseQuery.error}>
                     <p class="font-body text-neutral-400 text-sm">
-                        You may get a 'macOS cannot verify that this app is free
-                        from malware' warning, but you can safely ignore it
-                        (check{" "}
+                        Failed to load download links. Please visit{" "}
                         <a
-                            href={
-                                "https://www.virustotal.com/gui/search/" +
-                                encodeURI(encodeURIComponent(MAC_DOWNLOAD_URL!))
-                            }
+                            href="https://github.com/vigovlugt/draftgap/releases/latest"
                             class="text-blue-500"
                             target="_blank"
                         >
-                            VirusTotal
-                        </a>
-                        ) by using command+click in finder on the app and
-                        clicking 'Open' and then 'Open' again.
+                            GitHub releases
+                        </a>{" "}
+                        to download the desktop app.
                     </p>
-                }
-            >
-                <p class="font-body text-neutral-400 text-sm">
-                    You may get a 'Windows protected your PC' warning, but you
-                    can safely ignore it (check{" "}
-                    <a
-                        href={
-                            "https://www.virustotal.com/gui/search/" +
-                            encodeURI(encodeURIComponent(WINDOWS_DOWNLOAD_URL!))
-                        }
-                        class="text-blue-500"
-                        target="_blank"
-                    >
-                        VirusTotal
-                    </a>
-                    ) by clicking 'More info' and then 'Run anyway'.
-                </p>
-            </Show>
-            <div
-                class="flex justify-between gap-6"
-                classList={{
-                    "flex-row-reverse": isMac,
-                }}
-            >
-                <a
-                    href={WINDOWS_DOWNLOAD_URL}
-                    class={cn(
-                        buttonVariants({
-                            variant: !isMac ? "primary" : "secondary",
-                        }),
-                        "w-full text-lg flex justify-center",
-                        {
-                            "border-neutral-700 text-neutral-300": isMac,
-                        }
-                    )}
-                >
-                    <WindowsLogo />
-                    Download for windows
-                </a>
-                <a
-                    href={MAC_DOWNLOAD_URL}
-                    class={cn(
-                        buttonVariants({
-                            variant: isMac ? "primary" : "secondary",
-                        }),
-                        "w-full text-lg flex justify-center",
-                        {
-                            "border-neutral-700 text-neutral-300": !isMac,
-                        }
-                    )}
-                >
-                    <AppleLogo />
-                    Download for mac
-                </a>
-            </div>
+                </Match>
+            </Switch>
         </DialogContent>
     );
 }
