@@ -89,7 +89,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                         <DropdownMenuItem disabled={!champion()} asChild>
                             <a
                                 target="_blank"
-                                class="flex items-center"
+                                class="flex items-center w-full"
                                 href={
                                     champion()
                                         ? linkByStatsSite(

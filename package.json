@@ -9,7 +9,7 @@
         "tauri": "bun run --filter @draftgap/frontend tauri"
     },
     "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "latest"
     },
     "dependencies": {
         "turbo": "^2.8.1"
