@@ -8,11 +8,11 @@
         "tauri": "pnpm run --filter @draftgap/frontend tauri"
     },
     "devDependencies": {
-        "@types/node": "^20.4.4",
-        "tsx": "^3.12.7"
+        "@types/node": "^25.1.0",
+        "tsx": "^4.21.0"
     },
     "dependencies": {
-        "turbo": "^2.5.3"
+        "turbo": "^2.8.1"
     },
     "packageManager": "pnpm@9.2.0"
 }

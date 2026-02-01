@@ -46,7 +46,7 @@
     "devDependencies": {
         "@tauri-apps/cli": "^2.9.6",
         "@types/gtag.js": "^0.0.18",
-        "@types/node": "^20.10.1",
+        "@types/node": "^20.19.30",
         "@typescript-eslint/eslint-plugin": "^6.13.1",
         "@typescript-eslint/parser": "^6.13.1",
         "autoprefixer": "^10.4.16",
@@ -56,7 +56,7 @@
         "eslint-plugin-solid": "^0.13.0",
         "postcss": "^8.4.31",
         "tailwindcss": "^3.3.5",
-        "tsx": "^4.6.1",
+        "tsx": "^4.21.0",
         "typescript": "^5.3.2",
         "vite": "^5.0.4",
         "vite-plugin-solid": "^2.7.2",
