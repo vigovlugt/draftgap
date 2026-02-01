@@ -1,7 +1,10 @@
 {
     "name": "draftgap",
-    "version": "3.1.0",
-    "workspaces": ["packages/*", "apps/*"],
+    "version": "3.2.0",
+    "workspaces": [
+        "packages/*",
+        "apps/*"
+    ],
     "scripts": {
         "bump-version": "bun run typecheck && bun scripts/bump-version.ts",
         "typecheck": "turbo typecheck",
