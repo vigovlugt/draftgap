@@ -43,15 +43,9 @@ importers:
 
   apps/frontend:
     dependencies:
-      '@aws-sdk/client-s3':
-        specifier: ^3.462.0
-        version: 3.688.0
       '@draftgap/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@formkit/auto-animate':
-        specifier: 0.8.1
-        version: 0.8.1
       '@kobalte/core':
         specifier: ^0.11.2
         version: 0.11.2(solid-js@1.9.3)
@@ -88,9 +82,6 @@ importers:
       '@tauri-apps/plugin-updater':
         specifier: ~2
         version: 2.9.0
-      '@thisbeyond/solid-dnd':
-        specifier: ^0.7.5
-        version: 0.7.5(solid-js@1.9.3)
       chart.js:
         specifier: ^4.4.0
         version: 4.4.6
@@ -125,6 +116,9 @@ importers:
         specifier: ^2.0.0
         version: 2.5.4
     devDependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.462.0
+        version: 3.688.0
       '@tauri-apps/cli':
         specifier: ^2.9.6
         version: 2.9.6
@@ -1116,9 +1110,6 @@ packages:
   '@formatjs/intl-localematcher@0.6.1':
     resolution: {integrity: sha512-ePEgLgVCqi2BBFnTMWPfIghu6FkbZnnBVhO2sSxvLfrdFw7wCHAHiDoM2h4NRgjbaY7+B7HgOLZGkK187pZTZg==}
 
-  '@formkit/auto-animate@0.8.1':
-    resolution: {integrity: sha512-0/Z2cuNXWVVIG/l0SpcHAWFhGdvLJ8DRvEfRWvmojtmRWfEy+LWNwgDazbZqY0qQYtkHcoEK3jBLkhiZaB/4Ig==}
-
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
     engines: {node: '>=10.10.0'}
@@ -1953,12 +1944,6 @@ packages:
 
   '@tauri-apps/plugin-updater@2.9.0':
     resolution: {integrity: sha512-j++sgY8XpeDvzImTrzWA08OqqGqgkNyxczLD7FjNJJx/uXxMZFz5nDcfkyoI/rCjYuj2101Tci/r/HFmOmoxCg==}
-
-  '@thisbeyond/solid-dnd@0.7.5':
-    resolution: {integrity: sha512-DfI5ff+yYGpK9M21LhYwIPlbP2msKxN2ARwuu6GF8tT1GgNVDTI8VCQvH4TJFoVApP9d44izmAcTh/iTCH2UUw==}
-    engines: {node: '>=18.0.0', pnpm: '>=8.6.0'}
-    peerDependencies:
-      solid-js: ^1.5
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -4657,8 +4642,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@formkit/auto-animate@0.8.1': {}
-
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
@@ -5696,10 +5679,6 @@ snapshots:
   '@tauri-apps/plugin-updater@2.9.0':
     dependencies:
       '@tauri-apps/api': 2.9.1
-
-  '@thisbeyond/solid-dnd@0.7.5(solid-js@1.9.3)':
-    dependencies:
-      solid-js: 1.9.3
 
   '@types/babel__core@7.20.5':
     dependencies:
