@@ -21,7 +21,7 @@ export const Toast: Component<Props> = (props) => {
         <div
             class={`${
                 props.t.visible ? "animate-enter" : "animate-leave"
-            } relative max-w-sm w-full bg-neutral-800 rounded-lg overflow-hidden ring-1 ring-white ring-opacity-20`}
+            } relative max-w-sm w-full bg-neutral-800 rounded-lg overflow-hidden ring-1 ring-white/20`}
         >
             <div class="p-2">
                 <div class="flex items-start">

@@ -71,7 +71,7 @@ export function TooltipProvider(props: { children: JSX.Element }) {
                             id="tooltip"
                             class="max-w-xs w-max"
                         >
-                            <div class="rounded-md bg-neutral-800 shadow-lg px-4 py-2 font-body text-sm ring-1 ring-white ring-opacity-20">
+                            <div class="rounded-md bg-neutral-800 shadow-lg px-4 py-2 font-body text-sm ring-1 ring-white/20">
                                 {ctx.popoverContent()}
                             </div>
                             <div data-popper-arrow id="arrow" />

@@ -114,7 +114,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                 </p>
                 <MatchupResultTable
                     showAll={true}
-                    class="ring-1 ring-white ring-opacity-10"
+                    class="ring-1 ring-white/10"
                     data={() => {
                         const data =
                             draftResult()
@@ -156,7 +156,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                 </h3>
                 <DuoResultTable
                     team={props.team}
-                    class="ring-1 ring-white ring-opacity-10"
+                    class="ring-1 ring-white/10"
                     halfDuoRating
                     data={() => {
                         const data = draftResult()!

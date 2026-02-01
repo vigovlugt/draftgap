@@ -23,7 +23,7 @@ function DialogOverlay(props: ComponentProps<typeof DialogPrimitives.Overlay>) {
         <DialogPrimitives.Overlay
             {...props}
             class={cn(
-                "fixed inset-0 bg-black bg-opacity-40 transition-opacity",
+                "fixed inset-0 bg-black/40 transition-colors",
                 props.class
             )}
         />
@@ -37,7 +37,7 @@ export function DialogContent(
 ) {
     return (
         <DialogPortal>
-            <DialogOverlay class="ui-expanded:animate-enter animate-leave scale-100!" />
+            <DialogOverlay class="ui-expanded:animate-enter-opacity animate-leave-opacity" />
             <DialogPrimitives.Content
                 {...props}
                 class={cn(

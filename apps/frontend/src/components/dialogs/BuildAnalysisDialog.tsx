@@ -217,7 +217,7 @@ export function BuildAnalysisDialog() {
                 >
                     Champion winrates normalized
                 </p>
-                <BuildMatchupTable class="ring-1 ring-white ring-opacity-10" />
+                <BuildMatchupTable class="ring-1 ring-white/10" />
             </div>
         </DialogContent>
     );
