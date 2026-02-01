@@ -6,6 +6,7 @@
             "dependsOn": ["typecheck"],
             "outputs": ["dist/**"]
         },
-        "lint": {}
+        "lint": {},
+        "format": {}
     }
 }

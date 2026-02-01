@@ -2,9 +2,11 @@
     "name": "@draftgap/core",
     "version": "3.1.0",
     "scripts": {
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "format": "bunx prettier . --write"
     },
     "devDependencies": {
+        "prettier": "3.8.1",
         "typescript": "^5.9.3"
     },
     "dependencies": {
