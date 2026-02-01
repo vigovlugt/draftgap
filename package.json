@@ -3,14 +3,13 @@
     "version": "3.1.0",
     "workspaces": ["packages/*", "apps/*"],
     "scripts": {
-        "bump-version": "bun run typecheck && bunx tsx scripts/bump-version.ts",
+        "bump-version": "bun run typecheck && bun scripts/bump-version.ts",
         "typecheck": "turbo typecheck",
         "dev": "bun run --filter @draftgap/frontend dev",
         "tauri": "bun run --filter @draftgap/frontend tauri"
     },
     "devDependencies": {
         "@types/bun": "latest",
-        "tsx": "^4.21.0"
     },
     "dependencies": {
         "turbo": "^2.8.1"

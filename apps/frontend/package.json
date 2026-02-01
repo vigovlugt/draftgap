@@ -10,7 +10,7 @@
         "lint": "eslint .",
         "typecheck": "tsc --noEmit",
         "update-data": "bun run scripts/update-data.ts",
-        "publish-tauri-update": "bunx tsx scripts/publish-tauri-update.ts",
+        "publish-tauri-update": "bun scripts/publish-tauri-update.ts",
         "tauri-dev": "tauri dev"
     },
     "dependencies": {
@@ -52,7 +52,6 @@
         "eslint-plugin-solid": "^0.14.5",
         "postcss": "^8.5.6",
         "tailwindcss": "^4.1.18",
-        "tsx": "^4.21.0",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.54.0",
         "vite": "^7.3.1",
