@@ -308,7 +308,7 @@ export default function AnalysisView() {
                 >
                     Team winrate normalized
                 </span>
-                <div class="p-4 rounded-md bg-[#191919] w-1/2 max-w-2xl h-64">
+                <div class="p-4 rounded-md bg-primary w-1/2 max-w-2xl h-64">
                     <ScalingChart />
                 </div>
             </div>

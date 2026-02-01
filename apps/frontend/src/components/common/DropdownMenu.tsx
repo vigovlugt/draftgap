@@ -27,7 +27,7 @@ export function DropdownMenuSubTrigger(
         <DropdownMenuPrimitive.SubTrigger
             {...props}
             class={cn(
-                "relative flex select-none items-center px-3 py-1.5 text-lg outline-none hover:bg-neutral-700 transition-colors ui-disabled:pointer-events-none ui-disabled:opacity-50 uppercase",
+                "relative flex select-none items-center px-3 py-1.5 text-lg outline-hidden hover:bg-neutral-700 transition-colors ui-disabled:pointer-events-none ui-disabled:opacity-50 uppercase",
                 {
                     "pl-8": props.inset,
                 },
@@ -53,7 +53,7 @@ export function DropdownMenuSubContent(
             <DropdownMenuPrimitive.SubContent
                 {...props}
                 class={cn(
-                    "z-50 min-w-[8rem] overflow-hidden rounded-md border border-white/10 bg-neutral-800 py-1.5 animate-leave ui-expanded:animate-enter",
+                    "z-50 min-w-32 overflow-hidden rounded-md border border-white/10 bg-neutral-800 py-1.5 animate-leave ui-expanded:animate-enter",
                     props.class
                 )}
             >
@@ -71,7 +71,7 @@ export function DropdownMenuContent(
             <DropdownMenuPrimitive.Content
                 {...props}
                 class={cn(
-                    "z-50 min-w-[8rem] overflow-hidden rounded-md border border-white/10 bg-neutral-800 py-1.5 animate-leave ui-expanded:animate-enter",
+                    "z-50 min-w-32 overflow-hidden rounded-md border border-white/10 bg-neutral-800 py-1.5 animate-leave ui-expanded:animate-enter",
                     props.class
                 )}
             >
@@ -90,7 +90,7 @@ export function DropdownMenuItem(
         <DropdownMenuPrimitive.Item
             {...props}
             class={cn(
-                "relative flex select-none items-center px-3 py-1.5 text-lg outline-none hover:bg-neutral-700 transition-colors ui-disabled:pointer-events-none ui-disabled:opacity-50 uppercase",
+                "relative flex select-none items-center px-3 py-1.5 text-lg outline-hidden hover:bg-neutral-700 transition-colors ui-disabled:pointer-events-none ui-disabled:opacity-50 uppercase",
                 {
                     "pl-8": props.inset,
                 },
@@ -109,7 +109,7 @@ export function DropdownMenuCheckboxItem(
         <DropdownMenuPrimitive.CheckboxItem
             {...props}
             class={cn(
-                "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-lg outline-none transition-colors focus:bg-accent focus:text-accent-foreground ui-disabled:pointer-events-none ui-disabled:opacity-50",
+                "relative flex cursor-default select-none items-center rounded-xs py-1.5 pl-8 pr-2 text-lg outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground ui-disabled:pointer-events-none ui-disabled:opacity-50",
                 props.class
             )}
         >
@@ -129,7 +129,7 @@ export function DropdownMenuRadioItem(
         <DropdownMenuPrimitive.RadioItem
             {...props}
             class={cn(
-                "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-lg outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                "relative flex cursor-default select-none items-center rounded-xs py-1.5 pl-8 pr-2 text-lg outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground ui-disabled:pointer-events-none ui-disabled:opacity-50",
                 props.class
             )}
         >

@@ -1,6 +1,72 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin '@kobalte/tailwindcss';
+
+@theme {
+  --color-primary: #191919;
+  --color-secondary: #d6b598;
+  --color-tertiary: #ffd700;
+  --color-background: #eeeeee;
+  --color-text: #f4f4f4;
+  --color-ally: #3b82f6;
+  --color-opponent: #ef4444;
+
+  --color-winrate-shiggo: #ff4e50;
+  --color-winrate-meh: #fcb1b2;
+  --color-winrate-okay: #fafafa;
+  --color-winrate-good: #7ea4f4;
+  --color-winrate-great: #3273fa;
+  --color-winrate-volxd: #ff9b00;
+
+  --font-header: 'Oswald', sans-serif;
+  --font-body:
+    'OpenSans', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+  --animate-enter: enter 0.15s ease-out;
+  --animate-leave: leave 0.1s ease-in forwards;
+  --animate-dialog-enter: enter 0.3s ease-out;
+  --animate-dialog-leave: leave 0.2s ease-in forwards;
+
+  @keyframes enter {
+    0% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  @keyframes leave {
+    100% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 @layer base {
     body {

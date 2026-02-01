@@ -15,7 +15,7 @@ export function TeamSelector() {
     }
 
     return (
-        <span class="isolate inline-flex rounded-md shadow-sm">
+        <span class="isolate inline-flex rounded-md shadow-xs">
             <For each={TEAMS}>
                 {(team, i) => (
                     <button
@@ -25,7 +25,7 @@ export function TeamSelector() {
                             "rounded-r-md": i() === TEAMS.length - 1,
                             "rounded-l-md": i() === 0,
                             "-ml-px": i() !== 0,
-                            "text-white !bg-neutral-700":
+                            "text-white bg-neutral-700!":
                                 selection.team === team,
                         }}
                         onClick={() => selectTeam(team)}

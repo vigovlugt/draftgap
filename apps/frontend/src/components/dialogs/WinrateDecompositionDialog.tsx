@@ -19,10 +19,10 @@ export const WinrateDecompositionDialog: Component<Props> = (props) => {
                 <DialogTitle>Winrate Decomposition</DialogTitle>
             </DialogHeader>
             <div
-                class={`grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-3`}
+                class={`grid overflow-hidden rounded-lg bg-primary grid-cols-2 sm:grid-cols-3`}
             >
                 <SummaryCard
-                    class="!py-2"
+                    class="py-2!"
                     icon={presentationChartLine}
                     title="Draftgap winrate"
                     rating={props.data.rating}
@@ -35,7 +35,7 @@ export const WinrateDecompositionDialog: Component<Props> = (props) => {
                     }
                 />
                 <SummaryCard
-                    class="!py-2"
+                    class="py-2!"
                     icon={presentationChartLine}
                     title="Observed winrate"
                     rating={winrateToRating(props.data.wins / props.data.games)}
@@ -47,7 +47,7 @@ export const WinrateDecompositionDialog: Component<Props> = (props) => {
                     }
                 />
                 <SummaryCard
-                    class="!py-2"
+                    class="py-2!"
                     icon={hashtag}
                     title="Observed games"
                     number={Math.ceil(props.data.games)}

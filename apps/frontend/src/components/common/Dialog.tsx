@@ -37,7 +37,7 @@ export function DialogContent(
 ) {
     return (
         <DialogPortal>
-            <DialogOverlay class="ui-expanded:animate-enter animate-leave !scale-100" />
+            <DialogOverlay class="ui-expanded:animate-enter animate-leave scale-100!" />
             <DialogPrimitives.Content
                 {...props}
                 class={cn(
@@ -47,7 +47,7 @@ export function DialogContent(
             >
                 {props.children}
                 <Show when={props.canClose ?? true}>
-                    <DialogPrimitives.CloseButton class="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none">
+                    <DialogPrimitives.CloseButton class="absolute right-4 top-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none">
                         <Icon path={xMark} class="h-[24px] text-neutral-400" />
                     </DialogPrimitives.CloseButton>
                 </Show>

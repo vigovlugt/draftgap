@@ -52,7 +52,7 @@ const SummonerSpells: Component<{ setId: string }> = (props) => {
 
     return (
         <button
-            class="flex flex-col flex-shrink-0 gap-1 text-sm items-center justify-between"
+            class="flex flex-col shrink-0 gap-1 text-sm items-center justify-between"
             classList={{
                 "opacity-20":
                     data().games / partialBuildDataset()!.games < 0.01,
@@ -71,7 +71,7 @@ const SummonerSpells: Component<{ setId: string }> = (props) => {
                     }/img/spell/${
                         dataset()!.summonerSpellData[spells()[0]].id
                     }.png`}
-                    class="w-12 h-12 rounded"
+                    class="w-12 h-12 rounded-sm"
                 />
                 <img
                     src={`https://ddragon.leagueoflegends.com/cdn/${
@@ -79,7 +79,7 @@ const SummonerSpells: Component<{ setId: string }> = (props) => {
                     }/img/spell/${
                         dataset()!.summonerSpellData[spells()[1]].id
                     }.png`}
-                    class="w-12 h-12 rounded"
+                    class="w-12 h-12 rounded-sm"
                 />
             </div>
             <div>

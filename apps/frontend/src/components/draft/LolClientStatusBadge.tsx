@@ -70,7 +70,7 @@ export const LolClientStatusBadge: Component<Props> = (props) => {
                             Admin error:
                             <br />
                             <span
-                                class="bg-neutral-800 px-2 py-1 rounded"
+                                class="bg-neutral-800 px-2 py-1 rounded-sm"
                                 style={{ "font-family": "monospace" }}
                             >
                                 {clientError() ?? "No error"}

@@ -145,12 +145,12 @@ export const BuildSummaryCards: Component<
         <div
             {...props}
             class={cn(
-                "grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-3",
+                "grid overflow-hidden rounded-lg bg-primary grid-cols-2 sm:grid-cols-3",
                 props.class
             )}
         >
             <SummaryCard
-                class="!py-2"
+                class="py-2!"
                 icon={user}
                 title={title()}
                 rating={baseRating()}
@@ -163,7 +163,7 @@ export const BuildSummaryCards: Component<
                 }
             />
             <SummaryCard
-                class="!py-2"
+                class="py-2!"
                 icon={arrowsRightLeft}
                 title="Matchups"
                 rating={matchupRating()}
@@ -177,7 +177,7 @@ export const BuildSummaryCards: Component<
                 }
             />
             <SummaryCard
-                class="!py-2"
+                class="py-2!"
                 icon={presentationChartLine}
                 title="Total"
                 rating={totalRating()}

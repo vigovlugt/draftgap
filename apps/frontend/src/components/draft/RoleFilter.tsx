@@ -17,7 +17,7 @@ export function RoleFilter(props: ComponentProps<"span">) {
     return (
         <span
             {...props}
-            class={cn("isolate inline-flex rounded-md shadow-sm", props.class)}
+            class={cn("isolate inline-flex rounded-md shadow-xs", props.class)}
         >
             <For each={ROLES}>
                 {(role, i) => (
@@ -28,7 +28,7 @@ export function RoleFilter(props: ComponentProps<"span">) {
                             "rounded-r-md": i() === ROLES.length - 1,
                             "rounded-l-md": i() === 0,
                             "-ml-px": i() !== 0,
-                            "text-white !bg-neutral-700": roleFilter() === role,
+                            "text-white bg-neutral-700!": roleFilter() === role,
                         }}
                         onClick={() =>
                             roleFilter() === role

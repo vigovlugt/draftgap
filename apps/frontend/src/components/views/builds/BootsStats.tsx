@@ -57,7 +57,7 @@ const Boot: Component<{ itemId: number }> = (props) => {
                 src={`https://ddragon.leagueoflegends.com/cdn/${
                     dataset()!.version
                 }/img/item/${props.itemId}.png`}
-                class="w-12 h-12 rounded"
+                class="w-12 h-12 rounded-sm"
             />
             <div>
                 <div class={`${getRatingClass(result().totalRating)}`}>

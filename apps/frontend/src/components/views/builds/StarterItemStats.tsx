@@ -58,7 +58,7 @@ const StarterItem: Component<{ setId: string }> = (props) => {
 
     return (
         <button
-            class="flex flex-col flex-shrink-0 gap-1 text-sm items-center justify-between"
+            class="flex flex-col shrink-0 gap-1 text-sm items-center justify-between"
             classList={{
                 "opacity-20":
                     data().games / partialBuildDataset()!.games < 0.01,
@@ -85,7 +85,7 @@ const StarterItem: Component<{ setId: string }> = (props) => {
                                 src={`https://ddragon.leagueoflegends.com/cdn/${
                                     dataset()!.version
                                 }/img/item/${id}.png`}
-                                class="w-12 h-12 rounded"
+                                class="w-12 h-12 rounded-sm"
                             />
 
                             <Show when={number > 1}>

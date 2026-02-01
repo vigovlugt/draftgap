@@ -25,7 +25,7 @@ export const Toast: Component<Props> = (props) => {
         >
             <div class="p-2">
                 <div class="flex items-start">
-                    <div class="flex-shrink-0 pt-[4px]">
+                    <div class="shrink-0 pt-[4px]">
                         <Icon path={props.icon} class="w-6 text-neutral-400" />
                     </div>
                     <div class="ml-2 w-0 flex-1 pt-0.5">
@@ -57,7 +57,7 @@ export const Toast: Component<Props> = (props) => {
                             </div>
                         </Show>
                     </div>
-                    <div class="ml-4 flex-shrink-0 flex">
+                    <div class="ml-4 shrink-0 flex">
                         <button
                             class="rounded-md inline-flex text-gray-400 hover:text-gray-500 transition ease-out duration-150"
                             onClick={() => toast.dismiss(props.t.id)}

@@ -201,7 +201,7 @@ export default function DraftTable() {
                         class="w-6 inline group-hover:opacity-80 transition duration-200 ease-out"
                         classList={{
                             "opacity-50": !favouriteFilter(),
-                            "!opacity-100": favouriteFilter(),
+                            "opacity-100!": favouriteFilter(),
                         }}
                     />
                 </button>
@@ -217,7 +217,7 @@ export default function DraftTable() {
                         fallback={
                             <Icon
                                 path={starOutline}
-                                class="w-6 opacity-0 group-hover/row:opacity-50 transition duration-200 ease-out group-hover/cell:!opacity-80"
+                                class="w-6 opacity-0 group-hover/row:opacity-50 transition duration-200 ease-out group-hover/cell:opacity-80!"
                             />
                         }
                     >

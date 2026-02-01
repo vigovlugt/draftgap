@@ -55,7 +55,7 @@ export function Search() {
 
     return (
         <div class="flex rounded-md flex-1">
-            <div class="relative flex flex-grow items-stretch">
+            <div class="relative flex grow items-stretch">
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                     <Icon
                         path={magnifyingGlass}

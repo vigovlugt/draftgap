@@ -35,7 +35,7 @@ export const SummaryCard = (
     const colorClasses = () => {
         if (!props.team) return "bg-[#101010]";
 
-        return props.team === "ally" ? "bg-[#3c82f6]" : "bg-[#ef4444]";
+        return props.team === "ally" ? "bg-[#3c82f6]" : "bg-opponent";
     };
 
     return (
@@ -89,7 +89,7 @@ export const DraftSummaryCards = (
         <div
             {...props}
             class={cn(
-                "grid divide-neutral-700 overflow-hidden rounded-lg bg-[#191919] grid-cols-2 md:grid-cols-4 md:divide-x",
+                "grid divide-neutral-700 overflow-hidden rounded-lg bg-primary grid-cols-2 md:grid-cols-4 md:divide-x",
                 props.class
             )}
         >
@@ -196,19 +196,19 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
         <div
             {...props}
             class={cn(
-                "grid overflow-hidden rounded-lg bg-[#191919] grid-cols-2 sm:grid-cols-4",
+                "grid overflow-hidden rounded-lg bg-primary grid-cols-2 sm:grid-cols-4",
                 props.class
             )}
         >
             <SummaryCard
-                class="!py-2"
+                class="py-2!"
                 icon={user}
                 title="Champion"
                 rating={baseChampionRating()}
                 tooltip={<>{capitalize(name())} base winrate</>}
             />
             <SummaryCard
-                class="!py-2"
+                class="py-2!"
                 icon={arrowsRightLeft}
                 title="Matchups"
                 rating={matchupRating()}
@@ -221,7 +221,7 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
                 }
             />
             <SummaryCard
-                class="!py-2"
+                class="py-2!"
                 icon={users}
                 title="Duos"
                 rating={duoRating()}
@@ -234,7 +234,7 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
                 }
             />
             <SummaryCard
-                class="!py-2"
+                class="py-2!"
                 icon={presentationChartLine}
                 title="Winrate"
                 rating={totalRating()}

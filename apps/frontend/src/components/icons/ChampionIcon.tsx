@@ -15,7 +15,7 @@ export function ChampionIcon(
     return (
         <div
             {...other}
-            class={cn("relative overflow-hidden rounded", props.class)}
+            class={cn("relative overflow-hidden rounded-sm", props.class)}
             style={{
                 width: props.size + "px",
                 height: props.size + "px",

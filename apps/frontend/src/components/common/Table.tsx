@@ -48,7 +48,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                     "divide-y divide-neutral-700": rows.length > 0,
                 }}
             >
-                <thead class="bg-neutral-900 sticky top-0 z-[1]">
+                <thead class="bg-neutral-900 sticky top-0 z-1">
                     <For each={props.table.getHeaderGroups()}>
                         {(headerGroup) => (
                             <tr>

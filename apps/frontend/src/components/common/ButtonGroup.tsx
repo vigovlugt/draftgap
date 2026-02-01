@@ -27,7 +27,7 @@ export function ButtonGroup<T>(
         <div
             {...externalProps}
             class={cn(
-                "isolate inline-flex rounded-md shadow-sm ",
+                "isolate inline-flex rounded-md shadow-xs ",
                 externalProps.class
             )}
         >

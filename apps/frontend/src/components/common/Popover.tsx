@@ -13,7 +13,7 @@ export function PopoverContent(props: PopoverContentProps) {
         <PopoverPrimitive.Portal>
             <PopoverPrimitive.Content
                 class={cn(
-                    "z-50 w-72 rounded-md border border-white/10 bg-neutral-800 p-4 shadow-md outline-none animate-leave ui-expanded:animate-enter ",
+                    "z-50 w-72 rounded-md border border-white/10 bg-neutral-800 p-4 shadow-md outline-hidden animate-leave ui-expanded:animate-enter ",
                     props.class
                 )}
                 {...props}

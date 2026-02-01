@@ -114,14 +114,14 @@ export const BuildEntityCell = (props: Props) => {
                 <img
                     src={imageSrc()!}
                     alt={name()}
-                    class="h-[36px] w-36px] rounded"
+                    class="h-[36px] w-36px] rounded-sm"
                 />
             </Show>
             <Show when={imageSrc2()}>
                 <img
                     src={imageSrc2()!}
                     alt={name()}
-                    class="h-[36px] w-36px] rounded"
+                    class="h-[36px] w-36px] rounded-sm"
                 />
             </Show>
             <Show when={!props.hideName || !imageSrc()}>

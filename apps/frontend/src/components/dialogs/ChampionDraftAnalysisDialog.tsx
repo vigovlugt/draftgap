@@ -53,7 +53,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                     <ChampionIcon
                         championKey={props.championKey}
                         size={120 / 1.1}
-                        class="!rounded-full"
+                        class="rounded-full!"
                     />
                 </div>
                 <div class="flex flex-col justify-center">
