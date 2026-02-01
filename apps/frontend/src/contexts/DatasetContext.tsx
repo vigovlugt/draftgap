@@ -18,6 +18,7 @@ const fetchDataset = async (name: "30-days" | "current-patch") => {
         const json = await response.json();
         return json as Dataset;
     } catch (err) {
+        console.error(err);
         return undefined;
     }
 };
@@ -32,7 +33,9 @@ function createDatasetContext() {
 
     createEffect(() => {
         (window as any).DRAFTGAP_DEBUG = (window as any).DRAFTGAP_DEBUG || {};
+        // eslint-disable-next-line solid/reactivity
         (window as any).DRAFTGAP_DEBUG.dataset = dataset;
+        // eslint-disable-next-line solid/reactivity
         (window as any).DRAFTGAP_DEBUG.dataset30Days = dataset30Days;
     });
 

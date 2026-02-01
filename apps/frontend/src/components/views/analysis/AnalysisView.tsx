@@ -10,6 +10,7 @@ import { Team } from "@draftgap/core/src/models/Team";
 import { useUser } from "../../../contexts/UserContext";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { ScalingChart } from "./ScalingChart";
+// eslint-disable-next-line 
 tooltip;
 
 export default function AnalysisView() {

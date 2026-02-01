@@ -56,7 +56,7 @@ export function DesktopAppDialog(props: Props) {
         console.log(props.open);
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const nav = navigator as any;
     const isMac =
         (nav?.userAgentData?.platform || navigator?.platform || "unknown")

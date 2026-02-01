@@ -13,6 +13,7 @@ import { cn } from "../../utils/style";
 import { displayNameByStatsSite, linkByStatsSite } from "../../utils/sites";
 import { useUser } from "../../contexts/UserContext";
 import { championName } from "../../utils/i18n";
+// eslint-disable-next-line 
 tooltip;
 
 type Props = {
@@ -87,7 +88,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
             >
                 <h3
                     class="text-3xl uppercase ml-4"
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                     
                     // @ts-ignore
                     use:tooltip={{
                         content: <>Winrates of all {name()} matchups</>,
@@ -97,7 +98,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                 </h3>
                 <p
                     class="text-neutral-500 uppercase mb-1 ml-4"
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                     
                     // @ts-ignore
                     use:tooltip={{
                         content: (
@@ -145,7 +146,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
             <div id="duo-champion-result" class="overflow-x-hidden -m-1 p-1">
                 <h3
                     class="text-3xl uppercase mb-1 ml-4"
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                     
                     // @ts-ignore
                     use:tooltip={{
                         content: <>Winrates of all {name()} duos</>,

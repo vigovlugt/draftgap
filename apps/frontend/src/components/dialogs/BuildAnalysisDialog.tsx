@@ -6,6 +6,7 @@ import { tooltip } from "../../directives/tooltip";
 import { useDataset } from "../../contexts/DatasetContext";
 import { DialogContent, DialogTitle } from "../common/Dialog";
 import { Show } from "solid-js";
+// eslint-disable-next-line 
 tooltip;
 
 export function BuildAnalysisDialog() {

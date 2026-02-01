@@ -8,6 +8,7 @@ import { tooltip } from "../../directives/tooltip";
 import { capitalize } from "../../utils/strings";
 import { getRatingClass } from "../../utils/rating";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
+// eslint-disable-next-line 
 tooltip;
 
 interface IProps {

@@ -283,7 +283,7 @@ const DraftContext = createContext<ReturnType<typeof createDraftContext>>();
 
 export function DraftProvider(props: { children: JSXElement }) {
     const ctx = createDraftContext();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const DRAFTGAP_DEBUG = ((window as any).DRAFTGAP_DEBUG = ctx) as any;
     DRAFTGAP_DEBUG.test = () => {
         batch(() => {

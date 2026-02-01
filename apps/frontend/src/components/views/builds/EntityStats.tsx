@@ -20,19 +20,23 @@ export const useEntityStats = <T,>(props: Props<T>) => {
         switch (currentSort()) {
             case "rating-asc":
                 return props.data.sort(
+                    // eslint-disable-next-line solid/reactivity
                     (a, b) => props.getRating(a) - props.getRating(b)
                 );
             case "rating-desc":
             default:
                 return props.data.sort(
+                    // eslint-disable-next-line solid/reactivity
                     (a, b) => props.getRating(b) - props.getRating(a)
                 );
             case "pickrate-asc":
                 return props.data.sort(
+                    // eslint-disable-next-line solid/reactivity
                     (a, b) => props.getGames(a) - props.getGames(b)
                 );
             case "pickrate-desc":
                 return props.data.sort(
+                    // eslint-disable-next-line solid/reactivity
                     (a, b) => props.getGames(b) - props.getGames(a)
                 );
         }

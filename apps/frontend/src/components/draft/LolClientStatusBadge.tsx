@@ -1,6 +1,5 @@
 import { Component, Match, Switch } from "solid-js";
 import { ClientState, useLolClient } from "../../contexts/LolClientContext";
-import { createErrorToast } from "../../utils/toast";
 import { Badge } from "../common/Badge";
 import { useMedia } from "../../hooks/useMedia";
 import {

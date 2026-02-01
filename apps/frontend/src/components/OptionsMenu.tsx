@@ -1,4 +1,3 @@
-import { openUrl } from '@tauri-apps/plugin-opener';
 import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/solid";
 import {

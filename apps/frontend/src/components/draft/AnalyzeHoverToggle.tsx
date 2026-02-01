@@ -4,6 +4,7 @@ import { Icon } from "solid-heroicons";
 import { eye, eyeSlash } from "solid-heroicons/solid";
 import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
+// eslint-disable-next-line 
 tooltip;
 
 export function AnalyzeHoverToggle() {

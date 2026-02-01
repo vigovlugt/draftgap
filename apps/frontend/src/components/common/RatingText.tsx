@@ -3,6 +3,7 @@ import { formatRating, getRatingClass } from "../../utils/rating";
 import { Icon } from "solid-heroicons";
 import { exclamationTriangle } from "solid-heroicons/solid-mini";
 import { tooltip } from "../../directives/tooltip";
+// eslint-disable-next-line 
 tooltip;
 
 type Props = {
@@ -22,7 +23,7 @@ export const RatingText: Component<Props> = (props) => {
             <Show when={props.games !== undefined && props.games < 1000}>
                 <div
                     class="absolute -top-1 -right-6"
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                     
                     // @ts-ignore
                     use:tooltip={{
                         content:

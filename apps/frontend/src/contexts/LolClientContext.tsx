@@ -346,7 +346,7 @@ export const createLolClientContext = () => {
                 setClientError(undefined);
             } catch (e) {
                 setClientState(ClientState.NotFound);
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                 
                 setClientError((e as any).toString());
             }
 

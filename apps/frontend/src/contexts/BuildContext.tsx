@@ -150,9 +150,9 @@ export function createBuildContext() {
 
     const partialBuildDataset = () => query.data?.[0];
     const fullBuildDataset = () => query.data?.[1];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     (window as any).DRAFTGAP_DEBUG.fullBuildDataset = fullBuildDataset;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     (window as any).DRAFTGAP_DEBUG.partialBuildDataset = partialBuildDataset;
 
     const buildAnalysisResult = createMemo(() => {

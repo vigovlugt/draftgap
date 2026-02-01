@@ -14,6 +14,7 @@ import { capitalize } from "../../../utils/strings";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { cn } from "../../../utils/style";
+// eslint-disable-next-line 
 tooltip;
 
 export const SummaryCard = (
@@ -44,7 +45,7 @@ export const SummaryCard = (
                 "px-4 py-5 flex gap-4 items-center text-left",
                 props.class
             )}
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+             
             // @ts-ignore
             use:tooltip={{
                 content: props.tooltip,

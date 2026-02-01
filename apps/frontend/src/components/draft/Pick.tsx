@@ -14,6 +14,7 @@ import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { championName } from "../../utils/i18n";
 import { useMedia } from "../../hooks/useMedia";
+// eslint-disable-next-line 
 tooltip;
 
 type Props = {
