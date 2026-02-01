@@ -84,3 +84,4 @@ export async function main() {
 
     console.log("Updated tauri updater latest.json");
 }
+main();
