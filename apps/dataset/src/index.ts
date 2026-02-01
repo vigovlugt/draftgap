@@ -2,11 +2,11 @@ import "dotenv/config";
 import { getChampionDataFromLolalytics } from "./lolalytics";
 import {
     deleteDatasetMatchupSynergyData,
-    Dataset,
+    type Dataset,
     removeRankBias,
 } from "@draftgap/core/src/models/dataset/Dataset";
-import { ItemData } from "@draftgap/core/src/models/dataset/ItemData";
-import {
+import type { ItemData } from "@draftgap/core/src/models/dataset/ItemData";
+import type {
     RuneData,
     RunePathData,
 } from "@draftgap/core/src/models/dataset/RuneData";
@@ -16,13 +16,13 @@ import {
     getChampions,
     getRunes,
     getItems,
-    RiotRunePath,
-    RiotItem,
-    RiotChampion,
+    type RiotRunePath,
+    type RiotItem,
+    type RiotChampion,
     getSummonerSpells,
-    RiotSummonerSpell,
+    type RiotSummonerSpell,
 } from "./riot";
-import { SummonerSpellData } from "@draftgap/core/src/models/dataset/SummonerSpellData";
+import type { SummonerSpellData } from "@draftgap/core/src/models/dataset/SummonerSpellData";
 
 const BATCH_SIZE = 10;
 
@@ -242,8 +242,8 @@ async function getDataset(
             if (!champion) {
                 console.log(
                     "Skipping champion " +
-                        c.name +
-                        " as it lolalytics has no data for it"
+                    c.name +
+                    " as it lolalytics has no data for it"
                 );
                 continue;
             }

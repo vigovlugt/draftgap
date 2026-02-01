@@ -1,5 +1,5 @@
 import { retry } from "../utils";
-import { LolalyticsRole } from "./roles";
+import { type LolalyticsRole } from "./roles";
 
 export interface LolalyticsChampionResponse {
     header: Header;
@@ -261,9 +261,9 @@ export async function getLolalyticsChampion(
     } catch (e) {
         throw new Error(
             "Error parsing JSON for lolalytics champion " +
-                championKey +
-                " url: " +
-                url,
+            championKey +
+            " url: " +
+            url,
             {
                 cause: e,
             }

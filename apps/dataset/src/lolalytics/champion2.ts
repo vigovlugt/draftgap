@@ -1,5 +1,5 @@
 import { retry } from "../utils";
-import { LolalyticsRole } from "./roles";
+import type { LolalyticsRole } from "./roles";
 
 export interface LolalyticsChampion2Response {
     skills: Skills;

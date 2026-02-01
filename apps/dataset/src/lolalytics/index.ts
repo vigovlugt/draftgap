@@ -1,15 +1,15 @@
-import { ChampionData } from "@draftgap/core/src/models/dataset/ChampionData";
-import { ChampionSynergyData } from "@draftgap/core/src/models/dataset/ChampionSynergyData";
-import { ChampionMatchupData } from "@draftgap/core/src/models/dataset/ChampionMatchupData";
+import type { ChampionData } from "@draftgap/core/src/models/dataset/ChampionData";
+import type { ChampionSynergyData } from "@draftgap/core/src/models/dataset/ChampionSynergyData";
+import type { ChampionMatchupData } from "@draftgap/core/src/models/dataset/ChampionMatchupData";
 import { getRoleFromString, Role } from "@draftgap/core/src/models/Role";
 import {
-    ChampionRoleData,
+    type ChampionRoleData,
     defaultChampionRoleData,
 } from "@draftgap/core/src/models/dataset/ChampionRoleData";
-import { LOLALYTICS_ROLES, LolalyticsRole } from "./roles";
+import { LOLALYTICS_ROLES, type LolalyticsRole } from "./roles";
 import { getLolalyticsQwikChampion } from "./qwik";
 import { getLolalyticsQwikChampion2 } from "./qwik-champion2";
-import { RiotChampion } from "../riot";
+import type { RiotChampion } from "../riot";
 
 export async function getChampionDataFromLolalytics(
     version: string,
@@ -117,13 +117,13 @@ export async function getChampionDataFromLolalytics(
                                                 games,
                                             ] = d;
                                             const synergy: ChampionSynergyData =
-                                                {
-                                                    championKey:
-                                                        championKey.toString(),
-                                                    games,
-                                                    wins:
-                                                        games * (winRate / 100),
-                                                };
+                                            {
+                                                championKey:
+                                                    championKey.toString(),
+                                                games,
+                                                wins:
+                                                    games * (winRate / 100),
+                                            };
 
                                             return [d[0], synergy];
                                         })

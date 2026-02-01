@@ -1,14 +1,14 @@
 import {
     GetObjectCommand,
-    GetObjectCommandInput,
+    type GetObjectCommandInput,
     PutBucketCorsCommand,
     PutObjectCommand,
-    PutObjectCommandInput,
+    type PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
 import { client } from "./client";
 import {
     DATASET_VERSION,
-    Dataset,
+    type Dataset,
 } from "@draftgap/core/src/models/dataset/Dataset";
 import { bytesToHumanReadable } from "../utils";
 
@@ -40,8 +40,7 @@ export async function storeDataset(
         byteLength: params.Body.length,
     };
     console.log(
-        `Stored dataset ${params.Bucket}/${
-            params.Key
+        `Stored dataset ${params.Bucket}/${params.Key
         } of size ${bytesToHumanReadable(serialized.byteLength)}`
     );
 

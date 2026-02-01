@@ -1,5 +1,5 @@
 import { retry } from "../utils";
-import { LolalyticsRole } from "./roles";
+import { type LolalyticsRole } from "./roles";
 
 export type LolalyticsChampion2Response = {
     team_h: string[];
