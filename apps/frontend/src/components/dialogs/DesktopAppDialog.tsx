@@ -1,4 +1,4 @@
-import { Show, Switch, Match } from "solid-js";
+import { Show, Switch, Match, createEffect } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 import { LoadingIcon } from "../icons/LoadingIcon";
 import { buttonVariants } from "../common/Button";
@@ -31,9 +31,14 @@ const WindowsLogo = () => {
     );
 };
 
-export function DesktopAppDialog() {
+type Props = {
+    open: boolean;
+};
+
+export function DesktopAppDialog(props: Props) {
     const releaseQuery = createQuery(() => ({
         queryKey: ["latest-release"],
+        enabled: props.open,
         queryFn: async () => {
             const octokit = new Octokit();
             const response = await octokit.rest.repos.getLatestRelease({ owner: "vigovlugt", repo: "draftgap" });
@@ -47,6 +52,9 @@ export function DesktopAppDialog() {
             };
         },
     }));
+    createEffect(() => {
+        console.log(props.open);
+    });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const nav = navigator as any;

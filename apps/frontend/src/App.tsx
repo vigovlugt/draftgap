@@ -218,7 +218,7 @@ const App: Component = () => {
                         open={showDownloadModal()}
                         onOpenChange={setShowDownloadModal}
                     >
-                        <DesktopAppDialog />
+                        <DesktopAppDialog open={showDownloadModal()} />
                     </Dialog>
                     <LolClientStatusBadge
                         setShowDownloadModal={setShowDownloadModal}
