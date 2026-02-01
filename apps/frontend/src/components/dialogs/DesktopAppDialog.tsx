@@ -1,7 +1,8 @@
-import { Show } from "solid-js";
+import { Show, createEffect, createSignal } from "solid-js";
 import { buttonVariants } from "../common/Button";
 import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
 import { cn } from "../../utils/style";
+import { Octokit } from "@octokit/rest";
 
 const AppleLogo = () => {
     return (
@@ -28,12 +29,42 @@ const WindowsLogo = () => {
     );
 };
 
-const MAC_DOWNLOAD_URL =
+const FALLBACK_MAC_DOWNLOAD_URL =
     "https://bucket.draftgap.com/releases/DraftGap_latest_x64.dmg";
-const WINDOWS_DOWNLOAD_URL =
+const FALLBACK_WINDOWS_DOWNLOAD_URL =
     "https://bucket.draftgap.com/releases/DraftGap_latest_x64_en-US.msi";
 
 export function DesktopAppDialog() {
+    const [macDownloadUrl, setMacDownloadUrl] = createSignal<string | null>(null);
+    const [windowsDownloadUrl, setWindowsDownloadUrl] = createSignal<string | null>(null);
+
+    createEffect(() => {
+        (async () => {
+            try {
+                const octokit = new Octokit();
+                const response = await octokit.rest.repos.getLatestRelease({
+                    owner: "vigovlugt",
+                    repo: "draftgap",
+                });
+
+                const macAsset = response.data.assets.find((a) =>
+                    a.name.includes("aarch64.dmg")
+                );
+                const windowsAsset = response.data.assets.find((a) =>
+                    a.name.includes("x64_en-US.msi")
+                );
+
+                setMacDownloadUrl(macAsset?.browser_download_url ?? null);
+                setWindowsDownloadUrl(windowsAsset?.browser_download_url ?? null);
+            } catch (error) {
+                console.error("Failed to fetch latest release", error);
+            }
+        })();
+    });
+
+    const macUrl = () => macDownloadUrl() ?? FALLBACK_MAC_DOWNLOAD_URL;
+    const windowsUrl = () => windowsDownloadUrl() ?? FALLBACK_WINDOWS_DOWNLOAD_URL;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const nav = navigator as any;
     const isMac =
@@ -63,7 +94,7 @@ export function DesktopAppDialog() {
                         <a
                             href={
                                 "https://www.virustotal.com/gui/search/" +
-                                encodeURI(encodeURIComponent(MAC_DOWNLOAD_URL!))
+                                encodeURI(encodeURIComponent(macUrl()))
                             }
                             class="text-blue-500"
                             target="_blank"
@@ -81,7 +112,7 @@ export function DesktopAppDialog() {
                     <a
                         href={
                             "https://www.virustotal.com/gui/search/" +
-                            encodeURI(encodeURIComponent(WINDOWS_DOWNLOAD_URL!))
+                            encodeURI(encodeURIComponent(windowsUrl()))
                         }
                         class="text-blue-500"
                         target="_blank"
@@ -98,7 +129,7 @@ export function DesktopAppDialog() {
                 }}
             >
                 <a
-                    href={WINDOWS_DOWNLOAD_URL}
+                    href={windowsUrl()}
                     class={cn(
                         buttonVariants({
                             variant: !isMac ? "primary" : "secondary",
@@ -113,7 +144,7 @@ export function DesktopAppDialog() {
                     Download for windows
                 </a>
                 <a
-                    href={MAC_DOWNLOAD_URL}
+                    href={macUrl()}
                     class={cn(
                         buttonVariants({
                             variant: isMac ? "primary" : "secondary",
