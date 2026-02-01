@@ -5,26 +5,26 @@ This guide is for agentic coding assistants working in this repository. DraftGap
 ## Build, Lint, and Test Commands
 
 ### Root Commands
-- `pnpm typecheck` - Run TypeScript type checking across all packages (uses turbo)
-- `pnpm dev` - Start frontend development server
-- `pnpm tauri` - Run Tauri commands for desktop app
+- `bun typecheck` - Run TypeScript type checking across all packages (uses turbo)
+- `bun dev` - Start frontend development server
+- `bun tauri` - Run Tauri commands for desktop app
 
 ### Frontend Specific (apps/frontend)
-- `pnpm dev` - Start Vite dev server (port 3000)
-- `pnpm build` - Build frontend (runs tsc then vite build)
-- `pnpm serve` - Preview production build
-- `pnpm test` - Run Vitest tests
-- `pnpm test -- <test-file>` - Run a specific test file
-- `pnpm test --run` - Run tests once (non-watch mode)
-- `pnpm lint` - Run ESLint on src directory
-- `pnpm typecheck` - TypeScript type checking (tsc --noEmit)
+- `bun dev` - Start Vite dev server (port 3000)
+- `bun build` - Build frontend (runs tsc then vite build)
+- `bun serve` - Preview production build
+- `bun test` - Run Vitest tests
+- `bun test -- <test-file>` - Run a specific test file
+- `bun test --run` - Run tests once (non-watch mode)
+- `bun lint` - Run ESLint on src directory
+- `bun typecheck` - TypeScript type checking (tsc --noEmit)
 
 ### Core Package Specific (packages/core)
-- `pnpm typecheck` - TypeScript type checking (tsc --noEmit)
+- `bun typecheck` - TypeScript type checking (tsc --noEmit)
 
 ### Running Commands in Specific Packages
-- `pnpm run --filter @draftgap/frontend <command>` - Run command in frontend
-- `pnpm run --filter @draftgap/core <command>` - Run command in core
+- `bun run --filter @draftgap/frontend <command>` - Run command in frontend
+- `bun run --filter @draftgap/core <command>` - Run command in core
 
 ## Code Style Guidelines
 
@@ -97,4 +97,4 @@ This guide is for agentic coding assistants working in this repository. DraftGap
 - LCU API functions invoke Tauri commands
 - Desktop-specific code checks `isDesktop` from `useMedia` hook
 - Workspace package references use `workspace:*` protocol
-- All packages use pnpm@9.2.0
+- All packages use bun@1.3.6

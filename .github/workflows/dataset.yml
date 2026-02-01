@@ -15,23 +15,26 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Install PNPM
-              run: npm install -g pnpm
-
-            - name: Sync node version and setup cache
-              uses: actions/setup-node@v4
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
               with:
-                  node-version: "lts/*"
-                  cache: "pnpm"
+                  bun-version: latest
+
+            - name: Setup cache
+              uses: actions/cache@v4
+              with:
+                  path: |
+                    ~/.bun/install/cache
+                    node_modules
+                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+                  restore-keys: |
+                    ${{ runner.os }}-bun-
 
             - name: Install app dependencies
-              run: pnpm install
-
-            # - name: Install Playwright Browsers
-            #   run: npx playwright install --with-deps
+              run: bun install
 
             - name: Update S3 dataset
-              run: pnpm start
+              run: bun run start
               env:
                   S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
                   S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}

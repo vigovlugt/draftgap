@@ -20,13 +20,6 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v6
 
-            # - name: Install dependencies (ubuntu only)
-            # if: matrix.platform == 'ubuntu-20.04'
-            # # You can remove libayatana-appindicator3-dev if you don't use the system tray feature.
-            # run: |
-            #     sudo apt-get update
-            #     sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev
-
             - name: Rust setup
               uses: dtolnay/rust-toolchain@stable
 
@@ -35,18 +28,25 @@ jobs:
               with:
                   workspaces: "./src-tauri -> target"
 
-            - uses: pnpm/action-setup@v4
-
-            - name: Sync node version and setup cache
-              uses: actions/setup-node@v3
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
               with:
-                  node-version: "lts/*"
-                  cache: "pnpm" # Set this to npm, yarn or pnpm.
+                  bun-version: latest
+
+            - name: Setup cache
+              uses: actions/cache@v4
+              with:
+                  path: |
+                    ~/.bun/install/cache
+                    node_modules
+                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+                  restore-keys: |
+                    ${{ runner.os }}-bun-
 
             - name: Install app dependencies
-              run: pnpm install
+              run: bun install
 
-            - name: Build the app
+            - name: Build app
               uses: tauri-apps/tauri-action@v0
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -58,7 +58,7 @@ jobs:
                   releaseName: "DraftGap v__VERSION__" # tauri-action replaces \_\_VERSION\_\_ with the app version.
                   releaseBody: "# Download DraftGap\n[Windows](https://github.com/vigovlugt/draftgap/releases/download/v__VERSION__/DraftGap___VERSION___x64_en-US.msi)\n[Mac](https://github.com/vigovlugt/draftgap/releases/download/v__VERSION__/DraftGap.app.tar.gz)"
                   projectPath: apps/frontend
-                  tauriScript: pnpm tauri
+                  tauriScript: bun run tauri
 
     publish:
         runs-on: ubuntu-latest
@@ -68,19 +68,26 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v6
 
-            - uses: pnpm/action-setup@v4
-
-            - name: Sync node version and setup cache
-              uses: actions/setup-node@v3
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
               with:
-                  node-version: "lts/*"
-                  cache: "pnpm" # Set this to npm, yarn or pnpm.
+                  bun-version: latest
+
+            - name: Setup cache
+              uses: actions/cache@v4
+              with:
+                  path: |
+                    ~/.bun/install/cache
+                    node_modules
+                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+                  restore-keys: |
+                    ${{ runner.os }}-bun-
 
             - name: Install app dependencies
-              run: pnpm install
+              run: bun install
 
             - name: Update tauri-update gist
-              run: pnpm publish-tauri-update
+              run: bun run publish-tauri-update
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   GIST_TOKEN: ${{ secrets.GIST_TOKEN }}

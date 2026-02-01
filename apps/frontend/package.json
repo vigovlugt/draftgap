@@ -3,14 +3,14 @@
     "version": "3.1.0",
     "type": "module",
     "scripts": {
-        "start": "vite",
-        "dev": "vite",
-        "build": "tsc && vite build",
-        "serve": "vite preview",
+        "start": "bunx --bun vite",
+        "dev": "bunx --bun vite",
+        "build": "bunx --bun vite build",
+        "serve": "bunx --bun vite preview",
         "lint": "eslint .",
         "typecheck": "tsc --noEmit",
-        "update-data": "node -r esbuild-register scripts/update-data.ts",
-        "publish-tauri-update": "tsx scripts/publish-tauri-update.ts",
+        "update-data": "bun run scripts/update-data.ts",
+        "publish-tauri-update": "bunx tsx scripts/publish-tauri-update.ts",
         "tauri-dev": "tauri dev"
     },
     "dependencies": {
@@ -45,7 +45,7 @@
         "@tailwindcss/postcss": "^4.1.18",
         "@tauri-apps/cli": "^2.9.6",
         "@types/gtag.js": "^0.0.20",
-        "@types/node": "^25.1.0",
+        "@types/bun": "latest",
         "esbuild": "^0.27.2",
         "esbuild-register": "^3.5.0",
         "eslint": "^9.39.2",
@@ -58,5 +58,5 @@
         "vite": "^7.3.1",
         "vite-plugin-solid": "^2.11.10"
     },
-    "packageManager": "pnpm@9.2.0"
+    "packageManager": "bun@1.3.6"
 }

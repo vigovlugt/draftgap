@@ -43,7 +43,7 @@ function getPaths(dir: string, fileName: string): string[] {
 export function main() {
     const args = process.argv.slice(2);
     if (args.length !== 1) {
-        console.error("Usage: pnpm bump:version PATCH|MINOR|MAJOR");
+        console.error("Usage: bun bump:version PATCH|MINOR|MAJOR");
         return;
     }
     const versionType = args[0].toUpperCase();

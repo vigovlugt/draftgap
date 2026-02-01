@@ -1,18 +1,19 @@
 {
     "name": "draftgap",
     "version": "3.1.0",
+    "workspaces": ["packages/*", "apps/*"],
     "scripts": {
-        "bump-version": "pnpm typecheck && tsx scripts/bump-version.ts",
+        "bump-version": "bun run typecheck && bunx tsx scripts/bump-version.ts",
         "typecheck": "turbo typecheck",
-        "dev": "pnpm run --filter @draftgap/frontend dev",
-        "tauri": "pnpm run --filter @draftgap/frontend tauri"
+        "dev": "bun run --filter @draftgap/frontend dev",
+        "tauri": "bun run --filter @draftgap/frontend tauri"
     },
     "devDependencies": {
-        "@types/node": "^25.1.0",
+        "@types/bun": "latest",
         "tsx": "^4.21.0"
     },
     "dependencies": {
         "turbo": "^2.8.1"
     },
-    "packageManager": "pnpm@9.2.0"
+    "packageManager": "bun@1.3.6"
 }

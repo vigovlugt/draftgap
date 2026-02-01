@@ -1,13 +1,18 @@
 {
     "compilerOptions": {
-        "lib": ["es2023", "DOM"],
-        "module": "ESNext",
-        "target": "es2022",
-
-        "strict": true,
-        "esModuleInterop": true,
+        "lib": [
+            "ESNext"
+        ],
+        "target": "ESNext",
+        "module": "Preserve",
+        "moduleDetection": "force",
+        "allowJs": true,
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "noEmit": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "moduleResolution": "node"
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
     }
 }
