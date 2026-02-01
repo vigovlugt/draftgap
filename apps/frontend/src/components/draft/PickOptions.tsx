@@ -19,7 +19,6 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "../common/DropdownMenu";
-import { As } from "@kobalte/core";
 import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
 import { For, Show } from "solid-js";
@@ -54,15 +53,15 @@ export function PickOptions(props: { team: Team; index: number }) {
     return (
         <div class="absolute right-0 top-0">
             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <As
-                        component="button"
+                <DropdownMenuTrigger>
+                    <button
                         class={cn(
                             buttonVariants({ variant: "transparent" }),
                             "px-1 py-2",
                         )}
-                    />
-                    <Icon path={ellipsisVertical} class="h-7" />
+                    >
+                        <Icon path={ellipsisVertical} class="h-7" />
+                    </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>
@@ -88,9 +87,9 @@ export function PickOptions(props: { team: Team; index: number }) {
                             <DropdownMenuShortcut>R</DropdownMenuShortcut>
                         </DropdownMenuItem>
                         <DropdownMenuItem disabled={!champion()} asChild>
-                            <As
-                                component="a"
+                            <a
                                 target="_blank"
+                                class="flex items-center"
                                 href={
                                     champion()
                                         ? linkByStatsSite(
@@ -109,7 +108,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                                 <DropdownMenuIcon path={user} />
                                 <span>{config.defaultStatsSite}</span>
                                 <DropdownMenuShortcut>B</DropdownMenuShortcut>
-                            </As>
+                            </a>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             disabled={!champion()}

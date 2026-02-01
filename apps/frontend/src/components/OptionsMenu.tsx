@@ -19,7 +19,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "./common/DropdownMenu";
-import { As } from "@kobalte/core";
 import { cn } from "../utils/style";
 import { buttonVariants } from "./common/Button";
 
@@ -31,15 +30,15 @@ type Props = {
 export const OptionsDropdownMenu: Component<Props> = (props) => {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <As
-                    component="button"
+            <DropdownMenuTrigger>
+                <button
                     class={cn(
                         buttonVariants({ variant: "transparent" }),
                         "px-1 py-2"
                     )}
-                />
-                <Icon path={ellipsisVertical} class="w-7" />
+                >
+                    <Icon path={ellipsisVertical} class="w-7" />
+                </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent class="w-56">
                 <DropdownMenuLabel>Draftgap</DropdownMenuLabel>
@@ -56,22 +55,22 @@ export const OptionsDropdownMenu: Component<Props> = (props) => {
                         <span>FAQ</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <As component="a" href="mailto:vigovlugt+draftgap@gmail.com" target="_blank">
+                        <a href="mailto:vigovlugt+draftgap@gmail.com" target="_blank" class="flex items-center">
                             <DropdownMenuIcon path={envelope} />
                             <span>Contact</span>
-                        </As>
+                        </a>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <As component="a" href="https://leagueofitems.com" target="_blank" >
+                        <a href="https://leagueofitems.com" target="_blank" class="flex items-center">
                             <DropdownMenuIcon path={globeAlt} />
                             <span>LeagueOfItems</span>
-                        </As>
+                        </a>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <As component="a" href="https://www.buymeacoffee.com/vigovlugt" target="_blank" >
+                        <a href="https://www.buymeacoffee.com/vigovlugt" target="_blank" class="flex items-center">
                             <DropdownMenuIcon path={heart} />
                             <span>Donate</span>
-                        </As>
+                        </a>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
             </DropdownMenuContent>

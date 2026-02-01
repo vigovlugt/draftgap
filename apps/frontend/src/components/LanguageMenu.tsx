@@ -10,7 +10,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "./common/DropdownMenu";
-import { As } from "@kobalte/core";
 import { cn } from "../utils/style";
 import { buttonVariants } from "./common/Button";
 import { useUser } from "../contexts/UserContext";
@@ -20,15 +19,15 @@ export const LanguageDropdownMenu: Component = () => {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <As
-                    component="button"
+            <DropdownMenuTrigger>
+                <button
                     class={cn(
                         buttonVariants({ variant: "transparent" }),
                         "px-1 py-2"
                     )}
-                />
-                <Icon path={language} class="w-7" />
+                >
+                    <Icon path={language} class="w-7" />
+                </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent class="w-56">
                 <DropdownMenuLabel>Language</DropdownMenuLabel>

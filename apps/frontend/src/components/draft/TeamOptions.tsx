@@ -13,7 +13,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../common/DropdownMenu";
-import { As } from "@kobalte/core";
 import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
 
@@ -26,15 +25,15 @@ export function TeamOptions(props: Props) {
     return (
         <div class="absolute right-1 top-0">
             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <As
-                        component="button"
+                <DropdownMenuTrigger>
+                    <button
                         class={cn(
                             buttonVariants({ variant: "transparent" }),
                             "px-1 py-2"
                         )}
-                    />
-                    <Icon path={ellipsisVertical} class="h-7" />
+                    >
+                        <Icon path={ellipsisVertical} class="h-7" />
+                    </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>{props.team} team</DropdownMenuLabel>
