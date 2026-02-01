@@ -10,7 +10,7 @@ type HelpPopoverParams = {
 
 export function tooltip(
     el: HTMLElement,
-    accessor: Accessor<HelpPopoverParams>
+    accessor: Accessor<HelpPopoverParams>,
 ) {
     const {
         setPopoverContent,

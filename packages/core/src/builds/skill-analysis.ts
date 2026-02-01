@@ -10,31 +10,35 @@ import { EntityAnalysisResult, analyzeEntity } from "./entity-analysis";
 export type SkillsAnalysisResult = {
     order: Record<SkillOrder, EntityAnalysisResult>;
     levels: Record<Skill, EntityAnalysisResult>[];
-}
+};
 
 export function analyzeSkills(
     partialBuildDataset: PartialBuildDataset,
     fullBuildDataset: FullBuildDataset,
-    config: AnalyzeDraftConfig
+    config: AnalyzeDraftConfig,
 ): SkillsAnalysisResult {
     const skills = {
         levels: [] as Record<Skill, EntityAnalysisResult>[],
         order: {},
-    } as SkillsAnalysisResult
+    } as SkillsAnalysisResult;
 
-    for (const skill of Object.keys(partialBuildDataset.skills.order) as SkillOrder[]) {
+    for (const skill of Object.keys(
+        partialBuildDataset.skills.order,
+    ) as SkillOrder[]) {
         skills.order[skill] = analyzeEntity(
             partialBuildDataset,
             fullBuildDataset,
             config,
             getSkillOrderStats,
-            skill
+            skill,
         );
     }
 
     for (let i = 0; i < partialBuildDataset.skills.level.length; i++) {
         skills.levels.push({} as Record<Skill, EntityAnalysisResult>);
-        for (const skill of Object.keys(partialBuildDataset.skills.level[i]) as Skill[]) {
+        for (const skill of Object.keys(
+            partialBuildDataset.skills.level[i],
+        ) as Skill[]) {
             skills.levels[i][skill] = analyzeEntity(
                 partialBuildDataset,
                 fullBuildDataset,
@@ -43,7 +47,7 @@ export function analyzeSkills(
                 {
                     level: i,
                     skill,
-                }
+                },
             );
         }
     }
@@ -51,10 +55,13 @@ export function analyzeSkills(
     return skills;
 }
 
-function getSkillLevelStats(data: PartialBuildDataset, skill: {
-    level: number;
-    skill: Skill;
-}) {
+function getSkillLevelStats(
+    data: PartialBuildDataset,
+    skill: {
+        level: number;
+        skill: Skill;
+    },
+) {
     return data.skills.level[skill.level][skill.skill] ?? { wins: 0, games: 0 };
 }
 

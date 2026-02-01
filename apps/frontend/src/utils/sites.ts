@@ -14,7 +14,7 @@ const LOLALYTICS_ROLES = [
 export const linkByStatsSite = (
     statsSite: StatsSite,
     champion: string,
-    role: Role
+    role: Role,
 ) => {
     champion = champion.toLowerCase();
     if (champion === "monkeyking") champion = "wukong";

@@ -13,7 +13,7 @@ import { cn } from "../../utils/style";
 import { displayNameByStatsSite, linkByStatsSite } from "../../utils/sites";
 import { useUser } from "../../contexts/UserContext";
 import { championName } from "../../utils/i18n";
-// eslint-disable-next-line 
+// eslint-disable-next-line
 tooltip;
 
 type Props = {
@@ -42,7 +42,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
     const name = () => championName(champion(), config);
     const role = () =>
         [...teamComp()].find(
-            ([, championKey]) => championKey === props.championKey
+            ([, championKey]) => championKey === props.championKey,
         )?.[0];
 
     return (
@@ -65,12 +65,12 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                 <a
                     class={cn(
                         buttonVariants({ variant: "secondary" }),
-                        "ml-auto mt-[64px]"
+                        "ml-auto mt-[64px]",
                     )}
                     href={linkByStatsSite(
                         config.defaultStatsSite,
                         champion().id,
-                        role()!
+                        role()!,
                     )}
                     target="_blank"
                 >
@@ -88,7 +88,6 @@ export function ChampionDraftAnalysisDialog(props: Props) {
             >
                 <h3
                     class="text-3xl uppercase ml-4"
-                     
                     // @ts-ignore
                     use:tooltip={{
                         content: <>Winrates of all {name()} matchups</>,
@@ -98,7 +97,6 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                 </h3>
                 <p
                     class="text-neutral-500 uppercase mb-1 ml-4"
-                     
                     // @ts-ignore
                     use:tooltip={{
                         content: (
@@ -123,7 +121,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                                         result.championKeyA ===
                                             props.championKey ||
                                         result.championKeyB ===
-                                            props.championKey
+                                            props.championKey,
                                 )
                                 .sort((a, b) => a.roleB - b.roleB) ?? [];
 
@@ -134,9 +132,9 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                             props.team === "ally"
                                 ? team
                                 : team === "ally"
-                                ? "opponent"
-                                : "ally",
-                            championKey
+                                  ? "opponent"
+                                  : "ally",
+                            championKey,
                         );
                     }}
                     truncateChampionNames
@@ -146,7 +144,6 @@ export function ChampionDraftAnalysisDialog(props: Props) {
             <div id="duo-champion-result" class="overflow-x-hidden -m-1 p-1">
                 <h3
                     class="text-3xl uppercase mb-1 ml-4"
-                     
                     // @ts-ignore
                     use:tooltip={{
                         content: <>Winrates of all {name()} duos</>,
@@ -163,7 +160,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                             .allyDuoRating.duoResults.filter(
                                 (result) =>
                                     result.championKeyA === props.championKey ||
-                                    result.championKeyB === props.championKey
+                                    result.championKeyB === props.championKey,
                             )
                             .map((r) => {
                                 if (r.championKeyA === props.championKey) {
@@ -185,7 +182,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                     onClickChampion={(championKey) => {
                         props.openChampionDraftAnalysisModal(
                             props.team,
-                            championKey
+                            championKey,
                         );
                     }}
                 />

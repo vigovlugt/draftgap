@@ -31,7 +31,7 @@ export function TeamSelector() {
                         onClick={() => selectTeam(team)}
                         disabled={
                             (team === "ally" ? allyTeam : opponentTeam).filter(
-                                (p) => p.championKey !== undefined
+                                (p) => p.championKey !== undefined,
                             ).length === 5
                         }
                     >

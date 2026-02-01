@@ -39,18 +39,18 @@ export function removeRankBias(dataset: Dataset) {
             sum +
             Object.values(champion.statsByRole).reduce(
                 (sum, stats) => sum + stats.wins,
-                0
+                0,
             ),
-        0
+        0,
     );
     const rankGames = Object.values(dataset.championData).reduce(
         (sum, champion) =>
             sum +
             Object.values(champion.statsByRole).reduce(
                 (sum, stats) => sum + stats.games,
-                0
+                0,
             ),
-        0
+        0,
     );
     const rankWinrate = rankWins / rankGames;
     const rankRating = winrateToRating(rankWinrate);
@@ -61,7 +61,7 @@ export function removeRankBias(dataset: Dataset) {
             roleData.wins = getNewWins(
                 roleData.wins,
                 roleData.games,
-                rankRating
+                rankRating,
             );
 
             // Fix matchups
@@ -70,7 +70,7 @@ export function removeRankBias(dataset: Dataset) {
                     matchupRoleData.wins = getNewWins(
                         matchupRoleData.wins,
                         matchupRoleData.games,
-                        rankRating
+                        rankRating,
                     );
                 }
             }
@@ -81,7 +81,7 @@ export function removeRankBias(dataset: Dataset) {
                     duoRoleData.wins = getNewWins(
                         duoRoleData.wins,
                         duoRoleData.games,
-                        rankRating
+                        rankRating,
                     );
                 }
             }
@@ -91,7 +91,7 @@ export function removeRankBias(dataset: Dataset) {
                 timeStats.wins = getNewWins(
                     timeStats.wins,
                     timeStats.games,
-                    rankRating
+                    rankRating,
                 );
             }
         }

@@ -47,7 +47,7 @@ export function createBuildContext() {
                 : undefined,
             role: pick
                 ? [...teamComp!.entries()].find(
-                      ([, key]) => key === teamPicks[pick!.index].championKey
+                      ([, key]) => key === teamPicks[pick!.index].championKey,
                   )?.[0]
                 : undefined,
         });
@@ -97,7 +97,7 @@ export function createBuildContext() {
     const championRole = () => {
         if (!buildPick() || !myTeamComp()) return undefined;
         return [...myTeamComp()!.entries()].find(
-            ([, key]) => key === championKey()
+            ([, key]) => key === championKey(),
         )?.[0];
     };
 
@@ -121,7 +121,7 @@ export function createBuildContext() {
             if (cached?.state?.data && cached.state.error == null) {
                 return cached.state.data as [
                     PartialBuildDataset,
-                    FullBuildDataset
+                    FullBuildDataset,
                 ];
             }
 
@@ -130,7 +130,7 @@ export function createBuildContext() {
                 dataset()!,
                 championKey()!,
                 championRole()!,
-                theirTeamComp()!
+                theirTeamComp()!,
             );
         },
         refetchInterval: false,
@@ -150,9 +150,9 @@ export function createBuildContext() {
 
     const partialBuildDataset = () => query.data?.[0];
     const fullBuildDataset = () => query.data?.[1];
-     
+
     (window as any).DRAFTGAP_DEBUG.fullBuildDataset = fullBuildDataset;
-     
+
     (window as any).DRAFTGAP_DEBUG.partialBuildDataset = partialBuildDataset;
 
     const buildAnalysisResult = createMemo(() => {
@@ -163,7 +163,7 @@ export function createBuildContext() {
             dataset()!,
             dataset30Days()!,
             ...query.data,
-            draftAnalysisConfig()
+            draftAnalysisConfig(),
         );
     });
 

@@ -28,27 +28,30 @@ export type RunesAnalysisResult = {
 export function analyzeRunes(
     partialBuildDataset: PartialBuildDataset,
     fullBuildDataset: FullBuildDataset,
-    config: AnalyzeDraftConfig
+    config: AnalyzeDraftConfig,
 ): RunesAnalysisResult {
     const analyze = (runeType: RuneType) => {
         const runeIds = Object.keys(
-            getRuneStatsMap(partialBuildDataset.runes, runeType)
+            getRuneStatsMap(partialBuildDataset.runes, runeType),
         );
-        return runeIds.reduce((result, runeId) => {
-            const runeIdNumber = parseInt(runeId);
-            const runeResult = analyzeEntity(
-                partialBuildDataset,
-                fullBuildDataset,
-                config,
-                getRuneStats,
-                {
-                    type: runeType,
-                    id: runeIdNumber,
-                }
-            );
-            result[runeId] = runeResult;
-            return result;
-        }, {} as Record<string, EntityAnalysisResult>);
+        return runeIds.reduce(
+            (result, runeId) => {
+                const runeIdNumber = parseInt(runeId);
+                const runeResult = analyzeEntity(
+                    partialBuildDataset,
+                    fullBuildDataset,
+                    config,
+                    getRuneStats,
+                    {
+                        type: runeType,
+                        id: runeIdNumber,
+                    },
+                );
+                result[runeId] = runeResult;
+                return result;
+            },
+            {} as Record<string, EntityAnalysisResult>,
+        );
     };
     return {
         primary: analyze("primary"),
@@ -81,7 +84,7 @@ function getRuneStats(
     rune: {
         type: RuneType;
         id: number;
-    }
+    },
 ) {
     switch (rune.type) {
         case "primary":

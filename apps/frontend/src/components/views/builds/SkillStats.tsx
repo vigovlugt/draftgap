@@ -15,12 +15,12 @@ export function SkillStats() {
     const totalOrderGames = () =>
         Object.values(partialBuildDataset()!.skills.order).reduce(
             (acc, skill) => acc + skill.games,
-            0
+            0,
         );
 
     const totalGamesByLevel = () =>
         partialBuildDataset()!.skills.level.map((level) =>
-            Object.values(level).reduce((acc, skill) => acc + skill.games, 0)
+            Object.values(level).reduce((acc, skill) => acc + skill.games, 0),
         );
 
     return (
@@ -30,13 +30,13 @@ export function SkillStats() {
                 <VerticalEntityStats
                     data={(
                         Object.keys(
-                            buildAnalysisResult()!.skills.order
+                            buildAnalysisResult()!.skills.order,
                         ) as SkillOrder[]
                     ).filter(
                         (id) =>
                             partialBuildDataset()!.skills.order[id].games /
                                 totalOrderGames() >
-                            0.05
+                            0.05,
                     )}
                     getGames={(id) =>
                         partialBuildDataset()!.skills.order[id].games
@@ -61,7 +61,7 @@ export function SkillStats() {
                                         .split("")
                                         .map(
                                             (ability, i) =>
-                                                [ability, i] as const
+                                                [ability, i] as const,
                                         )}
                                 >
                                     {([ability, i]) => (
@@ -143,7 +143,8 @@ export function SkillStats() {
                                                             buildAnalysisResult()!
                                                                 .skills.levels[
                                                                 i
-                                                            ][skill].totalRating
+                                                            ][skill]
+                                                                .totalRating,
                                                         )} text-right ${
                                                             data[skill].games /
                                                                 totalGamesByLevel()[
@@ -160,8 +161,8 @@ export function SkillStats() {
                                                                     .skills
                                                                     .levels[i][
                                                                     skill
-                                                                ].totalRating
-                                                            )
+                                                                ].totalRating,
+                                                            ),
                                                         )}
                                                     </span>
                                                     <span
@@ -173,7 +174,7 @@ export function SkillStats() {
                                                             data[skill].games /
                                                                 totalGamesByLevel()[
                                                                     i
-                                                                ]
+                                                                ],
                                                         )}
                                                     </span>
                                                 </div>

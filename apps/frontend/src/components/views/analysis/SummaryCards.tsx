@@ -14,7 +14,7 @@ import { capitalize } from "../../../utils/strings";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { cn } from "../../../utils/style";
-// eslint-disable-next-line 
+// eslint-disable-next-line
 tooltip;
 
 export const SummaryCard = (
@@ -30,7 +30,7 @@ export const SummaryCard = (
         number?: number;
         href?: string;
         tooltip: JSX.Element;
-    } & JSX.HTMLAttributes<HTMLDivElement>
+    } & JSX.HTMLAttributes<HTMLDivElement>,
 ) => {
     const colorClasses = () => {
         if (!props.team) return "bg-[#101010]";
@@ -43,9 +43,8 @@ export const SummaryCard = (
             {...props}
             class={cn(
                 "px-4 py-5 flex gap-4 items-center text-left",
-                props.class
+                props.class,
             )}
-             
             // @ts-ignore
             use:tooltip={{
                 content: props.tooltip,
@@ -76,7 +75,7 @@ export const SummaryCard = (
 };
 
 export const DraftSummaryCards = (
-    props: { team: Team } & JSX.HTMLAttributes<HTMLDivElement>
+    props: { team: Team } & JSX.HTMLAttributes<HTMLDivElement>,
 ) => {
     const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
 
@@ -90,7 +89,7 @@ export const DraftSummaryCards = (
             {...props}
             class={cn(
                 "grid divide-neutral-700 overflow-hidden rounded-lg bg-primary grid-cols-2 md:grid-cols-4 md:divide-x",
-                props.class
+                props.class,
             )}
         >
             <SummaryCard
@@ -156,7 +155,7 @@ type ChampionSummaryCardProps = {
 } & JSX.HTMLAttributes<HTMLDivElement>;
 
 export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
-    props
+    props,
 ) => {
     const { dataset } = useDataset();
     const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
@@ -168,7 +167,7 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
 
     const baseChampionRating = () =>
         draftResult().allyChampionRating.championResults.find(
-            (r) => r.championKey === props.championKey
+            (r) => r.championKey === props.championKey,
         )?.rating ?? 0;
 
     const duoRating = () =>
@@ -176,7 +175,7 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
             .allyDuoRating.duoResults.filter(
                 (r) =>
                     r.championKeyA === props.championKey ||
-                    r.championKeyB === props.championKey
+                    r.championKeyB === props.championKey,
             )
             .reduce((acc, r) => acc + r.rating / 2, 0);
 
@@ -185,7 +184,7 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
             .matchupRating.matchupResults.filter(
                 (r) =>
                     r.championKeyA === props.championKey ||
-                    r.championKeyB === props.championKey
+                    r.championKeyB === props.championKey,
             )
             .reduce((acc, r) => acc + r.rating, 0);
 
@@ -197,7 +196,7 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
             {...props}
             class={cn(
                 "grid overflow-hidden rounded-lg bg-primary grid-cols-2 sm:grid-cols-4",
-                props.class
+                props.class,
             )}
         >
             <SummaryCard

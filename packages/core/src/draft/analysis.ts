@@ -28,7 +28,7 @@ export function analyzeDraft(
     fullDataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>,
-    config: AnalyzeDraftConfig
+    config: AnalyzeDraftConfig,
 ): DraftResult {
     const priorGames = priorGamesByRiskLevel[config.riskLevel];
 
@@ -80,7 +80,7 @@ export function analyzeChampions(
     dataset: Dataset,
     synergyMatchupDataset: Dataset,
     team: Map<Role, string>,
-    priorGames: number
+    priorGames: number,
 ): AnalyzeChampionsResult {
     const championResults: AnalyzeChampionResult[] = [];
     let totalRating = 0;
@@ -91,7 +91,7 @@ export function analyzeChampions(
             synergyMatchupDataset,
             role,
             championKey,
-            priorGames
+            priorGames,
         );
 
         championResults.push(championResult);
@@ -109,7 +109,7 @@ export function analyzeChampion(
     fullDataset: Dataset,
     role: Role,
     championKey: string,
-    priorGames: number
+    priorGames: number,
 ) {
     // Get stats for this patch
     const championData = dataset.championData[championKey];
@@ -142,7 +142,7 @@ export function analyzeChampion(
         {
             wins: priorGames * fullChampionRoleWinrate,
             games: priorGames,
-        }
+        },
         // TOOD: if 30 days has no games, add other prior games
     );
 
@@ -175,7 +175,7 @@ export type AnalyzeDuosResult = {
 export function analyzeDuos(
     dataset: Dataset,
     team: Map<Role, string>,
-    priorGames: number
+    priorGames: number,
 ): AnalyzeDuosResult {
     const teamEntries = Array.from(team.entries()).sort((a, b) => a[0] - b[0]);
 
@@ -192,12 +192,12 @@ export function analyzeDuos(
                 winrateToRating(
                     roleStats.games === 0
                         ? 0.5
-                        : roleStats.wins / roleStats.games
+                        : roleStats.wins / roleStats.games,
                 ) +
                 winrateToRating(
                     champion2RoleStats.games === 0
                         ? 0.5
-                        : champion2RoleStats.wins / champion2RoleStats.games
+                        : champion2RoleStats.wins / champion2RoleStats.games,
                 );
             const expectedWinrate = ratingToWinrate(expectedRating);
 
@@ -207,7 +207,7 @@ export function analyzeDuos(
                 role,
                 "duo",
                 role2,
-                championKey2
+                championKey2,
             );
             const champion2DuoStats = getStats(
                 dataset,
@@ -215,7 +215,7 @@ export function analyzeDuos(
                 role2,
                 "duo",
                 role,
-                championKey
+                championKey,
             );
             const combinedStats = averageStats(duoStats, champion2DuoStats);
 
@@ -237,8 +237,8 @@ export function analyzeDuos(
                 wins:
                     ratingToWinrate(
                         winrateToRating(
-                            combinedStats.wins / combinedStats.games
-                        ) - expectedRating
+                            combinedStats.wins / combinedStats.games,
+                        ) - expectedRating,
                     ) * combinedStats.games,
                 games: combinedStats.games,
             });
@@ -271,7 +271,7 @@ export function analyzeMatchups(
     dataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>,
-    priorGames: number
+    priorGames: number,
 ): AnalyzeMatchupsResult {
     const matchupResults: AnalyzeMatchupResult[] = [];
     let totalRating = 0;
@@ -282,19 +282,19 @@ export function analyzeMatchups(
             const enemyRoleStats = getStats(
                 dataset,
                 enemyChampionKey,
-                enemyRole
+                enemyRole,
             );
 
             const expectedRating =
                 winrateToRating(
                     roleStats.games === 0
                         ? 0.5
-                        : roleStats.wins / roleStats.games
+                        : roleStats.wins / roleStats.games,
                 ) -
                 winrateToRating(
                     enemyRoleStats.games === 0
                         ? 0.5
-                        : enemyRoleStats.wins / enemyRoleStats.games
+                        : enemyRoleStats.wins / enemyRoleStats.games,
                 );
             const expectedWinrate = ratingToWinrate(expectedRating);
 
@@ -304,7 +304,7 @@ export function analyzeMatchups(
                 allyRole,
                 "matchup",
                 enemyRole,
-                enemyChampionKey
+                enemyChampionKey,
             );
             const enemyMatchupStats = getStats(
                 dataset,
@@ -312,7 +312,7 @@ export function analyzeMatchups(
                 enemyRole,
                 "matchup",
                 allyRole,
-                allyChampionKey
+                allyChampionKey,
             );
             const enemyLosses =
                 enemyMatchupStats.games - enemyMatchupStats.wins;
@@ -328,7 +328,7 @@ export function analyzeMatchups(
                 {
                     wins: priorGames * expectedWinrate,
                     games: priorGames,
-                }
+                },
             );
             const winrate = adjustedStats.wins / adjustedStats.games;
 
@@ -343,7 +343,7 @@ export function analyzeMatchups(
                 rating,
                 wins:
                     ratingToWinrate(
-                        winrateToRating(wins / games) - expectedRating
+                        winrateToRating(wins / games) - expectedRating,
                     ) * games,
                 games,
             });

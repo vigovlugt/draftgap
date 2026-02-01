@@ -1,9 +1,16 @@
-import { FetchQueryOptions, QueryClient, QueryOptions } from "@tanstack/query-core";
+import {
+    FetchQueryOptions,
+    QueryClient,
+    QueryOptions,
+} from "@tanstack/query-core";
 import {
     LolalyticsChampionResponse,
     getLolalyticsChampion,
 } from "../../../../apps/dataset/src/lolalytics/champion";
-import { LOLALYTICS_ROLES, LolalyticsRole } from "../../../../apps/dataset/src/lolalytics/roles";
+import {
+    LOLALYTICS_ROLES,
+    LolalyticsRole,
+} from "../../../../apps/dataset/src/lolalytics/roles";
 import { Role } from "../models/Role";
 import {
     FullBuildDataset,
@@ -20,7 +27,7 @@ import { EntityStats } from "./entity-analysis";
 
 function getRunesBuildData(
     dataset: Dataset,
-    championData: LolalyticsChampionResponse
+    championData: LolalyticsChampionResponse,
 ) {
     const runes: RunesBuildData = {
         primary: {},
@@ -33,7 +40,7 @@ function getRunesBuildData(
     };
 
     for (const [rawId, runesArray] of Object.entries(
-        championData.runes.stats
+        championData.runes.stats,
     )) {
         // Rune or Shard ID
         const runeId = parseInt(rawId);
@@ -41,7 +48,7 @@ function getRunesBuildData(
         const isFlexShard = rawId.at(-1) === "f";
 
         for (const [i, rune] of runesArray.map(
-            (rune, i) => [i, rune] as const
+            (rune, i) => [i, rune] as const,
         )) {
             const [, winRate, games] = rune;
             const chosenAsSecondary = i === 1;
@@ -62,11 +69,11 @@ function getRunesBuildData(
                     runes.shards.flex[runeId] = runeStats;
                 } else {
                     const slot = dataset.statShardData[runeId].positions.find(
-                        (p) => p.slot !== 1
+                        (p) => p.slot !== 1,
                     )?.slot;
                     if (slot === undefined) {
                         throw new Error(
-                            "Shard has no slot other than flex " + runeId
+                            "Shard has no slot other than flex " + runeId,
                         );
                     }
                     if (slot === 0) {
@@ -144,12 +151,12 @@ function getItemsBuildData(championData: LolalyticsChampionResponse) {
     return items;
 }
 
-function getSummonerSpellsBuildData(
-    championData: LolalyticsChampionResponse
-) {
+function getSummonerSpellsBuildData(championData: LolalyticsChampionResponse) {
     const summonerSpells = {} as SummonerSpellsBuildData;
 
-    const parseSummonerSpellSet = (summonerSpellData: LolalyticsChampionResponse["spells"][number]) => {
+    const parseSummonerSpellSet = (
+        summonerSpellData: LolalyticsChampionResponse["spells"][number],
+    ) => {
         const id = summonerSpellData[0];
         const winrate = summonerSpellData[1] / 100;
         const games = summonerSpellData[3];
@@ -174,7 +181,9 @@ function getSkillsBuildData(championData: LolalyticsChampionResponse) {
         level: {},
     } as SkillsBuildData;
 
-    const parseSkillOrder = (skillOrderData: LolalyticsChampionResponse["skills"]["skillOrder"][number]) => {
+    const parseSkillOrder = (
+        skillOrderData: LolalyticsChampionResponse["skills"]["skillOrder"][number],
+    ) => {
         const skillOrder = skillOrderData[0] as SkillOrder;
         const games = skillOrderData[1];
         const wins = skillOrderData[2];
@@ -187,19 +196,26 @@ function getSkillsBuildData(championData: LolalyticsChampionResponse) {
         skills.order[skillOrder] = stats;
     }
 
-    const parseSkillLevel = (skillLevelData: LolalyticsChampionResponse["skills"]["skillEarly"][number]) => {
+    const parseSkillLevel = (
+        skillLevelData: LolalyticsChampionResponse["skills"]["skillEarly"][number],
+    ) => {
         return skillLevelData.map(parseSkillLevelItem);
-    }
+    };
 
-    const parseSkillLevelItem = (skillLevelItemData: LolalyticsChampionResponse["skills"]["skillEarly"][number][number], i: number) => {
+    const parseSkillLevelItem = (
+        skillLevelItemData: LolalyticsChampionResponse["skills"]["skillEarly"][number][number],
+        i: number,
+    ) => {
         const skill = ["Q", "W", "E", "R"][i] as Skill;
         const games = skillLevelItemData[0];
         const wins = skillLevelItemData[1];
 
         return [skill, { wins, games }] as const;
-    }
+    };
 
-    skills.level = Array.from({ length: championData.skills.skillEarly.length }).map(() => ({}) as Record<Skill, EntityStats>);
+    skills.level = Array.from({
+        length: championData.skills.skillEarly.length,
+    }).map(() => ({}) as Record<Skill, EntityStats>);
     for (let i = 0; i < championData.skills.skillEarly.length; i++) {
         const skillLevelData = championData.skills.skillEarly[i];
         const skillStatsForLevel = parseSkillLevel(skillLevelData);
@@ -215,13 +231,13 @@ function partialDatasetFromLolalyticsData(
     dataset: Dataset,
     championKey: string,
     role: Role,
-    championData: LolalyticsChampionResponse
+    championData: LolalyticsChampionResponse,
 ) {
     const partialDataset: PartialBuildDataset = {
         championKey,
         role,
         wins: Math.round(
-            (championData.header.n * championData.header.wr) / 100
+            (championData.header.n * championData.header.wr) / 100,
         ),
         games: championData.header.n,
         runes: getRunesBuildData(dataset, championData),
@@ -242,13 +258,13 @@ function fullDatasetFromLolalyticsData(
         championKey: string;
         role: Role;
         championData: LolalyticsChampionResponse;
-    }[]
+    }[],
 ) {
     const partialDataset = partialDatasetFromLolalyticsData(
         dataset,
         championKey,
         role,
-        championData
+        championData,
     );
 
     const fullDataset: FullBuildDataset = {
@@ -259,7 +275,7 @@ function fullDatasetFromLolalyticsData(
             wins: Math.round(
                 (matchup.championData.header.n *
                     matchup.championData.header.wr) /
-                100
+                    100,
             ),
             games: matchup.championData.header.n,
             runes: getRunesBuildData(dataset, matchup.championData),
@@ -277,7 +293,7 @@ function getLolalyticsChampionOptions(
     championKey: string,
     role: LolalyticsRole | "default" = "default",
     matchup?: string,
-    matchupRole?: LolalyticsRole
+    matchupRole?: LolalyticsRole,
 ) {
     return {
         queryKey: [
@@ -290,8 +306,14 @@ function getLolalyticsChampionOptions(
             matchupRole,
         ],
         queryFn: () =>
-            getLolalyticsChampion(patch, championKey, role, matchup, matchupRole),
-        staleTime: 1000 * 60 * 60 // 1 hour
+            getLolalyticsChampion(
+                patch,
+                championKey,
+                role,
+                matchup,
+                matchupRole,
+            ),
+        staleTime: 1000 * 60 * 60, // 1 hour
     } satisfies FetchQueryOptions;
 }
 
@@ -300,36 +322,40 @@ export async function fetchBuildData(
     dataset: Dataset,
     championKey: string,
     role: Role,
-    opponentTeamComp: Map<Role, string>
+    opponentTeamComp: Map<Role, string>,
 ) {
     // convert patch from 13.7.1 to 13.7
     const patch = dataset.version.split(".").slice(0, 2).join(".");
 
-    const championPatchDataPromises = queryClient.fetchQuery(getLolalyticsChampionOptions(
-        patch,
-        championKey,
-        LOLALYTICS_ROLES[role]
-    ));
+    const championPatchDataPromises = queryClient.fetchQuery(
+        getLolalyticsChampionOptions(
+            patch,
+            championKey,
+            LOLALYTICS_ROLES[role],
+        ),
+    );
 
-    const champion30DaysDataPromises = queryClient.fetchQuery(getLolalyticsChampionOptions(
-        "30",
-        championKey,
-        LOLALYTICS_ROLES[role]
-    ));
+    const champion30DaysDataPromises = queryClient.fetchQuery(
+        getLolalyticsChampionOptions("30", championKey, LOLALYTICS_ROLES[role]),
+    );
 
     const matchup30DaysDataPromises = [...opponentTeamComp.entries()].map(
         ([opponentRole, opponentChampionKey]) =>
-            queryClient.fetchQuery(getLolalyticsChampionOptions(
-                "30",
-                championKey,
-                LOLALYTICS_ROLES[role],
-                opponentChampionKey,
-                LOLALYTICS_ROLES[opponentRole]
-            )).then((championData) => ({
-                championKey: opponentChampionKey,
-                role: opponentRole,
-                championData,
-            }))
+            queryClient
+                .fetchQuery(
+                    getLolalyticsChampionOptions(
+                        "30",
+                        championKey,
+                        LOLALYTICS_ROLES[role],
+                        opponentChampionKey,
+                        LOLALYTICS_ROLES[opponentRole],
+                    ),
+                )
+                .then((championData) => ({
+                    championKey: opponentChampionKey,
+                    role: opponentRole,
+                    championData,
+                })),
     );
 
     const results = await Promise.all([
@@ -344,7 +370,7 @@ export async function fetchBuildData(
         dataset,
         championKey,
         role,
-        championPatchData
+        championPatchData,
     );
 
     const fullDataset = fullDatasetFromLolalyticsData(
@@ -352,7 +378,7 @@ export async function fetchBuildData(
         championKey,
         role,
         champion30DaysData,
-        matchup30DaysData
+        matchup30DaysData,
     );
 
     return [partialDataset, fullDataset] as const;

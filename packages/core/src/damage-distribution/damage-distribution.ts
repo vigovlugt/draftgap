@@ -3,7 +3,7 @@ import { Dataset } from "../models/dataset/Dataset";
 
 export function getTeamDamageDistribution(
     dataset: Dataset,
-    team: Map<Role, string>
+    team: Map<Role, string>,
 ) {
     const damageDistribution = {
         magic: 0,

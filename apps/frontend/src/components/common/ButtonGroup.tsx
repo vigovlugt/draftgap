@@ -14,7 +14,7 @@ interface Props<T> {
 }
 
 export function ButtonGroup<T>(
-    _props: Props<T> & Omit<JSX.HTMLAttributes<HTMLDivElement>, "onChange">
+    _props: Props<T> & Omit<JSX.HTMLAttributes<HTMLDivElement>, "onChange">,
 ) {
     const mergedProps = mergeProps({ size: "md" }, _props);
     const [props, externalProps] = splitProps(mergedProps, [
@@ -28,7 +28,7 @@ export function ButtonGroup<T>(
             {...externalProps}
             class={cn(
                 "isolate inline-flex rounded-md shadow-xs ",
-                externalProps.class
+                externalProps.class,
             )}
         >
             <For each={props.options}>
@@ -45,7 +45,7 @@ export function ButtonGroup<T>(
                                 "text-white bg-neutral-700":
                                     props.selected === option.value,
                                 "py-2": props.size === "sm",
-                            }
+                            },
                         )}
                         onClick={() => props.onChange(option.value)}
                     >

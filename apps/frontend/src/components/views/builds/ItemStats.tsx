@@ -13,17 +13,17 @@ export const ItemStats: Component = () => {
 
     const getDataForOrder = (order: number) => {
         const orderGames = Object.values(
-            partialBuildDataset()!.items.statsByOrder[order]
+            partialBuildDataset()!.items.statsByOrder[order],
         ).reduce((acc, item) => acc + item.games, 0);
         return Object.keys(
-            buildAnalysisResult()!.items.statsByOrder[order] ?? {}
+            buildAnalysisResult()!.items.statsByOrder[order] ?? {},
         )
             .map((id) => parseInt(id))
             .filter(
                 (id) =>
                     partialBuildDataset()!.items.statsByOrder[order][id].games /
                         orderGames >
-                    0.01
+                    0.01,
             );
     };
 

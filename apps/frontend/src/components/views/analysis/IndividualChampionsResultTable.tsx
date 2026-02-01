@@ -26,7 +26,7 @@ interface Props {
 }
 
 export function IndividualChampionsResultTable(
-    _props: Props & JSX.HTMLAttributes<HTMLDivElement>
+    _props: Props & JSX.HTMLAttributes<HTMLDivElement>,
 ) {
     const [props, externalProps] = splitProps(_props, [
         "team",
@@ -68,12 +68,12 @@ export function IndividualChampionsResultTable(
                 dataset()!.championData[
                     a.getValue<string>(id)
                 ].name.localeCompare(
-                    dataset()!.championData[b.getValue<string>(id)].name
+                    dataset()!.championData[b.getValue<string>(id)].name,
                 ),
             meta: {
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<AnalyzeChampionResult, unknown>
+                    info: CellContext<AnalyzeChampionResult, unknown>,
                 ) => {
                     e.stopPropagation();
                     props.onClickChampion?.(info.getValue<string>());
@@ -95,7 +95,7 @@ export function IndividualChampionsResultTable(
                 footerClass: "w-1",
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<AnalyzeChampionResult, unknown>
+                    info: CellContext<AnalyzeChampionResult, unknown>,
                 ) => {
                     e.stopPropagation();
                     setChosenResult(info.row.original);
@@ -112,7 +112,7 @@ export function IndividualChampionsResultTable(
         get data(): AnalyzeChampionResult[] {
             const championResults =
                 draftResult()?.allyChampionRating.championResults.sort(
-                    (a, b) => a.role - b.role
+                    (a, b) => a.role - b.role,
                 ) ?? [];
             return championResults;
         },

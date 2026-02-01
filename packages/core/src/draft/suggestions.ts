@@ -14,7 +14,7 @@ export function getSuggestions(
     synergyMatchupDataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>,
-    config: AnalyzeDraftConfig
+    config: AnalyzeDraftConfig,
 ) {
     const remainingRoles = ROLES.filter((role) => !team.has(role));
     const enemyChampions = new Set(enemy.values());
@@ -42,7 +42,7 @@ export function getSuggestions(
                 synergyMatchupDataset,
                 team,
                 enemy,
-                config
+                config,
             );
             team.delete(role);
 
@@ -55,6 +55,6 @@ export function getSuggestions(
     }
 
     return suggestions.sort(
-        (a, b) => b.draftResult.winrate - a.draftResult.winrate
+        (a, b) => b.draftResult.winrate - a.draftResult.winrate,
     );
 }

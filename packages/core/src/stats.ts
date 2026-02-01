@@ -17,7 +17,7 @@ export function addStats(...stats: { wins: number; games: number }[]) {
 
 export function multiplyStats(
     stats: { wins: number; games: number },
-    number: number
+    number: number,
 ) {
     return {
         wins: stats.wins * number,
@@ -27,7 +27,7 @@ export function multiplyStats(
 
 export function divideStats(
     stats: { wins: number; games: number },
-    number: number
+    number: number,
 ) {
     return {
         wins: stats.wins / number,

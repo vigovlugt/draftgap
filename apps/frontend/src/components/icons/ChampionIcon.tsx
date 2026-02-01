@@ -7,7 +7,7 @@ export function ChampionIcon(
         championKey: string;
         imgClass?: string;
         size: number;
-    } & JSX.HTMLAttributes<HTMLDivElement>
+    } & JSX.HTMLAttributes<HTMLDivElement>,
 ) {
     const [, other] = splitProps(props, ["championKey", "imgClass", "size"]);
     const { dataset } = useDataset();

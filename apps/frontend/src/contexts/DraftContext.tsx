@@ -50,7 +50,7 @@ export function createDraftContext() {
     const [bans, setBans] = createStore<string[]>([]);
     // If empty, assume all champions are owned
     const [ownedChampions, setOwnedChampions] = createSignal<Set<string>>(
-        new Set()
+        new Set(),
     );
 
     function getNextPick(team: Team) {
@@ -61,13 +61,13 @@ export function createDraftContext() {
 
     function fixClashes(championKey: string, index: number) {
         const allyClashingChampion = allyTeam.findIndex(
-            (p) => p.championKey === championKey
+            (p) => p.championKey === championKey,
         );
         if (allyClashingChampion !== -1 && allyClashingChampion !== index) {
             resetChampion("ally", allyClashingChampion);
         }
         const opponentClashingChampion = opponentTeam.findIndex(
-            (p) => p.championKey === championKey
+            (p) => p.championKey === championKey,
         );
         if (opponentClashingChampion !== -1 && allyClashingChampion !== index) {
             resetChampion("opponent", opponentClashingChampion);
@@ -94,7 +94,7 @@ export function createDraftContext() {
             resetFilters = true,
             reportEvent = true,
             updateView = true,
-        } = {}
+        } = {},
     ) {
         batch(() => {
             if (
@@ -171,7 +171,7 @@ export function createDraftContext() {
         team: "ally" | "opponent",
         index: number,
         championKey: string | undefined,
-        role: Role | undefined
+        role: Role | undefined,
     ) {
         batch(() => {
             if (
@@ -231,7 +231,7 @@ export function createDraftContext() {
     const select = (
         team: Team | undefined,
         index?: number,
-        resetFilters = true
+        resetFilters = true,
     ) => {
         if (team !== undefined && index !== undefined) {
             const teamPicks = team === "ally" ? allyTeam : opponentTeam;
@@ -258,7 +258,7 @@ export function createDraftContext() {
 
     const draftFinished = () =>
         [...allyTeam, ...opponentTeam].every(
-            (s) => s.championKey !== undefined
+            (s) => s.championKey !== undefined,
         );
 
     return {
@@ -283,7 +283,7 @@ const DraftContext = createContext<ReturnType<typeof createDraftContext>>();
 
 export function DraftProvider(props: { children: JSXElement }) {
     const ctx = createDraftContext();
-     
+
     const DRAFTGAP_DEBUG = ((window as any).DRAFTGAP_DEBUG = ctx) as any;
     DRAFTGAP_DEBUG.test = () => {
         batch(() => {

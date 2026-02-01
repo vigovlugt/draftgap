@@ -4,7 +4,7 @@ import { Role } from "../models/Role";
 export function getStats(
     dataset: Dataset,
     championKey: string,
-    role: Role
+    role: Role,
 ): { wins: number; games: number };
 export function getStats(
     dataset: Dataset,
@@ -12,7 +12,7 @@ export function getStats(
     role: Role,
     type: "duo",
     role2: Role,
-    championKey2: string
+    championKey2: string,
 ): { wins: number; games: number };
 export function getStats(
     dataset: Dataset,
@@ -20,7 +20,7 @@ export function getStats(
     role: Role,
     type: "matchup",
     role2: Role,
-    championKey2: string
+    championKey2: string,
 ): { wins: number; games: number };
 export function getStats(
     dataset: Dataset,
@@ -28,7 +28,7 @@ export function getStats(
     role: Role,
     type?: "matchup" | "duo",
     matchupDuoRole?: Role,
-    matchupDuoChampionKey?: string
+    matchupDuoChampionKey?: string,
 ) {
     if (!type) {
         return (

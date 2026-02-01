@@ -233,7 +233,7 @@ function getDataId(objs: any) {
                 obj != undefined &&
                 obj["analysed"] !== undefined &&
                 obj["avgWr"] !== undefined &&
-                obj["enemy"] !== undefined
+                obj["enemy"] !== undefined,
         )
         .toString(36);
 }
@@ -259,7 +259,7 @@ function parseObj(objs: any[], id: string): any {
             Object.entries(obj).map(([key, value]) => [
                 key,
                 parseObj(objs, value as string),
-            ])
+            ]),
         );
     }
 
@@ -286,7 +286,7 @@ export async function getLolalyticsQwikChampion(
     championId: string,
     role?: LolalyticsRole,
     matchupId?: string,
-    matchupRole?: LolalyticsRole
+    matchupRole?: LolalyticsRole,
 ) {
     championId = championId.toLowerCase();
     if (championId === "monkeyking") {
@@ -319,7 +319,7 @@ export async function getLolalyticsQwikChampion(
     const res = await retry(() => fetch(url));
     if (!res.ok) {
         throw new Error(
-            "Failed to fetch lolalytics champion " + url + " " + res.status
+            "Failed to fetch lolalytics champion " + url + " " + res.status,
         );
     }
 

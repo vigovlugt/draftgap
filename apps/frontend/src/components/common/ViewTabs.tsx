@@ -17,7 +17,7 @@ export const ViewTabs = <T,>(props: Props<T>) => {
         <div
             class={cn(
                 "bg-primary w-full border-b border-neutral-700",
-                props.class
+                props.class,
             )}
         >
             <For each={props.tabs}>
@@ -30,10 +30,10 @@ export const ViewTabs = <T,>(props: Props<T>) => {
                                     props.equals
                                         ? props.equals(
                                               tab.value,
-                                              props.selected
+                                              props.selected,
                                           )
                                         : tab.value === props.selected,
-                            }
+                            },
                         )}
                         onClick={() => props.onChange(tab.value)}
                     >

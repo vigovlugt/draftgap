@@ -83,7 +83,7 @@ export default function DraftTable() {
 
         if (favouriteFilter()) {
             filtered = filtered.filter((s) =>
-                isFavourite(s.championKey, s.role)
+                isFavourite(s.championKey, s.role),
             );
         }
 
@@ -147,7 +147,7 @@ export default function DraftTable() {
     function setAnalysisPick(
         pick:
             | { team: Team; championKey: string; role: Role | undefined }
-            | undefined
+            | undefined,
     ) {
         batch(() => {
             if (!pick) {
@@ -161,7 +161,7 @@ export default function DraftTable() {
                         resetFilters: false,
                         reportEvent: false,
                         updateView: false,
-                    }
+                    },
                 );
                 setRoleFilter(savedRoleFilter());
                 setSavedRoleFilter(undefined);
@@ -180,7 +180,7 @@ export default function DraftTable() {
                         resetFilters: false,
                         reportEvent: false,
                         updateView: false,
-                    }
+                    },
                 );
             }
             _setAnalysisPick(pick);
@@ -212,7 +212,7 @@ export default function DraftTable() {
                     <Show
                         when={isFavourite(
                             info.row.original.championKey,
-                            info.row.original.role
+                            info.row.original.role,
                         )}
                         fallback={
                             <Icon
@@ -233,7 +233,7 @@ export default function DraftTable() {
                 headerClass: "w-1",
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<Suggestion, unknown>
+                    info: CellContext<Suggestion, unknown>,
                 ) => {
                     e.stopPropagation();
                     setFavourite(
@@ -241,8 +241,8 @@ export default function DraftTable() {
                         info.row.original.role,
                         !isFavourite(
                             info.row.original.championKey,
-                            info.row.original.role
-                        )
+                            info.row.original.role,
+                        ),
                     );
                 },
             },
@@ -267,7 +267,7 @@ export default function DraftTable() {
                 dataset()!.championData[
                     a.getValue<string>(id)
                 ].name.localeCompare(
-                    dataset()!.championData[b.getValue<string>(id)].name
+                    dataset()!.championData[b.getValue<string>(id)].name,
                 ),
         },
         ...(config.showAdvancedWinrates
@@ -365,7 +365,7 @@ export default function DraftTable() {
             selection.team,
             selection.index,
             row.original.championKey,
-            row.original.role
+            row.original.role,
         );
 
         document.getElementById("draftTableSearch")?.focus();

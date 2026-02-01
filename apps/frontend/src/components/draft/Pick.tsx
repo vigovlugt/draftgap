@@ -14,7 +14,7 @@ import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { championName } from "../../utils/i18n";
 import { useMedia } from "../../hooks/useMedia";
-// eslint-disable-next-line 
+// eslint-disable-next-line
 tooltip;
 
 type Props = {
@@ -27,7 +27,7 @@ export function Pick(props: Props) {
     const { allyTeam, opponentTeam, selection, select, pickChampion } =
         useDraft();
 
-    const {isDesktop} = useMedia();
+    const { isDesktop } = useMedia();
 
     const team = () => (props.team === "ally" ? allyTeam : opponentTeam);
 
@@ -50,7 +50,7 @@ export function Pick(props: Props) {
     const pick = () => picks()[props.index];
     const teamCompRole = () =>
         [...(teamComp()?.entries() ?? [])].find(
-            (e) => e[1] === pick().championKey
+            (e) => e[1] === pick().championKey,
         )?.[0];
 
     const isSelected = () =>
@@ -91,8 +91,8 @@ export function Pick(props: Props) {
                 config.defaultStatsSite,
                 champion()!.id,
                 [...teamComp().entries()].find(
-                    ([, value]) => value === pick().championKey
-                )![0] as Role
+                    ([, value]) => value === pick().championKey,
+                )![0] as Role,
             );
             if (isDesktop) {
                 openUrl(link);
@@ -183,7 +183,7 @@ export function Pick(props: Props) {
                                         setRole(
                                             pick().role === undefined
                                                 ? role
-                                                : undefined
+                                                : undefined,
                                         );
                                     }}
                                     // @ts-ignore

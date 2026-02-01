@@ -7,7 +7,7 @@ export function bytesToHumanReadable(size: number) {
 }
 
 export async function retry<
-    T extends (...args: unknown[]) => Promise<Awaited<ReturnType<T>>>
+    T extends (...args: unknown[]) => Promise<Awaited<ReturnType<T>>>,
 >(fn: T, retries = 5): Promise<ReturnType<T>> {
     let error: unknown | undefined;
     for (let i = 0; i < retries; i++) {

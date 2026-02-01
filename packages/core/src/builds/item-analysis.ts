@@ -17,7 +17,7 @@ type ItemType = number | "boots" | "startingSets" | "sets";
 export function analyzeItems(
     partialBuildDataset: PartialBuildDataset,
     fullBuildDatset: FullBuildDataset,
-    config: AnalyzeDraftConfig
+    config: AnalyzeDraftConfig,
 ): ItemsAnalysisResult {
     return {
         boots: Object.keys(partialBuildDataset.items.boots).reduce(
@@ -30,42 +30,48 @@ export function analyzeItems(
                     {
                         type: "boots",
                         id: parseInt(itemId),
-                    }
+                    },
                 );
                 return acc;
             },
-            {} as Record<string, EntityAnalysisResult>
+            {} as Record<string, EntityAnalysisResult>,
         ),
         statsByOrder: partialBuildDataset.items.statsByOrder.map((stats, i) => {
-            return Object.keys(stats).reduce((acc, itemId) => {
-                acc[itemId] = analyzeEntity(
+            return Object.keys(stats).reduce(
+                (acc, itemId) => {
+                    acc[itemId] = analyzeEntity(
+                        partialBuildDataset,
+                        fullBuildDatset,
+                        config,
+                        getItemStats,
+                        {
+                            type: i,
+                            id: parseInt(itemId),
+                        },
+                    );
+                    return acc;
+                },
+                {} as Record<string, EntityAnalysisResult>,
+            );
+        }),
+        startingSets: Object.keys(
+            partialBuildDataset.items.startingSets,
+        ).reduce(
+            (acc, setId) => {
+                acc[setId] = analyzeEntity(
                     partialBuildDataset,
                     fullBuildDatset,
                     config,
                     getItemStats,
                     {
-                        type: i,
-                        id: parseInt(itemId),
-                    }
+                        type: "startingSets",
+                        id: setId,
+                    },
                 );
                 return acc;
-            }, {} as Record<string, EntityAnalysisResult>);
-        }),
-        startingSets: Object.keys(
-            partialBuildDataset.items.startingSets
-        ).reduce((acc, setId) => {
-            acc[setId] = analyzeEntity(
-                partialBuildDataset,
-                fullBuildDatset,
-                config,
-                getItemStats,
-                {
-                    type: "startingSets",
-                    id: setId,
-                }
-            );
-            return acc;
-        }, {} as Record<string, EntityAnalysisResult>),
+            },
+            {} as Record<string, EntityAnalysisResult>,
+        ),
         sets: {},
     };
 }
@@ -76,7 +82,7 @@ function getItemStats(
     item: {
         id: number | string;
         type: ItemType;
-    }
+    },
 ) {
     switch (item.type) {
         case "boots":

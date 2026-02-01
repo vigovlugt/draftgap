@@ -10,7 +10,7 @@ import { Team } from "@draftgap/core/src/models/Team";
 import { useUser } from "../../../contexts/UserContext";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { ScalingChart } from "./ScalingChart";
-// eslint-disable-next-line 
+// eslint-disable-next-line
 tooltip;
 
 export default function AnalysisView() {
@@ -20,7 +20,7 @@ export default function AnalysisView() {
 
     const openChampionDraftAnalysisModal = (
         team: Team,
-        championKey: string
+        championKey: string,
     ) => {
         setAnalysisPick({ team, championKey });
     };
@@ -126,7 +126,7 @@ export default function AnalysisView() {
                             onClickChampion={(championKey) =>
                                 openChampionDraftAnalysisModal(
                                     "ally",
-                                    championKey
+                                    championKey,
                                 )
                             }
                         />
@@ -148,7 +148,7 @@ export default function AnalysisView() {
                             onClickChampion={(championKey) =>
                                 openChampionDraftAnalysisModal(
                                     "opponent",
-                                    championKey
+                                    championKey,
                                 )
                             }
                         />

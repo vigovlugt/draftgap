@@ -16,7 +16,7 @@ export const createTooltipContext = () => {
     const [popoverPlacement, setPopoverPlacement] =
         createSignal<Placement>("auto");
     const [popoverTarget, setPopoverTarget] = createSignal<HTMLElement | null>(
-        null
+        null,
     );
     const [popoverVisible, setPopoverVisible] = createSignal(false);
 

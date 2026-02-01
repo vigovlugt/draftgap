@@ -105,14 +105,14 @@ async function main() {
         champions,
         runes,
         items,
-        summonerSpells
+        summonerSpells,
     );
     const dataset30days = await getDataset(
         "30",
         champions,
         runes,
         items,
-        summonerSpells
+        summonerSpells,
     );
 
     deleteDatasetMatchupSynergyData(datasetCurrentPatch);
@@ -140,12 +140,12 @@ function riotRunesToRuneData(runes: RiotRunePath[]) {
                                         slot: slotIndex,
                                         index: i,
                                     } satisfies RuneData,
-                                ] as const
-                        )
+                                ] as const,
+                        ),
                     );
                 })
                 .flat()
-                .flat()
+                .flat(),
         ),
         runePathData: Object.fromEntries(
             runes.map(
@@ -158,8 +158,8 @@ function riotRunesToRuneData(runes: RiotRunePath[]) {
                             name: r.name,
                             icon: r.icon,
                         } satisfies RunePathData,
-                    ] as const
-            )
+                    ] as const,
+            ),
         ),
         statShardData: STAT_SHARD_DATA,
     } satisfies Pick<Dataset, "runeData" | "runePathData" | "statShardData">;
@@ -168,7 +168,7 @@ function riotRunesToRuneData(runes: RiotRunePath[]) {
 }
 
 function riotItemsToItemData(
-    items: Record<string, RiotItem>
+    items: Record<string, RiotItem>,
 ): Record<number, ItemData> {
     return Object.fromEntries(
         Object.entries(items).map(
@@ -180,13 +180,13 @@ function riotItemsToItemData(
                         name: item.name,
                         gold: item.gold.total,
                     },
-                ] as const
-        )
+                ] as const,
+        ),
     );
 }
 
 function riotSummonerSpellsToSummonerSpellData(
-    summonerSpells: Record<string, RiotSummonerSpell>
+    summonerSpells: Record<string, RiotSummonerSpell>,
 ): Record<string, SummonerSpellData> {
     return Object.fromEntries(
         Object.entries(summonerSpells).map(
@@ -198,8 +198,8 @@ function riotSummonerSpellsToSummonerSpellData(
                         key: +spell.key,
                         name: spell.name,
                     },
-                ] as const
-        )
+                ] as const,
+        ),
     );
 }
 
@@ -208,7 +208,7 @@ async function getDataset(
     champions: RiotChampion[],
     runes: RiotRunePath[],
     items: Record<string, RiotItem>,
-    summonerSpells: Record<string, RiotSummonerSpell>
+    summonerSpells: Record<string, RiotSummonerSpell>,
 ) {
     console.log("Getting dataset for version", version);
     const dataset: Dataset = {
@@ -224,8 +224,8 @@ async function getDataset(
     for (let i = 0; i < champions.length; i += BATCH_SIZE) {
         console.log(
             `Processing batch ${i / BATCH_SIZE} of ${Math.ceil(
-                champions.length / BATCH_SIZE
-            )}`
+                champions.length / BATCH_SIZE,
+            )}`,
         );
         const batch = champions.slice(i, i + BATCH_SIZE);
         const championData = await Promise.all(
@@ -234,16 +234,16 @@ async function getDataset(
                     [
                         champion,
                         await getChampionDataFromLolalytics(version, champion),
-                    ] as const
-            )
+                    ] as const,
+            ),
         );
 
         for (const [c, champion] of championData) {
             if (!champion) {
                 console.log(
                     "Skipping champion " +
-                    c.name +
-                    " as it lolalytics has no data for it"
+                        c.name +
+                        " as it lolalytics has no data for it",
                 );
                 continue;
             }

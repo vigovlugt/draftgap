@@ -1,9 +1,6 @@
 import { Octokit } from "@octokit/rest";
 import { config } from "dotenv";
-import {
-    PutObjectCommand,
-    S3Client,
-} from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 config();
 
 const errors: string[] = [];
@@ -63,7 +60,7 @@ export async function main() {
         owner: REPOSITORY_OWNER,
         repo: REPOSITORY_NAME,
         asset_id: latestRelease.data.assets.find(
-            (a) => a.name === "latest.json"
+            (a) => a.name === "latest.json",
         )!.id,
         headers: {
             Accept: "application/octet-stream",
@@ -71,7 +68,7 @@ export async function main() {
     });
 
     const latestJsonString = new TextDecoder().decode(
-        latestJsonBinary.data as unknown as ArrayBuffer
+        latestJsonBinary.data as unknown as ArrayBuffer,
     );
 
     const latestJson = JSON.parse(latestJsonString);

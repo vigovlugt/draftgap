@@ -16,7 +16,7 @@ export function createExtraDraftAnalysisContext() {
             dataset30Days()!,
             allyTeamComp(),
             opponentTeamComp(),
-            config
+            config,
         );
     });
 
@@ -27,7 +27,7 @@ export function createExtraDraftAnalysisContext() {
             dataset30Days()!,
             opponentTeamComp(),
             allyTeamComp(),
-            config
+            config,
         );
     });
 

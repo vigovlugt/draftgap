@@ -41,10 +41,17 @@ export function DesktopAppDialog(props: Props) {
         enabled: props.open,
         queryFn: async () => {
             const octokit = new Octokit();
-            const response = await octokit.rest.repos.getLatestRelease({ owner: "vigovlugt", repo: "draftgap" });
+            const response = await octokit.rest.repos.getLatestRelease({
+                owner: "vigovlugt",
+                repo: "draftgap",
+            });
 
-            const macAsset = response.data.assets.find((a) => a.name.endsWith("aarch64.dmg"));
-            const windowsAsset = response.data.assets.find((a) => a.name.endsWith("x64_en-US.msi"));
+            const macAsset = response.data.assets.find((a) =>
+                a.name.endsWith("aarch64.dmg"),
+            );
+            const windowsAsset = response.data.assets.find((a) =>
+                a.name.endsWith("x64_en-US.msi"),
+            );
 
             return {
                 macUrl: macAsset?.browser_download_url,
@@ -56,7 +63,6 @@ export function DesktopAppDialog(props: Props) {
         console.log(props.open);
     });
 
-     
     const nav = navigator as any;
     const isMac =
         (nav?.userAgentData?.platform || navigator?.platform || "unknown")
@@ -81,16 +87,16 @@ export function DesktopAppDialog(props: Props) {
                         when={!isMac}
                         fallback={
                             <p class="font-body text-neutral-400 text-sm">
-                                You may get a 'macOS cannot verify that this app is free
-                                from malware' warning, but you can safely ignore it
-                                (check{" "}
+                                You may get a 'macOS cannot verify that this app
+                                is free from malware' warning, but you can
+                                safely ignore it (check{" "}
                                 <a
                                     href={
                                         "https://www.virustotal.com/gui/search/" +
                                         encodeURI(
                                             encodeURIComponent(
-                                                releaseQuery.data?.macUrl ?? ""
-                                            )
+                                                releaseQuery.data?.macUrl ?? "",
+                                            ),
                                         )
                                     }
                                     class="text-blue-500"
@@ -98,21 +104,21 @@ export function DesktopAppDialog(props: Props) {
                                 >
                                     VirusTotal
                                 </a>
-                                ) by using command+click in finder on the app and
-                                clicking 'Open' and then 'Open' again.
+                                ) by using command+click in finder on the app
+                                and clicking 'Open' and then 'Open' again.
                             </p>
                         }
                     >
                         <p class="font-body text-neutral-400 text-sm">
-                            You may get a 'Windows protected your PC' warning, but you
-                            can safely ignore it (check{" "}
+                            You may get a 'Windows protected your PC' warning,
+                            but you can safely ignore it (check{" "}
                             <a
                                 href={
                                     "https://www.virustotal.com/gui/search/" +
                                     encodeURI(
                                         encodeURIComponent(
-                                            releaseQuery.data?.windowsUrl ?? ""
-                                        )
+                                            releaseQuery.data?.windowsUrl ?? "",
+                                        ),
                                     )
                                 }
                                 class="text-blue-500"
@@ -135,12 +141,15 @@ export function DesktopAppDialog(props: Props) {
                                 href={releaseQuery.data!.windowsUrl}
                                 class={cn(
                                     buttonVariants({
-                                        variant: !isMac ? "primary" : "secondary",
+                                        variant: !isMac
+                                            ? "primary"
+                                            : "secondary",
                                     }),
                                     "w-full text-lg flex justify-center",
                                     {
-                                        "border-neutral-700 text-neutral-300": isMac,
-                                    }
+                                        "border-neutral-700 text-neutral-300":
+                                            isMac,
+                                    },
                                 )}
                             >
                                 <WindowsLogo />
@@ -152,12 +161,15 @@ export function DesktopAppDialog(props: Props) {
                                 href={releaseQuery.data!.macUrl}
                                 class={cn(
                                     buttonVariants({
-                                        variant: isMac ? "primary" : "secondary",
+                                        variant: isMac
+                                            ? "primary"
+                                            : "secondary",
                                     }),
                                     "w-full text-lg flex justify-center",
                                     {
-                                        "border-neutral-700 text-neutral-300": !isMac,
-                                    }
+                                        "border-neutral-700 text-neutral-300":
+                                            !isMac,
+                                    },
                                 )}
                             >
                                 <AppleLogo />

@@ -21,7 +21,7 @@ export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 export function DropdownMenuSubTrigger(
     props: ComponentProps<typeof DropdownMenuPrimitive.SubTrigger> & {
         inset?: boolean;
-    }
+    },
 ) {
     return (
         <DropdownMenuPrimitive.SubTrigger
@@ -31,7 +31,7 @@ export function DropdownMenuSubTrigger(
                 {
                     "pl-8": props.inset,
                 },
-                props.class
+                props.class,
             )}
         >
             {props.children}
@@ -46,7 +46,7 @@ export function DropdownMenuSubTrigger(
 }
 
 export function DropdownMenuSubContent(
-    props: ComponentProps<typeof DropdownMenuPrimitive.SubContent>
+    props: ComponentProps<typeof DropdownMenuPrimitive.SubContent>,
 ) {
     return (
         <DropdownMenuPrimitive.Portal>
@@ -54,7 +54,7 @@ export function DropdownMenuSubContent(
                 {...props}
                 class={cn(
                     "z-50 min-w-32 overflow-hidden rounded-md border border-white/10 bg-neutral-800 py-1.5 animate-leave ui-expanded:animate-enter",
-                    props.class
+                    props.class,
                 )}
             >
                 {props.children}
@@ -64,7 +64,7 @@ export function DropdownMenuSubContent(
 }
 
 export function DropdownMenuContent(
-    props: ComponentProps<typeof DropdownMenuPrimitive.Content>
+    props: ComponentProps<typeof DropdownMenuPrimitive.Content>,
 ) {
     return (
         <DropdownMenuPrimitive.Portal>
@@ -72,7 +72,7 @@ export function DropdownMenuContent(
                 {...props}
                 class={cn(
                     "z-50 min-w-32 overflow-hidden rounded-md border border-white/10 bg-neutral-800 py-1.5 animate-leave ui-expanded:animate-enter",
-                    props.class
+                    props.class,
                 )}
             >
                 {props.children}
@@ -84,7 +84,7 @@ export function DropdownMenuContent(
 export function DropdownMenuItem(
     props: ComponentProps<typeof DropdownMenuPrimitive.Item> & {
         inset?: boolean;
-    }
+    },
 ) {
     return (
         <DropdownMenuPrimitive.Item
@@ -94,7 +94,7 @@ export function DropdownMenuItem(
                 {
                     "pl-8": props.inset,
                 },
-                props.class
+                props.class,
             )}
         >
             {props.children}
@@ -103,14 +103,14 @@ export function DropdownMenuItem(
 }
 
 export function DropdownMenuCheckboxItem(
-    props: ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>
+    props: ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>,
 ) {
     return (
         <DropdownMenuPrimitive.CheckboxItem
             {...props}
             class={cn(
                 "relative flex cursor-default select-none items-center rounded-xs py-1.5 pl-8 pr-2 text-lg outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground ui-disabled:pointer-events-none ui-disabled:opacity-50",
-                props.class
+                props.class,
             )}
         >
             <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -123,14 +123,14 @@ export function DropdownMenuCheckboxItem(
 }
 
 export function DropdownMenuRadioItem(
-    props: ComponentProps<typeof DropdownMenuPrimitive.RadioItem>
+    props: ComponentProps<typeof DropdownMenuPrimitive.RadioItem>,
 ) {
     return (
         <DropdownMenuPrimitive.RadioItem
             {...props}
             class={cn(
                 "relative flex cursor-default select-none items-center rounded-xs py-1.5 pl-8 pr-2 text-lg outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground ui-disabled:pointer-events-none ui-disabled:opacity-50",
-                props.class
+                props.class,
             )}
         >
             <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -146,7 +146,7 @@ export function DropdownMenuRadioItem(
 export function DropdownMenuLabel(
     props: ComponentProps<"label"> & {
         inset?: boolean;
-    }
+    },
 ) {
     return (
         <label
@@ -154,7 +154,7 @@ export function DropdownMenuLabel(
             class={cn(
                 "px-3 py-1.5 text-lg font-medium uppercase",
                 props.inset && "pl-8",
-                props.class
+                props.class,
             )}
         >
             {props.children}
@@ -163,7 +163,7 @@ export function DropdownMenuLabel(
 }
 
 export function DropdownMenuSeparator(
-    props: ComponentProps<typeof DropdownMenuPrimitive.Separator>
+    props: ComponentProps<typeof DropdownMenuPrimitive.Separator>,
 ) {
     return (
         <DropdownMenuPrimitive.Separator
@@ -179,7 +179,7 @@ export function DropdownMenuShortcut(props: ComponentProps<"span">) {
             {...props}
             class={cn(
                 "pl-3 ml-auto text-base tracking-widest opacity-60",
-                props.class
+                props.class,
             )}
         >
             {props.children}

@@ -7,7 +7,7 @@ import {
 
 export async function getChampSelectSession(): Promise<LolChampSelectChampSelectSession | null> {
     return (await invoke(
-        "get_champ_select_session"
+        "get_champ_select_session",
     )) as LolChampSelectChampSelectSession | null;
 }
 
@@ -17,7 +17,7 @@ export async function getCurrentSummoner(): Promise<LolSummonerSummoner | null> 
 
 export async function getGridChampions(): Promise<LolChampSelectGridChampions | null> {
     return (await invoke(
-        "get_grid_champions"
+        "get_grid_champions",
     )) as LolChampSelectGridChampions | null;
 }
 

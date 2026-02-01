@@ -7,7 +7,7 @@ export function formatRating(rating: number): string {
 export function formatPercentage(
     percentage: number,
     maxDecimals = 2,
-    useMinDecimals = false
+    useMinDecimals = false,
 ): string {
     const p = (percentage * 100).toFixed(maxDecimals).toString();
 

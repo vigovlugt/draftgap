@@ -11,7 +11,7 @@ export function analyzeDraftExtra(
     fullDataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>,
-    config: AnalyzeDraftConfig
+    config: AnalyzeDraftConfig,
 ) {
     const priorGames = priorGamesByRiskLevel[config.riskLevel];
 
@@ -19,7 +19,7 @@ export function analyzeDraftExtra(
     const teamChampions = ally.map(
         ([role, champion]) =>
             fullDataset.championData[champion]?.statsByRole[role] ??
-            defaultChampionRoleData()
+            defaultChampionRoleData(),
     );
 
     return {
@@ -40,7 +40,7 @@ export function analyzeDraftExtra(
                     wins: priorGames * baseChampionWinrate,
                 });
                 const championTimeRating = winrateToRating(
-                    championStats.wins / championStats.games
+                    championStats.wins / championStats.games,
                 );
 
                 return championTimeRating - baseChampionRating;
@@ -48,7 +48,7 @@ export function analyzeDraftExtra(
 
             const totalRating = championTimeRatings.reduce(
                 (acc, rating) => acc + rating,
-                0
+                0,
             );
 
             return {

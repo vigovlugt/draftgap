@@ -23,7 +23,7 @@ export const LanguageDropdownMenu: Component = () => {
                 <button
                     class={cn(
                         buttonVariants({ variant: "transparent" }),
-                        "px-1 py-2"
+                        "px-1 py-2",
                     )}
                 >
                     <Icon path={language} class="w-7" />
@@ -36,7 +36,7 @@ export const LanguageDropdownMenu: Component = () => {
                     <DropdownMenuItem
                         onSelect={() => setConfig({ language: "en_US" })}
                         class={cn(
-                            config.language === "en_US" && "bg-neutral-700"
+                            config.language === "en_US" && "bg-neutral-700",
                         )}
                     >
                         <span>English</span>
@@ -44,7 +44,7 @@ export const LanguageDropdownMenu: Component = () => {
                     <DropdownMenuItem
                         onSelect={() => setConfig({ language: "zh_CN" })}
                         class={cn(
-                            config.language === "zh_CN" && "bg-neutral-700"
+                            config.language === "zh_CN" && "bg-neutral-700",
                         )}
                     >
                         <span>Simplified Chinese</span>

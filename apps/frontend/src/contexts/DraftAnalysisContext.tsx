@@ -33,7 +33,8 @@ export function createDraftAnalysisContext() {
 
         const championData = picks
             .filter(
-                (pick) => pick.championKey || (pick.hoverKey && analyzeHovers())
+                (pick) =>
+                    pick.championKey || (pick.hoverKey && analyzeHovers()),
             )
             .map((pick) => ({
                 ...dataset()!.championData[pick.championKey || pick.hoverKey!],
@@ -47,12 +48,12 @@ export function createDraftAnalysisContext() {
     const allyTeamComp = createMemo(
         () =>
             allyTeamComps().at(0)?.[0] ??
-            (new Map() as ReturnType<typeof allyTeamComps>[number][0])
+            (new Map() as ReturnType<typeof allyTeamComps>[number][0]),
     );
     const opponentTeamComp = createMemo(
         () =>
             opponentTeamComps().at(0)?.[0] ??
-            (new Map() as ReturnType<typeof opponentTeamComps>[number][0])
+            (new Map() as ReturnType<typeof opponentTeamComps>[number][0]),
     );
 
     const allyRoles = createMemo(() => predictRoles(allyTeamComps()));
@@ -71,7 +72,7 @@ export function createDraftAnalysisContext() {
             dataset30Days()!,
             allyTeamComps()[0][0],
             opponentTeamComps()[0][0],
-            draftAnalysisConfig()
+            draftAnalysisConfig(),
         );
     });
     const opponentDraftAnalysis = createMemo(() => {
@@ -81,7 +82,7 @@ export function createDraftAnalysisContext() {
             dataset30Days()!,
             opponentTeamComps()[0][0],
             allyTeamComps()[0][0],
-            draftAnalysisConfig()
+            draftAnalysisConfig(),
         );
     });
 
@@ -159,7 +160,7 @@ export function createDraftAnalysisContext() {
     const [showAnalysisPick, setShowAnalysisPick] = createSignal(false);
 
     function setAnalysisPick(
-        pick: { team: Team; championKey: string } | undefined
+        pick: { team: Team; championKey: string } | undefined,
     ) {
         if (!pick) {
             setShowAnalysisPick(false);

@@ -10,7 +10,7 @@ export type SummonerSpellsAnalysisResult = Record<string, EntityAnalysisResult>;
 export function analyzeSummonerSpells(
     partialBuildDataset: PartialBuildDataset,
     fullBuildDataset: FullBuildDataset,
-    config: AnalyzeDraftConfig
+    config: AnalyzeDraftConfig,
 ): SummonerSpellsAnalysisResult {
     const summonerSpells = {} as Record<string, EntityAnalysisResult>;
 
@@ -20,7 +20,7 @@ export function analyzeSummonerSpells(
             fullBuildDataset,
             config,
             getSummonerSpellStats,
-            spellSetId
+            spellSetId,
         );
     }
 

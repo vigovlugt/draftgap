@@ -17,7 +17,7 @@ export const BootsStats: Component = () => {
                     (id) =>
                         partialBuildDataset()!.items.boots[parseInt(id)].games /
                             partialBuildDataset()!.games >
-                        0.01
+                        0.01,
                 )}
                 getGames={(id) => partialBuildDataset()!.items.boots[id].games}
                 getRating={(id) =>
@@ -65,7 +65,7 @@ const Boot: Component<{ itemId: number }> = (props) => {
                 </div>
                 <div class={"text-neutral-500"}>
                     {formatPercentage(
-                        data().games / partialBuildDataset()!.games
+                        data().games / partialBuildDataset()!.games,
                     )}
                 </div>
             </div>

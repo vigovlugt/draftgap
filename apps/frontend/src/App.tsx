@@ -105,7 +105,7 @@ const App: Component = () => {
                                 team={analysisPick()!.team}
                                 openChampionDraftAnalysisModal={(
                                     team,
-                                    championKey
+                                    championKey,
                                 ) => setAnalysisPick({ team, championKey })}
                             />
                         </Dialog>
@@ -234,7 +234,7 @@ const App: Component = () => {
                                     buttonVariants({
                                         variant: "transparent",
                                     }),
-                                    "px-1 py-2"
+                                    "px-1 py-2",
                                 )}
                             >
                                 <Icon path={cog_6Tooth} class="w-7" />

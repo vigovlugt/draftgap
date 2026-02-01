@@ -11,7 +11,7 @@ export function Switch(props: ComponentProps<typeof SwitchPrimitives.Root>) {
                 {
                     "bg-secondary hover:bg-secondary": props.checked,
                 },
-                props.class
+                props.class,
             )}
         >
             <SwitchPrimitives.Input />
@@ -23,7 +23,7 @@ export function Switch(props: ComponentProps<typeof SwitchPrimitives.Root>) {
                         {
                             "translate-x-5": props.checked,
                             "translate-x-0": !props.checked,
-                        }
+                        },
                     )}
                 />
             </SwitchPrimitives.Control>

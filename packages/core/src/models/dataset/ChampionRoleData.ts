@@ -21,11 +21,11 @@ export function defaultChampionRoleData(): ChampionRoleData {
         wins: 0,
         matchup: [0, 1, 2, 3, 4].reduce(
             (acc, role) => ({ ...acc, [role]: {} }),
-            {}
+            {},
         ) as ChampionRoleData["matchup"],
         synergy: [0, 1, 2, 3, 4].reduce(
             (acc, role) => ({ ...acc, [role]: {} }),
-            {}
+            {},
         ) as ChampionRoleData["synergy"],
         damageProfile: {
             magic: 0,
@@ -40,7 +40,7 @@ export function defaultChampionRoleData(): ChampionRoleData {
 }
 
 export function deleteChampionRoleDataMatchupSynergyData(
-    data: ChampionRoleData
+    data: ChampionRoleData,
 ) {
     data.matchup = {} as ChampionRoleData["matchup"];
     data.synergy = {} as ChampionRoleData["synergy"];

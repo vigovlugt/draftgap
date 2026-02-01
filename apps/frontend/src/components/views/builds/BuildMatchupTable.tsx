@@ -22,7 +22,7 @@ import { WinrateDecompositionDialog } from "../../dialogs/WinrateDecompositionDi
 import { EntityMatchupAnalysisResult } from "@draftgap/core/src/builds/entity-analysis";
 
 export const BuildMatchupTable = (
-    props: JSX.HTMLAttributes<HTMLDivElement>
+    props: JSX.HTMLAttributes<HTMLDivElement>,
 ) => {
     const { dataset } = useDataset();
     const { selectedEntity, buildAnalysisResult, partialBuildDataset } =
@@ -42,7 +42,7 @@ export const BuildMatchupTable = (
             item: "Item",
             summonerSpells: "Spells",
             skills: "Skills",
-        }[selectedEntity()!.type]);
+        })[selectedEntity()!.type];
 
     const data = () => {
         const selected = selectedEntity();
@@ -132,7 +132,7 @@ export const BuildMatchupTable = (
                 dataset()!.championData[
                     a.getValue<string>(id)
                 ].name.localeCompare(
-                    dataset()!.championData[b.getValue<string>(id)].name
+                    dataset()!.championData[b.getValue<string>(id)].name,
                 ),
         },
         {
@@ -175,7 +175,7 @@ export const BuildMatchupTable = (
                 dataset()!.championData[
                     a.getValue<string>(id)
                 ].name.localeCompare(
-                    dataset()!.championData[b.getValue<string>(id)].name
+                    dataset()!.championData[b.getValue<string>(id)].name,
                 ),
         },
         {
@@ -191,7 +191,7 @@ export const BuildMatchupTable = (
             meta: {
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<EntityMatchupAnalysisResult, unknown>
+                    info: CellContext<EntityMatchupAnalysisResult, unknown>,
                 ) => {
                     e.stopPropagation();
                     setChosenResult(info.row.original);
@@ -213,7 +213,7 @@ export const BuildMatchupTable = (
                           formatPercentage(
                               (result as any).raw.wins /
                                   (result as any).raw.games -
-                                  (result as any).expected
+                                  (result as any).expected,
                           ),
                   },
                   {
@@ -222,7 +222,7 @@ export const BuildMatchupTable = (
                       accessorFn: (result) =>
                           formatPercentage(
                               (result as any).raw.wins /
-                                  (result as any).raw.games
+                                  (result as any).raw.games,
                           ),
                   },
                   {

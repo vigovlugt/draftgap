@@ -31,7 +31,7 @@ interface Props {
 }
 
 export function MatchupResultTable(
-    props: Props & JSX.HTMLAttributes<HTMLDivElement>
+    props: Props & JSX.HTMLAttributes<HTMLDivElement>,
 ) {
     const { dataset } = useDataset();
     const { allyDraftAnalysis } = useDraftAnalysis();
@@ -69,7 +69,7 @@ export function MatchupResultTable(
                 footerClass: "w-1",
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<AnalyzeChampionResult, unknown>
+                    info: CellContext<AnalyzeChampionResult, unknown>,
                 ) => {
                     e.stopPropagation();
                     props.onClickChampion?.("ally", info.getValue<string>());
@@ -79,7 +79,7 @@ export function MatchupResultTable(
                 dataset()!.championData[
                     a.getValue<string>(id)
                 ].name.localeCompare(
-                    dataset()!.championData[b.getValue<string>(id)].name
+                    dataset()!.championData[b.getValue<string>(id)].name,
                 ),
         },
         {
@@ -98,7 +98,7 @@ export function MatchupResultTable(
                 footerClass: "w-1",
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<AnalyzeMatchupResult, unknown>
+                    info: CellContext<AnalyzeMatchupResult, unknown>,
                 ) => {
                     e.stopPropagation();
                     setChosenResult(info.row.original);
@@ -139,17 +139,17 @@ export function MatchupResultTable(
                 dataset()!.championData[
                     a.getValue<string>(id)
                 ].name.localeCompare(
-                    dataset()!.championData[b.getValue<string>(id)].name
+                    dataset()!.championData[b.getValue<string>(id)].name,
                 ),
             meta: {
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<AnalyzeChampionResult, unknown>
+                    info: CellContext<AnalyzeChampionResult, unknown>,
                 ) => {
                     e.stopPropagation();
                     props.onClickChampion?.(
                         "opponent",
-                        info.getValue<string>()
+                        info.getValue<string>(),
                     );
                 },
             },
@@ -168,7 +168,7 @@ export function MatchupResultTable(
             meta: {
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<AnalyzeMatchupResult, unknown>
+                    info: CellContext<AnalyzeMatchupResult, unknown>,
                 ) => {
                     e.stopPropagation();
                     setChosenResult({

@@ -16,7 +16,7 @@ export const SummonerSpellsStats: Component = () => {
                     (id) =>
                         partialBuildDataset()!.summonerSpells[id].games /
                             partialBuildDataset()!.games >
-                        0.01
+                        0.01,
                 )}
                 getGames={(id) =>
                     partialBuildDataset()!.summonerSpells[id].games
@@ -88,7 +88,7 @@ const SummonerSpells: Component<{ setId: string }> = (props) => {
                 </div>
                 <div class={"text-neutral-500"}>
                     {formatPercentage(
-                        data().games / partialBuildDataset()!.games
+                        data().games / partialBuildDataset()!.games,
                     )}
                 </div>
             </div>

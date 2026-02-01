@@ -14,7 +14,7 @@ export const Badge: Component<Props> = (props) => {
         ({
             secondary: "bg-neutral-800 text-neutral-100",
             primary: "bg-neutral-100 text-neutral-800 font-bold",
-        }[props.theme]);
+        })[props.theme];
 
     return (
         <Dynamic

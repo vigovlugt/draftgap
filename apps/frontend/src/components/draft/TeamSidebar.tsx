@@ -8,7 +8,7 @@ import { tooltip } from "../../directives/tooltip";
 import { capitalize } from "../../utils/strings";
 import { getRatingClass } from "../../utils/rating";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
-// eslint-disable-next-line 
+// eslint-disable-next-line
 tooltip;
 
 interface IProps {
@@ -45,7 +45,7 @@ export function TeamSidebar(props: IProps) {
                         value={rating() ? ratingToWinrate(rating()!) : 0.5}
                         formatFn={(value) => (value * 100).toFixed(2)}
                         class={`${getRatingClass(
-                            rating() ?? 0
+                            rating() ?? 0,
                         )} transition-colors duration-500`}
                         style={{
                             "font-variant-numeric": "tabular-nums",

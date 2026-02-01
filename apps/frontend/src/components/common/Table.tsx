@@ -39,7 +39,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
             {...props}
             class={cn(
                 "rounded-md overflow-auto max-h-full max-w-full",
-                props.class
+                props.class,
             )}
         >
             <table
@@ -71,7 +71,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                                 (
                                                     header.column.columnDef
                                                         .meta as any
-                                                )?.headerClass
+                                                )?.headerClass,
                                             )}
                                             onClick={header.column.getToggleSortingHandler()}
                                         >
@@ -81,7 +81,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                                     : flexRender(
                                                           header.column
                                                               .columnDef.header,
-                                                          header.getContext()
+                                                          header.getContext(),
                                                       )}
                                                 <Show
                                                     when={
@@ -125,7 +125,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                 class="transition duration-200 ease-out group/row"
                                 classList={{
                                     "hover:bg-neutral-800": Boolean(
-                                        props.onClickRow
+                                        props.onClickRow,
                                     ),
                                     [props.rowClassName?.(row) ?? ""]: true,
                                 }}
@@ -156,13 +156,13 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                                                 cell.column
                                                                     .columnDef
                                                                     .meta as any
-                                                            )?.onClickCell
+                                                            )?.onClickCell,
                                                         ),
                                                 },
                                                 (
                                                     cell.column.columnDef
                                                         .meta as any
-                                                )?.cellClass
+                                                )?.cellClass,
                                             )}
                                             onClick={(e) =>
                                                 (
@@ -170,13 +170,13 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                                         .meta as any
                                                 )?.onClickCell?.(
                                                     e,
-                                                    cell.getContext()
+                                                    cell.getContext(),
                                                 )
                                             }
                                         >
                                             {flexRender(
                                                 cell.column.columnDef.cell,
-                                                cell.getContext()
+                                                cell.getContext(),
                                             )}
                                         </td>
                                     )}
@@ -227,7 +227,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                                     (
                                                         footer.column.columnDef
                                                             .meta as any
-                                                    )?.footerClass
+                                                    )?.footerClass,
                                                 )}
                                             >
                                                 {footer.isPlaceholder
@@ -235,7 +235,7 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                                     : flexRender(
                                                           footer.column
                                                               .columnDef.footer,
-                                                          footer.getContext()
+                                                          footer.getContext(),
                                                       )}
                                             </th>
                                         )}

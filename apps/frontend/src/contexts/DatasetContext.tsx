@@ -13,7 +13,7 @@ import {
 const fetchDataset = async (name: "30-days" | "current-patch") => {
     try {
         const response = await fetch(
-            `https://bucket.draftgap.com/datasets/v${DATASET_VERSION}/${name}.json`
+            `https://bucket.draftgap.com/datasets/v${DATASET_VERSION}/${name}.json`,
         );
         const json = await response.json();
         return json as Dataset;

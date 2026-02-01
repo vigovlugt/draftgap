@@ -1,6 +1,6 @@
 export async function getVersions() {
     const res = await fetch(
-        "https://ddragon.leagueoflegends.com/api/versions.json"
+        "https://ddragon.leagueoflegends.com/api/versions.json",
     );
     const json = (await res.json()) as string[];
 
@@ -16,7 +16,7 @@ export type RiotChampion = {
 
 export async function getChampions(version: string, locale = "en_US") {
     const res = await fetch(
-        `https://ddragon.leagueoflegends.com/cdn/${version}/data/${locale}/champion.json`
+        `https://ddragon.leagueoflegends.com/cdn/${version}/data/${locale}/champion.json`,
     );
     const json = (await res.json()) as { data: Record<string, RiotChampion> };
 
@@ -50,7 +50,7 @@ export type RiotRune = {
 
 export async function getRunes(version: string) {
     const res = await fetch(
-        `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/runesReforged.json`
+        `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/runesReforged.json`,
     );
     const json = (await res.json()) as RiotRunePath[];
 
@@ -66,7 +66,7 @@ export type RiotItem = {
 
 export async function getItems(version: string) {
     const res = await fetch(
-        `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/item.json`
+        `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/item.json`,
     );
     const json = (await res.json()) as { data: Record<string, RiotItem> };
 
@@ -80,7 +80,7 @@ export type RiotSummonerSpell = {
 
 export async function getSummonerSpells(version: string) {
     const res = await fetch(
-        `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/summoner.json`
+        `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/summoner.json`,
     );
     const json = (await res.json()) as {
         data: Record<string, RiotSummonerSpell>;

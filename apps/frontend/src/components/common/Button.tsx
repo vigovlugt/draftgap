@@ -20,7 +20,7 @@ export const buttonVariants = cva(
             variant: "primary",
             size: "default",
         },
-    }
+    },
 );
 
 type Props = JSX.HTMLAttributes<HTMLButtonElement> &

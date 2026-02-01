@@ -4,7 +4,7 @@ import { Icon } from "solid-heroicons";
 import { eye, eyeSlash } from "solid-heroicons/solid";
 import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
-// eslint-disable-next-line 
+// eslint-disable-next-line
 tooltip;
 
 export function AnalyzeHoverToggle() {
@@ -20,7 +20,7 @@ export function AnalyzeHoverToggle() {
             class={cn(
                 buttonVariants({ variant: "transparent" }),
                 "px-1 text-neutral-50",
-                !analyzeHovers() && "text-neutral-700"
+                !analyzeHovers() && "text-neutral-700",
             )}
         >
             <Icon path={analyzeHovers() ? eye : eyeSlash} class="w-6 h-6" />

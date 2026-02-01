@@ -30,7 +30,7 @@ export default function SettingsDialog() {
         (level) => ({
             value: level,
             label: displayNameByRiskLevel[level],
-        })
+        }),
     );
 
     const draftTablePlacementOptions = [

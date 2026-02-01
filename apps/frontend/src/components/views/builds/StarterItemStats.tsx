@@ -14,12 +14,12 @@ export const StarterItemStats: Component = () => {
             <PanelHeader>Starting Items</PanelHeader>
             <HorizontalEntityStats
                 data={Object.keys(
-                    buildAnalysisResult()!.items.startingSets
+                    buildAnalysisResult()!.items.startingSets,
                 ).filter(
                     (id) =>
                         partialBuildDataset()!.items.startingSets[id].games /
                             partialBuildDataset()!.games >
-                        0.01
+                        0.01,
                 )}
                 getGames={(id) =>
                     partialBuildDataset()!.items.startingSets[id].games
@@ -46,15 +46,18 @@ const StarterItem: Component<{ setId: string }> = (props) => {
         props.setId
             .split("_")
             .map((id) => parseInt(id))
-            .reduce((acc, id) => {
-                if (acc[id] !== undefined) {
-                    acc[id] += 1;
-                } else {
-                    acc[id] = 1;
-                }
+            .reduce(
+                (acc, id) => {
+                    if (acc[id] !== undefined) {
+                        acc[id] += 1;
+                    } else {
+                        acc[id] = 1;
+                    }
 
-                return acc;
-            }, {} as Record<number, number>);
+                    return acc;
+                },
+                {} as Record<number, number>,
+            );
 
     return (
         <button
@@ -76,7 +79,7 @@ const StarterItem: Component<{ setId: string }> = (props) => {
                     each={Object.entries(items()).sort(
                         ([a], [b]) =>
                             dataset()!.itemData[Number(b)].gold -
-                            dataset()!.itemData[Number(a)].gold
+                            dataset()!.itemData[Number(a)].gold,
                     )}
                 >
                     {([id, number]) => (
@@ -103,7 +106,7 @@ const StarterItem: Component<{ setId: string }> = (props) => {
                 </div>
                 <div class={"text-neutral-500"}>
                     {formatPercentage(
-                        data().games / partialBuildDataset()!.games
+                        data().games / partialBuildDataset()!.games,
                     )}
                 </div>
             </div>

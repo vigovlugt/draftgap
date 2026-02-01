@@ -5,4 +5,4 @@ export const LOLALYTICS_ROLES = [
     "bottom",
     "support",
 ] as const;
-export type LolalyticsRole = typeof LOLALYTICS_ROLES[number];
+export type LolalyticsRole = (typeof LOLALYTICS_ROLES)[number];

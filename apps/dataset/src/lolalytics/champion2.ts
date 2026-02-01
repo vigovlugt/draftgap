@@ -54,7 +54,7 @@ export async function getLolalyticsChampion2(
     championKey: string,
     role: LolalyticsRole | "default" = "default",
     matchup?: string,
-    matchupRole?: LolalyticsRole
+    matchupRole?: LolalyticsRole,
 ) {
     // convert patch from 12.21.1 to 12.21
     patch = patch.split(".").slice(0, 2).join(".");
@@ -75,7 +75,7 @@ export async function getLolalyticsChampion2(
     }
 
     const res = await retry(() =>
-        fetch(`https://ax.lolalytics.com/mega/?${queryParams.toString()}`)
+        fetch(`https://ax.lolalytics.com/mega/?${queryParams.toString()}`),
     );
 
     const json = (await res.json()) as LolalyticsChampion2Response;

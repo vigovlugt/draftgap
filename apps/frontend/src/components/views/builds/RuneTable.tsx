@@ -45,7 +45,7 @@ export const PathTable: Component<PathTableProps> = (props) => {
 
     const runes = () =>
         Object.values(dataset()!.runeData).filter(
-            (r) => r.pathId === props.pathId
+            (r) => r.pathId === props.pathId,
         );
     const runesBySlot = createMemo(() => {
         const result = new Map<number, RuneData[]>();
@@ -60,7 +60,7 @@ export const PathTable: Component<PathTableProps> = (props) => {
         for (const slot of result.keys()) {
             result.set(
                 slot,
-                result.get(slot)!.sort((a, b) => a.index - b.index)
+                result.get(slot)!.sort((a, b) => a.index - b.index),
             );
         }
 

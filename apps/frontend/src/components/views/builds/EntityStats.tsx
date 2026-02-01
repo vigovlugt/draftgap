@@ -21,23 +21,23 @@ export const useEntityStats = <T,>(props: Props<T>) => {
             case "rating-asc":
                 return props.data.sort(
                     // eslint-disable-next-line solid/reactivity
-                    (a, b) => props.getRating(a) - props.getRating(b)
+                    (a, b) => props.getRating(a) - props.getRating(b),
                 );
             case "rating-desc":
             default:
                 return props.data.sort(
                     // eslint-disable-next-line solid/reactivity
-                    (a, b) => props.getRating(b) - props.getRating(a)
+                    (a, b) => props.getRating(b) - props.getRating(a),
                 );
             case "pickrate-asc":
                 return props.data.sort(
                     // eslint-disable-next-line solid/reactivity
-                    (a, b) => props.getGames(a) - props.getGames(b)
+                    (a, b) => props.getGames(a) - props.getGames(b),
                 );
             case "pickrate-desc":
                 return props.data.sort(
                     // eslint-disable-next-line solid/reactivity
-                    (a, b) => props.getGames(b) - props.getGames(a)
+                    (a, b) => props.getGames(b) - props.getGames(a),
                 );
         }
     };
@@ -98,7 +98,7 @@ export const HorizontalEntityStats = <T,>(props: Props<T>) => {
                 <For
                     each={data().map(
                         (d) =>
-                            [d, props.getGames(d), props.getRating(d)] as const
+                            [d, props.getGames(d), props.getRating(d)] as const,
                     )}
                 >
                     {props.children}
@@ -162,7 +162,7 @@ export const VerticalEntityStats = <T,>(props: Props<T>) => {
                 <For
                     each={data().map(
                         (d) =>
-                            [d, props.getGames(d), props.getRating(d)] as const
+                            [d, props.getGames(d), props.getRating(d)] as const,
                     )}
                 >
                     {props.children}

@@ -33,7 +33,7 @@ export const OptionsDropdownMenu: Component<Props> = (props) => {
                 <button
                     class={cn(
                         buttonVariants({ variant: "transparent" }),
-                        "px-1 py-2"
+                        "px-1 py-2",
                     )}
                 >
                     <Icon path={ellipsisVertical} class="w-7" />
@@ -54,19 +54,31 @@ export const OptionsDropdownMenu: Component<Props> = (props) => {
                         <span>FAQ</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <a href="mailto:vigovlugt+draftgap@gmail.com" target="_blank" class="flex items-center">
+                        <a
+                            href="mailto:vigovlugt+draftgap@gmail.com"
+                            target="_blank"
+                            class="flex items-center"
+                        >
                             <DropdownMenuIcon path={envelope} />
                             <span>Contact</span>
                         </a>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <a href="https://leagueofitems.com" target="_blank" class="flex items-center">
+                        <a
+                            href="https://leagueofitems.com"
+                            target="_blank"
+                            class="flex items-center"
+                        >
                             <DropdownMenuIcon path={globeAlt} />
                             <span>LeagueOfItems</span>
                         </a>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <a href="https://www.buymeacoffee.com/vigovlugt" target="_blank" class="flex items-center">
+                        <a
+                            href="https://www.buymeacoffee.com/vigovlugt"
+                            target="_blank"
+                            class="flex items-center"
+                        >
                             <DropdownMenuIcon path={heart} />
                             <span>Donate</span>
                         </a>

@@ -27,7 +27,7 @@ interface Props {
 }
 
 export function DuoResultTable(
-    props: Props & JSX.HTMLAttributes<HTMLDivElement>
+    props: Props & JSX.HTMLAttributes<HTMLDivElement>,
 ) {
     const { dataset } = useDataset();
     const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
@@ -70,7 +70,7 @@ export function DuoResultTable(
                 footerClass: "w-1",
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<AnalyzeDuoResult, unknown>
+                    info: CellContext<AnalyzeDuoResult, unknown>,
                 ) => {
                     e.stopPropagation();
                     props.onClickChampion?.(info.getValue<string>());
@@ -80,7 +80,7 @@ export function DuoResultTable(
                 dataset()!.championData[
                     a.getValue<string>(id)
                 ].name.localeCompare(
-                    dataset()!.championData[b.getValue<string>(id)].name
+                    dataset()!.championData[b.getValue<string>(id)].name,
                 ),
         },
         {
@@ -107,7 +107,7 @@ export function DuoResultTable(
             meta: {
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<AnalyzeDuoResult, unknown>
+                    info: CellContext<AnalyzeDuoResult, unknown>,
                 ) => {
                     e.stopPropagation();
                     props.onClickChampion?.(info.getValue<string>());
@@ -117,7 +117,7 @@ export function DuoResultTable(
                 dataset()!.championData[
                     a.getValue<string>(id)
                 ].name.localeCompare(
-                    dataset()!.championData[b.getValue<string>(id)].name
+                    dataset()!.championData[b.getValue<string>(id)].name,
                 ),
         },
         {
@@ -135,7 +135,7 @@ export function DuoResultTable(
                 footerClass: "w-1",
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<AnalyzeDuoResult, unknown>
+                    info: CellContext<AnalyzeDuoResult, unknown>,
                 ) => {
                     e.stopPropagation();
                     setChosenResult(info.row.original);

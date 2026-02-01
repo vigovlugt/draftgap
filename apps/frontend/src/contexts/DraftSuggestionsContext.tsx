@@ -16,7 +16,7 @@ export function createDraftSuggestionsContext() {
             dataset30Days()!,
             allyTeamComp(),
             opponentTeamComp(),
-            draftAnalysisConfig()
+            draftAnalysisConfig(),
         );
     });
 
@@ -28,7 +28,7 @@ export function createDraftSuggestionsContext() {
             dataset30Days()!,
             opponentTeamComp(),
             allyTeamComp(),
-            draftAnalysisConfig()
+            draftAnalysisConfig(),
         );
     });
 

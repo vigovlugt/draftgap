@@ -26,7 +26,7 @@ export const BuildsViewTabs = (props: { team: Team }) => {
                     value: { team: props.team, index: i },
                     label: overflowEllipsis(
                         dataset()!.championData[team()[i].championKey!].name,
-                        10
+                        10,
                     ),
                 }))}
             selected={buildPick()}

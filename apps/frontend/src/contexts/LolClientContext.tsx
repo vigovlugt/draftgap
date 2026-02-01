@@ -99,12 +99,12 @@ export const createLolClientContext = () => {
     const { isFavourite, setFavourite } = useUser();
 
     const [clientState, setClientState] = createSignal<ClientState>(
-        ClientState.NotFound
+        ClientState.NotFound,
     );
     const [clientError, setClientError] = createSignal<string | undefined>();
     const [champSelectSession, setChampSelectSession] =
         createStore<LolChampSelectChampSelectSession>(
-            createChampSelectSession()
+            createChampSelectSession(),
         );
     const [hasCurrentSummoner, setHasCurrentSummoner] = createSignal(false);
     const [currentSummoner, setCurrentSummoner] =
@@ -132,7 +132,7 @@ export const createLolClientContext = () => {
 
     const updateChampSelectSession = (
         session: LolChampSelectChampSelectSession,
-        firstTime = false
+        firstTime = false,
     ) => {
         const nextPick = session.actions
             .flat()
@@ -151,7 +151,7 @@ export const createLolClientContext = () => {
         const processSelection = (
             selection: LolChampSelectChampSelectPlayerSelection,
             team: Team,
-            index: number
+            index: number,
         ) => {
             const teamPicks = team === "ally" ? allyTeam : opponentTeam;
 
@@ -208,7 +208,7 @@ export const createLolClientContext = () => {
                 .map((a) =>
                     a.completed && a.type === "ban"
                         ? String(a.championId)
-                        : null
+                        : null,
                 )
                 .filter(Boolean) as string[];
             if (
@@ -224,7 +224,7 @@ export const createLolClientContext = () => {
                     ? session.myTeam
                     : session.theirTeam;
                 const index = nextPickTeamSelection.findIndex(
-                    (s) => s.cellId === nextPick.actorCellId
+                    (s) => s.cellId === nextPick.actorCellId,
                 );
 
                 // Only update next pick if ally
@@ -233,7 +233,7 @@ export const createLolClientContext = () => {
                     select(
                         nextPick.isAllyAction ? "ally" : "opponent",
                         index,
-                        false
+                        false,
                     );
                 }
             }
@@ -246,7 +246,7 @@ export const createLolClientContext = () => {
         const DRAFTGAP_IMPORT_FAVOURITES_LAST_ASKED =
             "draftgap-import-favourites-last-asked";
         const lastAsked = localStorage.getItem(
-            DRAFTGAP_IMPORT_FAVOURITES_LAST_ASKED
+            DRAFTGAP_IMPORT_FAVOURITES_LAST_ASKED,
         );
         if (lastAsked) {
             const lastAskedDate = new Date(lastAsked);
@@ -267,11 +267,11 @@ export const createLolClientContext = () => {
             c.positionsFavorited.map((p) => ({
                 championKey: c.id.toString(),
                 role: getRoleFromString(p as LolalyticsRole),
-            }))
+            })),
         );
 
         const nonFavouritePicks = lolFavourites.filter(
-            (f) => !isFavourite(f.championKey, f.role)
+            (f) => !isFavourite(f.championKey, f.role),
         );
 
         if (!nonFavouritePicks.length) {
@@ -288,7 +288,7 @@ export const createLolClientContext = () => {
 
         localStorage.setItem(
             DRAFTGAP_IMPORT_FAVOURITES_LAST_ASKED,
-            new Date().toISOString()
+            new Date().toISOString(),
         );
     };
 
@@ -338,7 +338,7 @@ export const createLolClientContext = () => {
 
                         updateChampSelectSession(
                             session,
-                            clientState() !== ClientState.InChampSelect
+                            clientState() !== ClientState.InChampSelect,
                         );
                         setClientState(ClientState.InChampSelect);
                     });
@@ -346,7 +346,7 @@ export const createLolClientContext = () => {
                 setClientError(undefined);
             } catch (e) {
                 setClientState(ClientState.NotFound);
-                 
+
                 setClientError((e as any).toString());
             }
 

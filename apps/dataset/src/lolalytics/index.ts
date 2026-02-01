@@ -13,7 +13,7 @@ import type { RiotChampion } from "../riot";
 
 export async function getChampionDataFromLolalytics(
     version: string,
-    champion: RiotChampion
+    champion: RiotChampion,
 ) {
     const [championData, champion2Data] = await Promise.all([
         getLolalyticsQwikChampion(version, champion.id),
@@ -28,14 +28,14 @@ export async function getChampionDataFromLolalytics(
 
     const mainRole = championData.header.lane as LolalyticsRole;
     const remainingRoles = LOLALYTICS_ROLES.filter(
-        (role) => role !== championData.header.lane
+        (role) => role !== championData.header.lane,
     );
 
     const rolePromises = remainingRoles.map((role) =>
         Promise.all([
             getLolalyticsQwikChampion(version, champion.id, role),
             getLolalyticsQwikChampion2(version, champion.id, role),
-        ])
+        ]),
     );
     const roleDataResults = await Promise.allSettled(rolePromises);
 
@@ -46,7 +46,7 @@ export async function getChampionDataFromLolalytics(
 
         console.log(
             `No data for ${champion.id} in role ${remainingRoles[i]}`,
-            result.reason
+            result.reason,
         );
 
         return [remainingRoles[i], undefined] as const;
@@ -66,7 +66,7 @@ export async function getChampionDataFromLolalytics(
                 const championRoleData: ChampionRoleData = {
                     games: championData.header.n,
                     wins: Math.round(
-                        (championData.header.n * championData.header.wr) / 100
+                        (championData.header.n * championData.header.wr) / 100,
                     ),
                     matchup: Object.fromEntries(
                         LOLALYTICS_ROLES.map((role) => {
@@ -94,10 +94,10 @@ export async function getChampionDataFromLolalytics(
                                         };
 
                                         return [d[0], matchup];
-                                    })
+                                    }),
                                 ),
                             ];
-                        })
+                        }),
                     ) as Record<Role, Record<string, ChampionMatchupData>>,
                     synergy: Object.fromEntries(
                         LOLALYTICS_ROLES.filter((r) => r !== role).map(
@@ -117,20 +117,20 @@ export async function getChampionDataFromLolalytics(
                                                 games,
                                             ] = d;
                                             const synergy: ChampionSynergyData =
-                                            {
-                                                championKey:
-                                                    championKey.toString(),
-                                                games,
-                                                wins:
-                                                    games * (winRate / 100),
-                                            };
+                                                {
+                                                    championKey:
+                                                        championKey.toString(),
+                                                    games,
+                                                    wins:
+                                                        games * (winRate / 100),
+                                                };
 
                                             return [d[0], synergy];
-                                        })
+                                        }),
                                     ),
                                 ];
-                            }
-                        )
+                            },
+                        ),
                     ) as Record<Role, Record<string, ChampionSynergyData>>,
                     damageProfile: championData.header.damage,
                     statsByTime: Array.from({ length: 5 }).map((_, i) => {
@@ -162,7 +162,7 @@ export async function getChampionDataFromLolalytics(
                 };
 
                 return [getRoleFromString(role), championRoleData];
-            })
+            }),
         ) as Record<Role, ChampionRoleData>,
     };
 

@@ -30,9 +30,9 @@ export function ScalingChart() {
                                     (result) =>
                                         Math.round(
                                             ratingToWinrate(
-                                                result.totalRating
-                                            ) * 10000
-                                        ) / 100
+                                                result.totalRating,
+                                            ) * 10000,
+                                        ) / 100,
                                 ),
                                 borderColor: "#3c82f6",
                             },
@@ -42,9 +42,9 @@ export function ScalingChart() {
                                     (result) =>
                                         Math.round(
                                             ratingToWinrate(
-                                                result.totalRating
-                                            ) * 10000
-                                        ) / 100
+                                                result.totalRating,
+                                            ) * 10000,
+                                        ) / 100,
                                 ),
                                 borderColor: "#ef4444",
                             },
@@ -74,8 +74,8 @@ export function ScalingChart() {
                                                         `${dataset()?.championData[
                                                             r.championKey
                                                         ]?.name.toUpperCase()} - ${formatRating(
-                                                            r.rating
-                                                        )}`
+                                                            r.rating,
+                                                        )}`,
                                                 );
 
                                         return [
@@ -83,7 +83,7 @@ export function ScalingChart() {
                                             "",
                                             "TOTAL - " +
                                                 formatRating(
-                                                    result.totalRating
+                                                    result.totalRating,
                                                 ),
                                         ];
                                     },

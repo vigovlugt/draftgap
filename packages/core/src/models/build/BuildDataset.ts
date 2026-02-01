@@ -43,7 +43,6 @@ export type RunesBuildData = {
     };
 };
 
-
 export type ItemsBuildData = {
     boots: Record<string, EntityStats>;
     statsByOrder: Record<string, EntityStats>[];
@@ -64,4 +63,4 @@ export type SkillOrder = "QWE" | "QEW" | "WQE" | "WEQ" | "EQW" | "EWQ";
 export type SkillsBuildData = {
     order: Record<SkillOrder, EntityStats>;
     level: Record<Skill, EntityStats>[];
-}
+};

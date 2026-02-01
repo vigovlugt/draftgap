@@ -76,12 +76,12 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
                 dataset()!.championData[
                     a.getValue<string>(id)
                 ].name.localeCompare(
-                    dataset()!.championData[b.getValue<string>(id)].name
+                    dataset()!.championData[b.getValue<string>(id)].name,
                 ),
             meta: {
                 onClickCell: (
                     e: MouseEvent,
-                    info: CellContext<ChampionContribution, unknown>
+                    info: CellContext<ChampionContribution, unknown>,
                 ) => {
                     e.stopPropagation();
                     props.onClickChampion?.(info.getValue<string>());
@@ -168,7 +168,7 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
                         acc.set(result.championKey, result);
                         return acc;
                     },
-                    new Map<string, AnalyzeChampionResult>()
+                    new Map<string, AnalyzeChampionResult>(),
                 );
 
             const allyDuoResultsByChampionKey =
@@ -185,7 +185,7 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
 
                         return acc;
                     },
-                    new Map<string, AnalyzeDuoResult[]>()
+                    new Map<string, AnalyzeDuoResult[]>(),
                 );
 
             const allyMatchupResultsByChampionKey =
@@ -198,7 +198,7 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
 
                         return acc;
                     },
-                    new Map<string, AnalyzeMatchupResult[]>()
+                    new Map<string, AnalyzeMatchupResult[]>(),
                 );
 
             const contributions = champions.map((championKey) => {
@@ -212,11 +212,11 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
                 const baseRating = allyChampionResult?.rating ?? 0;
                 const matchupRating = matchupResults.reduce(
                     (acc, result) => acc + result.rating,
-                    0
+                    0,
                 );
                 const duoRating = allyDuoResults.reduce(
                     (acc, result) => acc + result.rating / 2,
-                    0
+                    0,
                 );
 
                 const totalRating = baseRating + matchupRating + duoRating;

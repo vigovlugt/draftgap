@@ -1,7 +1,7 @@
 import { JSX } from "solid-js";
 
 export default function SupportIcon(
-    props: JSX.SvgSVGAttributes<SVGSVGElement>
+    props: JSX.SvgSVGAttributes<SVGSVGElement>,
 ) {
     return (
         <svg viewBox="0 0 31 31" {...props}>

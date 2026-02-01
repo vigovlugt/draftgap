@@ -24,7 +24,7 @@ function DialogOverlay(props: ComponentProps<typeof DialogPrimitives.Overlay>) {
             {...props}
             class={cn(
                 "fixed inset-0 bg-black/40 transition-colors",
-                props.class
+                props.class,
             )}
         />
     );
@@ -33,7 +33,7 @@ function DialogOverlay(props: ComponentProps<typeof DialogPrimitives.Overlay>) {
 export function DialogContent(
     props: ComponentProps<typeof DialogPrimitives.Content> & {
         canClose?: boolean;
-    }
+    },
 ) {
     return (
         <DialogPortal>
@@ -42,7 +42,7 @@ export function DialogContent(
                 {...props}
                 class={cn(
                     "fixed z-50 grid w-full gap-4 rounded-lg bg-primary p-6 shadow-lg max-w-lg sm:rounded-lg border border-white/10 max-h-[calc(100%-4rem)] overflow-y-auto animate-dialog-leave ui-expanded:animate-dialog-enter",
-                    props.class
+                    props.class,
                 )}
             >
                 {props.children}
@@ -62,7 +62,7 @@ export function DialogHeader(props: ComponentProps<"div">) {
             {...props}
             class={cn(
                 "flex flex-col space-y-1.5 text-center sm:text-left",
-                props.class
+                props.class,
             )}
         >
             {props.children}
@@ -76,7 +76,7 @@ export function DialogFooter(props: ComponentProps<"div">) {
             {...props}
             class={cn(
                 "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-                props.class
+                props.class,
             )}
         >
             {props.children}
@@ -85,14 +85,14 @@ export function DialogFooter(props: ComponentProps<"div">) {
 }
 
 export function DialogTitle(
-    props: ComponentProps<typeof DialogPrimitives.Title>
+    props: ComponentProps<typeof DialogPrimitives.Title>,
 ) {
     return (
         <DialogPrimitives.Title
             {...props}
             class={cn(
                 "text-4xl uppercase font-medium leading-none",
-                props.class
+                props.class,
             )}
         >
             {props.children}
@@ -101,7 +101,7 @@ export function DialogTitle(
 }
 
 export function DialogDescription(
-    props: ComponentProps<typeof DialogPrimitives.Description>
+    props: ComponentProps<typeof DialogPrimitives.Description>,
 ) {
     return (
         <DialogPrimitives.Description

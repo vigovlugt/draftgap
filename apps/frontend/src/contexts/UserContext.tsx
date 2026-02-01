@@ -37,7 +37,7 @@ const CONFIG_KEY = "draftgap-config";
 
 function createConfig() {
     const partialInitialConfig = JSON.parse(
-        localStorage.getItem(CONFIG_KEY) || "{}"
+        localStorage.getItem(CONFIG_KEY) || "{}",
     );
 
     const [config, setConfig] = createStore<DraftGapConfig>({
@@ -61,7 +61,7 @@ function createFavouritePicks() {
     createEffect(() => {
         localStorage.setItem(
             "draftgap-favourite-picks",
-            JSON.stringify([...favouritePicks()])
+            JSON.stringify([...favouritePicks()]),
         );
     });
 

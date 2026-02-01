@@ -68,7 +68,7 @@ export const BuildEntityCell = (props: Props) => {
                         .sort(
                             (a, b) =>
                                 dataset()!.itemData[b].gold -
-                                dataset()!.itemData[a].gold
+                                dataset()!.itemData[a].gold,
                         );
 
                     return `https://ddragon.leagueoflegends.com/cdn/${

@@ -25,7 +25,7 @@ export async function getDataset({ name }: { name: string }) {
 
 export async function storeDataset(
     dataset: Dataset,
-    { name }: { name: string }
+    { name }: { name: string },
 ) {
     const params = {
         Bucket: process.env.S3_BUCKET || "draftgap",
@@ -40,8 +40,9 @@ export async function storeDataset(
         byteLength: params.Body.length,
     };
     console.log(
-        `Stored dataset ${params.Bucket}/${params.Key
-        } of size ${bytesToHumanReadable(serialized.byteLength)}`
+        `Stored dataset ${params.Bucket}/${
+            params.Key
+        } of size ${bytesToHumanReadable(serialized.byteLength)}`,
     );
 
     const corsCommand = new PutBucketCorsCommand({

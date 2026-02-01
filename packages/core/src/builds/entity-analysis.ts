@@ -39,7 +39,7 @@ export type EntityStats = {
 
 export type EntityStatsGetter<T> = (
     dataset: PartialBuildDataset,
-    entity: T
+    entity: T,
 ) => EntityStats;
 
 export function analyzeEntity<T>(
@@ -47,21 +47,21 @@ export function analyzeEntity<T>(
     fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
     getStats: EntityStatsGetter<T>,
-    entity: T
+    entity: T,
 ) {
     const baseResult = analyzeBaseEntity(
         partialBuildDataset,
         fullBuildDataset,
         config,
         getStats,
-        entity
+        entity,
     );
     const matchupResult = analyzeEntityMatchups(
         partialBuildDataset,
         fullBuildDataset,
         config,
         getStats,
-        entity
+        entity,
     );
 
     const totalRating = baseResult.rating + matchupResult.totalRating;
@@ -78,7 +78,7 @@ export function analyzeBaseEntity<T>(
     fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
     getStats: EntityStatsGetter<T>,
-    entity: T
+    entity: T,
 ) {
     const priorGames = buildPriorGamesByRiskLevel[config.riskLevel];
 
@@ -109,7 +109,7 @@ export function analyzeEntityMatchups<T>(
     fullBuildDataset: FullBuildDataset,
     config: AnalyzeDraftConfig,
     getStats: EntityStatsGetter<T>,
-    entity: T
+    entity: T,
 ) {
     const matchupResults = fullBuildDataset.matchups.map((m) =>
         analyzeEntityMatchup(
@@ -118,13 +118,13 @@ export function analyzeEntityMatchups<T>(
             config,
             getStats,
             entity,
-            m
-        )
+            m,
+        ),
     );
 
     const totalRating = matchupResults.reduce(
         (total, r) => total + r.rating,
-        0
+        0,
     );
 
     return {
@@ -139,7 +139,7 @@ export function analyzeEntityMatchup<T>(
     config: AnalyzeDraftConfig,
     getStats: EntityStatsGetter<T>,
     entity: T,
-    matchup: BuildMatchupData
+    matchup: BuildMatchupData,
 ) {
     const priorGames = buildPriorGamesByRiskLevel[config.riskLevel];
 
@@ -158,7 +158,7 @@ export function analyzeEntityMatchup<T>(
     const matchupRating = winrateToRating(matchupWinrate);
     const expectedWithEntityMatchupRating = matchupRating + entityRating;
     const expectedWithEntityMatchupWinrate = ratingToWinrate(
-        expectedWithEntityMatchupRating
+        expectedWithEntityMatchupRating,
     );
 
     const rawMatchupWithEntityStats = getStats(matchup, entity);
@@ -184,8 +184,8 @@ export function analyzeEntityMatchup<T>(
             ratingToWinrate(
                 winrateToRating(
                     rawMatchupWithEntityStats.wins /
-                    rawMatchupWithEntityStats.games
-                ) - expectedWithEntityMatchupRating
+                        rawMatchupWithEntityStats.games,
+                ) - expectedWithEntityMatchupRating,
             ) * rawMatchupWithEntityStats.games,
         raw: {
             games: rawMatchupWithEntityStats.games,

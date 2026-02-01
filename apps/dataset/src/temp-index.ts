@@ -39,8 +39,8 @@ async function scrapePage(browser: Browser, role: string) {
     return await page.evaluate(() => {
         const rows = Array.from(
             document.querySelectorAll(
-                "div.odd\\:bg-\\[\\#181818\\].even\\:bg-\\[\\#101010\\]"
-            )
+                "div.odd\\:bg-\\[\\#181818\\].even\\:bg-\\[\\#101010\\]",
+            ),
         ).map((el) => {
             const name = (
                 el.children[2].children[0] as HTMLAnchorElement
@@ -50,12 +50,12 @@ async function scrapePage(browser: Browser, role: string) {
                     (
                         el.children[5].children[0]
                             .children[0] as HTMLSpanElement
-                    ).innerText.trim()
+                    ).innerText.trim(),
                 ) / 100;
             const games = parseInt(
                 (el.children[9] as HTMLDivElement).innerText
                     .trim()
-                    .replaceAll(",", "")
+                    .replaceAll(",", ""),
             );
 
             return {
@@ -69,9 +69,9 @@ async function scrapePage(browser: Browser, role: string) {
             parseFloat(
                 document
                     .querySelector(
-                        "div.flex.h-\\[51px\\].flex-1.items-center.text-xs"
+                        "div.flex.h-\\[51px\\].flex-1.items-center.text-xs",
                     )!
-                    .children[0].childNodes[2].textContent!.trim()
+                    .children[0].childNodes[2].textContent!.trim(),
             ) / 100;
 
         return {
@@ -102,7 +102,7 @@ async function main() {
                 d.rows
                     .map((row) => {
                         const champion = champions.find(
-                            (c) => c.name === row.name
+                            (c) => c.name === row.name,
                         );
                         if (!champion) {
                             console.log("No champion found for", row.name);
@@ -114,7 +114,7 @@ async function main() {
                         const newWins =
                             ratingToWinrate(
                                 winrateToRating(row.wins / row.games) -
-                                    rankRating
+                                    rankRating,
                             ) * row.games;
 
                         return {
@@ -129,7 +129,7 @@ async function main() {
                     wins: number;
                     games: number;
                     role: number;
-                }[]
+                }[],
         )
         .flat();
 

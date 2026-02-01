@@ -23,7 +23,7 @@ export type Team = {
 export async function getLolalyticsQwikChampion2(
     patch: string,
     championId: string,
-    role?: LolalyticsRole
+    role?: LolalyticsRole,
     // matchupId?: string,
     // matchupRole?: LolalyticsRole
 ) {
@@ -50,7 +50,7 @@ export async function getLolalyticsQwikChampion2(
     // }
 
     const res = await retry(() =>
-        fetch(`https://a1.lolalytics.com/mega/?${queryParams.toString()}`)
+        fetch(`https://a1.lolalytics.com/mega/?${queryParams.toString()}`),
     );
 
     const json = (await res.json()) as LolalyticsChampion2Response;

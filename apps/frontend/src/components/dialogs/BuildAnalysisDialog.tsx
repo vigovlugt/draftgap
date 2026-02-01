@@ -6,7 +6,7 @@ import { tooltip } from "../../directives/tooltip";
 import { useDataset } from "../../contexts/DatasetContext";
 import { DialogContent, DialogTitle } from "../common/Dialog";
 import { Show } from "solid-js";
-// eslint-disable-next-line 
+// eslint-disable-next-line
 tooltip;
 
 export function BuildAnalysisDialog() {
@@ -29,25 +29,28 @@ export function BuildAnalysisDialog() {
                     const items = selected.id
                         .split("_")
                         .map((id) => parseInt(id))
-                        .reduce((acc, id) => {
-                            if (acc[id] !== undefined) {
-                                acc[id] += 1;
-                            } else {
-                                acc[id] = 1;
-                            }
+                        .reduce(
+                            (acc, id) => {
+                                if (acc[id] !== undefined) {
+                                    acc[id] += 1;
+                                } else {
+                                    acc[id] = 1;
+                                }
 
-                            return acc;
-                        }, {} as Record<number, number>);
+                                return acc;
+                            },
+                            {} as Record<number, number>,
+                        );
                     return Object.entries(items)
                         .sort(
                             ([id1], [id2]) =>
                                 dataset()!.itemData[parseInt(id2)].gold -
-                                dataset()!.itemData[parseInt(id1)].gold
+                                dataset()!.itemData[parseInt(id1)].gold,
                         )
                         .map(
                             ([id, amount]) =>
                                 (amount > 1 ? `${amount} ` : "") +
-                                dataset()!.itemData[parseInt(id)].name
+                                dataset()!.itemData[parseInt(id)].name,
                         )
                         .join(" + ");
                 }
@@ -97,7 +100,7 @@ export function BuildAnalysisDialog() {
                         .sort(
                             (a, b) =>
                                 dataset()!.itemData[b].gold -
-                                dataset()!.itemData[a].gold
+                                dataset()!.itemData[a].gold,
                         );
 
                     return `https://ddragon.leagueoflegends.com/cdn/${
@@ -170,7 +173,7 @@ export function BuildAnalysisDialog() {
                                         if (
                                             selected.type === "rune" &&
                                             selected.runeType.startsWith(
-                                                "shard"
+                                                "shard",
                                             )
                                         ) {
                                             return "pixelated";

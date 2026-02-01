@@ -28,7 +28,7 @@ export const createImportFavouritePicksSuccessToast = (amount: number) => {
         ),
         {
             duration: 3000,
-        }
+        },
     );
 };
 
@@ -44,7 +44,7 @@ export const createErrorToast = (message: string) => {
         ),
         {
             duration: 3000,
-        }
+        },
     );
 };
 
@@ -60,6 +60,6 @@ export const createMustSelectToast = () => {
         ),
         {
             duration: 3000,
-        }
+        },
     );
 };

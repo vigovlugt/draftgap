@@ -22,7 +22,7 @@ export const BuildSummaryCards: Component<
             item: "Item",
             summonerSpells: "Summoner Spell",
             skills: "Skills",
-        }[selectedEntity()!.type]);
+        })[selectedEntity()!.type];
     const name = () => {
         const selected = selectedEntity()!;
         switch (selected.type) {
@@ -109,9 +109,11 @@ export const BuildSummaryCards: Component<
             case "order":
                 return buildAnalysisResult()!.skills.order[selected.id];
             case "level":
-                return buildAnalysisResult()!.skills.levels[selected.level][selected.id];
+                return buildAnalysisResult()!.skills.levels[selected.level][
+                    selected.id
+                ];
         }
-    }
+    };
 
     const analysisResult = () => {
         const selected = selectedEntity()!;
@@ -146,7 +148,7 @@ export const BuildSummaryCards: Component<
             {...props}
             class={cn(
                 "grid overflow-hidden rounded-lg bg-primary grid-cols-2 sm:grid-cols-3",
-                props.class
+                props.class,
             )}
         >
             <SummaryCard

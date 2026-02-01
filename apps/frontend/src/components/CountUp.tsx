@@ -62,8 +62,8 @@ export const CountUp: Component<Props> = (props) => {
                     };
 
                     update();
-                }
-            )
+                },
+            ),
         );
     });
 

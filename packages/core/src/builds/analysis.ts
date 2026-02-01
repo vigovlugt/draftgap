@@ -27,7 +27,7 @@ export function analyzeBuild(
     fullDataset: Dataset,
     partialBuildDataset: PartialBuildDataset,
     fullBuildDatset: FullBuildDataset,
-    config: AnalyzeDraftConfig
+    config: AnalyzeDraftConfig,
 ) {
     return {
         runes: analyzeRunes(partialBuildDataset, fullBuildDatset, config),
@@ -35,12 +35,8 @@ export function analyzeBuild(
         summonerSpells: analyzeSummonerSpells(
             partialBuildDataset,
             fullBuildDatset,
-            config
+            config,
         ),
-        skills: analyzeSkills(
-            partialBuildDataset,
-            fullBuildDatset,
-            config
-        ),
+        skills: analyzeSkills(partialBuildDataset, fullBuildDatset, config),
     };
 }

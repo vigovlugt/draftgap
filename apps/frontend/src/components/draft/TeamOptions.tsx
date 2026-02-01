@@ -29,7 +29,7 @@ export function TeamOptions(props: Props) {
                     <button
                         class={cn(
                             buttonVariants({ variant: "transparent" }),
-                            "px-1 py-2"
+                            "px-1 py-2",
                         )}
                     >
                         <Icon path={ellipsisVertical} class="h-7" />
