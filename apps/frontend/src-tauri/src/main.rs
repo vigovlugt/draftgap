@@ -4,11 +4,15 @@
 )]
 #[cfg(target_os = "windows")]
 use std::os::windows::process::CommandExt;
+use std::path::PathBuf;
 
 use reqwest::Client;
 use serde::Serialize;
 use serde_json::Value;
 use tauri::async_runtime::Mutex;
+
+#[cfg(target_os = "windows")]
+use windows_sys::Win32::UI::WindowsAndMessaging::{MessageBoxW, MB_ICONERROR, MB_OK};
 
 struct AppState {
     lcu_data: Mutex<Option<LcuData>>,
@@ -20,6 +24,53 @@ struct LcuData {
     port: u16,
     password: String,
     username: String,
+}
+
+fn write_startup_log(contents: &str) -> Option<PathBuf> {
+    let dir = std::env::temp_dir().join("DraftGap");
+    std::fs::create_dir_all(&dir).ok()?;
+
+    let path = dir.join("startup-error.log");
+    std::fs::write(&path, contents).ok()?;
+    Some(path)
+}
+
+fn show_fatal_error(title: &str, message: &str) {
+    #[cfg(target_os = "windows")]
+    {
+        let title_w: Vec<u16> = title.encode_utf16().chain(std::iter::once(0)).collect();
+        let message_w: Vec<u16> = message
+            .encode_utf16()
+            .chain(std::iter::once(0))
+            .collect();
+
+        unsafe {
+            MessageBoxW(
+                0,
+                message_w.as_ptr(),
+                title_w.as_ptr(),
+                MB_OK | MB_ICONERROR,
+            );
+        }
+        return;
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    {
+        eprintln!("{title}: {message}");
+    }
+}
+
+fn report_startup_failure(kind: &str, details: &str) {
+    let mut message = format!(
+        "DraftGap failed to start ({kind}).\n\nThis is commonly caused by a missing or broken Microsoft Edge WebView2 Runtime.\n\nInstall/repair WebView2 and try again:\nhttps://go.microsoft.com/fwlink/p/?LinkId=2124703\n\nDetails:\n{details}" 
+    );
+
+    if let Some(path) = write_startup_log(&message) {
+        message.push_str(&format!("\n\nLog file written to:\n{}", path.display()));
+    }
+
+    show_fatal_error("DraftGap", &message);
 }
 
 fn get_league_lcu_data() -> Result<LcuData, String> {
@@ -169,17 +220,37 @@ async fn get_pickable_champion_ids(state: tauri::State<'_, AppState>) -> Result<
 }
 
 fn main() {
-    let client = Client::builder()
+    std::panic::set_hook(Box::new(|info| {
+        let details = match info.location() {
+            Some(loc) => format!(
+                "panic at {}:{}:{}\n{}",
+                loc.file(),
+                loc.line(),
+                loc.column(),
+                info
+            ),
+            None => format!("panic\n{info}"),
+        };
+        report_startup_failure("panic", &details);
+    }));
+
+    let client = match Client::builder()
         .danger_accept_invalid_certs(true)
         .build()
-        .expect("Could not build client");
+    {
+        Ok(client) => client,
+        Err(e) => {
+            report_startup_failure("http-client", &format!("{e}"));
+            return;
+        }
+    };
 
     let state = AppState {
         lcu_data: Mutex::new(None),
         client,
     };
 
-    tauri::Builder::default()
+    let run_result = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_process::init())
@@ -191,6 +262,9 @@ fn main() {
             get_grid_champions,
             get_pickable_champion_ids
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .run(tauri::generate_context!());
+
+    if let Err(e) = run_result {
+        report_startup_failure("tauri-run", &format!("{e}"));
+    }
 }
