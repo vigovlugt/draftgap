@@ -63,6 +63,10 @@ export function createDraftAnalysisContext() {
         ignoreChampionWinrates: config.ignoreChampionWinrates,
         riskLevel: config.riskLevel,
         minGames: config.minGames,
+        usePickBanRateAdjustments: config.usePickBanRateAdjustments,
+        banRateRatingBonus: config.banRateRatingBonus,
+        pickRatePriorScale: config.pickRatePriorScale,
+        referencePickRate: config.referencePickRate,
     });
 
     const allyDraftAnalysis = createMemo(() => {

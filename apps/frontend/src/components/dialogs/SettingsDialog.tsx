@@ -7,6 +7,10 @@ import {
     RiskLevel,
     displayNameByRiskLevel,
 } from "@draftgap/core/src/risk/risk-level";
+import {
+    EloBracket,
+    displayNameByEloBracket,
+} from "@draftgap/core/src/models/rank/elo-bracket";
 import { useUser } from "../../contexts/UserContext";
 import { useMedia } from "../../hooks/useMedia";
 import {
@@ -30,6 +34,13 @@ export default function SettingsDialog() {
         (level) => ({
             value: level,
             label: displayNameByRiskLevel[level],
+        }),
+    );
+
+    const eloBracketOptions: ButtonGroupOption<EloBracket>[] = EloBracket.map(
+        (bracket) => ({
+            value: bracket,
+            label: displayNameByEloBracket[bracket],
         }),
     );
 
@@ -106,6 +117,33 @@ export default function SettingsDialog() {
                         })
                     }
                 />
+                <div class="flex flex-col gap-1 mt-2">
+                    <span class="text-lg uppercase block">Elo</span>
+                    <ButtonGroup
+                        options={eloBracketOptions}
+                        selected={config.eloBracket}
+                        size="sm"
+                        onChange={(value: EloBracket) =>
+                            setConfig({
+                                eloBracket: value,
+                            })
+                        }
+                    />
+                </div>
+                <div class="flex space-x-16 items-center justify-between mt-2">
+                    <span class="text-lg uppercase">
+                        Adjust ratings using pick/ban rate
+                    </span>
+                    <Switch
+                        checked={config.usePickBanRateAdjustments}
+                        onChange={() =>
+                            setConfig({
+                                usePickBanRateAdjustments:
+                                    !config.usePickBanRateAdjustments,
+                            })
+                        }
+                    />
+                </div>
             </div>
             <div>
                 <h3 class="text-3xl uppercase">UI</h3>

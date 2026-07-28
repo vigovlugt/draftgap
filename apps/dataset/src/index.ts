@@ -23,6 +23,7 @@ import {
     type RiotSummonerSpell,
 } from "./riot";
 import type { SummonerSpellData } from "@draftgap/core/src/models/dataset/SummonerSpellData";
+import { EloBracket } from "@draftgap/core/src/models/rank/elo-bracket";
 
 const BATCH_SIZE = 10;
 
@@ -100,25 +101,33 @@ async function main() {
         },
     }));
 
-    const datasetCurrentPatch = await getDataset(
-        currentVersion,
-        champions,
-        runes,
-        items,
-        summonerSpells,
-    );
-    const dataset30days = await getDataset(
-        "30",
-        champions,
-        runes,
-        items,
-        summonerSpells,
-    );
+    for (const eloBracket of EloBracket) {
+        console.log("Building dataset for elo bracket", eloBracket);
 
-    deleteDatasetMatchupSynergyData(datasetCurrentPatch);
+        const datasetCurrentPatch = await getDataset(
+            currentVersion,
+            champions,
+            runes,
+            items,
+            summonerSpells,
+            eloBracket,
+        );
+        const dataset30days = await getDataset(
+            "30",
+            champions,
+            runes,
+            items,
+            summonerSpells,
+            eloBracket,
+        );
 
-    await storeDataset(datasetCurrentPatch, { name: "current-patch" });
-    await storeDataset(dataset30days, { name: "30-days" });
+        deleteDatasetMatchupSynergyData(datasetCurrentPatch);
+
+        await storeDataset(datasetCurrentPatch, {
+            name: `${eloBracket}/current-patch`,
+        });
+        await storeDataset(dataset30days, { name: `${eloBracket}/30-days` });
+    }
 }
 
 function riotRunesToRuneData(runes: RiotRunePath[]) {
@@ -209,6 +218,7 @@ async function getDataset(
     runes: RiotRunePath[],
     items: Record<string, RiotItem>,
     summonerSpells: Record<string, RiotSummonerSpell>,
+    eloBracket: EloBracket,
 ) {
     console.log("Getting dataset for version", version);
     const dataset: Dataset = {
@@ -233,7 +243,11 @@ async function getDataset(
                 async (champion) =>
                     [
                         champion,
-                        await getChampionDataFromLolalytics(version, champion),
+                        await getChampionDataFromLolalytics(
+                            version,
+                            champion,
+                            eloBracket,
+                        ),
                     ] as const,
             ),
         );

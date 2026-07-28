@@ -7,17 +7,29 @@ import {
     defaultChampionRoleData,
 } from "@draftgap/core/src/models/dataset/ChampionRoleData";
 import { LOLALYTICS_ROLES, type LolalyticsRole } from "./roles";
-import { getLolalyticsQwikChampion } from "./qwik";
+import { getKdaFromStats, getLolalyticsQwikChampion } from "./qwik";
 import { getLolalyticsQwikChampion2 } from "./qwik-champion2";
 import type { RiotChampion } from "../riot";
+import {
+    DEFAULT_ELO_BRACKET,
+    type EloBracket,
+} from "@draftgap/core/src/models/rank/elo-bracket";
 
 export async function getChampionDataFromLolalytics(
     version: string,
     champion: RiotChampion,
+    tier: EloBracket = DEFAULT_ELO_BRACKET,
 ) {
     const [championData, champion2Data] = await Promise.all([
-        getLolalyticsQwikChampion(version, champion.id),
-        getLolalyticsQwikChampion2(version, champion.id),
+        getLolalyticsQwikChampion(
+            version,
+            champion.id,
+            undefined,
+            undefined,
+            undefined,
+            tier,
+        ),
+        getLolalyticsQwikChampion2(version, champion.id, undefined, tier),
     ]);
 
     // If data is not available, throw
@@ -33,8 +45,15 @@ export async function getChampionDataFromLolalytics(
 
     const rolePromises = remainingRoles.map((role) =>
         Promise.all([
-            getLolalyticsQwikChampion(version, champion.id, role),
-            getLolalyticsQwikChampion2(version, champion.id, role),
+            getLolalyticsQwikChampion(
+                version,
+                champion.id,
+                role,
+                undefined,
+                undefined,
+                tier,
+            ),
+            getLolalyticsQwikChampion2(version, champion.id, role, tier),
         ]),
     );
     const roleDataResults = await Promise.allSettled(rolePromises);
@@ -68,6 +87,9 @@ export async function getChampionDataFromLolalytics(
                     wins: Math.round(
                         (championData.header.n * championData.header.wr) / 100,
                     ),
+                    pickRate: championData.header.pr,
+                    banRate: championData.header.br,
+                    kda: getKdaFromStats(championData.sidebar.stats),
                     matchup: Object.fromEntries(
                         LOLALYTICS_ROLES.map((role) => {
                             const data = championData.enemy[role];

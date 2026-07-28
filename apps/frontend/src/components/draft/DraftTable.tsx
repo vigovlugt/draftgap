@@ -18,6 +18,8 @@ import { Icon } from "solid-heroicons";
 import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
 import { RatingText } from "../common/RatingText";
+import { PercentageText } from "../common/PercentageText";
+import { KdaText } from "../common/KdaText";
 import { createMustSelectToast } from "../../utils/toast";
 import { useUser } from "../../contexts/UserContext";
 import { useDraftSuggestions } from "../../contexts/DraftSuggestionsContext";
@@ -269,6 +271,59 @@ export default function DraftTable() {
                 ].name.localeCompare(
                     dataset()!.championData[b.getValue<string>(id)].name,
                 ),
+        },
+        {
+            header: "Pick Rate",
+            accessorFn: (suggestion) =>
+                dataset()!.championData[suggestion.championKey]?.statsByRole[
+                    suggestion.role
+                ]?.pickRate ?? 0,
+            cell: (info) => (
+                <div class="flex justify-end">
+                    <PercentageText percentage={info.getValue<number>()} />
+                </div>
+            ),
+        },
+        {
+            header: "Ban Rate",
+            accessorFn: (suggestion) =>
+                dataset()!.championData[suggestion.championKey]?.statsByRole[
+                    suggestion.role
+                ]?.banRate ?? 0,
+            cell: (info) => (
+                <div class="flex justify-end">
+                    <PercentageText percentage={info.getValue<number>()} />
+                </div>
+            ),
+        },
+        {
+            header: "KDA",
+            accessorFn: (suggestion) => {
+                const roleData = dataset()!.championData[
+                    suggestion.championKey
+                ]?.statsByRole[suggestion.role];
+                if (!roleData) return 0;
+                return (
+                    (roleData.kda.kills + roleData.kda.assists) /
+                    (roleData.kda.deaths || 1)
+                );
+            },
+            cell: (info) => {
+                const roleData = () =>
+                    dataset()!.championData[info.row.original.championKey]
+                        ?.statsByRole[info.row.original.role];
+                return (
+                    <Show when={roleData()}>
+                        <div class="flex justify-end">
+                            <KdaText
+                                kills={roleData()!.kda.kills}
+                                deaths={roleData()!.kda.deaths}
+                                assists={roleData()!.kda.assists}
+                            />
+                        </div>
+                    </Show>
+                );
+            },
         },
         ...(config.showAdvancedWinrates
             ? ([

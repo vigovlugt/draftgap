@@ -1,5 +1,9 @@
 import { retry } from "../utils";
 import { type LolalyticsRole } from "./roles";
+import {
+    DEFAULT_ELO_BRACKET,
+    type EloBracket,
+} from "@draftgap/core/src/models/rank/elo-bracket";
 
 export type LolalyticsChampion2Response = {
     team_h: string[];
@@ -26,6 +30,7 @@ export async function getLolalyticsQwikChampion2(
     role?: LolalyticsRole,
     // matchupId?: string,
     // matchupRole?: LolalyticsRole
+    tier: EloBracket = DEFAULT_ELO_BRACKET,
 ) {
     championId = championId.toLowerCase();
     if (championId === "monkeyking") {
@@ -38,7 +43,7 @@ export async function getLolalyticsQwikChampion2(
     const queryParams = new URLSearchParams();
     queryParams.append("ep", "build-team");
     queryParams.append("v", "1");
-    queryParams.append("tier", "emerald_plus");
+    queryParams.append("tier", tier);
     queryParams.append("queue", "ranked");
     queryParams.append("region", "all");
     queryParams.append("patch", patch);

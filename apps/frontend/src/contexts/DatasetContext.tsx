@@ -9,11 +9,15 @@ import {
     DATASET_VERSION,
     Dataset,
 } from "@draftgap/core/src/models/dataset/Dataset";
+import { EloBracket } from "@draftgap/core/src/models/rank/elo-bracket";
+import { useUser } from "./UserContext";
 
-const fetchDataset = async (name: "30-days" | "current-patch") => {
+type DatasetKey = { tier: EloBracket; name: "30-days" | "current-patch" };
+
+const fetchDataset = async ({ tier, name }: DatasetKey) => {
     try {
         const response = await fetch(
-            `https://bucket.draftgap.com/datasets/v${DATASET_VERSION}/${name}.json`,
+            `https://bucket.draftgap.com/datasets/v${DATASET_VERSION}/${tier}/${name}.json`,
         );
         const json = await response.json();
         return json as Dataset;
@@ -24,9 +28,17 @@ const fetchDataset = async (name: "30-days" | "current-patch") => {
 };
 
 function createDatasetContext() {
-    const [dataset] = createResource("current-patch", fetchDataset);
+    const { config } = useUser();
 
-    const [dataset30Days] = createResource("30-days", fetchDataset);
+    const [dataset] = createResource(
+        () => ({ tier: config.eloBracket, name: "current-patch" as const }),
+        fetchDataset,
+    );
+
+    const [dataset30Days] = createResource(
+        () => ({ tier: config.eloBracket, name: "30-days" as const }),
+        fetchDataset,
+    );
 
     const isLoaded = () =>
         dataset() !== undefined && dataset30Days() !== undefined;

@@ -8,6 +8,7 @@ import {
 import { createStore } from "solid-js/store";
 import { Role } from "@draftgap/core/src/models/Role";
 import { DraftGapConfig } from "@draftgap/core/src/models/user/Config";
+import { DEFAULT_ELO_BRACKET } from "@draftgap/core/src/models/rank/elo-bracket";
 
 type FavouritePick = `${string}:${Role}`;
 
@@ -16,6 +17,11 @@ const DEFAULT_CONFIG: DraftGapConfig = {
     ignoreChampionWinrates: false,
     riskLevel: "medium",
     minGames: 1000,
+    eloBracket: DEFAULT_ELO_BRACKET,
+    usePickBanRateAdjustments: false,
+    banRateRatingBonus: 20,
+    pickRatePriorScale: 1,
+    referencePickRate: 0.05,
 
     // UI
     showFavouritesAtTop: false,
