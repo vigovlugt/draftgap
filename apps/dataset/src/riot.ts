@@ -20,11 +20,13 @@ export async function getChampions(version: string, locale = "en_US") {
     );
     const json = (await res.json()) as { data: Record<string, RiotChampion> };
 
-    return Object.values(json.data).map((v: any) => ({
-        id: v.id,
-        key: v.key,
-        name: v.name,
-    }));
+    return Object.values(json.data)
+        .filter((v) => !v.id.startsWith("Jade_"))
+        .map((v) => ({
+            id: v.id,
+            key: v.key,
+            name: v.name,
+        }));
 }
 
 export type RiotRunePath = {
