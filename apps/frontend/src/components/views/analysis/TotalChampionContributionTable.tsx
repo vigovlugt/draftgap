@@ -22,6 +22,7 @@ import { Table } from "../../common/Table";
 import { useUser } from "../../../contexts/UserContext";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
+import { t } from "../../../utils/i18n";
 
 type Props = {
     team: Team;
@@ -53,7 +54,7 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
 
     const columns: ColumnDef<ChampionContribution>[] = [
         {
-            header: "Role",
+            header: t(config, "role"),
             accessorFn: (result) => result.role,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
             meta: {
@@ -64,7 +65,7 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
         },
         {
             id: "champion",
-            header: "Champion",
+            header: t(config, "champion"),
             accessorFn: (result) => result.championKey,
             cell: (info) => (
                 <ChampionCell
@@ -90,7 +91,7 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
         },
         {
             id: "base",
-            header: "Base",
+            header: t(config, "base"),
             accessorFn: (result) => result.baseRating,
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
             footer: () => (
@@ -104,7 +105,7 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
             },
         },
         {
-            header: "Matchup",
+            header: t(config, "matchup"),
             accessorFn: (result) => result.matchupRating,
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
             footer: () => (
@@ -116,7 +117,7 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
             },
         },
         {
-            header: "Duo",
+            header: t(config, "duo"),
             accessorFn: (result) => result.duoRating,
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
             footer: () => (
@@ -128,7 +129,7 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
             },
         },
         {
-            header: "Total",
+            header: t(config, "total"),
             accessorFn: (result) => result.totalRating,
             cell: (info) => <RatingText rating={info.getValue<number>()} />,
             footer: () => (

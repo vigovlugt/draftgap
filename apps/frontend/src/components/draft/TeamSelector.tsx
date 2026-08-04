@@ -1,11 +1,14 @@
 import { For } from "solid-js";
 import { useDraft } from "../../contexts/DraftContext";
 import { Team } from "@draftgap/core/src/models/Team";
+import { useUser } from "../../contexts/UserContext";
+import { teamName } from "../../utils/i18n";
 
 const TEAMS = ["ally", "opponent"] as const;
 
 export function TeamSelector() {
     const { selection, select, allyTeam, opponentTeam } = useDraft();
+    const { config } = useUser();
 
     function selectTeam(team: Team) {
         const picks = team === "ally" ? allyTeam : opponentTeam;
@@ -35,7 +38,7 @@ export function TeamSelector() {
                             ).length === 5
                         }
                     >
-                        {team}
+                        {teamName(config, team)}
                     </button>
                 )}
             </For>

@@ -18,6 +18,8 @@ import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { WinrateDecompositionDialog } from "../../dialogs/WinrateDecompositionDialog";
 import { Dialog } from "../../common/Dialog";
+import { useUser } from "../../../contexts/UserContext";
+import { t } from "../../../utils/i18n";
 
 interface Props {
     team: Team;
@@ -31,6 +33,7 @@ export function DuoResultTable(
 ) {
     const { dataset } = useDataset();
     const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
+    const { config } = useUser();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
         createSignal(false);
@@ -46,7 +49,7 @@ export function DuoResultTable(
     const columns: ColumnDef<AnalyzeDuoResult>[] = [
         {
             id: "roleA",
-            header: "Role",
+            header: t(config, "role"),
             accessorFn: (result) => result.roleA,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
             meta: {
@@ -57,7 +60,7 @@ export function DuoResultTable(
         },
         {
             id: "championA",
-            header: "Champion",
+            header: t(config, "champion"),
             accessorFn: (result) => result.championKeyA,
             cell: (info) => (
                 <ChampionCell
@@ -85,7 +88,7 @@ export function DuoResultTable(
         },
         {
             id: "roleB",
-            header: "Role",
+            header: t(config, "role"),
             accessorFn: (result) => result.roleB,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
             meta: {
@@ -96,7 +99,7 @@ export function DuoResultTable(
         },
         {
             id: "championB",
-            header: "Champion",
+            header: t(config, "champion"),
             accessorFn: (result) => result.championKeyB,
             cell: (info) => (
                 <ChampionCell
@@ -121,7 +124,7 @@ export function DuoResultTable(
                 ),
         },
         {
-            header: "Winrate",
+            header: t(config, "winrate"),
             accessorFn: (duo) => duo.rating,
             cell: (info) => (
                 <RatingText

@@ -39,11 +39,11 @@
                 "depends": []
             }
         },
-        "createUpdaterArtifacts": "v1Compatible"
+        "createUpdaterArtifacts": false
     },
     "productName": "DraftGap",
     "mainBinaryName": "DraftGap",
-    "version": "3.2.1",
+    "version": "3.2.3",
     "identifier": "com.draftgap",
     "plugins": {
         "updater": {

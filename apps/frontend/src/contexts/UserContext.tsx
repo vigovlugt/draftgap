@@ -30,6 +30,7 @@ const DEFAULT_CONFIG: DraftGapConfig = {
 
     // LOL CLIENT
     disableLeagueClientIntegration: false,
+    syncChampionSelectionToLeagueClient: true,
 };
 
 const FAVOURITE_PICKS_KEY = "draftgap-favourite-picks";

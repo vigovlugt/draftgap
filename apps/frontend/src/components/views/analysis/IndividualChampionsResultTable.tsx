@@ -19,6 +19,8 @@ import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { Dialog } from "../../common/Dialog";
 import { WinrateDecompositionDialog } from "../../dialogs/WinrateDecompositionDialog";
+import { useUser } from "../../../contexts/UserContext";
+import { t } from "../../../utils/i18n";
 
 interface Props {
     team: Team;
@@ -34,6 +36,7 @@ export function IndividualChampionsResultTable(
     ]);
     const { dataset } = useDataset();
     const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
+    const { config } = useUser();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
         createSignal(false);
@@ -48,7 +51,7 @@ export function IndividualChampionsResultTable(
 
     const columns: ColumnDef<AnalyzeChampionResult>[] = [
         {
-            header: "Role",
+            header: t(config, "role"),
             accessorFn: (result) => result.role,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
             meta: {
@@ -59,7 +62,7 @@ export function IndividualChampionsResultTable(
         },
         {
             id: "champion",
-            header: "Champion",
+            header: t(config, "champion"),
             accessorFn: (result) => result.championKey,
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
@@ -81,7 +84,7 @@ export function IndividualChampionsResultTable(
             },
         },
         {
-            header: "Winrate",
+            header: t(config, "winrate"),
             accessorFn: (result) => result.rating,
             cell: (info) => (
                 <RatingText

@@ -3,10 +3,11 @@ import { magnifyingGlass, xMark } from "solid-heroicons/outline";
 import { onCleanup, onMount, Show } from "solid-js";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";
 import { useUser } from "../../contexts/UserContext";
+import { t } from "../../utils/i18n";
 
 export function Search() {
     const { search, setSearch } = useDraftFilters();
-    const { setConfig } = useUser();
+    const { config, setConfig } = useUser();
 
     // eslint-disable-next-line prefer-const -- solid js ref
     let inputEl: HTMLInputElement | undefined = undefined;
@@ -67,7 +68,7 @@ export function Search() {
                     ref={inputEl}
                     id="draftTableSearch"
                     class="text-lg py-1 block w-full rounded-md rounded-l-md border-gray-301 pl-10 bg-neutral-800 placeholder:text-neutral-500 text-neutral-100"
-                    placeholder="SEARCH"
+                    placeholder={t(config, "search")}
                     value={search()}
                     onInput={onInput}
                 />

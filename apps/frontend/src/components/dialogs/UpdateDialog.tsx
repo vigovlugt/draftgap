@@ -10,9 +10,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from "../common/Dialog";
+import { useUser } from "../../contexts/UserContext";
+import { t } from "../../utils/i18n";
 
 export const UpdateDialog: Component = () => {
     const { isDesktop } = useMedia();
+    const { config } = useUser();
     const [isOpen, setIsOpen] = createSignal(false);
     const [update, setUpdate] = createSignal<Update | null>(null);
 
@@ -39,14 +42,14 @@ export const UpdateDialog: Component = () => {
         <Dialog open={isOpen()}>
             <DialogContent canClose={false}>
                 <DialogHeader>
-                    <DialogTitle>Update available!</DialogTitle>
+                    <DialogTitle>{t(config, "updateAvailable")}</DialogTitle>
                 </DialogHeader>
                 <p class="text-xl uppercase text-neutral-300">
-                    A new version of DraftGap is available.
+                    {t(config, "updateAvailableBody")}
                 </p>
                 <DialogFooter>
                     <Button variant="primary" onClick={doUpdate}>
-                        Update
+                        {t(config, "update")}
                     </Button>
                 </DialogFooter>
             </DialogContent>

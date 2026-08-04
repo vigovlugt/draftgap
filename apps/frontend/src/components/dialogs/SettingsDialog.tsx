@@ -3,10 +3,7 @@ import { questionMarkCircle } from "solid-heroicons/solid-mini";
 import { Show } from "solid-js";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import { Switch } from "../common/Switch";
-import {
-    RiskLevel,
-    displayNameByRiskLevel,
-} from "@draftgap/core/src/risk/risk-level";
+import { RiskLevel } from "@draftgap/core/src/risk/risk-level";
 import { useUser } from "../../contexts/UserContext";
 import { useMedia } from "../../hooks/useMedia";
 import {
@@ -21,6 +18,7 @@ import {
     DialogTrigger,
 } from "../common/Dialog";
 import { FAQDialog } from "./FAQDialog";
+import { riskLevelName, t } from "../../utils/i18n";
 
 export default function SettingsDialog() {
     const { isDesktop } = useMedia();
@@ -29,22 +27,22 @@ export default function SettingsDialog() {
     const riskLevelOptions: ButtonGroupOption<RiskLevel>[] = RiskLevel.map(
         (level) => ({
             value: level,
-            label: displayNameByRiskLevel[level],
+            label: riskLevelName(config, level),
         }),
     );
 
     const draftTablePlacementOptions = [
         {
             value: DraftTablePlacement.Bottom,
-            label: "Bottom",
+            label: t(config, "bottom"),
         },
         {
             value: DraftTablePlacement.InPlace,
-            label: "In Place",
+            label: t(config, "inPlace"),
         },
         {
             value: DraftTablePlacement.Hidden,
-            label: "Hidden",
+            label: t(config, "hidden"),
         },
     ];
 
@@ -66,13 +64,13 @@ export default function SettingsDialog() {
     return (
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Settings</DialogTitle>
+                <DialogTitle>{t(config, "settings")}</DialogTitle>
             </DialogHeader>
             <div>
-                <h3 class="text-3xl uppercase">Draft</h3>
+                <h3 class="text-3xl uppercase">{t(config, "draft")}</h3>
                 <div class="flex space-x-16 items-center justify-between mt-2">
                     <span class="text-lg uppercase">
-                        Ignore individual champion winrates
+                        {t(config, "ignoreChampionWinrates")}
                     </span>
                     <Switch
                         checked={config.ignoreChampionWinrates}
@@ -85,7 +83,9 @@ export default function SettingsDialog() {
                     />
                 </div>
                 <div class="flex items-center mt-1 mb-1 gap-1">
-                    <span class="text-lg uppercase block">Risk level</span>
+                    <span class="text-lg uppercase block">
+                        {t(config, "riskLevel")}
+                    </span>
                     <Dialog>
                         <DialogTrigger>
                             <Icon
@@ -108,10 +108,10 @@ export default function SettingsDialog() {
                 />
             </div>
             <div>
-                <h3 class="text-3xl uppercase">UI</h3>
+                <h3 class="text-3xl uppercase">{t(config, "ui")}</h3>
                 <div class="flex space-x-8 items-center justify-between mt-2">
                     <span class="text-lg uppercase">
-                        Place favourites at top of suggestions
+                        {t(config, "placeFavouritesAtTop")}
                     </span>
                     <Switch
                         checked={config.showFavouritesAtTop}
@@ -127,7 +127,7 @@ export default function SettingsDialog() {
                 <Show when={isDesktop}>
                     <div class="flex flex-col gap-1 mt-2">
                         <span class="text-lg uppercase">
-                            Place banned champion suggestions at
+                            {t(config, "placeBannedChampionSuggestionsAt")}
                         </span>
                         <ButtonGroup
                             options={draftTablePlacementOptions}
@@ -142,23 +142,10 @@ export default function SettingsDialog() {
                     </div>
                     <div class="flex flex-col gap-1 mt-2">
                         <span class="text-lg uppercase">
-                            Place unowned champion suggestions at
+                            {t(config, "placeUnownedChampionSuggestionsAt")}
                         </span>
                         <ButtonGroup
-                            options={[
-                                {
-                                    value: DraftTablePlacement.Bottom,
-                                    label: "Bottom",
-                                },
-                                {
-                                    value: DraftTablePlacement.InPlace,
-                                    label: "In Place",
-                                },
-                                {
-                                    value: DraftTablePlacement.Hidden,
-                                    label: "Hidden",
-                                },
-                            ]}
+                            options={draftTablePlacementOptions}
                             size="sm"
                             selected={config.unownedPlacement}
                             onChange={(v) =>
@@ -172,7 +159,7 @@ export default function SettingsDialog() {
 
                 <div class="flex space-x-8 items-center justify-between mt-2">
                     <span class="text-lg uppercase">
-                        Show advanced winrates
+                        {t(config, "showAdvancedWinrates")}
                     </span>
                     <Switch
                         checked={config.showAdvancedWinrates}
@@ -188,10 +175,12 @@ export default function SettingsDialog() {
 
             <Show when={isDesktop}>
                 <div>
-                    <h3 class="text-3xl uppercase">League Client</h3>
+                    <h3 class="text-3xl uppercase">
+                        {t(config, "leagueClient")}
+                    </h3>
                     <div class="flex space-x-16 items-center justify-between mt-2">
                         <span class="text-lg uppercase">
-                            Disable league client integration
+                            {t(config, "disableLeagueClientIntegration")}
                         </span>
                         <Switch
                             checked={config.disableLeagueClientIntegration}
@@ -203,13 +192,29 @@ export default function SettingsDialog() {
                             }
                         />
                     </div>
+                    <div class="flex space-x-16 items-center justify-between mt-2">
+                        <span class="text-lg uppercase">
+                            {t(config, "syncChampionSelectionToLeagueClient")}
+                        </span>
+                        <Switch
+                            checked={config.syncChampionSelectionToLeagueClient}
+                            onChange={() =>
+                                setConfig({
+                                    syncChampionSelectionToLeagueClient:
+                                        !config.syncChampionSelectionToLeagueClient,
+                                })
+                            }
+                        />
+                    </div>
                 </div>
             </Show>
 
             <div>
-                <h3 class="text-3xl uppercase">Misc</h3>
+                <h3 class="text-3xl uppercase">{t(config, "misc")}</h3>
                 <div class="flex flex-col gap-1 mt-2">
-                    <span class="text-lg uppercase">Favourite builds site</span>
+                    <span class="text-lg uppercase">
+                        {t(config, "favouriteBuildsSite")}
+                    </span>
                     <ButtonGroup
                         options={statsSiteOptions}
                         selected={config.defaultStatsSite}

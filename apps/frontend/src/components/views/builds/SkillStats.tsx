@@ -7,10 +7,13 @@ import { Icon } from "solid-heroicons";
 import { chevronRight } from "solid-heroicons/solid";
 import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
+import { useUser } from "../../../contexts/UserContext";
+import { t } from "../../../utils/i18n";
 
 export function SkillStats() {
     const { buildAnalysisResult, partialBuildDataset, setSelectedEntity } =
         useBuild();
+    const { config } = useUser();
 
     const totalOrderGames = () =>
         Object.values(partialBuildDataset()!.skills.order).reduce(
@@ -26,7 +29,7 @@ export function SkillStats() {
     return (
         <div class="flex gap-4">
             <Panel>
-                <PanelHeader>Skill Priority</PanelHeader>
+                <PanelHeader>{t(config, "skillPriority")}</PanelHeader>
                 <VerticalEntityStats
                     data={(
                         Object.keys(
@@ -90,12 +93,12 @@ export function SkillStats() {
                 </VerticalEntityStats>
             </Panel>
             <Panel class="w-full">
-                <PanelHeader>Skill Order</PanelHeader>
+                <PanelHeader>{t(config, "skillOrder")}</PanelHeader>
                 <table class="bg-[#141414] rounded-md">
                     <thead>
                         <tr>
                             <th class="text-center uppercase pt-3 pr-1.5 pl-3 font-normal">
-                                Level
+                                {t(config, "level")}
                             </th>
                             <th class="text-center uppercase pt-3 px-1.5 font-normal">
                                 Q

@@ -1,29 +1,37 @@
 import { check, exclamationCircle, star } from "solid-heroicons/outline";
 import toast from "solid-toast";
 import { Toast } from "../components/common/Toast";
+import { DraftGapConfig } from "@draftgap/core/src/models/user/Config";
+import { t } from "./i18n";
 
-export const createImportFavouritePicksToast = (onSubmit: () => void) => {
-    return toast.custom((t) => (
+export const createImportFavouritePicksToast = (
+    config: DraftGapConfig,
+    onSubmit: () => void,
+) => {
+    return toast.custom((toastModel) => (
         <Toast
-            t={t}
+            t={toastModel}
             icon={star}
-            title="Import favourite champions"
-            content="Do you want to import your favourite champions from the League client?"
-            dismissText="Not now"
-            okText="Import"
+            title={t(config, "importFavouriteChampions")}
+            content={t(config, "importFavouriteChampionsQuestion")}
+            dismissText={t(config, "notNow")}
+            okText={t(config, "import")}
             onSubmit={onSubmit}
         />
     ));
 };
 
-export const createImportFavouritePicksSuccessToast = (amount: number) => {
+export const createImportFavouritePicksSuccessToast = (
+    config: DraftGapConfig,
+    amount: number,
+) => {
     return toast.custom(
-        (t) => (
+        (toastModel) => (
             <Toast
-                t={t}
+                t={toastModel}
                 icon={check}
-                title="Success"
-                content={`Successfully imported ${amount} favourite champions.`}
+                title={t(config, "success")}
+                content={t(config, "importedFavouriteChampions", { amount })}
             />
         ),
         {
@@ -32,13 +40,13 @@ export const createImportFavouritePicksSuccessToast = (amount: number) => {
     );
 };
 
-export const createErrorToast = (message: string) => {
+export const createErrorToast = (config: DraftGapConfig, message: string) => {
     return toast.custom(
-        (t) => (
+        (toastModel) => (
             <Toast
-                t={t}
+                t={toastModel}
                 icon={exclamationCircle}
-                title="Error"
+                title={t(config, "error")}
                 content={message}
             />
         ),
@@ -48,14 +56,14 @@ export const createErrorToast = (message: string) => {
     );
 };
 
-export const createMustSelectToast = () => {
+export const createMustSelectToast = (config: DraftGapConfig) => {
     return toast.custom(
-        (t) => (
+        (toastModel) => (
             <Toast
-                t={t}
+                t={toastModel}
                 icon={exclamationCircle}
-                title="No pick selected"
-                content="Select a pick first by clicking on one in the draft or opponent tab."
+                title={t(config, "noPickSelected")}
+                content={t(config, "noPickSelectedHelp")}
             />
         ),
         {

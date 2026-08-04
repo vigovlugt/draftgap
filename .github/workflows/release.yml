@@ -14,7 +14,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                platform: [macos-latest, windows-latest] # ubuntu-20.04,
+                platform: [windows-latest]
         runs-on: ${{ matrix.platform }}
         steps:
             - name: Checkout repository
@@ -39,7 +39,7 @@ jobs:
                   path: |
                     ~/.bun/install/cache
                     node_modules
-                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
                   restore-keys: |
                     ${{ runner.os }}-bun-
 
@@ -50,51 +50,10 @@ jobs:
               uses: tauri-apps/tauri-action@v0
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-                  TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
                   VITE_GA_TAG: "G-967XTGK665"
               with:
                   tagName: ${{ github.ref_name }} # This only works if your workflow triggers on new tags.
                   releaseName: "DraftGap v__VERSION__" # tauri-action replaces \_\_VERSION\_\_ with the app version.
-                  releaseBody: "# Download DraftGap\n[Windows](https://github.com/vigovlugt/draftgap/releases/download/v__VERSION__/DraftGap___VERSION___x64_en-US.msi)\n[Mac](https://github.com/vigovlugt/draftgap/releases/download/v__VERSION__/DraftGap.app.tar.gz)"
+                  releaseBody: "# Download DraftGap\n[Windows MSI](https://github.com/Tangent-90C/draftgap/releases/download/v__VERSION__/DraftGap___VERSION___x64_en-US.msi)\n[Windows Setup](https://github.com/Tangent-90C/draftgap/releases/download/v__VERSION__/DraftGap___VERSION___x64-setup.exe)"
                   projectPath: apps/frontend
-                  tauriScript: bun run tauri
-
-    publish:
-        runs-on: ubuntu-latest
-        needs: [release]
-        permissions: write-all
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v6
-
-            - name: Setup Bun
-              uses: oven-sh/setup-bun@v2
-              with:
-                  bun-version: latest
-
-            - name: Setup cache
-              uses: actions/cache@v4
-              with:
-                  path: |
-                    ~/.bun/install/cache
-                    node_modules
-                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-                  restore-keys: |
-                    ${{ runner.os }}-bun-
-
-            - name: Install app dependencies
-              run: bun install
-
-            - name: Update tauri-update gist
-              run: bun run publish-tauri-update
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
-                  S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
-                  S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
-                  S3_ENDPOINT: https://6239efaaf63b138409f3ff6e44602435.r2.cloudflarestorage.com
-                  S3_PUBLIC_URL: https://bucket.draftgap.com
-                  GIST_ID: "5d549f4fdd602eb22542ef55e7c881ec"
-                  REPOSITORY_OWNER: vigovlugt
-                  REPOSITORY_NAME: draftgap
+                  tauriScript: bun x tauri

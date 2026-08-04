@@ -1,17 +1,19 @@
 import { useBuild } from "../../contexts/BuildContext";
-import { displayNameByRole } from "@draftgap/core/src/models/Role";
 import { BuildSummaryCards } from "../views/builds/BuildSummaryCards";
 import { BuildMatchupTable } from "../views/builds/BuildMatchupTable";
 import { tooltip } from "../../directives/tooltip";
 import { useDataset } from "../../contexts/DatasetContext";
 import { DialogContent, DialogTitle } from "../common/Dialog";
 import { Show } from "solid-js";
+import { useUser } from "../../contexts/UserContext";
+import { roleName, t } from "../../utils/i18n";
 // eslint-disable-next-line
 tooltip;
 
 export function BuildAnalysisDialog() {
     const { dataset } = useDataset();
     const { championKey, championRole, selectedEntity } = useBuild();
+    const { config } = useUser();
 
     const title = () => {
         const selected = selectedEntity()!;
@@ -76,7 +78,7 @@ export function BuildAnalysisDialog() {
     const subTitle = () =>
         dataset()!.championData[championKey()!].name +
         " " +
-        displayNameByRole[championRole()!];
+        roleName(config, championRole()!);
 
     const imageSrc = () => {
         const selected = selectedEntity()!;
@@ -200,10 +202,16 @@ export function BuildAnalysisDialog() {
                     class="text-3xl uppercase ml-4"
                     // @ts-ignore
                     use:tooltip={{
-                        content: <>Winrates of all {title()} matchups</>,
+                        content: (
+                            <>
+                                {t(config, "allChampionMatchupsTooltip", {
+                                    name: title() ?? "",
+                                })}
+                            </>
+                        ),
                     }}
                 >
-                    Matchups
+                    {t(config, "matchups")}
                 </h3>
                 <p
                     class="text-neutral-500 uppercase mb-1 ml-4"
@@ -218,7 +226,7 @@ export function BuildAnalysisDialog() {
                         ),
                     }}
                 >
-                    Champion winrates normalized
+                    {t(config, "championWinratesNormalized")}
                 </p>
                 <BuildMatchupTable class="ring-1 ring-white/10" />
             </div>

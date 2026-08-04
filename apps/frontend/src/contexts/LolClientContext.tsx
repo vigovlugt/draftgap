@@ -12,6 +12,7 @@ import {
     getCurrentSummoner,
     getGridChampions,
     getPickableChampionIds,
+    selectChampionInClient,
 } from "../api/lcu-api";
 import { getRoleFromString, Role } from "@draftgap/core/src/models/Role";
 import { Team } from "@draftgap/core/src/models/Team";
@@ -28,6 +29,8 @@ import { useDraft } from "./DraftContext";
 import { useMedia } from "../hooks/useMedia";
 import { useUser } from "./UserContext";
 import { LolalyticsRole } from "../../../dataset/src/lolalytics/roles";
+import { createErrorToast } from "../utils/toast";
+import { t } from "../utils/i18n";
 
 const createChampSelectSession = (): LolChampSelectChampSelectSession => ({
     actions: [],
@@ -95,8 +98,9 @@ export const createLolClientContext = () => {
         bans,
         setBans,
         setOwnedChampions,
+        setPickChampionSideEffect,
     } = useDraft();
-    const { isFavourite, setFavourite } = useUser();
+    const { isFavourite, setFavourite, config } = useUser();
 
     const [clientState, setClientState] = createSignal<ClientState>(
         ClientState.NotFound,
@@ -170,6 +174,7 @@ export const createLolClientContext = () => {
                 pickChampion(team, index, championKey, role, {
                     updateSelection: false,
                     resetFilters,
+                    syncToClient: false,
                 });
 
                 return true;
@@ -278,12 +283,15 @@ export const createLolClientContext = () => {
             return;
         }
 
-        createImportFavouritePicksToast(() => {
+        createImportFavouritePicksToast(config, () => {
             for (const nonFavourite of nonFavouritePicks) {
                 setFavourite(nonFavourite.championKey, nonFavourite.role, true);
             }
 
-            createImportFavouritePicksSuccessToast(nonFavouritePicks.length);
+            createImportFavouritePicksSuccessToast(
+                config,
+                nonFavouritePicks.length,
+            );
         });
 
         localStorage.setItem(
@@ -305,6 +313,49 @@ export const createLolClientContext = () => {
     const [integrationTimeout, setIntegrationTimeout] = createSignal<
         NodeJS.Timeout | undefined
     >();
+
+    setPickChampionSideEffect(() => async ({ team, index, championKey }) => {
+        if (
+            config.disableLeagueClientIntegration ||
+            !config.syncChampionSelectionToLeagueClient ||
+            clientState() !== ClientState.InChampSelect ||
+            team !== "ally"
+        ) {
+            return;
+        }
+
+        const localPlayerCellId = champSelectSession.localPlayerCellId;
+        const localPlayerIndex = champSelectSession.myTeam.findIndex(
+            (selection) => selection.cellId === localPlayerCellId,
+        );
+        if (localPlayerIndex !== index) {
+            return;
+        }
+
+        const action = [...champSelectSession.actions.flat()]
+            .reverse()
+            .find(
+                (action) =>
+                    action.actorCellId === localPlayerCellId &&
+                    action.type === "pick" &&
+                    !action.completed,
+            );
+        if (!action) {
+            return;
+        }
+
+        const championId = Number(championKey);
+        if (!Number.isFinite(championId) || action.championId === championId) {
+            return;
+        }
+
+        try {
+            await selectChampionInClient(action.id, championId);
+        } catch (e) {
+            console.error("Failed to sync champion selection", e);
+            createErrorToast(config, t(config, "syncChampionSelectionFailed"));
+        }
+    });
 
     const startLolClientIntegration = () => {
         if (!isDesktop) return;
@@ -369,6 +420,7 @@ export const createLolClientContext = () => {
     };
 
     onCleanup(() => {
+        setPickChampionSideEffect(() => undefined);
         stopLolClientIntegration();
         setClientState(ClientState.NotFound);
     });

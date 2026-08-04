@@ -7,6 +7,7 @@ import {
 } from "solid-heroicons/solid";
 import { JSX } from "solid-js/jsx-runtime";
 import { Team } from "@draftgap/core/src/models/Team";
+import { DraftResult } from "@draftgap/core/src/draft/analysis";
 import { tooltip } from "../../../directives/tooltip";
 import { RatingText } from "../../common/RatingText";
 import { Component, Show } from "solid-js";
@@ -14,6 +15,8 @@ import { capitalize } from "../../../utils/strings";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { cn } from "../../../utils/style";
+import { useUser } from "../../../contexts/UserContext";
+import { t, teamName } from "../../../utils/i18n";
 // eslint-disable-next-line
 tooltip;
 
@@ -42,7 +45,7 @@ export const SummaryCard = (
         <a
             {...props}
             class={cn(
-                "px-4 py-5 flex gap-4 items-center text-left",
+                "px-3 py-4 flex gap-3 items-center text-left sm:px-4 sm:py-5 sm:gap-4",
                 props.class,
             )}
             // @ts-ignore
@@ -51,16 +54,16 @@ export const SummaryCard = (
             }}
         >
             <div
-                class={`rounded-full h-[48px] w-[48px] flex items-center justify-center ${colorClasses()}`}
+                class={`rounded-full h-10 w-10 flex shrink-0 items-center justify-center sm:h-[48px] sm:w-[48px] ${colorClasses()}`}
             >
-                <Icon path={props.icon} class="w-6" />
+                <Icon path={props.icon} class="w-5 sm:w-6" />
             </div>
             <div>
-                <div class="text-lg text-neutral-400 uppercase">
+                <div class="text-base text-neutral-400 uppercase sm:text-lg">
                     {props.title}
                 </div>
                 <div class="flex items-baseline justify-between md:block lg:flex -mt-1">
-                    <div class="flex items-baseline text-3xl">
+                    <div class="flex items-baseline text-2xl sm:text-3xl">
                         <Show
                             when={props.rating !== undefined}
                             fallback={props.number}
@@ -78,6 +81,7 @@ export const DraftSummaryCards = (
     props: { team: Team } & JSX.HTMLAttributes<HTMLDivElement>,
 ) => {
     const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
+    const { config } = useUser();
 
     const draftResult = () =>
         props.team === "ally" ? allyDraftAnalysis()! : opponentDraftAnalysis()!;
@@ -95,20 +99,21 @@ export const DraftSummaryCards = (
             <SummaryCard
                 team={props.team}
                 icon={user}
-                title="Champions"
+                title={t(config, "champions")}
                 rating={draftResult().allyChampionRating.totalRating}
                 href="#champions-result"
                 tooltip={
                     <>
-                        {capitalize(props.team)} estimated winrate when only
-                        taking into account {props.team} champions
+                        {teamName(config, props.team)} estimated winrate when
+                        only taking into account {teamName(config, props.team)}{" "}
+                        champions
                     </>
                 }
             />
             <SummaryCard
                 team={props.team}
                 icon={arrowsRightLeft}
-                title="Matchups"
+                title={t(config, "matchups")}
                 rating={draftResult().matchupRating.totalRating}
                 href="#matchup-result"
                 tooltip={
@@ -121,7 +126,7 @@ export const DraftSummaryCards = (
             <SummaryCard
                 team={props.team}
                 icon={users}
-                title="Duos"
+                title={t(config, "duos")}
                 rating={draftResult().allyDuoRating.totalRating}
                 href="#duo-result"
                 tooltip={
@@ -134,7 +139,7 @@ export const DraftSummaryCards = (
             <SummaryCard
                 team={props.team}
                 icon={presentationChartLine}
-                title="Winrate"
+                title={t(config, "winrate")}
                 rating={draftResult().totalRating}
                 href="#total-result"
                 tooltip={
@@ -152,6 +157,7 @@ export const DraftSummaryCards = (
 type ChampionSummaryCardProps = {
     championKey: string;
     team: Team;
+    draftResult?: DraftResult;
 } & JSX.HTMLAttributes<HTMLDivElement>;
 
 export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
@@ -159,9 +165,11 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
 ) => {
     const { dataset } = useDataset();
     const { allyDraftAnalysis, opponentDraftAnalysis } = useDraftAnalysis();
+    const { config } = useUser();
 
     const draftResult = () =>
-        props.team === "ally" ? allyDraftAnalysis()! : opponentDraftAnalysis()!;
+        props.draftResult ??
+        (props.team === "ally" ? allyDraftAnalysis()! : opponentDraftAnalysis()!);
 
     const name = () => dataset()!.championData[props.championKey].name;
 
@@ -202,14 +210,14 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
             <SummaryCard
                 class="py-2!"
                 icon={user}
-                title="Champion"
+                title={t(config, "champion")}
                 rating={baseChampionRating()}
                 tooltip={<>{capitalize(name())} base winrate</>}
             />
             <SummaryCard
                 class="py-2!"
                 icon={arrowsRightLeft}
-                title="Matchups"
+                title={t(config, "matchups")}
                 rating={matchupRating()}
                 href="#matchup-champion-result"
                 tooltip={
@@ -222,7 +230,7 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
             <SummaryCard
                 class="py-2!"
                 icon={users}
-                title="Duos"
+                title={t(config, "duos")}
                 rating={duoRating()}
                 href="#duo-champion-result"
                 tooltip={
@@ -235,7 +243,7 @@ export const ChampionSummaryCards: Component<ChampionSummaryCardProps> = (
             <SummaryCard
                 class="py-2!"
                 icon={presentationChartLine}
-                title="Winrate"
+                title={t(config, "winrate")}
                 rating={totalRating()}
                 tooltip={
                     <>

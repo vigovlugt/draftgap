@@ -3,6 +3,8 @@ import { SummaryCard } from "../views/analysis/SummaryCards";
 import { hashtag, presentationChartLine } from "solid-heroicons/solid";
 import { winrateToRating } from "@draftgap/core/src/rating/ratings";
 import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
+import { useUser } from "../../contexts/UserContext";
+import { t } from "../../utils/i18n";
 
 type Props = {
     data: {
@@ -13,10 +15,12 @@ type Props = {
 };
 
 export const WinrateDecompositionDialog: Component<Props> = (props) => {
+    const { config } = useUser();
+
     return (
         <DialogContent class="max-w-3xl">
             <DialogHeader>
-                <DialogTitle>Winrate Decomposition</DialogTitle>
+                <DialogTitle>{t(config, "winrateDecomposition")}</DialogTitle>
             </DialogHeader>
             <div
                 class={`grid overflow-hidden rounded-lg bg-primary grid-cols-2 sm:grid-cols-3`}
@@ -24,7 +28,7 @@ export const WinrateDecompositionDialog: Component<Props> = (props) => {
                 <SummaryCard
                     class="py-2!"
                     icon={presentationChartLine}
-                    title="Draftgap winrate"
+                    title={t(config, "draftgapWinrate")}
                     rating={props.data.rating}
                     tooltip={
                         <>
@@ -37,7 +41,7 @@ export const WinrateDecompositionDialog: Component<Props> = (props) => {
                 <SummaryCard
                     class="py-2!"
                     icon={presentationChartLine}
-                    title="Observed winrate"
+                    title={t(config, "observedWinrate")}
                     rating={winrateToRating(props.data.wins / props.data.games)}
                     tooltip={
                         <>
@@ -49,10 +53,10 @@ export const WinrateDecompositionDialog: Component<Props> = (props) => {
                 <SummaryCard
                     class="py-2!"
                     icon={hashtag}
-                    title="Observed games"
+                    title={t(config, "observedGames")}
                     number={Math.ceil(props.data.games)}
                     tooltip={
-                        <>Number of games in the sample from the dataset.</>
+                        <>{t(config, "observedGamesTooltip")}</>
                     }
                 />
             </div>

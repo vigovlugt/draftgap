@@ -5,12 +5,15 @@ import { useBuild } from "../../../contexts/BuildContext";
 import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { getRatingClass, formatPercentage } from "../../../utils/rating";
+import { useUser } from "../../../contexts/UserContext";
+import { t } from "../../../utils/i18n";
 
 export const SummonerSpellsStats: Component = () => {
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
+    const { config } = useUser();
     return (
         <Panel>
-            <PanelHeader>Summoner Spells</PanelHeader>
+            <PanelHeader>{t(config, "summonerSpell")}</PanelHeader>
             <HorizontalEntityStats
                 data={Object.keys(buildAnalysisResult()!.summonerSpells).filter(
                     (id) =>

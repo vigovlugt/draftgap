@@ -5,7 +5,7 @@
 #[cfg(target_os = "windows")]
 use std::os::windows::process::CommandExt;
 
-use reqwest::Client;
+use reqwest::{Client, Method};
 use serde::Serialize;
 use serde_json::Value;
 use tauri::async_runtime::Mutex;
@@ -83,9 +83,11 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
     })
 }
 
-async fn get_lcu_response(
+async fn send_lcu_request(
     state: &tauri::State<'_, AppState>,
+    method: Method,
     path: &str,
+    body: Option<Value>,
 ) -> Result<serde_json::Value, String> {
     let mut lcu_data_mutex = state.lcu_data.lock().await;
 
@@ -96,12 +98,19 @@ async fn get_lcu_response(
     }
     let lcu_data = lcu_data_mutex.as_ref().unwrap();
 
-    let res = state
+    let mut req = state
         .client
-        .get(format!("https://127.0.0.1:{}/{}", lcu_data.port, path))
-        .basic_auth(&lcu_data.username, Some(&lcu_data.password))
-        .send()
-        .await;
+        .request(
+            method,
+            format!("https://127.0.0.1:{}/{}", lcu_data.port, path),
+        )
+        .basic_auth(&lcu_data.username, Some(&lcu_data.password));
+
+    if let Some(body) = body {
+        req = req.json(&body);
+    }
+
+    let res = req.send().await;
 
     let res = match res {
         Ok(res) => res,
@@ -136,6 +145,10 @@ async fn get_lcu_response(
         return Err(format!("LCU returned {status}: {body}"));
     }
 
+    if body.is_empty() {
+        return Ok(serde_json::Value::Null);
+    }
+
     let json = serde_json::from_str(&body).map_err(|e| {
         format!(
             "Could not parse json: {e}; body={}",
@@ -144,6 +157,13 @@ async fn get_lcu_response(
     })?;
 
     Ok(json)
+}
+
+async fn get_lcu_response(
+    state: &tauri::State<'_, AppState>,
+    path: &str,
+) -> Result<serde_json::Value, String> {
+    send_lcu_request(state, Method::GET, path, None).await
 }
 
 #[tauri::command]
@@ -168,6 +188,24 @@ async fn get_pickable_champion_ids(state: tauri::State<'_, AppState>) -> Result<
     get_lcu_response(&state, "lol-champ-select/v1/pickable-champion-ids").await
 }
 
+#[tauri::command]
+async fn select_champion(
+    state: tauri::State<'_, AppState>,
+    action_id: u64,
+    champion_id: u64,
+) -> Result<Value, String> {
+    send_lcu_request(
+        &state,
+        Method::PATCH,
+        &format!("lol-champ-select/v1/session/actions/{action_id}"),
+        Some(serde_json::json!({
+            "championId": champion_id,
+            "type": "pick"
+        })),
+    )
+    .await
+}
+
 fn main() {
     let client = Client::builder()
         .danger_accept_invalid_certs(true)
@@ -189,7 +227,8 @@ fn main() {
             get_champ_select_session,
             get_current_summoner,
             get_grid_champions,
-            get_pickable_champion_ids
+            get_pickable_champion_ids,
+            select_champion
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

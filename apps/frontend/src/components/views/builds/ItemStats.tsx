@@ -5,11 +5,14 @@ import { useBuild } from "../../../contexts/BuildContext";
 import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
 import { getRatingClass, formatPercentage } from "../../../utils/rating";
 import { useDataset } from "../../../contexts/DatasetContext";
+import { useUser } from "../../../contexts/UserContext";
+import { t } from "../../../utils/i18n";
 
 const ZERO_TO_FOUR = [0, 1, 2, 3, 4] as const;
 
 export const ItemStats: Component = () => {
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
+    const { config } = useUser();
 
     const getDataForOrder = (order: number) => {
         const orderGames = Object.values(
@@ -29,13 +32,13 @@ export const ItemStats: Component = () => {
 
     return (
         <Panel>
-            <PanelHeader>Items</PanelHeader>
+            <PanelHeader>{t(config, "items")}</PanelHeader>
             <div class="flex gap-2 flex-wrap justify-between max-w-[1170px]">
                 <For each={ZERO_TO_FOUR}>
                     {(i) => (
                         <div>
                             <p class="text-md uppercase font-semibold mb-1 ml-3">
-                                Item {i + 1}
+                                {t(config, "itemNumber", { number: i + 1 })}
                             </p>
                             <VerticalEntityStats
                                 data={getDataForOrder(i)}

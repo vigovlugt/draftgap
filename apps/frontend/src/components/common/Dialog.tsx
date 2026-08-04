@@ -91,7 +91,7 @@ export function DialogTitle(
         <DialogPrimitives.Title
             {...props}
             class={cn(
-                "text-4xl uppercase font-medium leading-none",
+                "text-3xl uppercase font-medium leading-none sm:text-4xl",
                 props.class,
             )}
         >

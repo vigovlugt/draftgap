@@ -13,7 +13,7 @@ export const buttonVariants = cva(
                 transparent: "hover:bg-white/10 disabled:pointer-events-none",
             },
             size: {
-                default: "px-4 py-1 text-xl",
+                default: "px-4 py-1 text-lg sm:text-xl",
             },
         },
         defaultVariants: {

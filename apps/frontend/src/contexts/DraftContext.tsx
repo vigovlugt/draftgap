@@ -26,6 +26,13 @@ type Selection = {
     index: number;
 };
 
+type PickChampionSideEffect = (pick: {
+    team: Team;
+    index: number;
+    championKey: string;
+    role: Role | undefined;
+}) => void | Promise<void>;
+
 export function createDraftContext() {
     const { dataset } = useDataset();
     const { setCurrentDraftView, currentDraftView } = useDraftView();
@@ -52,6 +59,8 @@ export function createDraftContext() {
     const [ownedChampions, setOwnedChampions] = createSignal<Set<string>>(
         new Set(),
     );
+    const [pickChampionSideEffect, setPickChampionSideEffect] =
+        createSignal<PickChampionSideEffect>();
 
     function getNextPick(team: Team) {
         const picks = team === "ally" ? allyTeam : opponentTeam;
@@ -94,16 +103,17 @@ export function createDraftContext() {
             resetFilters = true,
             reportEvent = true,
             updateView = true,
+            syncToClient = true,
         } = {},
     ) {
-        batch(() => {
-            if (
-                championKey &&
-                dataset()?.championData[championKey] === undefined
-            ) {
-                return;
-            }
+        if (
+            championKey &&
+            dataset()?.championData[championKey] === undefined
+        ) {
+            return;
+        }
 
+        batch(() => {
             const setTeam = team === "ally" ? setAllyTeam : setOpponentTeam;
 
             if (championKey !== undefined) {
@@ -165,6 +175,15 @@ export function createDraftContext() {
                 });
             }
         });
+
+        if (championKey !== undefined && syncToClient) {
+            void pickChampionSideEffect()?.({
+                team,
+                index,
+                championKey,
+                role,
+            });
+        }
     }
 
     function hoverChampion(
@@ -269,6 +288,7 @@ export function createDraftContext() {
         ownedChampions,
         setOwnedChampions,
         pickChampion,
+        setPickChampionSideEffect,
         hoverChampion,
         resetChampion,
         resetTeam,

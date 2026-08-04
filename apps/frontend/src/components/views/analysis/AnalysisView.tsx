@@ -10,6 +10,7 @@ import { Team } from "@draftgap/core/src/models/Team";
 import { useUser } from "../../../contexts/UserContext";
 import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { ScalingChart } from "./ScalingChart";
+import { t } from "../../../utils/i18n";
 // eslint-disable-next-line
 tooltip;
 
@@ -36,30 +37,15 @@ export default function AnalysisView() {
             >
                 <div class="md:w-1/2">
                     <h3
-                        class="text-3xl mb-1 uppercase ml-4"
+                        class="text-2xl mb-1 uppercase ml-4 sm:text-3xl"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
-                                <>
-                                    How much does every champion contribute to
-                                    the draft in which aspect?
-                                    <br />
-                                    <br />
-                                    <strong>BASE</strong>: Champion base winrate
-                                    <br />
-                                    <strong>MATCHUP</strong>: Total winrate of
-                                    all champion matchups
-                                    <br />
-                                    <strong>DUO</strong>: Total winrate of all
-                                    champion duos
-                                    <br />
-                                    <strong>TOTAL</strong>: Total contribution
-                                    of champion (BASE + MATCHUP + DUO)
-                                </>
+                                <>{t(config, "overviewTooltip")}</>
                             ),
                         }}
                     >
-                        Ally overview
+                        {t(config, "allyOverview")}
                     </h3>
                     <TotalChampionContributionTable
                         team="ally"
@@ -70,30 +56,15 @@ export default function AnalysisView() {
                 </div>
                 <div class="md:w-1/2">
                     <h3
-                        class="text-3xl mb-1 uppercase ml-4"
+                        class="text-2xl mb-1 uppercase ml-4 sm:text-3xl"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
-                                <>
-                                    How much does every champion contribute to
-                                    the draft in which aspect?
-                                    <br />
-                                    <br />
-                                    <strong>BASE</strong>: Champion base winrate
-                                    <br />
-                                    <strong>MATCHUP</strong>: Total winrate of
-                                    all champion matchups
-                                    <br />
-                                    <strong>DUO</strong>: Total winrate of all
-                                    champion duos
-                                    <br />
-                                    <strong>TOTAL</strong>: Total contribution
-                                    of champion (BASE + MATCHUP + DUO)
-                                </>
+                                <>{t(config, "overviewTooltip")}</>
                             ),
                         }}
                     >
-                        Opponent overview
+                        {t(config, "opponentOverview")}
                     </h3>
                     <TotalChampionContributionTable
                         team="opponent"
@@ -111,15 +82,20 @@ export default function AnalysisView() {
                 >
                     <div class="sm:w-1/2">
                         <h3
-                            class="text-3xl uppercase mb-1 ml-4"
+                            class="text-2xl uppercase mb-1 ml-4 sm:text-3xl"
                             // @ts-ignore
                             use:tooltip={{
                                 content: (
-                                    <>Base winrates of individual champions</>
+                                    <>
+                                        {t(
+                                            config,
+                                            "baseChampionWinratesTooltip",
+                                        )}
+                                    </>
                                 ),
                             }}
                         >
-                            Ally champions
+                            {t(config, "allyChampions")}
                         </h3>
                         <IndividualChampionsResultTable
                             team="ally"
@@ -133,15 +109,20 @@ export default function AnalysisView() {
                     </div>
                     <div class="sm:w-1/2">
                         <h3
-                            class="text-3xl uppercase mb-1 ml-4"
+                            class="text-2xl uppercase mb-1 ml-4 sm:text-3xl"
                             // @ts-ignore
                             use:tooltip={{
                                 content: (
-                                    <>Base winrates of individual champions</>
+                                    <>
+                                        {t(
+                                            config,
+                                            "baseChampionWinratesTooltip",
+                                        )}
+                                    </>
                                 ),
                             }}
                         >
-                            Opponent champions
+                            {t(config, "opponentChampions")}
                         </h3>
                         <IndividualChampionsResultTable
                             team="opponent"
@@ -162,7 +143,7 @@ export default function AnalysisView() {
             >
                 <div>
                     <h3
-                        class="text-3xl uppercase ml-4"
+                        class="text-2xl uppercase ml-4 sm:text-3xl"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
@@ -173,7 +154,7 @@ export default function AnalysisView() {
                             ),
                         }}
                     >
-                        Matchups
+                        {t(config, "matchups")}
                     </h3>
                     <p
                         class="text-neutral-500 uppercase ml-4"
@@ -189,13 +170,13 @@ export default function AnalysisView() {
                             ),
                         }}
                     >
-                        Champion winrates normalized
+                        {t(config, "championWinratesNormalized")}
                     </p>
                 </div>
                 <ButtonGroup
                     options={[
-                        { label: "HEAD 2 HEAD", value: false },
-                        { label: "ALL", value: true },
+                        { label: t(config, "headToHead"), value: false },
+                        { label: t(config, "all"), value: true },
                     ]}
                     size="sm"
                     selected={showAllMatchups()}
@@ -213,15 +194,15 @@ export default function AnalysisView() {
             <div class="flex-col md:flex-row flex gap-4 mb-8" id="duo-result">
                 <div class="md:w-1/2">
                     <h3
-                        class="text-3xl uppercase ml-4"
+                        class="text-2xl uppercase ml-4 sm:text-3xl"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
-                                <>Winrates of all duos in the ally draft</>
+                                <>{t(config, "allAllyDuosTooltip")}</>
                             ),
                         }}
                     >
-                        Ally duos
+                        {t(config, "allyDuos")}
                     </h3>
                     <p
                         class="text-neutral-500 uppercase ml-4 mb-2"
@@ -236,7 +217,7 @@ export default function AnalysisView() {
                             ),
                         }}
                     >
-                        Champion winrates normalized
+                        {t(config, "championWinratesNormalized")}
                     </p>
                     <DuoResultTable
                         team="ally"
@@ -247,15 +228,15 @@ export default function AnalysisView() {
                 </div>
                 <div class="md:w-1/2">
                     <h3
-                        class="text-3xl uppercase ml-4"
+                        class="text-2xl uppercase ml-4 sm:text-3xl"
                         // @ts-ignore
                         use:tooltip={{
                             content: (
-                                <>Winrates of all duos in the opponent draft</>
+                                <>{t(config, "allOpponentDuosTooltip")}</>
                             ),
                         }}
                     >
-                        Opponent duos
+                        {t(config, "opponentDuos")}
                     </h3>
                     <p
                         class="text-neutral-500 uppercase ml-4 mb-2"
@@ -270,7 +251,7 @@ export default function AnalysisView() {
                             ),
                         }}
                     >
-                        Champion winrates normalized
+                        {t(config, "championWinratesNormalized")}
                     </p>
                     <DuoResultTable
                         team="opponent"
@@ -284,7 +265,7 @@ export default function AnalysisView() {
             {/* <div class="mb-2 mt-16 flex justify-center items-center gap-2">
                 <div class="h-[3px] bg-neutral-700 w-24" />
 
-                <h2 class="text-4xl uppercase text-neutral-500 text-center">
+                <h2 class="text-3xl uppercase text-neutral-500 text-center sm:text-4xl">
                     Misc
                 </h2>
 
@@ -292,7 +273,9 @@ export default function AnalysisView() {
             </div> */}
 
             <div>
-                <h3 class="text-3xl uppercase ml-4">Scaling</h3>
+                <h3 class="text-2xl uppercase ml-4 sm:text-3xl">
+                    {t(config, "scaling")}
+                </h3>
                 <span
                     class="text-neutral-500 uppercase ml-4 mb-2"
                     // @ts-ignore
@@ -306,7 +289,7 @@ export default function AnalysisView() {
                         ),
                     }}
                 >
-                    Team winrate normalized
+                    {t(config, "teamWinrateNormalized")}
                 </span>
                 <div class="p-4 rounded-md bg-primary w-1/2 max-w-2xl h-64">
                     <ScalingChart />

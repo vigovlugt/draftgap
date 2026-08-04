@@ -20,6 +20,7 @@ import { useLolClient } from "./contexts/LolClientContext";
 import { Badge } from "./components/common/Badge";
 import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
+import { zhCN } from "date-fns/locale";
 import { ViewTabs } from "./components/common/ViewTabs";
 import { BuildsView } from "./components/views/builds/BuildsView";
 import { useDraftView } from "./contexts/DraftViewContext";
@@ -39,11 +40,12 @@ import { useMedia } from "./hooks/useMedia";
 import { buttonVariants } from "./components/common/Button";
 import { cn } from "./utils/style";
 import { LanguageDropdownMenu } from "./components/LanguageMenu";
+import { t } from "./utils/i18n";
 
 const App: Component = () => {
     const { config } = useUser();
     const { currentDraftView, setCurrentDraftView } = useDraftView();
-    const { dataset, isLoaded } = useDataset();
+    const { dataset, dataset30Days, isLoaded } = useDataset();
     const { analysisPick, setAnalysisPick, showAnalysisPick } =
         useDraftAnalysis();
     const { startLolClientIntegration, stopLolClientIntegration } =
@@ -66,6 +68,7 @@ const App: Component = () => {
         dataset()
             ? formatDistance(new Date(dataset()!.date), new Date(), {
                   addSuffix: true,
+                  locale: config.language === "zh_CN" ? zhCN : undefined,
               })
             : "";
 
@@ -80,12 +83,14 @@ const App: Component = () => {
                 <Switch>
                     <Match
                         when={
-                            dataset.state === "ready" && dataset() === undefined
+                            (dataset.state === "ready" &&
+                                dataset() === undefined) ||
+                            (dataset30Days.state === "ready" &&
+                                dataset30Days() === undefined)
                         }
                     >
                         <div class="flex justify-center items-center h-full text-2xl text-red-500">
-                            An unexpected error occurred. Please try again
-                            later.
+                            {t(config, "unexpectedError")}
                         </div>
                     </Match>
                     <Match when={!isLoaded()}>
@@ -94,37 +99,46 @@ const App: Component = () => {
                         </div>
                     </Match>
                     <Match when={isLoaded()}>
-                        <Dialog
-                            open={showAnalysisPick()}
-                            onOpenChange={(open) => {
-                                if (!open) setAnalysisPick(undefined);
-                            }}
-                        >
-                            <ChampionDraftAnalysisDialog
-                                championKey={analysisPick()!.championKey}
-                                team={analysisPick()!.team}
-                                openChampionDraftAnalysisModal={(
-                                    team,
-                                    championKey,
-                                ) => setAnalysisPick({ team, championKey })}
-                            />
-                        </Dialog>
+                        <Show when={showAnalysisPick() && analysisPick()}>
+                            {(pick) => (
+                                <Dialog
+                                    open={showAnalysisPick()}
+                                    onOpenChange={(open) => {
+                                        if (!open) setAnalysisPick(undefined);
+                                    }}
+                                >
+                                    <ChampionDraftAnalysisDialog
+                                        championKey={pick().championKey}
+                                        team={pick().team}
+                                        openChampionDraftAnalysisModal={(
+                                            team,
+                                            championKey,
+                                        ) =>
+                                            setAnalysisPick({
+                                                team,
+                                                championKey,
+                                            })
+                                        }
+                                    />
+                                </Dialog>
+                            )}
+                        </Show>
                         <div class="flex flex-col min-h-full flex-1">
                             <ViewTabs
                                 tabs={
                                     [
                                         {
-                                            label: "Draft",
+                                            label: t(config, "draft"),
                                             value: "draft",
                                         },
                                         {
-                                            label: "Draft Analysis",
+                                            label: t(config, "draftAnalysis"),
                                             value: "analysis",
                                         },
                                         ...(config.enableBetaFeatures
                                             ? ([
                                                   {
-                                                      label: "Builds",
+                                                      label: t(config, "builds"),
                                                       value: "builds",
                                                   },
                                               ] as const)
@@ -206,13 +220,19 @@ const App: Component = () => {
                 <FAQDialog />
             </Dialog>
             <header class="bg-primary px-1 py-0 border-b-2 border-neutral-700 flex justify-between">
-                <h1 class="text-4xl sm:text-5xl mr-2 ml-1 mt-1 mb-[0.4rem] font-semibold tracking-wide">
+                <h1 class="text-3xl sm:text-4xl xl:text-5xl mr-2 ml-1 mt-1 mb-[0.4rem] font-semibold tracking-wide">
                     DRAFTGAP
                 </h1>
                 <div class="flex items-center gap-4">
                     <div class="text-xs text-neutral-400 hidden md:flex flex-col text-right uppercase">
-                        <span>Patch {dataset()?.version ?? ""}</span>
-                        <span>Last updated {timeAgo()}</span>
+                        <span>
+                            {t(config, "patch", {
+                                version: dataset()?.version ?? "",
+                            })}
+                        </span>
+                        <span>
+                            {t(config, "lastUpdated", { time: timeAgo() })}
+                        </span>
                     </div>
                     <Dialog
                         open={showDownloadModal()}

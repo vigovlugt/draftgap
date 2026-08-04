@@ -8,16 +8,19 @@ import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
 import { useBuild } from "../../../contexts/BuildContext";
 import { useDataset } from "../../../contexts/DatasetContext";
+import { useUser } from "../../../contexts/UserContext";
+import { t } from "../../../utils/i18n";
 
 export const RuneTable: Component = () => {
     const { dataset } = useDataset();
+    const { config } = useUser();
 
     const paths = () =>
         Object.keys(dataset()!.runePathData).map((str) => parseInt(str));
 
     return (
         <Panel>
-            <PanelHeader>Runes</PanelHeader>
+            <PanelHeader>{t(config, "runes")}</PanelHeader>
             <div class="flex gap-4 justify-between flex-wrap max-w-7xl">
                 <For each={paths()}>
                     {(pathId) => (
@@ -128,6 +131,7 @@ export const PathTable: Component<PathTableProps> = (props) => {
 export const ShardTable: Component = () => {
     const { dataset } = useDataset();
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
+    const { config } = useUser();
 
     const shards = () => Object.values(dataset()!.statShardData);
 
@@ -149,7 +153,9 @@ export const ShardTable: Component = () => {
 
     return (
         <div>
-            <h3 class="uppercase mb-2 min-w-[184px]">Shards</h3>
+            <h3 class="uppercase mb-2 min-w-[184px]">
+                {t(config, "shards")}
+            </h3>
             <div class="bg-[#141414] p-2 rounded-md flex flex-col gap-2 relative">
                 <For
                     each={

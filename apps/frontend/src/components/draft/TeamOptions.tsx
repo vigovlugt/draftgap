@@ -15,12 +15,15 @@ import {
 } from "../common/DropdownMenu";
 import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
+import { useUser } from "../../contexts/UserContext";
+import { t, teamName } from "../../utils/i18n";
 
 type Props = {
     team: Team;
 };
 export function TeamOptions(props: Props) {
     const { resetTeam } = useDraft();
+    const { config } = useUser();
 
     return (
         <div class="absolute right-1 top-0">
@@ -36,14 +39,18 @@ export function TeamOptions(props: Props) {
                     </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuLabel>{props.team} team</DropdownMenuLabel>
+                    <DropdownMenuLabel>
+                        {t(config, "teamLabel", {
+                            team: teamName(config, props.team),
+                        })}
+                    </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                         <DropdownMenuItem
                             onSelect={() => resetTeam(props.team)}
                         >
                             <DropdownMenuIcon path={trash} />
-                            <span>Reset team</span>
+                            <span>{t(config, "resetTeam")}</span>
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>

@@ -12,7 +12,7 @@ import { useTooltip } from "../../contexts/TooltipContext";
 import { linkByStatsSite } from "../../utils/sites";
 import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
-import { championName } from "../../utils/i18n";
+import { championName, t } from "../../utils/i18n";
 import { useMedia } from "../../hooks/useMedia";
 // eslint-disable-next-line
 tooltip;
@@ -133,8 +133,8 @@ export function Pick(props: Props) {
             onMouseOut={onMouseOut}
         >
             <Show when={!champion()}>
-                <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
-                    PICK {props.index + 1}
+                <span class="absolute top-2 left-2 uppercase text-lg leading-none sm:text-xl xl:text-2xl">
+                    {t(config, "pickNumber", { number: props.index + 1 })}
                 </span>
             </Show>
 
@@ -157,7 +157,7 @@ export function Pick(props: Props) {
                         }}
                     />
 
-                    <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
+                    <span class="absolute top-2 left-2 max-w-[calc(100%-2.5rem)] truncate uppercase text-lg leading-none sm:text-xl xl:text-2xl">
                         {championName(champion()!, config)}
                     </span>
 
@@ -191,8 +191,14 @@ export function Pick(props: Props) {
                                         content: (
                                             <>
                                                 {pick().role !== undefined
-                                                    ? "The champion is locked in this position, to choose an other position, click to unlock"
-                                                    : "Click to lock the champion in this position, the current estimated position is highlighted"}
+                                                    ? t(
+                                                          config,
+                                                          "unlockRoleTooltip",
+                                                      )
+                                                    : t(
+                                                          config,
+                                                          "lockRoleTooltip",
+                                                      )}
                                             </>
                                         ),
                                     }}
@@ -200,7 +206,7 @@ export function Pick(props: Props) {
                                     <div class="text-md">
                                         <RoleIcon
                                             role={role}
-                                            class="h-8 lg:h-10"
+                                            class="h-7 sm:h-8 xl:h-10"
                                             classList={{
                                                 "opacity-50":
                                                     teamCompRole() !== role,
@@ -218,9 +224,10 @@ export function Pick(props: Props) {
                                             use:tooltip={{
                                                 content: (
                                                     <>
-                                                        The probability of this
-                                                        champion being played in
-                                                        this position
+                                                        {t(
+                                                            config,
+                                                            "roleProbabilityTooltip",
+                                                        )}
                                                     </>
                                                 ),
                                             }}

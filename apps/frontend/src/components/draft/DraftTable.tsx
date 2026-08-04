@@ -7,13 +7,25 @@ import {
     Row,
     SortingState,
 } from "@tanstack/solid-table";
+import { DraftResult } from "@draftgap/core/src/draft/analysis";
+import {
+    analyzeDraftExtra,
+    DraftExtraAnalysis,
+} from "@draftgap/core/src/draft/extra-analysis";
 import { useDraft } from "../../contexts/DraftContext";
 import { Role } from "@draftgap/core/src/models/Role";
 import { Suggestion } from "@draftgap/core/src/draft/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
-import { batch, createSignal, onCleanup, onMount, Show } from "solid-js";
+import {
+    createEffect,
+    createSignal,
+    For,
+    onCleanup,
+    onMount,
+    Show,
+} from "solid-js";
 import { Icon } from "solid-heroicons";
 import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
@@ -23,16 +35,147 @@ import { useUser } from "../../contexts/UserContext";
 import { useDraftSuggestions } from "../../contexts/DraftSuggestionsContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";
-import { informationCircle } from "solid-heroicons/solid-mini";
+import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
+import {
+    informationCircle,
+    presentationChartLine,
+} from "solid-heroicons/solid-mini";
 import { Dialog } from "../common/Dialog";
 import { ChampionDraftAnalysisDialog } from "../dialogs/ChampionDraftAnalysisDialog";
 import { Team } from "@draftgap/core/src/models/Team";
-import { championName } from "../../utils/i18n";
+import { championName, roleName, t, teamName } from "../../utils/i18n";
+import { Button } from "../common/Button";
+
+type PendingPick = {
+    team: Team;
+    index: number;
+    suggestion: Suggestion;
+};
+
+type AnalysisPick = {
+    team: Team;
+    championKey: string;
+    draftResult?: DraftResult;
+    teamComp?: Map<Role, string>;
+    allyRatingByTime?: DraftExtraAnalysis["ratingByTime"];
+    opponentRatingByTime?: DraftExtraAnalysis["ratingByTime"];
+};
+
+function DraftPickConfirmation(props: {
+    pendingPick: PendingPick;
+    onConfirm: () => void;
+    onCancel: () => void;
+    onOpenDetails: () => void;
+}) {
+    const { config } = useUser();
+    const [showAnalysis, setShowAnalysis] = createSignal(false);
+
+    const suggestion = () => props.pendingPick.suggestion;
+    const draftResult = () => suggestion().draftResult;
+
+    const summaryItems = () => [
+        {
+            label: t(config, "winrate"),
+            rating: draftResult().totalRating,
+        },
+        {
+            label: t(config, "champions"),
+            rating: draftResult().allyChampionRating.totalRating,
+        },
+        {
+            label: t(config, "matchups"),
+            rating: draftResult().matchupRating.totalRating,
+        },
+        {
+            label: t(config, "duos"),
+            rating: draftResult().allyDuoRating.totalRating,
+        },
+    ];
+
+    return (
+        <div class="rounded-md border border-white/10 bg-primary shadow-lg">
+            <div class="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between">
+                <div class="min-w-0">
+                    <div class="text-xs uppercase text-neutral-500 sm:text-sm">
+                        {t(config, "confirmPickFor", {
+                            team: teamName(config, props.pendingPick.team),
+                            number: props.pendingPick.index + 1,
+                        })}
+                    </div>
+                    <div class="mt-1 flex min-w-0 items-center gap-3 text-base uppercase sm:text-lg">
+                        <ChampionCell
+                            championKey={suggestion().championKey}
+                            nameMaxLength={14}
+                        />
+                        <span class="text-neutral-500">
+                            {roleName(config, suggestion().role)}
+                        </span>
+                    </div>
+                </div>
+                <div class="flex shrink-0 flex-wrap items-center gap-2">
+                    <button
+                        type="button"
+                        class="px-3 py-1.5 text-sm uppercase text-neutral-300 transition-colors hover:text-white sm:text-base"
+                        onClick={() => setShowAnalysis(!showAnalysis())}
+                    >
+                        {showAnalysis()
+                            ? t(config, "hideAnalysis")
+                            : t(config, "showAnalysis")}
+                    </button>
+                    <Button
+                        variant="secondary"
+                        class="gap-2 text-base sm:text-lg"
+                        onClick={props.onOpenDetails}
+                    >
+                        <Icon path={presentationChartLine} class="h-5 w-5" />
+                        {t(config, "fullDetails")}
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        class="text-base sm:text-lg"
+                        onClick={props.onCancel}
+                    >
+                        {t(config, "cancel")}
+                    </Button>
+                    <Button
+                        class="text-base sm:text-lg"
+                        onClick={props.onConfirm}
+                    >
+                        {t(config, "confirm")}
+                    </Button>
+                </div>
+            </div>
+            <Show when={showAnalysis()}>
+                <div class="max-h-56 overflow-y-auto border-t border-neutral-800 p-3">
+                    <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                        <For each={summaryItems()}>
+                            {(item) => (
+                                <div class="rounded-md bg-[#101010] px-3 py-2">
+                                    <div class="text-xs uppercase text-neutral-500 sm:text-sm">
+                                        {item.label}
+                                    </div>
+                                    <div class="mt-1 text-xl leading-none sm:text-2xl">
+                                        <RatingText rating={item.rating} />
+                                    </div>
+                                </div>
+                            )}
+                        </For>
+                    </div>
+                </div>
+            </Show>
+        </div>
+    );
+}
 
 export default function DraftTable() {
-    const { dataset } = useDataset();
-    const { selection, pickChampion, select, bans, ownedChampions } =
-        useDraft();
+    const { dataset, dataset30Days } = useDataset();
+    const {
+        selection,
+        pickChampion,
+        select,
+        bans,
+        ownedChampions,
+    } = useDraft();
     const {
         search,
         roleFilter,
@@ -41,6 +184,8 @@ export default function DraftTable() {
         setFavouriteFilter,
     } = useDraftFilters();
     const { allySuggestions, opponentSuggestions } = useDraftSuggestions();
+    const { allyTeamComp, opponentTeamComp, draftAnalysisConfig } =
+        useDraftAnalysis();
     const { isFavourite, setFavourite, config } = useUser();
 
     const suggestions = () =>
@@ -137,55 +282,80 @@ export default function DraftTable() {
         return filtered;
     };
 
-    const [analysisPick, _setAnalysisPick] = createSignal<{
-        team: Team;
-        championKey: string;
-    }>();
+    const [analysisPick, _setAnalysisPick] = createSignal<AnalysisPick>();
     const [showAnalysisPick, setShowAnalysisPick] = createSignal(false);
-    const [savedRoleFilter, setSavedRoleFilter] = createSignal<Role>();
+    const [pendingPick, setPendingPick] = createSignal<PendingPick>();
+
+    createEffect(() => {
+        const pending = pendingPick();
+        if (
+            pending &&
+            (selection.team !== pending.team || selection.index !== pending.index)
+        ) {
+            setPendingPick(undefined);
+        }
+    });
 
     function setAnalysisPick(
         pick:
             | { team: Team; championKey: string; role: Role | undefined }
             | undefined,
     ) {
-        batch(() => {
-            if (!pick) {
-                pickChampion(
-                    selection.team!,
-                    selection.index,
-                    undefined,
-                    undefined,
-                    {
-                        updateSelection: false,
-                        resetFilters: false,
-                        reportEvent: false,
-                        updateView: false,
-                    },
+        if (!pick) {
+            _setAnalysisPick(undefined);
+            setShowAnalysisPick(false);
+            return;
+        }
+
+        if (pick.role !== undefined) {
+            const suggestion = suggestions().find(
+                (s) =>
+                    s.championKey === pick.championKey &&
+                    s.role === pick.role,
+            );
+
+            if (suggestion && dataset() && dataset30Days()) {
+                const candidateTeamComp = new Map(
+                    pick.team === "ally" ? allyTeamComp() : opponentTeamComp(),
                 );
-                setRoleFilter(savedRoleFilter());
-                setSavedRoleFilter(undefined);
-                setShowAnalysisPick(false);
+                candidateTeamComp.set(pick.role, pick.championKey);
+
+                const candidateAllyTeamComp =
+                    pick.team === "ally"
+                        ? candidateTeamComp
+                        : allyTeamComp();
+                const candidateOpponentTeamComp =
+                    pick.team === "opponent"
+                        ? candidateTeamComp
+                        : opponentTeamComp();
+
+                _setAnalysisPick({
+                    team: pick.team,
+                    championKey: pick.championKey,
+                    draftResult: suggestion.draftResult,
+                    teamComp: candidateTeamComp,
+                    allyRatingByTime: analyzeDraftExtra(
+                        dataset()!,
+                        dataset30Days()!,
+                        candidateAllyTeamComp,
+                        candidateOpponentTeamComp,
+                        draftAnalysisConfig(),
+                    ).ratingByTime,
+                    opponentRatingByTime: analyzeDraftExtra(
+                        dataset()!,
+                        dataset30Days()!,
+                        candidateOpponentTeamComp,
+                        candidateAllyTeamComp,
+                        draftAnalysisConfig(),
+                    ).ratingByTime,
+                });
+                setShowAnalysisPick(true);
                 return;
             }
-            if (pick.role !== undefined) {
-                setSavedRoleFilter(roleFilter());
-                pickChampion(
-                    selection.team!,
-                    selection.index,
-                    pick.championKey,
-                    pick.role,
-                    {
-                        updateSelection: false,
-                        resetFilters: false,
-                        reportEvent: false,
-                        updateView: false,
-                    },
-                );
-            }
-            _setAnalysisPick(pick);
-            setShowAnalysisPick(true);
-        });
+        }
+
+        _setAnalysisPick(pick);
+        setShowAnalysisPick(true);
     }
 
     const columns: () => ColumnDef<Suggestion>[] = () => [
@@ -249,7 +419,7 @@ export default function DraftTable() {
             enableSorting: false,
         },
         {
-            header: "Role",
+            header: t(config, "role"),
             accessorFn: (suggestion) => suggestion.role,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
             meta: {
@@ -258,7 +428,7 @@ export default function DraftTable() {
             sortDescFirst: false,
         },
         {
-            header: "Champion",
+            header: t(config, "champion"),
             accessorFn: (suggestion) => suggestion.championKey,
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} />
@@ -273,7 +443,7 @@ export default function DraftTable() {
         ...(config.showAdvancedWinrates
             ? ([
                   {
-                      header: "Champions",
+                      header: t(config, "champions"),
                       accessorFn: (suggestion) =>
                           suggestion.draftResult.allyChampionRating.totalRating,
                       cell: (info) => (
@@ -283,7 +453,7 @@ export default function DraftTable() {
                       ),
                   },
                   {
-                      header: "Matchups",
+                      header: t(config, "matchups"),
                       accessorFn: (suggestion) =>
                           suggestion.draftResult.matchupRating.totalRating,
                       cell: (info) => (
@@ -293,7 +463,7 @@ export default function DraftTable() {
                       ),
                   },
                   {
-                      header: "Duos",
+                      header: t(config, "duos"),
                       accessorFn: (suggestion) =>
                           suggestion.draftResult.allyDuoRating.totalRating,
                       cell: (info) => (
@@ -305,7 +475,7 @@ export default function DraftTable() {
               ] as ColumnDef<Suggestion>[])
             : []),
         {
-            header: "Winrate",
+            header: t(config, "winrate"),
             accessorFn: (suggestion) => suggestion.draftResult.totalRating,
             cell: (info) => (
                 <div class="flex justify-end">
@@ -357,16 +527,28 @@ export default function DraftTable() {
 
     function pick(row: Row<Suggestion>) {
         if (!selection.team) {
-            createMustSelectToast();
+            createMustSelectToast(config);
             return;
         }
 
+        setPendingPick({
+            team: selection.team,
+            index: selection.index,
+            suggestion: row.original,
+        });
+    }
+
+    function confirmPendingPick() {
+        const pending = pendingPick();
+        if (!pending) return;
+
         pickChampion(
-            selection.team,
-            selection.index,
-            row.original.championKey,
-            row.original.role,
+            pending.team,
+            pending.index,
+            pending.suggestion.championKey,
+            pending.suggestion.role,
         );
+        setPendingPick(undefined);
 
         document.getElementById("draftTableSearch")?.focus();
     }
@@ -427,31 +609,73 @@ export default function DraftTable() {
 
     return (
         <>
-            <Table
-                table={table}
-                onClickRow={pick}
-                rowClassName={(r) =>
-                    bans.find((b) => b === r.original.championKey) ||
-                    !ownsChampion(r.original.championKey)
-                        ? "opacity-30"
-                        : ""
-                }
-                id="draft-table"
-            />
-            <Dialog
-                open={showAnalysisPick()}
-                onOpenChange={(open) => {
-                    if (!open) setAnalysisPick(undefined);
-                }}
-            >
-                <ChampionDraftAnalysisDialog
-                    championKey={analysisPick()!.championKey}
-                    team={analysisPick()!.team}
-                    openChampionDraftAnalysisModal={(team, championKey) =>
-                        setAnalysisPick({ team, championKey, role: undefined })
+            <div class="flex min-h-0 flex-1 flex-col gap-3">
+                <Table
+                    table={table}
+                    onClickRow={pick}
+                    rowClassName={(r) =>
+                        bans.find((b) => b === r.original.championKey) ||
+                        !ownsChampion(r.original.championKey)
+                            ? "opacity-30"
+                            : pendingPick()?.suggestion.championKey ===
+                                    r.original.championKey &&
+                                pendingPick()?.suggestion.role ===
+                                    r.original.role
+                              ? "bg-neutral-800"
+                              : ""
                     }
+                    id="draft-table"
+                    class="min-h-0 flex-1"
                 />
-            </Dialog>
+                <Show when={pendingPick()}>
+                    {(pending) => (
+                        <DraftPickConfirmation
+                            pendingPick={pending()}
+                            onConfirm={confirmPendingPick}
+                            onCancel={() => setPendingPick(undefined)}
+                            onOpenDetails={() =>
+                                setAnalysisPick({
+                                    team: pending().team,
+                                    championKey:
+                                        pending().suggestion.championKey,
+                                    role: pending().suggestion.role,
+                                })
+                            }
+                        />
+                    )}
+                </Show>
+            </div>
+            <Show when={showAnalysisPick() && analysisPick()}>
+                {(pick) => (
+                    <Dialog
+                        open={showAnalysisPick()}
+                        onOpenChange={(open) => {
+                            if (!open) setAnalysisPick(undefined);
+                        }}
+                    >
+                        <ChampionDraftAnalysisDialog
+                            championKey={pick().championKey}
+                            team={pick().team}
+                            draftResult={pick().draftResult}
+                            teamComp={pick().teamComp}
+                            allyRatingByTime={pick().allyRatingByTime}
+                            opponentRatingByTime={
+                                pick().opponentRatingByTime
+                            }
+                            openChampionDraftAnalysisModal={(
+                                team,
+                                championKey,
+                            ) =>
+                                setAnalysisPick({
+                                    team,
+                                    championKey,
+                                    role: undefined,
+                                })
+                            }
+                        />
+                    </Dialog>
+                )}
+            </Show>
         </>
     );
 }

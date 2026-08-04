@@ -13,6 +13,7 @@ import {
 import { cn } from "../utils/style";
 import { buttonVariants } from "./common/Button";
 import { useUser } from "../contexts/UserContext";
+import { t } from "../utils/i18n";
 
 export const LanguageDropdownMenu: Component = () => {
     const { config, setConfig } = useUser();
@@ -30,7 +31,7 @@ export const LanguageDropdownMenu: Component = () => {
                 </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent class="w-56">
-                <DropdownMenuLabel>Language</DropdownMenuLabel>
+                <DropdownMenuLabel>{t(config, "language")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem
@@ -39,7 +40,7 @@ export const LanguageDropdownMenu: Component = () => {
                             config.language === "en_US" && "bg-neutral-700",
                         )}
                     >
-                        <span>English</span>
+                        <span>{t(config, "english")}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         onSelect={() => setConfig({ language: "zh_CN" })}
@@ -47,12 +48,12 @@ export const LanguageDropdownMenu: Component = () => {
                             config.language === "zh_CN" && "bg-neutral-700",
                         )}
                     >
-                        <span>Simplified Chinese</span>
+                        <span>{t(config, "simplifiedChinese")}</span>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel class="text-neutral-500 text-sm">
-                    Only affects champion names
+                    {t(config, "uiLanguageHint")}
                 </DropdownMenuLabel>
             </DropdownMenuContent>
         </DropdownMenu>

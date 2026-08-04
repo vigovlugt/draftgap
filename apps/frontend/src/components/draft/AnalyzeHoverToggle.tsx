@@ -4,17 +4,20 @@ import { Icon } from "solid-heroicons";
 import { eye, eyeSlash } from "solid-heroicons/solid";
 import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
+import { useUser } from "../../contexts/UserContext";
+import { t } from "../../utils/i18n";
 // eslint-disable-next-line
 tooltip;
 
 export function AnalyzeHoverToggle() {
     const { analyzeHovers, setAnalyzeHovers } = useDraftAnalysis();
+    const { config } = useUser();
 
     return (
         <button
             // @ts-ignore
             use:tooltip={{
-                content: "Analyze hovered champions in the draft",
+                content: t(config, "analyzeHoveredChampions"),
             }}
             onClick={() => setAnalyzeHovers((v) => !v)}
             class={cn(

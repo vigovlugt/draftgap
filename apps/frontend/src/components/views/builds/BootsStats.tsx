@@ -5,13 +5,16 @@ import { formatPercentage, getRatingClass } from "../../../utils/rating";
 import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
 import { HorizontalEntityStats } from "./EntityStats";
 import { useDataset } from "../../../contexts/DatasetContext";
+import { useUser } from "../../../contexts/UserContext";
+import { t } from "../../../utils/i18n";
 
 export const BootsStats: Component = () => {
     const { buildAnalysisResult, partialBuildDataset } = useBuild();
+    const { config } = useUser();
 
     return (
         <Panel>
-            <PanelHeader>Boots</PanelHeader>
+            <PanelHeader>{t(config, "boots")}</PanelHeader>
             <HorizontalEntityStats
                 data={Object.keys(buildAnalysisResult()!.items.boots).filter(
                     (id) =>

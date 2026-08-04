@@ -23,7 +23,7 @@ import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
 import { For, Show } from "solid-js";
 import { RoleIcon } from "../icons/roles/RoleIcon";
-import { championName } from "../../utils/i18n";
+import { championName, t } from "../../utils/i18n";
 
 export function PickOptions(props: { team: Team; index: number }) {
     const { config } = useUser();
@@ -67,7 +67,9 @@ export function PickOptions(props: { team: Team; index: number }) {
                     <DropdownMenuLabel>
                         {champion()
                             ? championName(champion()!, config)
-                            : `Pick ${props.index + 1}`}
+                            : t(config, "pickNumber", {
+                                  number: props.index + 1,
+                              })}
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
@@ -83,7 +85,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                             }
                         >
                             <DropdownMenuIcon path={trash} />
-                            <span>Reset</span>
+                            <span>{t(config, "reset")}</span>
                             <DropdownMenuShortcut>R</DropdownMenuShortcut>
                         </DropdownMenuItem>
                         <DropdownMenuItem disabled={!champion()} asChild>
@@ -121,7 +123,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                             }
                         >
                             <DropdownMenuIcon path={presentationChartLine} />
-                            <span>Analysis</span>
+                            <span>{t(config, "analysis")}</span>
                             <DropdownMenuShortcut>F</DropdownMenuShortcut>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />

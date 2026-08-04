@@ -20,6 +20,8 @@ import { useDataset } from "../../../contexts/DatasetContext";
 import { Dialog } from "../../common/Dialog";
 import { WinrateDecompositionDialog } from "../../dialogs/WinrateDecompositionDialog";
 import { EntityMatchupAnalysisResult } from "@draftgap/core/src/builds/entity-analysis";
+import { useUser } from "../../../contexts/UserContext";
+import { t } from "../../../utils/i18n";
 
 export const BuildMatchupTable = (
     props: JSX.HTMLAttributes<HTMLDivElement>,
@@ -27,6 +29,7 @@ export const BuildMatchupTable = (
     const { dataset } = useDataset();
     const { selectedEntity, buildAnalysisResult, partialBuildDataset } =
         useBuild();
+    const { config } = useUser();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
         createSignal(false);
@@ -38,10 +41,10 @@ export const BuildMatchupTable = (
 
     const title = () =>
         ({
-            rune: "Rune",
-            item: "Item",
-            summonerSpells: "Spells",
-            skills: "Skills",
+            rune: t(config, "rune"),
+            item: t(config, "item"),
+            summonerSpells: t(config, "spells"),
+            skills: t(config, "skills"),
         })[selectedEntity()!.type];
 
     const data = () => {
@@ -109,7 +112,7 @@ export const BuildMatchupTable = (
 
     const columns: ColumnDef<EntityMatchupAnalysisResult>[] = [
         {
-            header: "Role",
+            header: t(config, "role"),
             accessorFn: () => partialBuildDataset()!.role,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
             meta: {
@@ -119,7 +122,7 @@ export const BuildMatchupTable = (
             sortDescFirst: false,
         },
         {
-            header: "Ally",
+            header: t(config, "ally"),
             accessorFn: () => partialBuildDataset()!.championKey,
             cell: (info) => (
                 <ChampionCell championKey={info.getValue<string>()} hideName />
@@ -145,7 +148,11 @@ export const BuildMatchupTable = (
             },
         },
         {
-            header: () => <div class="text-center w-full uppercase">VS</div>,
+            header: () => (
+                <div class="text-center w-full uppercase">
+                    {t(config, "vs")}
+                </div>
+            ),
             id: "seperator",
             cell: () => <div class="w-20" />,
             meta: {
@@ -154,7 +161,7 @@ export const BuildMatchupTable = (
             },
         },
         {
-            header: "Role",
+            header: t(config, "role"),
             id: "opponentRole",
             accessorFn: (result) => result.role,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
@@ -165,7 +172,7 @@ export const BuildMatchupTable = (
             },
         },
         {
-            header: "Opponent",
+            header: t(config, "opponent"),
             id: "opponentChampionKey",
             accessorFn: (result) => result.championKey,
             cell: (info) => (
@@ -179,7 +186,7 @@ export const BuildMatchupTable = (
                 ),
         },
         {
-            header: "Winrate",
+            header: t(config, "winrate"),
             id: "rating",
             accessorFn: (result) => result.rating,
             cell: (info) => (
@@ -202,12 +209,12 @@ export const BuildMatchupTable = (
         ...(import.meta.env.DEV
             ? ([
                   {
-                      header: "Games",
+                      header: t(config, "games"),
                       id: "games",
                       accessorFn: (result) => (result as any).raw.games,
                   },
                   {
-                      header: "Delta",
+                      header: t(config, "delta"),
                       id: "delta",
                       accessorFn: (result) =>
                           formatPercentage(
@@ -226,7 +233,7 @@ export const BuildMatchupTable = (
                           ),
                   },
                   {
-                      header: "Expected",
+                      header: t(config, "expected"),
                       id: "expected",
                       accessorFn: (result) =>
                           formatPercentage((result as any).expected),

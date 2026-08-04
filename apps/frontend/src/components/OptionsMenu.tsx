@@ -20,6 +20,8 @@ import {
 } from "./common/DropdownMenu";
 import { cn } from "../utils/style";
 import { buttonVariants } from "./common/Button";
+import { useUser } from "../contexts/UserContext";
+import { t } from "../utils/i18n";
 
 type Props = {
     setShowSettings: (show: boolean) => void;
@@ -27,6 +29,8 @@ type Props = {
 };
 
 export const OptionsDropdownMenu: Component<Props> = (props) => {
+    const { config } = useUser();
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
@@ -47,11 +51,11 @@ export const OptionsDropdownMenu: Component<Props> = (props) => {
                         onSelect={() => props.setShowSettings(true)}
                     >
                         <DropdownMenuIcon path={cog_6Tooth} />
-                        <span>Settings</span>
+                        <span>{t(config, "settings")}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem onSelect={() => props.setShowFAQ(true)}>
                         <DropdownMenuIcon path={questionMarkCircle} />
-                        <span>FAQ</span>
+                        <span>{t(config, "faq")}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                         <a
@@ -60,7 +64,7 @@ export const OptionsDropdownMenu: Component<Props> = (props) => {
                             class="flex items-center"
                         >
                             <DropdownMenuIcon path={envelope} />
-                            <span>Contact</span>
+                            <span>{t(config, "contact")}</span>
                         </a>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
@@ -80,7 +84,7 @@ export const OptionsDropdownMenu: Component<Props> = (props) => {
                             class="flex items-center"
                         >
                             <DropdownMenuIcon path={heart} />
-                            <span>Donate</span>
+                            <span>{t(config, "donate")}</span>
                         </a>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>

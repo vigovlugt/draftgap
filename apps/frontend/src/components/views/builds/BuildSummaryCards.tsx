@@ -9,19 +9,22 @@ import {
 import { capitalize } from "../../../utils/strings";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { cn } from "../../../utils/style";
+import { useUser } from "../../../contexts/UserContext";
+import { t } from "../../../utils/i18n";
 
 export const BuildSummaryCards: Component<
     JSX.HTMLAttributes<HTMLDivElement>
 > = (props) => {
     const { dataset } = useDataset();
     const { selectedEntity, buildAnalysisResult } = useBuild();
+    const { config } = useUser();
 
     const title = () =>
         ({
-            rune: "Rune",
-            item: "Item",
-            summonerSpells: "Summoner Spell",
-            skills: "Skills",
+            rune: t(config, "rune"),
+            item: t(config, "item"),
+            summonerSpells: t(config, "summonerSpell"),
+            skills: t(config, "skills"),
         })[selectedEntity()!.type];
     const name = () => {
         const selected = selectedEntity()!;
@@ -34,9 +37,9 @@ export const BuildSummaryCards: Component<
             case "item":
                 switch (selected.itemType) {
                     case "startingSets":
-                        return "Starting Items";
+                        return t(config, "startingItems");
                     case "sets":
-                        return "Build";
+                        return t(config, "build");
                     default:
                         return dataset()!.itemData[selected.id].name;
                 }
@@ -49,9 +52,9 @@ export const BuildSummaryCards: Component<
             case "skills": {
                 switch (selected.skillsType) {
                     case "order":
-                        return "Skill Priority";
+                        return t(config, "skillPriority");
                     case "level":
-                        return "Skills";
+                        return t(config, "skills");
                 }
             }
         }
@@ -167,7 +170,7 @@ export const BuildSummaryCards: Component<
             <SummaryCard
                 class="py-2!"
                 icon={arrowsRightLeft}
-                title="Matchups"
+                title={t(config, "matchups")}
                 rating={matchupRating()}
                 tooltip={
                     <>
@@ -181,7 +184,7 @@ export const BuildSummaryCards: Component<
             <SummaryCard
                 class="py-2!"
                 icon={presentationChartLine}
-                title="Total"
+                title={t(config, "total")}
                 rating={totalRating()}
                 tooltip={
                     <>

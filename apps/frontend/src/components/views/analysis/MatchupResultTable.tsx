@@ -22,6 +22,8 @@ import { useDraftAnalysis } from "../../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { Dialog } from "../../common/Dialog";
 import { WinrateDecompositionDialog } from "../../dialogs/WinrateDecompositionDialog";
+import { useUser } from "../../../contexts/UserContext";
+import { t } from "../../../utils/i18n";
 
 interface Props {
     showAll: boolean;
@@ -35,6 +37,7 @@ export function MatchupResultTable(
 ) {
     const { dataset } = useDataset();
     const { allyDraftAnalysis } = useDraftAnalysis();
+    const { config } = useUser();
 
     const [confidenceAnalysisModalIsOpen, setConfidenceAnalysisModalIsOpen] =
         createSignal(false);
@@ -46,7 +49,7 @@ export function MatchupResultTable(
 
     const columns: ColumnDef<AnalyzeMatchupResult>[] = [
         {
-            header: "Role",
+            header: t(config, "role"),
             accessorFn: (result) => result.roleA,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
             meta: {
@@ -56,7 +59,7 @@ export function MatchupResultTable(
             sortDescFirst: false,
         },
         {
-            header: "Ally",
+            header: t(config, "ally"),
             accessorFn: (result) => result.championKeyA,
             cell: (info) => (
                 <ChampionCell
@@ -83,7 +86,7 @@ export function MatchupResultTable(
                 ),
         },
         {
-            header: "Winrate",
+            header: t(config, "winrate"),
             accessorFn: (result) => result.rating,
 
             cell: (info) => (
@@ -107,7 +110,9 @@ export function MatchupResultTable(
             },
         },
         {
-            header: () => <div class="text-center w-full">Winner</div>,
+            header: () => (
+                <div class="text-center w-full">{t(config, "winner")}</div>
+            ),
             id: "winner",
             accessorFn: (result) => result.rating > 0,
             cell: (info) => <WinnerCell winner={info.getValue<boolean>()} />,
@@ -117,7 +122,7 @@ export function MatchupResultTable(
         },
         {
             id: "opponent-role",
-            header: "Role",
+            header: t(config, "role"),
             accessorFn: (result) => result.roleB,
             cell: (info) => <RoleCell role={info.getValue<Role>()} />,
             meta: {
@@ -127,7 +132,7 @@ export function MatchupResultTable(
             sortDescFirst: false,
         },
         {
-            header: "Opponent",
+            header: t(config, "opponent"),
             accessorFn: (result) => result.championKeyB,
             cell: (info) => (
                 <ChampionCell
@@ -156,7 +161,7 @@ export function MatchupResultTable(
         },
         {
             id: "opponent-winrate",
-            header: "Winrate",
+            header: t(config, "winrate"),
             accessorFn: (result) => -result.rating,
             cell: (info) => (
                 <RatingText

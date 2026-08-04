@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../common/Popover";
 import { useUser } from "../../contexts/UserContext";
 import { buttonVariants } from "../common/Button";
 import { cn } from "../../utils/style";
+import { t } from "../../utils/i18n";
 
 export function FilterMenu() {
     const { config, setConfig } = useUser();
@@ -25,10 +26,10 @@ export function FilterMenu() {
             </PopoverTrigger>
             <PopoverContent>
                 <span class="text-2xl uppercase block mb-1 leading-none">
-                    Filters
+                    {t(config, "filters")}
                 </span>
                 <span class="text-lg uppercase block">
-                    Minimum game count (7d)
+                    {t(config, "minimumGameCount7d")}
                 </span>
                 <ButtonGroup
                     options={minGameCountOptions}

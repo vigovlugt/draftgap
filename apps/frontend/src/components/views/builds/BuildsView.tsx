@@ -8,11 +8,14 @@ import { useBuild } from "../../../contexts/BuildContext";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { Dialog } from "../../common/Dialog";
 import { BuildAnalysisDialog } from "../../dialogs/BuildAnalysisDialog";
+import { useUser } from "../../../contexts/UserContext";
+import { championName, t } from "../../../utils/i18n";
 
 export const BuildsViewTabs = (props: { team: Team }) => {
     const { allyTeam, opponentTeam } = useDraft();
     const { dataset } = useDataset();
     const { buildPick, setBuildPick } = useBuild();
+    const { config } = useUser();
 
     const team = () => (props.team === "ally" ? allyTeam : opponentTeam);
 
@@ -25,7 +28,10 @@ export const BuildsViewTabs = (props: { team: Team }) => {
                 .map((i) => ({
                     value: { team: props.team, index: i },
                     label: overflowEllipsis(
-                        dataset()!.championData[team()[i].championKey!].name,
+                        championName(
+                            dataset()!.championData[team()[i].championKey!],
+                            config,
+                        ),
                         10,
                     ),
                 }))}
@@ -45,6 +51,7 @@ export const BuildsView = () => {
         showSelectedEntity,
         buildAnalysisResult,
     } = useBuild();
+    const { config } = useUser();
 
     return (
         <>
@@ -57,7 +64,7 @@ export const BuildsView = () => {
                     when={buildPick()}
                     fallback={
                         <div class="text-neutral-500 text-2xl text-center grid place-items-center h-full">
-                            Select a champion to view their build
+                            {t(config, "selectChampionToViewBuild")}
                         </div>
                     }
                 >

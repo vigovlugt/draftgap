@@ -1,6 +1,8 @@
 import { Icon } from "solid-heroicons";
 import { Component, JSX, Show } from "solid-js";
 import toast, { Toast as ToastModel } from "solid-toast";
+import { useUser } from "../../contexts/UserContext";
+import { t } from "../../utils/i18n";
 
 type Props = {
     t: ToastModel;
@@ -17,6 +19,8 @@ type Props = {
 };
 
 export const Toast: Component<Props> = (props) => {
+    const { config } = useUser();
+
     return (
         <div
             class={`${
@@ -62,7 +66,7 @@ export const Toast: Component<Props> = (props) => {
                             class="rounded-md inline-flex text-gray-400 hover:text-gray-500 transition ease-out duration-150"
                             onClick={() => toast.dismiss(props.t.id)}
                         >
-                            <span class="sr-only">Close</span>
+                            <span class="sr-only">{t(config, "close")}</span>
                             <svg
                                 class="h-5 w-5"
                                 viewBox="0 0 20 20"

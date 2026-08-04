@@ -29,4 +29,5 @@ export type DraftGapConfig = {
 
     // LOL CLIENT
     disableLeagueClientIntegration: boolean;
+    syncChampionSelectionToLeagueClient: boolean;
 };
