@@ -38,6 +38,7 @@ import { AnalyzeHoverToggle } from "./components/draft/AnalyzeHoverToggle";
 import { useMedia } from "./hooks/useMedia";
 import { buttonVariants } from "./components/common/Button";
 import { cn } from "./utils/style";
+import { formatPatch } from "./utils/strings";
 import { LanguageDropdownMenu } from "./components/LanguageMenu";
 
 const App: Component = () => {
@@ -211,7 +212,7 @@ const App: Component = () => {
                 </h1>
                 <div class="flex items-center gap-4">
                     <div class="text-xs text-neutral-400 hidden md:flex flex-col text-right uppercase">
-                        <span>Patch {dataset()?.version ?? ""}</span>
+                        <span>Patch {formatPatch(dataset()?.version)}</span>
                         <span>Last updated {timeAgo()}</span>
                     </div>
                     <Dialog
