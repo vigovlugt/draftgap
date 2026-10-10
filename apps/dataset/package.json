@@ -1,6 +1,6 @@
 {
     "name": "@draftgap/dataset",
-    "version": "3.2.1",
+    "version": "3.2.2",
     "scripts": {
         "start": "bun run src/index.ts",
         "typecheck": "tsc --noEmit",
