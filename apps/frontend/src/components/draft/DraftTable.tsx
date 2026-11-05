@@ -28,9 +28,11 @@ import { Dialog } from "../common/Dialog";
 import { ChampionDraftAnalysisDialog } from "../dialogs/ChampionDraftAnalysisDialog";
 import { Team } from "@draftgap/core/src/models/Team";
 import { championName } from "../../utils/i18n";
+import { useMedia } from "../../hooks/useMedia";
 
 export default function DraftTable() {
     const { dataset } = useDataset();
+    const { isMobileLayout } = useMedia();
     const { selection, pickChampion, select, bans, ownedChampions } =
         useDraft();
     const {
@@ -368,7 +370,10 @@ export default function DraftTable() {
             row.original.role,
         );
 
-        document.getElementById("draftTableSearch")?.focus();
+        // Avoid opening the on-screen keyboard after every pick on mobile
+        if (!isMobileLayout()) {
+            document.getElementById("draftTableSearch")?.focus();
+        }
     }
 
     onMount(() => {

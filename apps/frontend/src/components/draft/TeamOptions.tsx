@@ -18,12 +18,13 @@ import { buttonVariants } from "../common/Button";
 
 type Props = {
     team: Team;
+    class?: string;
 };
 export function TeamOptions(props: Props) {
     const { resetTeam } = useDraft();
 
     return (
-        <div class="absolute right-1 top-0">
+        <div class={cn("absolute right-1 top-0", props.class)}>
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <button

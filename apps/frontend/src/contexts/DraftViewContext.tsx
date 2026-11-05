@@ -1,21 +1,12 @@
 import { JSXElement, createContext, createSignal, useContext } from "solid-js";
 
-type DraftView =
-    | {
-          type: "draft";
-          subType: "ally" | "opponent" | "draft";
-      }
-    | {
-          type: "analysis";
-      }
-    | {
-          type: "builds";
-      };
+type DraftView = {
+    type: "draft" | "analysis" | "builds";
+};
 
 function createDraftViewContext() {
     const [currentDraftView, setCurrentDraftView] = createSignal<DraftView>({
         type: "draft",
-        subType: "ally",
     });
 
     return {
