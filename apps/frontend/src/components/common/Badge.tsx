@@ -1,6 +1,7 @@
 import { Component, ComponentProps } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { Dynamic } from "solid-js/web";
+import { cn } from "../../utils/style";
 
 type BadgeElement = "a" | "button" | "div" | "span";
 type Props<T extends BadgeElement = BadgeElement> = {
@@ -20,9 +21,11 @@ export const Badge: Component<Props> = (props) => {
         <Dynamic
             {...props}
             component={props.as ?? "span"}
-            class={`uppercase inline-flex justify-center items-center rounded-full px-3 py-0.5 text-md ${themeClass()} ${
-                props.class
-            }`}
+            class={cn(
+                "uppercase inline-flex justify-center items-center rounded-full px-3 py-0.5 text-md",
+                themeClass(),
+                props.class,
+            )}
         >
             {props.children}
         </Dynamic>
