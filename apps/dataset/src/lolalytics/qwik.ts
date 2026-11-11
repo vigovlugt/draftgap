@@ -1,3 +1,4 @@
+import { DATASET_TIER } from "@draftgap/core/src/models/dataset/Dataset";
 import { retry } from "../utils";
 import { type LolalyticsRole } from "./roles";
 
@@ -226,15 +227,9 @@ export type Sums = {
     wr: number;
 };
 
-function getDataId(objs: any) {
+function getDataId(objs: any, isData: (obj: any) => boolean) {
     return objs
-        .findIndex(
-            (obj: any) =>
-                obj != undefined &&
-                obj["analysed"] !== undefined &&
-                obj["avgWr"] !== undefined &&
-                obj["enemy"] !== undefined,
-        )
+        .findIndex((obj: any) => obj != undefined && isData(obj))
         .toString(36);
 }
 
@@ -266,7 +261,11 @@ function parseObj(objs: any[], id: string): any {
     return obj;
 }
 
-function extractData(text: string): QwikLolalyticsData {
+// Extracts the first object matching isData from the qwik state of a lolalytics page
+export function extractQwikData<T>(
+    text: string,
+    isData: (obj: any) => boolean,
+): T {
     const regex =
         /<script\s+type=["']qwik\/json["'][^>]*>([\s\S]*?)<\/script>/i;
     const match = text.match(regex);
@@ -276,9 +275,19 @@ function extractData(text: string): QwikLolalyticsData {
 
     const innerText = match[1]; // The inner content
     const json = JSON.parse(innerText);
-    const parsedData = parseObj(json.objs, getDataId(json.objs));
+    const parsedData = parseObj(json.objs, getDataId(json.objs, isData));
 
     return parsedData;
+}
+
+function extractData(text: string) {
+    return extractQwikData<QwikLolalyticsData>(
+        text,
+        (obj) =>
+            obj["analysed"] !== undefined &&
+            obj["avgWr"] !== undefined &&
+            obj["enemy"] !== undefined,
+    );
 }
 
 export async function getLolalyticsQwikChampion(
@@ -303,7 +312,7 @@ export async function getLolalyticsQwikChampion(
     patch = patch.split(".").slice(0, 2).join(".");
 
     const queryParams = new URLSearchParams();
-    queryParams.append("tier", "emerald_plus");
+    queryParams.append("tier", DATASET_TIER);
     queryParams.append("region", "all");
     queryParams.append("patch", patch);
     if (role) {

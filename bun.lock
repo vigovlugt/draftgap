@@ -13,7 +13,7 @@
     },
     "apps/dataset": {
       "name": "@draftgap/dataset",
-      "version": "3.1.0",
+      "version": "3.2.2",
       "dependencies": {
         "@aws-sdk/client-s3": "^3.980.0",
         "@draftgap/core": "workspace:*",
@@ -27,7 +27,7 @@
     },
     "apps/frontend": {
       "name": "@draftgap/frontend",
-      "version": "3.1.0",
+      "version": "3.2.2",
       "dependencies": {
         "@draftgap/core": "workspace:*",
         "@kobalte/core": "^0.13.11",
@@ -76,7 +76,7 @@
     },
     "packages/core": {
       "name": "@draftgap/core",
-      "version": "3.1.0",
+      "version": "3.2.2",
       "dependencies": {
         "@tanstack/query-core": "^5.90.20",
       },

@@ -4,6 +4,7 @@ import { ChampionIcon } from "../icons/ChampionIcon";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useUser } from "../../contexts/UserContext";
 import { championName } from "../../utils/i18n";
+import { PatchChangeIndicator } from "./PatchChangeIndicator";
 
 interface Props {
     championKey: string;
@@ -27,6 +28,10 @@ export default function ChampionCell(props: Props) {
                         ? overflowEllipsis(name(), props.nameMaxLength)
                         : name()}
                 </span>
+                <PatchChangeIndicator
+                    championKey={props.championKey}
+                    class="-ml-1"
+                />
             </Show>
         </div>
     );

@@ -7,6 +7,7 @@ import {
     Match,
     Show,
     Switch,
+    untrack,
 } from "solid-js";
 import DraftTable from "./components/draft/DraftTable";
 import { RoleFilter } from "./components/draft/RoleFilter";
@@ -25,6 +26,8 @@ import { BuildsView } from "./components/views/builds/BuildsView";
 import { useDraftView } from "./contexts/DraftViewContext";
 import { useUser } from "./contexts/UserContext";
 import { useDataset } from "./contexts/DatasetContext";
+import { useDraft } from "./contexts/DraftContext";
+import { Dataset } from "@draftgap/core/src/models/dataset/Dataset";
 import { LoadingIcon } from "./components/icons/LoadingIcon";
 import { DialogTrigger, Dialog } from "./components/common/Dialog";
 import SettingsDialog from "./components/dialogs/SettingsDialog";
@@ -44,7 +47,8 @@ import { LanguageDropdownMenu } from "./components/LanguageMenu";
 const App: Component = () => {
     const { config } = useUser();
     const { currentDraftView, setCurrentDraftView } = useDraftView();
-    const { dataset, isLoaded } = useDataset();
+    const { dataset, isLoaded, isRefreshing, refreshDaily } = useDataset();
+    const { allyTeam, opponentTeam, bans } = useDraft();
     const { analysisPick, setAnalysisPick, showAnalysisPick } =
         useDraftAnalysis();
     const { startLolClientIntegration, stopLolClientIntegration } =
@@ -56,6 +60,23 @@ const App: Component = () => {
             stopLolClientIntegration();
         } else {
             startLolClientIntegration();
+        }
+    });
+
+    // Refreshed data can only replace the current data when it has every champion of the draft
+    const isDraftInDataset = (dataset: Dataset) =>
+        [...allyTeam, ...opponentTeam]
+            .flatMap((pick) => [pick.championKey, pick.hoverKey])
+            .concat(bans)
+            .every(
+                (key) =>
+                    key === undefined ||
+                    dataset.championData[key] !== undefined,
+            );
+
+    createEffect(() => {
+        if (isLoaded()) {
+            untrack(() => refreshDaily(isDraftInDataset));
         }
     });
 
@@ -195,7 +216,11 @@ const App: Component = () => {
                 <div class="flex items-center gap-4">
                     <div class="text-xs text-neutral-400 hidden md:flex flex-col text-right uppercase">
                         <span>Patch {formatPatch(dataset()?.version)}</span>
-                        <span>Last updated {timeAgo()}</span>
+                        <span>
+                            {isRefreshing()
+                                ? "Updating data..."
+                                : `Last updated ${timeAgo()}`}
+                        </span>
                     </div>
                     <Dialog
                         open={showDownloadModal()}

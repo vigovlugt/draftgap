@@ -4,7 +4,7 @@ import { useDraftAnalysis } from "./DraftAnalysisContext";
 import { useDataset } from "./DatasetContext";
 
 export function createDraftSuggestionsContext() {
-    const { isLoaded, dataset, dataset30Days } = useDataset();
+    const { isLoaded, dataset, fullDataset } = useDataset();
     const { draftAnalysisConfig, allyTeamComp, opponentTeamComp } =
         useDraftAnalysis();
 
@@ -13,7 +13,7 @@ export function createDraftSuggestionsContext() {
 
         return getSuggestions(
             dataset()!,
-            dataset30Days()!,
+            fullDataset()!,
             allyTeamComp(),
             opponentTeamComp(),
             draftAnalysisConfig(),
@@ -25,7 +25,7 @@ export function createDraftSuggestionsContext() {
 
         return getSuggestions(
             dataset()!,
-            dataset30Days()!,
+            fullDataset()!,
             opponentTeamComp(),
             allyTeamComp(),
             draftAnalysisConfig(),

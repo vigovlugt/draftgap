@@ -22,7 +22,7 @@ export function createDraftAnalysisContext() {
     const { config } = useUser();
     const { allyTeam, opponentTeam, selection } = useDraft();
     const { roleFilter, setRoleFilter } = useDraftFilters();
-    const { isLoaded, dataset, dataset30Days } = useDataset();
+    const { isLoaded, dataset, fullDataset } = useDataset();
 
     const [analyzeHovers, setAnalyzeHovers] = createSignal(false);
 
@@ -69,7 +69,7 @@ export function createDraftAnalysisContext() {
         if (!isLoaded()) return undefined;
         return analyzeDraft(
             dataset()!,
-            dataset30Days()!,
+            fullDataset()!,
             allyTeamComps()[0][0],
             opponentTeamComps()[0][0],
             draftAnalysisConfig(),
@@ -79,7 +79,7 @@ export function createDraftAnalysisContext() {
         if (!isLoaded()) return undefined;
         return analyzeDraft(
             dataset()!,
-            dataset30Days()!,
+            fullDataset()!,
             opponentTeamComps()[0][0],
             allyTeamComps()[0][0],
             draftAnalysisConfig(),

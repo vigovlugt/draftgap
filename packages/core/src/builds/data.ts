@@ -22,7 +22,7 @@ import {
     SkillsBuildData,
     SummonerSpellsBuildData,
 } from "../models/build/BuildDataset";
-import { Dataset } from "../models/dataset/Dataset";
+import { DATASET_DAYS, Dataset } from "../models/dataset/Dataset";
 import { EntityStats } from "./entity-analysis";
 
 function getRunesBuildData(
@@ -335,16 +335,20 @@ export async function fetchBuildData(
         ),
     );
 
-    const champion30DaysDataPromises = queryClient.fetchQuery(
-        getLolalyticsChampionOptions("30", championKey, LOLALYTICS_ROLES[role]),
+    const championFullDataPromises = queryClient.fetchQuery(
+        getLolalyticsChampionOptions(
+            DATASET_DAYS.toString(),
+            championKey,
+            LOLALYTICS_ROLES[role],
+        ),
     );
 
-    const matchup30DaysDataPromises = [...opponentTeamComp.entries()].map(
+    const matchupFullDataPromises = [...opponentTeamComp.entries()].map(
         ([opponentRole, opponentChampionKey]) =>
             queryClient
                 .fetchQuery(
                     getLolalyticsChampionOptions(
-                        "30",
+                        DATASET_DAYS.toString(),
                         championKey,
                         LOLALYTICS_ROLES[role],
                         opponentChampionKey,
@@ -360,10 +364,10 @@ export async function fetchBuildData(
 
     const results = await Promise.all([
         championPatchDataPromises,
-        champion30DaysDataPromises,
-        ...matchup30DaysDataPromises,
+        championFullDataPromises,
+        ...matchupFullDataPromises,
     ]);
-    const [championPatchData, champion30DaysData, ...matchup30DaysData] =
+    const [championPatchData, championFullData, ...matchupFullData] =
         results;
 
     const partialDataset = partialDatasetFromLolalyticsData(
@@ -377,8 +381,8 @@ export async function fetchBuildData(
         dataset,
         championKey,
         role,
-        champion30DaysData,
-        matchup30DaysData,
+        championFullData,
+        matchupFullData,
     );
 
     return [partialDataset, fullDataset] as const;

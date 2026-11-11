@@ -7,6 +7,20 @@ export async function getVersions() {
     return json;
 }
 
+// Data dragon has no release dates, the upload date of the patch files is the closest thing
+export async function getPatchReleaseDate(version: string) {
+    const res = await fetch(
+        `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/champion.json`,
+        { method: "HEAD" },
+    );
+    const lastModified = res.headers.get("last-modified");
+    if (!res.ok || !lastModified) {
+        return undefined;
+    }
+
+    return new Date(lastModified);
+}
+
 export type RiotChampion = {
     id: string;
     key: string;

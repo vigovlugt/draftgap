@@ -5,6 +5,8 @@
 #[cfg(target_os = "windows")]
 use std::os::windows::process::CommandExt;
 
+use std::sync::atomic::{AtomicBool, Ordering};
+
 use reqwest::Client;
 use serde::Serialize;
 use serde_json::Value;
@@ -168,6 +170,80 @@ async fn get_pickable_champion_ids(state: tauri::State<'_, AppState>) -> Result<
     get_lcu_response(&state, "lol-champ-select/v1/pickable-champion-ids").await
 }
 
+// The datasets are generated into the public directory of the frontend by the dataset app (bun run dataset).
+// Reading them from disk means the data can be refreshed without rebuilding the app.
+const DATASET_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../public");
+
+#[tauri::command]
+async fn read_dataset(path: String) -> Result<tauri::ipc::Response, String> {
+    let is_safe_path = path.split('/').all(|part| {
+        part != ".."
+            && !part.is_empty()
+            && part
+                .chars()
+                .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_' || c == '.')
+    });
+    if !is_safe_path {
+        return Err("Invalid dataset path".to_owned());
+    }
+
+    let bytes = std::fs::read(std::path::Path::new(DATASET_DIR).join(&path))
+        .map_err(|e| format!("Could not read dataset {path}: {e}"))?;
+
+    Ok(tauri::ipc::Response::new(bytes))
+}
+
+// The dataset app is run from the root of the repository
+const REPO_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../..");
+
+static IS_REFRESHING_DATASET: AtomicBool = AtomicBool::new(false);
+
+fn run_dataset_app() -> Result<(), String> {
+    let log_path = std::path::Path::new(REPO_DIR).join("dataset-refresh.log");
+    let log = std::fs::File::create(&log_path)
+        .map_err(|e| format!("Could not create {}: {e}", log_path.display()))?;
+    let log_stderr = log
+        .try_clone()
+        .map_err(|e| format!("Could not open {}: {e}", log_path.display()))?;
+
+    let mut command = std::process::Command::new("bun");
+    command
+        .args(["run", "dataset"])
+        .current_dir(REPO_DIR)
+        .stdin(std::process::Stdio::null())
+        .stdout(log)
+        .stderr(log_stderr);
+    #[cfg(target_os = "windows")]
+    command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+
+    let status = command
+        .status()
+        .map_err(|e| format!("Could not run bun: {e}"))?;
+    if !status.success() {
+        return Err(format!(
+            "Dataset refresh failed ({status}), see {}",
+            log_path.display()
+        ));
+    }
+
+    Ok(())
+}
+
+// Regenerates the datasets with the dataset app (bun run dataset), which takes about a minute
+#[tauri::command]
+async fn refresh_dataset() -> Result<(), String> {
+    if IS_REFRESHING_DATASET.swap(true, Ordering::SeqCst) {
+        return Err("Dataset refresh is already running".to_owned());
+    }
+
+    let result = tauri::async_runtime::spawn_blocking(run_dataset_app)
+        .await
+        .map_err(|e| format!("Dataset refresh crashed: {e}"));
+    IS_REFRESHING_DATASET.store(false, Ordering::SeqCst);
+
+    result?
+}
+
 fn main() {
     let client = Client::builder()
         .danger_accept_invalid_certs(true)
@@ -189,7 +265,9 @@ fn main() {
             get_champ_select_session,
             get_current_summoner,
             get_grid_champions,
-            get_pickable_champion_ids
+            get_pickable_champion_ids,
+            read_dataset,
+            refresh_dataset
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

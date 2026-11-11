@@ -1,8 +1,11 @@
 import "dotenv/config";
 import { getChampionDataFromLolalytics } from "./lolalytics";
+import { getPatchChanges } from "./lolalytics/patch-changes";
 import {
+    DATASET_DAYS,
     deleteDatasetMatchupSynergyData,
     type Dataset,
+    FULL_DATASET_NAME,
     removeRankBias,
 } from "@draftgap/core/src/models/dataset/Dataset";
 import type { ItemData } from "@draftgap/core/src/models/dataset/ItemData";
@@ -79,7 +82,8 @@ const STAT_SHARD_DATA = {
 };
 
 async function main() {
-    const currentVersion = (await getVersions())[0];
+    const versions = await getVersions();
+    const currentVersion = versions[0];
     console.log("Patch:", currentVersion);
 
     const [championsData, runes, items, summonerSpells, championsDataCn] =
@@ -107,8 +111,8 @@ async function main() {
         items,
         summonerSpells,
     );
-    const dataset30days = await getDataset(
-        "30",
+    const datasetFull = await getDataset(
+        DATASET_DAYS.toString(),
         champions,
         runes,
         items,
@@ -117,8 +121,27 @@ async function main() {
 
     deleteDatasetMatchupSynergyData(datasetCurrentPatch);
 
+    const patchChanges = await getPatchChanges(versions);
+    datasetCurrentPatch.patchChanges = patchChanges;
+    datasetFull.patchChanges = patchChanges;
+
+    // An unattended refresh must not replace good data with a broken one,
+    // ex. when lolalytics is unreachable or has no data yet for a new patch
+    const fullCount = Object.keys(datasetFull.championData).length;
+    const currentPatchCount = Object.keys(
+        datasetCurrentPatch.championData,
+    ).length;
+    if (
+        fullCount < champions.length * 0.9 ||
+        currentPatchCount < fullCount * 0.5
+    ) {
+        throw new Error(
+            `Incomplete data (${currentPatchCount} champions for the current patch, ${fullCount} for ${FULL_DATASET_NAME}, ${champions.length} expected), keeping the existing datasets`,
+        );
+    }
+
     await storeDataset(datasetCurrentPatch, { name: "current-patch" });
-    await storeDataset(dataset30days, { name: "30-days" });
+    await storeDataset(datasetFull, { name: FULL_DATASET_NAME });
 }
 
 function riotRunesToRuneData(runes: RiotRunePath[]) {

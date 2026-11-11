@@ -22,7 +22,7 @@ import { useDraftView } from "./DraftViewContext";
 
 export function createBuildContext() {
     const { allyTeam, opponentTeam } = useDraft();
-    const { dataset, dataset30Days } = useDataset();
+    const { dataset, fullDataset } = useDataset();
     const { allyTeamComp, opponentTeamComp, draftAnalysisConfig } =
         useDraftAnalysis();
     const { currentDraftView } = useDraftView();
@@ -156,12 +156,12 @@ export function createBuildContext() {
     (window as any).DRAFTGAP_DEBUG.partialBuildDataset = partialBuildDataset;
 
     const buildAnalysisResult = createMemo(() => {
-        if (!query.data || !dataset() || !dataset30Days()) {
+        if (!query.data || !dataset() || !fullDataset()) {
             return;
         }
         return analyzeBuild(
             dataset()!,
-            dataset30Days()!,
+            fullDataset()!,
             ...query.data,
             draftAnalysisConfig(),
         );

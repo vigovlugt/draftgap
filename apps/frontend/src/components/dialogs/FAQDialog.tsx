@@ -1,3 +1,7 @@
+import {
+    DATASET_DAYS,
+    DATASET_TIER_NAME,
+} from "@draftgap/core/src/models/dataset/Dataset";
 import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
 
 export function FAQDialog() {
@@ -68,7 +72,7 @@ export function FAQDialog() {
             <div>
                 <h2 class="text-2xl uppercase">Where is the data from?</h2>
                 <p class="font-body">
-                    The data used are the current Emerald+{" "}
+                    The data used are the current {DATASET_TIER_NAME}{" "}
                     <a
                         href="https://lolalytics.com"
                         class="text-blue-500"
@@ -76,8 +80,22 @@ export function FAQDialog() {
                     >
                         Lolalytics
                     </a>{" "}
-                    solo/duo winrates from all regions of the last 30 days. The
-                    data is updated every 12 hours.
+                    solo/duo winrates from all regions of the last{" "}
+                    {DATASET_DAYS} days. The data is updated every time the
+                    dataset is generated (bun run dataset).
+                </p>
+            </div>
+
+            <div>
+                <h2 class="text-2xl uppercase">
+                    What do the arrows next to a champion mean?
+                </h2>
+                <p class="font-body">
+                    The champion was buffed (green, up), nerfed (red, down) or
+                    adjusted (yellow) by a patch released in the last{" "}
+                    {DATASET_DAYS} days, according to the Lolalytics patch
+                    notes performance. Part of the matchup and duo data of
+                    these champions is from before the change.
                 </p>
             </div>
 

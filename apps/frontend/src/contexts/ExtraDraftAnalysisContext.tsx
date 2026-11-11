@@ -7,13 +7,13 @@ import { useDraftAnalysis } from "./DraftAnalysisContext";
 export function createExtraDraftAnalysisContext() {
     const { config } = useUser();
     const { allyTeamComp, opponentTeamComp } = useDraftAnalysis();
-    const { dataset, dataset30Days } = useDataset();
+    const { dataset, fullDataset } = useDataset();
 
     const allyDraftExtraAnalysis = createMemo(() => {
-        if (!dataset() || !dataset30Days()) return undefined;
+        if (!dataset() || !fullDataset()) return undefined;
         return analyzeDraftExtra(
             dataset()!,
-            dataset30Days()!,
+            fullDataset()!,
             allyTeamComp(),
             opponentTeamComp(),
             config,
@@ -21,10 +21,10 @@ export function createExtraDraftAnalysisContext() {
     });
 
     const opponentDraftExtraAnalysis = createMemo(() => {
-        if (!dataset() || !dataset30Days()) return undefined;
+        if (!dataset() || !fullDataset()) return undefined;
         return analyzeDraftExtra(
             dataset()!,
-            dataset30Days()!,
+            fullDataset()!,
             opponentTeamComp(),
             allyTeamComp(),
             config,

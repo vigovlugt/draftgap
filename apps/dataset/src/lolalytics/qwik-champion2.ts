@@ -1,3 +1,4 @@
+import { DATASET_TIER } from "@draftgap/core/src/models/dataset/Dataset";
 import { retry } from "../utils";
 import { type LolalyticsRole } from "./roles";
 
@@ -38,7 +39,7 @@ export async function getLolalyticsQwikChampion2(
     const queryParams = new URLSearchParams();
     queryParams.append("ep", "build-team");
     queryParams.append("v", "1");
-    queryParams.append("tier", "emerald_plus");
+    queryParams.append("tier", DATASET_TIER);
     queryParams.append("queue", "ranked");
     queryParams.append("region", "all");
     queryParams.append("patch", patch);

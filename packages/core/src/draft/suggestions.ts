@@ -1,5 +1,5 @@
 import { Role, ROLES } from "../models/Role";
-import { Dataset } from "../models/dataset/Dataset";
+import { DATASET_DAYS, Dataset } from "../models/dataset/Dataset";
 import { DraftResult, AnalyzeDraftConfig, analyzeDraft } from "./analysis";
 import { getStats } from "./utils";
 
@@ -30,7 +30,7 @@ export function getSuggestions(
             if (team.has(role)) continue;
             if (
                 (getStats(synergyMatchupDataset, championKey, role).games /
-                    30) *
+                    DATASET_DAYS) *
                     7 <
                 config.minGames
             )

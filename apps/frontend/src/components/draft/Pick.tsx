@@ -14,6 +14,7 @@ import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { championName } from "../../utils/i18n";
 import { useMedia } from "../../hooks/useMedia";
+import { PatchChangeIndicator } from "../common/PatchChangeIndicator";
 // eslint-disable-next-line
 tooltip;
 
@@ -157,8 +158,9 @@ export function Pick(props: Props) {
                         }}
                     />
 
-                    <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
+                    <span class="absolute top-2 left-2 uppercase text-2xl leading-none flex items-center gap-1">
                         {championName(champion()!, config)}
+                        <PatchChangeIndicator championKey={champion()!.key} />
                     </span>
 
                     <div

@@ -11,13 +11,16 @@ import {
     DialogTitle,
 } from "../common/Dialog";
 
+// The update feed is the one of the original app, updating would replace this copy with it
+const UPDATES_ENABLED = false;
+
 export const UpdateDialog: Component = () => {
     const { isDesktop } = useMedia();
     const [isOpen, setIsOpen] = createSignal(false);
     const [update, setUpdate] = createSignal<Update | null>(null);
 
     onMount(async () => {
-        if (isDesktop) {
+        if (isDesktop && UPDATES_ENABLED) {
             const update = await check();
             if (update) {
                 setIsOpen(true);

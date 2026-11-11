@@ -1,3 +1,5 @@
 node_modules/
 .env
 .turbo
+# Output of the daily dataset refresh
+dataset-refresh.log

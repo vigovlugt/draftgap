@@ -4,13 +4,22 @@ import { RuneData, RunePathData, StatShardData } from "./RuneData";
 import { ItemData } from "./ItemData";
 import { ratingToWinrate, winrateToRating } from "../../rating/ratings";
 import { SummonerSpellData } from "./SummonerSpellData";
+import { ChampionPatchChange } from "./PatchChange";
 
 export const DATASET_VERSION = "5";
+
+// Rank and period the data is taken from (Lolalytics `tier` and `patch` params)
+export const DATASET_TIER = "master_plus";
+export const DATASET_TIER_NAME = "Master+";
+export const DATASET_DAYS = 30;
+export const FULL_DATASET_NAME = `${DATASET_DAYS}-days`;
 
 export interface Dataset {
     version: string;
     date: string;
     championData: Record<string, ChampionData>;
+    // Balance changes of patches released within the last DATASET_DAYS days, by champion key
+    patchChanges?: Record<string, ChampionPatchChange[]>;
 
     itemData: Record<number, ItemData>;
     runeData: Record<number, RuneData>;
