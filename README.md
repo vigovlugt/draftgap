@@ -17,6 +17,11 @@ The data is not downloaded from draftgap.com, it is generated on your own machin
 
 The rank and period are set by `DATASET_TIER` and `DATASET_DAYS` in `packages/core/src/models/dataset/Dataset.ts`.
 
+Two things differ from the original in the analysis:
+
+- The draft table has a Lane column (with the advanced winrates), the matchup against the lane opponents: the same position, or the bottom and support together.
+- The amount of games a duo or matchup needs before it is trusted (the prior games) is no longer the same for every pair. It is measured from the data per combination of positions (`packages/core/src/draft/pair-prior.ts`), the risk level scales it.
+
 ### Desktop app
 
 The desktop app is built as "DraftGap Master", separate from the original DraftGap app, and does not update itself.

@@ -10,6 +10,7 @@ import {
 import { useDraft } from "../../contexts/DraftContext";
 import { Role } from "@draftgap/core/src/models/Role";
 import { Suggestion } from "@draftgap/core/src/draft/suggestions";
+import { getLaneMatchupRating } from "@draftgap/core/src/draft/lane";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
@@ -293,6 +294,30 @@ export default function DraftTable() {
                               <RatingText rating={info.getValue<number>()} />
                           </div>
                       ),
+                  },
+                  {
+                      header: "Lane",
+                      accessorFn: (suggestion) =>
+                          getLaneMatchupRating(
+                              suggestion.draftResult,
+                              suggestion.role,
+                              suggestion.championKey,
+                          ),
+                      cell: (info) => (
+                          <div class="flex justify-end">
+                              <Show
+                                  when={info.getValue() !== undefined}
+                                  fallback={
+                                      <span class="text-neutral-500">-</span>
+                                  }
+                              >
+                                  <RatingText
+                                      rating={info.getValue<number>()}
+                                  />
+                              </Show>
+                          </div>
+                      ),
+                      sortUndefined: "last",
                   },
                   {
                       header: "Duos",

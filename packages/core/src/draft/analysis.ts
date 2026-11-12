@@ -4,6 +4,7 @@ import { Role } from "../models/Role";
 import { winrateToRating, ratingToWinrate } from "../rating/ratings";
 import { RiskLevel, priorGamesByRiskLevel } from "../risk/risk-level";
 import { addStats, averageStats } from "../stats";
+import { getPairPriorGames } from "./pair-prior";
 import { getStats } from "./utils";
 
 export type DraftResult = {
@@ -39,9 +40,16 @@ export function analyzeDraft(
         ? analyzeChampions(dataset, fullDataset, enemy, priorGames)
         : { totalRating: 0, winrate: 0, championResults: [] };
 
-    const allyDuoRating = analyzeDuos(fullDataset, team, priorGames);
-    const enemyDuoRating = analyzeDuos(fullDataset, enemy, priorGames);
-    const matchupRating = analyzeMatchups(fullDataset, team, enemy, priorGames);
+    // The prior games of duos and matchups depend on the roles of the pair, the risk level scales them
+    const priorGamesScale = priorGames / priorGamesByRiskLevel["medium"];
+    const allyDuoRating = analyzeDuos(fullDataset, team, priorGamesScale);
+    const enemyDuoRating = analyzeDuos(fullDataset, enemy, priorGamesScale);
+    const matchupRating = analyzeMatchups(
+        fullDataset,
+        team,
+        enemy,
+        priorGamesScale,
+    );
 
     const totalRating =
         allyChampionRating.totalRating +
@@ -175,8 +183,9 @@ export type AnalyzeDuosResult = {
 export function analyzeDuos(
     dataset: Dataset,
     team: Map<Role, string>,
-    priorGames: number,
+    priorGamesScale: number,
 ): AnalyzeDuosResult {
+    const pairPriorGames = getPairPriorGames(dataset);
     const teamEntries = Array.from(team.entries()).sort((a, b) => a[0] - b[0]);
 
     const duoResults: AnalyzeDuoResult[] = [];
@@ -219,6 +228,7 @@ export function analyzeDuos(
             );
             const combinedStats = averageStats(duoStats, champion2DuoStats);
 
+            const priorGames = pairPriorGames.duo[role][role2] * priorGamesScale;
             const adjustedStats = addStats(combinedStats, {
                 wins: priorGames * expectedWinrate,
                 games: priorGames,
@@ -271,8 +281,9 @@ export function analyzeMatchups(
     dataset: Dataset,
     team: Map<Role, string>,
     enemy: Map<Role, string>,
-    priorGames: number,
+    priorGamesScale: number,
 ): AnalyzeMatchupsResult {
+    const pairPriorGames = getPairPriorGames(dataset);
     const matchupResults: AnalyzeMatchupResult[] = [];
     let totalRating = 0;
 
@@ -320,6 +331,8 @@ export function analyzeMatchups(
             const wins = (matchupStats.wins + enemyLosses) / 2;
             const games = (matchupStats.games + enemyMatchupStats.games) / 2;
 
+            const priorGames =
+                pairPriorGames.matchup[allyRole][enemyRole] * priorGamesScale;
             const adjustedStats = addStats(
                 {
                     wins,

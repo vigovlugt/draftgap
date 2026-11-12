@@ -125,6 +125,12 @@ export function FAQDialog() {
                     sample size, and thus could be inaccurate. On the other
                     hand, it will also recommend more niche duos/counters that
                     are not seen often, but could be very strong.
+                    <br />
+                    How many games a duo or matchup needs before it is trusted
+                    also depends on the positions of the two champions. This
+                    is measured from the data: a top versus top matchup needs
+                    far fewer games than a top and middle duo, as lane
+                    opponents influence each other much more.
                 </p>
             </div>
 
