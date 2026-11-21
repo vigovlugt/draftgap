@@ -31,6 +31,7 @@
 
           buildInputs = with pkgs; [
             glib
+            glib-networking
             atk
             librsvg
             webkitgtk_4_1
@@ -49,6 +50,10 @@
                 ]
               )
             }:$LD_LIBRARY_PATH
+            # TLS backend for WebKitGTK (otherwise: "TLS support is not available")
+            export GIO_MODULE_DIR=${pkgs.glib-networking}/lib/gio/modules/
+            # Avoid WebKitGTK "Error 71 (Protocol error)" crash on Wayland
+            export WEBKIT_DISABLE_DMABUF_RENDERER=1
           '';
         };
       }
