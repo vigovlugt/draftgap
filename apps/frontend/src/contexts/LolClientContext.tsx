@@ -213,19 +213,46 @@ export const createLolClientContext = () => {
             }
 
             // Handle bans
-            const getBannedChampions = (isAllyAction: boolean) =>
-                session.actions
+            // Place each ban in the slot of the player who banned it, like the client does
+            const getBannedChampions = (isAllyAction: boolean) => {
+                const teamSelections = isAllyAction
+                    ? session.myTeam
+                    : session.theirTeam;
+                const banActions = session.actions
                     .flat()
                     .filter(
                         (a) =>
-                            a.completed &&
-                            a.type === "ban" &&
-                            a.isAllyAction === isAllyAction &&
-                            a.championId > 0,
-                    )
-                    .map((a) => String(a.championId));
+                            a.type === "ban" && a.isAllyAction === isAllyAction,
+                    );
+                const bans: (string | undefined)[] = [];
+                banActions.forEach((a, actionIndex) => {
+                    if (!a.completed || a.championId <= 0) return;
+                    const playerIndex = teamSelections.findIndex(
+                        (s) => s.cellId === a.actorCellId,
+                    );
+                    const index =
+                        playerIndex !== -1 ? playerIndex : actionIndex;
+                    bans[index] = String(a.championId);
+                });
+                return bans;
+            };
             setTeamBans("ally", getBannedChampions(true));
             setTeamBans("opponent", getBannedChampions(false));
+
+            // Move selection to the next pick once all ally bans are done
+            const allyBansRemaining = session.actions
+                .flat()
+                .some(
+                    (a) => a.type === "ban" && a.isAllyAction && !a.completed,
+                );
+            if (
+                !currentBan &&
+                !allyBansRemaining &&
+                lastSelectedBanActionId !== undefined
+            ) {
+                lastSelectedBanActionId = undefined;
+                draftChanged = true;
+            }
 
             if (currentBan) {
                 if (currentBan.id !== lastSelectedBanActionId) {

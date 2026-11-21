@@ -29,7 +29,7 @@ type Selection = {
     index: number;
 };
 
-const toTeamBans = (championKeys: string[] = []) =>
+const toTeamBans = (championKeys: (string | undefined)[] = []) =>
     Array.from({ length: 5 }, (_, i) => championKeys[i]);
 
 export function createDraftContext() {
@@ -258,7 +258,7 @@ export function createDraftContext() {
     const resetBan = (team: Team, index: number) =>
         setBans(team, index, undefined);
 
-    const setTeamBans = (team: Team, championKeys: string[]) =>
+    const setTeamBans = (team: Team, championKeys: (string | undefined)[]) =>
         setBans(team, reconcile(toTeamBans(championKeys)));
 
     const resetTeam = (team: "ally" | "opponent") => {
