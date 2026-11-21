@@ -5,7 +5,7 @@ import { cn } from "../../utils/style";
 
 interface Props<T> {
     table: TanstackTable<T>;
-    onClickRow?: (row: Row<T>) => void;
+    onClickRow?: (row: Row<T>, e: MouseEvent | KeyboardEvent) => void;
     rowClassName?: (row: Row<T>) => string;
 }
 
@@ -129,12 +129,11 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                     ),
                                     [props.rowClassName?.(row) ?? ""]: true,
                                 }}
-                                onClick={() => props.onClickRow?.(row)}
+                                onClick={(e) => props.onClickRow?.(row, e)}
                                 tabindex={props.onClickRow ? 0 : undefined}
-                                onSubmit={() => props.onClickRow?.(row)}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter") {
-                                        props.onClickRow?.(row);
+                                        props.onClickRow?.(row, e);
                                     }
                                 }}
                             >

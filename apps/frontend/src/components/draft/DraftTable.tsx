@@ -13,7 +13,7 @@ import { Suggestion } from "@draftgap/core/src/draft/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
-import { batch, createSignal, onCleanup, onMount, Show } from "solid-js";
+import { batch, createSignal, Show } from "solid-js";
 import { Icon } from "solid-heroicons";
 import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
@@ -27,13 +27,13 @@ import { informationCircle } from "solid-heroicons/solid-mini";
 import { Dialog } from "../common/Dialog";
 import { ChampionDraftAnalysisDialog } from "../dialogs/ChampionDraftAnalysisDialog";
 import { Team } from "@draftgap/core/src/models/Team";
-import { championName } from "../../utils/i18n";
-import { useMedia } from "../../hooks/useMedia";
+import { championMatchesSearch } from "../../utils/search";
+import { focusSearch } from "./Search";
+import { createTableKeyboardNavigation } from "../../hooks/createTableKeyboardNavigation";
 
 export default function DraftTable() {
     const { dataset } = useDataset();
-    const { isMobileLayout } = useMedia();
-    const { selection, pickChampion, select, bans, ownedChampions } =
+    const { selection, pickChampion, select, allBans, ownedChampions } =
         useDraft();
     const {
         search,
@@ -61,22 +61,13 @@ export default function DraftTable() {
         }
 
         if (search()) {
-            const str = search()
-                .replaceAll(/[^a-zA-Z0-9\u4e00-\u9fff]/g, "")
-                .toLowerCase();
-            filtered = filtered.filter((s) => {
-                const champion = dataset()!.championData[s.championKey];
-                return (
-                    champion.name
-                        .replaceAll(/[^a-zA-Z0-9\u4e00-\u9fff]/g, "")
-                        .toLowerCase()
-                        .includes(str) ||
-                    championName(champion, config)
-                        .replaceAll(/[^a-zA-Z0-9\u4e00-\u9fff]/g, "")
-                        .toLowerCase()
-                        .includes(str)
-                );
-            });
+            filtered = filtered.filter((s) =>
+                championMatchesSearch(
+                    dataset()!.championData[s.championKey],
+                    search(),
+                    config,
+                ),
+            );
         }
 
         if (roleFilter() !== undefined) {
@@ -105,11 +96,11 @@ export default function DraftTable() {
         }
 
         if (config.banPlacement === "hidden") {
-            filtered = filtered.filter((s) => !bans.includes(s.championKey));
+            filtered = filtered.filter((s) => !allBans().has(s.championKey));
         } else if (config.banPlacement === "bottom") {
             filtered = [...filtered].sort((a, b) => {
-                const aBanned = bans.includes(a.championKey);
-                const bBanned = bans.includes(b.championKey);
+                const aBanned = allBans().has(a.championKey);
+                const bBanned = allBans().has(b.championKey);
                 if (aBanned && !bBanned) {
                     return 1;
                 } else if (!aBanned && bBanned) {
@@ -357,7 +348,7 @@ export default function DraftTable() {
         getSortedRowModel: getSortedRowModel(),
     });
 
-    function pick(row: Row<Suggestion>) {
+    function pick(row: Row<Suggestion>, e: MouseEvent | KeyboardEvent) {
         if (!selection.team) {
             createMustSelectToast();
             return;
@@ -370,65 +361,12 @@ export default function DraftTable() {
             row.original.role,
         );
 
-        // Avoid opening the on-screen keyboard after every pick on mobile
-        if (!isMobileLayout()) {
-            document.getElementById("draftTableSearch")?.focus();
+        if (e instanceof KeyboardEvent) {
+            focusSearch();
         }
     }
 
-    onMount(() => {
-        const draftTable = document.getElementById("draft-table");
-
-        const onKeyDown = (e: KeyboardEvent) => {
-            const activeElement = document.activeElement;
-            if (
-                activeElement?.tagName === "INPUT" &&
-                e.key !== "ArrowUp" &&
-                e.key !== "ArrowDown"
-            ) {
-                return;
-            }
-
-            const selectFirstRow = () => {
-                (
-                    draftTable!.querySelector("tbody tr") as HTMLTableRowElement
-                )?.focus();
-            };
-
-            if (e.key === "ArrowLeft" || e.key === "h") {
-                e.preventDefault();
-                select("ally");
-            } else if (e.key === "ArrowRight" || e.key === "l") {
-                e.preventDefault();
-                select("opponent");
-            } else if (e.key === "ArrowUp" || e.key === "k") {
-                e.preventDefault();
-                if (!activeElement || activeElement.tagName !== "TR") {
-                    selectFirstRow();
-                    return;
-                }
-                const previous =
-                    activeElement.previousSibling as HTMLTableRowElement;
-                if (previous.tagName === "TR") {
-                    previous.focus();
-                }
-            } else if (e.key === "ArrowDown" || e.key === "j") {
-                e.preventDefault();
-                if (!activeElement || activeElement.tagName !== "TR") {
-                    selectFirstRow();
-                    return;
-                }
-                const next = activeElement.nextSibling as HTMLTableRowElement;
-                if (next.tagName === "TR") {
-                    next.focus();
-                }
-            }
-        };
-        window.addEventListener("keydown", onKeyDown);
-        onCleanup(() => {
-            window.removeEventListener("keydown", onKeyDown);
-        });
-    });
+    createTableKeyboardNavigation("draft-table", (team) => select(team));
 
     return (
         <>
@@ -436,7 +374,7 @@ export default function DraftTable() {
                 table={table}
                 onClickRow={pick}
                 rowClassName={(r) =>
-                    bans.find((b) => b === r.original.championKey) ||
+                    allBans().has(r.original.championKey) ||
                     !ownsChampion(r.original.championKey)
                         ? "opacity-30"
                         : ""

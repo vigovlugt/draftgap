@@ -4,6 +4,10 @@ import { onCleanup, onMount, Show } from "solid-js";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";
 import { useUser } from "../../contexts/UserContext";
 
+export function focusSearch() {
+    document.getElementById("draftTableSearch")?.focus();
+}
+
 export function Search() {
     const { search, setSearch } = useDraftFilters();
     const { setConfig } = useUser();

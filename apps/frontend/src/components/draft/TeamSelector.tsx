@@ -5,14 +5,18 @@ import { Team } from "@draftgap/core/src/models/Team";
 const TEAMS = ["ally", "opponent"] as const;
 
 export function TeamSelector() {
-    const { selection, select, allyTeam, opponentTeam } = useDraft();
+    const { selection, select, allyTeam, opponentTeam, bans } = useDraft();
 
     function selectTeam(team: Team) {
-        const picks = team === "ally" ? allyTeam : opponentTeam;
-        const index = picks.findIndex((pick) => !pick.championKey);
-
-        select(team, index);
+        select(team, undefined, { type: selection.type });
     }
+
+    const isTeamFull = (team: Team) =>
+        selection.type === "ban"
+            ? bans[team].every((ban) => ban !== undefined)
+            : (team === "ally" ? allyTeam : opponentTeam).every(
+                  (p) => p.championKey !== undefined,
+              );
 
     return (
         <span class="isolate inline-flex rounded-md shadow-xs">
@@ -29,11 +33,7 @@ export function TeamSelector() {
                                 selection.team === team,
                         }}
                         onClick={() => selectTeam(team)}
-                        disabled={
-                            (team === "ally" ? allyTeam : opponentTeam).filter(
-                                (p) => p.championKey !== undefined,
-                            ).length === 5
-                        }
+                        disabled={isTeamFull(team)}
                     >
                         {team}
                     </button>

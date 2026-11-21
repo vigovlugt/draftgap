@@ -4,6 +4,7 @@ import { CountUp } from "../CountUp";
 import { DamageDistributionBar } from "./DamageDistributionBar";
 import { Pick } from "./Pick";
 import { TeamOptions } from "./TeamOptions";
+import { BanRow } from "./BanRow";
 import { tooltip } from "../../directives/tooltip";
 import { capitalize } from "../../utils/strings";
 import { getRatingClass } from "../../utils/rating";
@@ -56,6 +57,12 @@ export function TeamSidebar(props: IProps) {
             <For each={[0, 1, 2, 3, 4]}>
                 {(index) => <Pick team={props.team} index={index} />}
             </For>
+            <div class="shrink-0 flex items-center gap-2 px-2 py-2 border-t-2 border-neutral-700">
+                <span class="uppercase text-lg leading-none text-neutral-400">
+                    Bans
+                </span>
+                <BanRow team={props.team} class="flex-1" />
+            </div>
             <TeamOptions team={props.team} />
         </div>
     );

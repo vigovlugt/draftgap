@@ -1,12 +1,21 @@
 import { JSXElement, createContext, createMemo, useContext } from "solid-js";
 import { getSuggestions } from "@draftgap/core/src/draft/suggestions";
+import { getBanSuggestions } from "@draftgap/core/src/draft/bans";
 import { useDraftAnalysis } from "./DraftAnalysisContext";
 import { useDataset } from "./DatasetContext";
+import { useDraft } from "./DraftContext";
+import { useDraftFilters } from "./DraftFiltersContext";
 
 export function createDraftSuggestionsContext() {
     const { isLoaded, dataset, dataset30Days } = useDataset();
-    const { draftAnalysisConfig, allyTeamComp, opponentTeamComp } =
-        useDraftAnalysis();
+    const {
+        draftAnalysisConfig,
+        allyTeamComp,
+        opponentTeamComp,
+        analyzeHovers,
+    } = useDraftAnalysis();
+    const { selection, allyTeam, opponentTeam, allBans } = useDraft();
+    const { roleFilter } = useDraftFilters();
 
     const allySuggestions = createMemo(() => {
         if (!isLoaded()) return [];
@@ -32,7 +41,29 @@ export function createDraftSuggestionsContext() {
         );
     });
 
-    return { allySuggestions, opponentSuggestions };
+    const banSuggestions = createMemo(() => {
+        if (!isLoaded() || selection.type !== "ban" || !selection.team) {
+            return [];
+        }
+
+        const unavailable = new Set(allBans());
+        for (const pick of [...allyTeam, ...opponentTeam]) {
+            if (pick.championKey) unavailable.add(pick.championKey);
+            if (pick.hoverKey && analyzeHovers())
+                unavailable.add(pick.hoverKey);
+        }
+
+        return getBanSuggestions(
+            dataset()!,
+            selection.team === "ally"
+                ? opponentSuggestions()
+                : allySuggestions(),
+            unavailable,
+            roleFilter(),
+        );
+    });
+
+    return { allySuggestions, opponentSuggestions, banSuggestions };
 }
 
 export const DraftSuggestionsContext =

@@ -9,10 +9,10 @@ import { cn } from "../../utils/style";
 export function RoleFilter(props: ComponentProps<"span">) {
     const { selection, draftFinished } = useDraft();
     const { roleFilter, setRoleFilter } = useDraftFilters();
-    const { getFilledRoles } = useDraftAnalysis();
+    const { getFilledRoles, roleFilterTeam } = useDraftAnalysis();
 
     const filledRoles = () =>
-        (selection.team && getFilledRoles(selection.team)) ?? new Set();
+        (roleFilterTeam() && getFilledRoles(roleFilterTeam()!)) ?? new Set();
 
     return (
         <span
@@ -35,7 +35,10 @@ export function RoleFilter(props: ComponentProps<"span">) {
                                 ? setRoleFilter(undefined)
                                 : setRoleFilter(role)
                         }
-                        disabled={filledRoles().has(role) || draftFinished()}
+                        disabled={
+                            filledRoles().has(role) ||
+                            (draftFinished() && selection.type === "pick")
+                        }
                     >
                         <RoleIcon role={role} class="h-7" />
                     </button>

@@ -92,8 +92,7 @@ export const createLolClientContext = () => {
         resetAll,
         allyTeam,
         opponentTeam,
-        bans,
-        setBans,
+        setTeamBans,
         setOwnedChampions,
     } = useDraft();
     const { isFavourite, setFavourite } = useUser();
@@ -130,6 +129,8 @@ export const createLolClientContext = () => {
             privacy: "",
         });
 
+    let lastSelectedBanActionId: number | undefined;
+
     const updateChampSelectSession = (
         session: LolChampSelectChampSelectSession,
         firstTime = false,
@@ -137,6 +138,15 @@ export const createLolClientContext = () => {
         const nextPick = session.actions
             .flat()
             .find((a) => a.type === "pick" && !a.completed);
+        const allyBansInProgress = session.actions
+            .flat()
+            .filter(
+                (a) => a.type === "ban" && a.isInProgress && a.isAllyAction,
+            );
+        const currentBan =
+            allyBansInProgress.find(
+                (a) => a.actorCellId === session.localPlayerCellId,
+            ) ?? allyBansInProgress[0];
 
         const getRole = (role: string) => {
             return {
@@ -203,23 +213,30 @@ export const createLolClientContext = () => {
             }
 
             // Handle bans
-            const bannedChampions = session.actions
-                .flat()
-                .map((a) =>
-                    a.completed && a.type === "ban"
-                        ? String(a.championId)
-                        : null,
-                )
-                .filter(Boolean) as string[];
-            if (
-                bannedChampions.length !== bans.length ||
-                bannedChampions.some((b, i) => b !== bans[i])
-            ) {
-                setBans(bannedChampions);
-            }
+            const getBannedChampions = (isAllyAction: boolean) =>
+                session.actions
+                    .flat()
+                    .filter(
+                        (a) =>
+                            a.completed &&
+                            a.type === "ban" &&
+                            a.isAllyAction === isAllyAction &&
+                            a.championId > 0,
+                    )
+                    .map((a) => String(a.championId));
+            setTeamBans("ally", getBannedChampions(true));
+            setTeamBans("opponent", getBannedChampions(false));
 
-            // Set next pick if draft has changed
-            if (nextPick && draftChanged) {
+            if (currentBan) {
+                if (currentBan.id !== lastSelectedBanActionId) {
+                    lastSelectedBanActionId = currentBan.id;
+                    select("ally", undefined, {
+                        type: "ban",
+                        resetFilters: false,
+                    });
+                }
+            } else if (nextPick && draftChanged) {
+                // Set next pick if draft has changed
                 const nextPickTeamSelection = nextPick.isAllyAction
                     ? session.myTeam
                     : session.theirTeam;
@@ -230,11 +247,9 @@ export const createLolClientContext = () => {
                 // Only update next pick if ally
                 // Irritating to have it update when opponent picks
                 if (nextPick.isAllyAction) {
-                    select(
-                        nextPick.isAllyAction ? "ally" : "opponent",
-                        index,
-                        false,
-                    );
+                    select(nextPick.isAllyAction ? "ally" : "opponent", index, {
+                        resetFilters: false,
+                    });
                 }
             }
 
@@ -323,7 +338,8 @@ export const createLolClientContext = () => {
                 const session = await getChampSelectSession();
                 if (session == null) {
                     if (clientState() !== ClientState.MainMenu) {
-                        setBans([]);
+                        setTeamBans("ally", []);
+                        setTeamBans("opponent", []);
                         setOwnedChampions(new Set<string>());
                     }
 
@@ -335,7 +351,7 @@ export const createLolClientContext = () => {
                             // Disabled: favourites import prompt repeats, likely because WebView2 drops recent localStorage writes.
                             // checkImportFavourites();
                             resetAll();
-                            setBans([]);
+                            lastSelectedBanActionId = undefined;
                         }
 
                         updateChampSelectSession(

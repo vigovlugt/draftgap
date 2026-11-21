@@ -1,11 +1,12 @@
 import {
     batch,
     createContext,
+    createMemo,
     createSignal,
     JSXElement,
     useContext,
 } from "solid-js";
-import { createStore } from "solid-js/store";
+import { createStore, reconcile } from "solid-js/store";
 import { displayNameByRole, Role } from "@draftgap/core/src/models/Role";
 import { Team } from "@draftgap/core/src/models/Team";
 import { useDraftView } from "./DraftViewContext";
@@ -20,10 +21,16 @@ type TeamPick = {
 
 type TeamPicks = [TeamPick, TeamPick, TeamPick, TeamPick, TeamPick];
 
+export type SelectionType = "pick" | "ban";
+
 type Selection = {
+    type: SelectionType;
     team: Team | undefined;
     index: number;
 };
+
+const toTeamBans = (championKeys: string[] = []) =>
+    Array.from({ length: 5 }, (_, i) => championKeys[i]);
 
 export function createDraftContext() {
     const { dataset } = useDataset();
@@ -45,7 +52,18 @@ export function createDraftContext() {
         { championKey: undefined, role: undefined, hoverKey: undefined },
     ]);
 
-    const [bans, setBans] = createStore<string[]>([]);
+    const [bans, setBans] = createStore<Record<Team, (string | undefined)[]>>({
+        ally: toTeamBans(),
+        opponent: toTeamBans(),
+    });
+    const allBans = createMemo(
+        () =>
+            new Set(
+                [...bans.ally, ...bans.opponent].filter(
+                    (b): b is string => b !== undefined,
+                ),
+            ),
+    );
     // If empty, assume all champions are owned
     const [ownedChampions, setOwnedChampions] = createSignal<Set<string>>(
         new Set(),
@@ -55,6 +73,19 @@ export function createDraftContext() {
         const picks = team === "ally" ? allyTeam : opponentTeam;
 
         return picks.findIndex((pick) => pick.championKey === undefined);
+    }
+
+    function getNextBan(team: Team) {
+        return bans[team].findIndex((ban) => ban === undefined);
+    }
+
+    function removeBan(championKey: string) {
+        for (const team of ["ally", "opponent"] as const) {
+            const index = bans[team].indexOf(championKey);
+            if (index !== -1) {
+                setBans(team, index, undefined);
+            }
+        }
     }
 
     function fixClashes(championKey: string, index: number) {
@@ -106,6 +137,7 @@ export function createDraftContext() {
 
             if (championKey !== undefined) {
                 fixClashes(championKey, index);
+                removeBan(championKey);
             }
             if (championKey !== undefined && role !== undefined) {
                 fixRoleClashes(team, role, index);
@@ -197,11 +229,44 @@ export function createDraftContext() {
         });
     };
 
+    function selectNextEmptySlot(team: Team) {
+        const otherTeam: Team = team === "ally" ? "opponent" : "ally";
+        for (const t of [team, otherTeam]) {
+            if (getNextBan(t) !== -1)
+                return select(t, undefined, { type: "ban" });
+        }
+        for (const t of ["ally", "opponent"] as const) {
+            if (getNextPick(t) !== -1) return select(t);
+        }
+        select(undefined, 0);
+    }
+
+    function banChampion(team: Team, index: number, championKey: string) {
+        batch(() => {
+            removeBan(championKey);
+            setBans(team, index, championKey);
+            selectNextEmptySlot(team);
+
+            gtag("event", "ban_champion", {
+                event_category: "draft",
+                champion_key: championKey,
+                champion_name: dataset()!.championData[championKey].name,
+            });
+        });
+    }
+
+    const resetBan = (team: Team, index: number) =>
+        setBans(team, index, undefined);
+
+    const setTeamBans = (team: Team, championKeys: string[]) =>
+        setBans(team, reconcile(toTeamBans(championKeys)));
+
     const resetTeam = (team: "ally" | "opponent") => {
         batch(() => {
             for (let i = 0; i < 5; i++) {
                 resetChampion(team, i);
             }
+            setBans(team, toTeamBans());
 
             select(team, 0);
         });
@@ -215,6 +280,7 @@ export function createDraftContext() {
     };
 
     const [selection, setSelection] = createStore<Selection>({
+        type: "pick",
         team: "ally",
         index: 0,
     });
@@ -222,21 +288,27 @@ export function createDraftContext() {
     const select = (
         team: Team | undefined,
         index?: number,
-        resetFilters = true,
+        {
+            type = "pick",
+            resetFilters = true,
+        }: { type?: SelectionType; resetFilters?: boolean } = {},
     ) => {
         if (team !== undefined && index !== undefined) {
-            const teamPicks = team === "ally" ? allyTeam : opponentTeam;
-            if (teamPicks[index].championKey !== undefined) {
+            const isFilled =
+                type === "ban"
+                    ? bans[team][index] !== undefined
+                    : (team === "ally" ? allyTeam : opponentTeam)[index]
+                          .championKey !== undefined;
+            if (isFilled) {
                 return;
             }
         }
 
         if (index === undefined && team !== undefined) {
-            index = getNextPick(team!);
+            index = type === "ban" ? getNextBan(team) : getNextPick(team);
         }
 
-        setSelection("team", team);
-        setSelection("index", index ?? 0);
+        setSelection({ type, team, index: index ?? 0 });
         if (resetFilters) {
             resetDraftFilters();
         }
@@ -255,7 +327,10 @@ export function createDraftContext() {
         allyTeam,
         opponentTeam,
         bans,
-        setBans,
+        allBans,
+        banChampion,
+        resetBan,
+        setTeamBans,
         ownedChampions,
         setOwnedChampions,
         pickChampion,

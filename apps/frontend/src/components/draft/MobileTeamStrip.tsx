@@ -34,7 +34,9 @@ function MobilePickSlot(props: { team: Team; index: number }) {
         )?.[0];
 
     const isSelected = () =>
-        selection.team === props.team && selection.index === props.index;
+        selection.type === "pick" &&
+        selection.team === props.team &&
+        selection.index === props.index;
 
     return (
         <DropdownMenu
