@@ -147,10 +147,19 @@ export function createDraftAnalysisContext() {
         return new Set(teamComp.keys());
     };
 
-    createEffect(() => {
-        if (!selection.team) return;
+    const roleFilterTeam = (): Team | undefined => {
+        if (!selection.team) return undefined;
+        if (selection.type === "ban") {
+            return selection.team === "ally" ? "opponent" : "ally";
+        }
+        return selection.team;
+    };
 
-        const filledRoles = getFilledRoles(selection.team!);
+    createEffect(() => {
+        const team = roleFilterTeam();
+        if (!team) return;
+
+        const filledRoles = getFilledRoles(team);
         if (roleFilter() !== undefined && filledRoles.has(roleFilter())) {
             setRoleFilter(undefined);
         }
@@ -188,6 +197,7 @@ export function createDraftAnalysisContext() {
         opponentRoles,
         getLockedRoles,
         getFilledRoles,
+        roleFilterTeam,
         draftAnalysisConfig,
         analysisPick,
         showAnalysisPick,

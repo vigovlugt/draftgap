@@ -9,6 +9,7 @@ import {
     Switch,
 } from "solid-js";
 import DraftTable from "./components/draft/DraftTable";
+import BanTable from "./components/draft/BanTable";
 import { RoleFilter } from "./components/draft/RoleFilter";
 import { Search } from "./components/draft/Search";
 import { TeamSelector } from "./components/draft/TeamSelector";
@@ -33,6 +34,7 @@ import { DesktopAppDialog } from "./components/dialogs/DesktopAppDialog";
 import { UpdateDialog } from "./components/dialogs/UpdateDialog";
 import { OptionsDropdownMenu } from "./components/OptionsMenu";
 import { useDraftAnalysis } from "./contexts/DraftAnalysisContext";
+import { useDraft } from "./contexts/DraftContext";
 import { ChampionDraftAnalysisDialog } from "./components/dialogs/ChampionDraftAnalysisDialog";
 import { AnalyzeHoverToggle } from "./components/draft/AnalyzeHoverToggle";
 import { useMedia } from "./hooks/useMedia";
@@ -49,7 +51,9 @@ const App: Component = () => {
         useDraftAnalysis();
     const { startLolClientIntegration, stopLolClientIntegration } =
         useLolClient();
-    const { isDesktop } = useMedia();
+    const { isDesktop, isMobileLayout } = useMedia();
+    const { selection } = useDraft();
+    const isBanning = () => selection.type === "ban";
 
     createEffect(() => {
         if (config.disableLeagueClientIntegration) {
@@ -143,7 +147,12 @@ const App: Component = () => {
                                             <FilterMenu />
                                             <AnalyzeHoverToggle />
                                         </div>
-                                        <DraftTable />
+                                        <Show
+                                            when={isBanning()}
+                                            fallback={<DraftTable />}
+                                        >
+                                            <BanTable />
+                                        </Show>
                                     </div>
                                 </Match>
                                 <Match
@@ -231,45 +240,48 @@ const App: Component = () => {
                     </div>
                 </div>
             </header>
-            {/* Desktop main */}
-            <main
-                class="h-full lg:grid overflow-hidden hidden"
-                style={{
-                    "grid-template-columns": "1fr 4fr 1fr",
-                    "grid-template-rows": "100%",
-                }}
+            <Show
+                when={isMobileLayout()}
+                fallback={
+                    <main
+                        class="h-full grid overflow-hidden"
+                        style={{
+                            "grid-template-columns": "1fr 4fr 1fr",
+                            "grid-template-rows": "100%",
+                        }}
+                    >
+                        <TeamSidebar team="ally" />
+
+                        <MainView />
+
+                        <TeamSidebar team="opponent" />
+                    </main>
+                }
             >
-                <TeamSidebar team="ally" />
-
-                <MainView />
-
-                <TeamSidebar team="opponent" />
-            </main>
-
-            {/* Mobile main */}
-            <main class="h-full overflow-hidden lg:hidden">
-                <MainView />
-            </main>
-
-            {/* Mobile bottom nav */}
-            <nav class="bg-primary border-t-2 border-neutral-700 flex lg:hidden">
-                <For each={viewTabs()}>
-                    {(tab) => (
-                        <button
-                            class="flex-1 py-3 uppercase font-semibold text-neutral-500"
-                            classList={{
-                                "text-neutral-50!":
-                                    currentDraftView().type === tab.value,
-                            }}
-                            onClick={() =>
-                                setCurrentDraftView({ type: tab.value })
-                            }
-                        >
-                            {tab.value === "analysis" ? "Analysis" : tab.label}
-                        </button>
-                    )}
-                </For>
-            </nav>
+                <main class="h-full overflow-hidden">
+                    <MainView />
+                </main>
+                <nav class="bg-primary border-t-2 border-neutral-700 flex">
+                    <For each={viewTabs()}>
+                        {(tab) => (
+                            <button
+                                class="flex-1 py-3 uppercase font-semibold text-neutral-500"
+                                classList={{
+                                    "text-neutral-50!":
+                                        currentDraftView().type === tab.value,
+                                }}
+                                onClick={() =>
+                                    setCurrentDraftView({ type: tab.value })
+                                }
+                            >
+                                {tab.value === "analysis"
+                                    ? "Analysis"
+                                    : tab.label}
+                            </button>
+                        )}
+                    </For>
+                </nav>
+            </Show>
         </div>
     );
 };

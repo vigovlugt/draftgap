@@ -54,7 +54,9 @@ export function Pick(props: Props) {
         )?.[0];
 
     const isSelected = () =>
-        selection.team === props.team && selection.index === props.index;
+        selection.type === "pick" &&
+        selection.team === props.team &&
+        selection.index === props.index;
 
     const champion = () => {
         if (pick().championKey) {
