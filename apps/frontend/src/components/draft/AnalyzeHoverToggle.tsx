@@ -16,7 +16,7 @@ export function AnalyzeHoverToggle() {
             use:tooltip={{
                 content: "Analyze hovered champions in the draft",
             }}
-            onClick={() => setAnalyzeHovers((v) => !v)}
+            onClick={() => setAnalyzeHovers(!analyzeHovers())}
             class={cn(
                 buttonVariants({ variant: "transparent" }),
                 "px-1 text-neutral-50",
