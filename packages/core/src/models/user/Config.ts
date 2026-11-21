@@ -15,6 +15,7 @@ export type DraftGapConfig = {
     ignoreChampionWinrates: boolean;
     riskLevel: RiskLevel;
     minGames: number;
+    analyzeHovers: boolean;
 
     // DRAFT SUGGESTIONS
     showFavouritesAtTop: boolean;

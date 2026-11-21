@@ -19,12 +19,15 @@ import { useDataset } from "./DatasetContext";
 import { useDraftFilters } from "./DraftFiltersContext";
 
 export function createDraftAnalysisContext() {
-    const { config } = useUser();
+    const { config, setConfig } = useUser();
     const { allyTeam, opponentTeam, selection } = useDraft();
     const { roleFilter, setRoleFilter } = useDraftFilters();
     const { isLoaded, dataset, dataset30Days } = useDataset();
 
-    const [analyzeHovers, setAnalyzeHovers] = createSignal(false);
+    // Stored in the user config so the setting persists between app launches.
+    const analyzeHovers = () => config.analyzeHovers;
+    const setAnalyzeHovers = (value: boolean) =>
+        setConfig("analyzeHovers", value);
 
     function getTeamCompsForTeam(team: Team) {
         if (!isLoaded()) return [];
