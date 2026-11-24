@@ -128,7 +128,7 @@ export function ChampionContextMenuContent(props: Props) {
                     <Show when={props.onAnalysis}>
                         <DropdownMenuItem onSelect={() => props.onAnalysis!()}>
                             <DropdownMenuIcon path={presentationChartLine} />
-                            <span>Analysis</span>
+                            <span>Preview</span>
                         </DropdownMenuItem>
                     </Show>
                 </DropdownMenuGroup>

@@ -13,7 +13,7 @@ import { Suggestion } from "@draftgap/core/src/draft/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
-import { batch, createSignal, Show } from "solid-js";
+import { createSignal, Show, untrack } from "solid-js";
 import { Icon } from "solid-heroicons";
 import { star } from "solid-heroicons/solid";
 import { star as starOutline } from "solid-heroicons/outline";
@@ -31,18 +31,41 @@ import { championMatchesSearch } from "../../utils/search";
 import { focusSearch } from "./Search";
 import { createTableKeyboardNavigation } from "../../hooks/createTableKeyboardNavigation";
 import { ChampionContextMenuContent } from "./ChampionContextMenu";
+import {
+    PreviewDraftAnalysisProvider,
+    PreviewPick,
+} from "../../contexts/DraftAnalysisContext";
+
+function PreviewDialogContent(props: { pick: PreviewPick }) {
+    // Champion shown in the dialog; starts at the previewed champion and can
+    // change when clicking matchups/duos inside the dialog.
+    const [shown, setShown] = createSignal<{
+        team: Team;
+        championKey: string;
+    }>(
+        untrack(() => ({
+            team: props.pick.team,
+            championKey: props.pick.championKey,
+        })),
+    );
+
+    return (
+        <ChampionDraftAnalysisDialog
+            team={shown().team}
+            championKey={shown().championKey}
+            openChampionDraftAnalysisModal={(team, championKey) =>
+                setShown({ team, championKey })
+            }
+        />
+    );
+}
 
 export default function DraftTable() {
     const { dataset } = useDataset();
     const { selection, pickChampion, select, allBans, ownedChampions } =
         useDraft();
-    const {
-        search,
-        roleFilter,
-        setRoleFilter,
-        favouriteFilter,
-        setFavouriteFilter,
-    } = useDraftFilters();
+    const { search, roleFilter, favouriteFilter, setFavouriteFilter } =
+        useDraftFilters();
     const { allySuggestions, opponentSuggestions } = useDraftSuggestions();
     const { isFavourite, setFavourite, config } = useUser();
 
@@ -131,55 +154,18 @@ export default function DraftTable() {
         return filtered;
     };
 
-    const [analysisPick, _setAnalysisPick] = createSignal<{
-        team: Team;
-        championKey: string;
-    }>();
-    const [showAnalysisPick, setShowAnalysisPick] = createSignal(false);
-    const [savedRoleFilter, setSavedRoleFilter] = createSignal<Role>();
+    const [previewPick, setPreviewPick] = createSignal<PreviewPick>();
+    const [showPreview, setShowPreview] = createSignal(false);
 
-    function setAnalysisPick(
-        pick:
-            | { team: Team; championKey: string; role: Role | undefined }
-            | undefined,
-    ) {
-        batch(() => {
-            if (!pick) {
-                pickChampion(
-                    selection.team!,
-                    selection.index,
-                    undefined,
-                    undefined,
-                    {
-                        updateSelection: false,
-                        resetFilters: false,
-                        reportEvent: false,
-                        updateView: false,
-                    },
-                );
-                setRoleFilter(savedRoleFilter());
-                setSavedRoleFilter(undefined);
-                setShowAnalysisPick(false);
-                return;
-            }
-            if (pick.role !== undefined) {
-                setSavedRoleFilter(roleFilter());
-                pickChampion(
-                    selection.team!,
-                    selection.index,
-                    pick.championKey,
-                    pick.role,
-                    {
-                        updateSelection: false,
-                        resetFilters: false,
-                        reportEvent: false,
-                        updateView: false,
-                    },
-                );
-            }
-            _setAnalysisPick(pick);
-            setShowAnalysisPick(true);
+    function openPreview(championKey: string, role: Role | undefined) {
+        if (!selection.team) return;
+        setPreviewPick({
+            team: selection.team,
+            index: selection.index,
+            championKey,
+            role,
         });
+        setShowPreview(true);
     }
 
     const columns: () => ColumnDef<Suggestion>[] = () => [
@@ -314,11 +300,10 @@ export default function DraftTable() {
                     tabIndex={-1}
                     onClick={(e) => {
                         e.stopPropagation();
-                        setAnalysisPick({
-                            team: selection.team!,
-                            championKey: info.row.original.championKey,
-                            role: info.row.original.role,
-                        });
+                        openPreview(
+                            info.row.original.championKey,
+                            info.row.original.role,
+                        );
                     }}
                     class="py-2"
                 >
@@ -387,30 +372,24 @@ export default function DraftTable() {
                         onAnalysis={
                             selection.team
                                 ? () =>
-                                      setAnalysisPick({
-                                          team: selection.team!,
-                                          championKey: row.original.championKey,
-                                          role: row.original.role,
-                                      })
+                                      openPreview(
+                                          row.original.championKey,
+                                          row.original.role,
+                                      )
                                 : undefined
                         }
                     />
                 )}
                 id="draft-table"
             />
-            <Dialog
-                open={showAnalysisPick()}
-                onOpenChange={(open) => {
-                    if (!open) setAnalysisPick(undefined);
-                }}
-            >
-                <ChampionDraftAnalysisDialog
-                    championKey={analysisPick()!.championKey}
-                    team={analysisPick()!.team}
-                    openChampionDraftAnalysisModal={(team, championKey) =>
-                        setAnalysisPick({ team, championKey, role: undefined })
-                    }
-                />
+            <Dialog open={showPreview()} onOpenChange={setShowPreview}>
+                <Show when={previewPick()} keyed>
+                    {(pick) => (
+                        <PreviewDraftAnalysisProvider pick={pick}>
+                            <PreviewDialogContent pick={pick} />
+                        </PreviewDraftAnalysisProvider>
+                    )}
+                </Show>
             </Dialog>
         </>
     );

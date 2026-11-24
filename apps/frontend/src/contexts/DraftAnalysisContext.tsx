@@ -6,11 +6,12 @@ import {
     createSignal,
     useContext,
 } from "solid-js";
-import { getVisibleChampionKey, useDraft } from "./DraftContext";
+import { getVisibleChampionKey, TeamPick, useDraft } from "./DraftContext";
 import { useUser } from "./UserContext";
 import { getTeamDamageDistribution } from "@draftgap/core/src/damage-distribution/damage-distribution";
 import { analyzeDraft } from "@draftgap/core/src/draft/analysis";
 import { Team } from "@draftgap/core/src/models/Team";
+import { Role } from "@draftgap/core/src/models/Role";
 import { PickData } from "@draftgap/core/src/models/dataset/PickData";
 import predictRoles, {
     getTeamComps,
@@ -18,9 +19,18 @@ import predictRoles, {
 import { useDataset } from "./DatasetContext";
 import { useDraftFilters } from "./DraftFiltersContext";
 
-export function createDraftAnalysisContext() {
+type DraftAnalysisOptions = {
+    allyTeam?: () => TeamPick[];
+    opponentTeam?: () => TeamPick[];
+    isPreview?: boolean;
+};
+
+export function createDraftAnalysisContext(options: DraftAnalysisOptions = {}) {
     const { config, setConfig } = useUser();
-    const { allyTeam, opponentTeam, selection } = useDraft();
+    const draft = useDraft();
+    const { selection } = draft;
+    const allyTeam = () => options.allyTeam?.() ?? draft.allyTeam;
+    const opponentTeam = () => options.opponentTeam?.() ?? draft.opponentTeam;
     const { roleFilter, setRoleFilter } = useDraftFilters();
     const { isLoaded, dataset, dataset30Days } = useDataset();
 
@@ -31,7 +41,7 @@ export function createDraftAnalysisContext() {
     function getTeamCompsForTeam(team: Team) {
         if (!isLoaded()) return [];
 
-        const picks = team === "ally" ? allyTeam : opponentTeam;
+        const picks = team === "ally" ? allyTeam() : opponentTeam();
 
         const championData = picks
             .map((pick) => ({
@@ -104,7 +114,7 @@ export function createDraftAnalysisContext() {
     function getTeamData(team: Team): Map<string, PickData> {
         if (!isLoaded()) return new Map();
 
-        const picks = team === "ally" ? allyTeam : opponentTeam;
+        const picks = team === "ally" ? allyTeam() : opponentTeam();
         const roles = team === "ally" ? allyRoles() : opponentRoles();
 
         const teamData = new Map<string, PickData>();
@@ -129,7 +139,7 @@ export function createDraftAnalysisContext() {
 
     const getLockedRoles = (team: Team) => {
         if (!selection.team) return new Set();
-        const teamDraft = team === "ally" ? allyTeam : opponentTeam;
+        const teamDraft = team === "ally" ? allyTeam() : opponentTeam();
 
         return new Set(teamDraft.map((p) => p.role));
     };
@@ -154,6 +164,7 @@ export function createDraftAnalysisContext() {
     };
 
     createEffect(() => {
+        if (options.isPreview) return;
         const team = roleFilterTeam();
         if (!team) return;
 
@@ -211,6 +222,49 @@ export const DraftAnalysisContext =
 export function DraftAnalysisProvider(props: { children: JSXElement }) {
     return (
         <DraftAnalysisContext.Provider value={createDraftAnalysisContext()}>
+            {props.children}
+        </DraftAnalysisContext.Provider>
+    );
+}
+
+export type PreviewPick = {
+    team: Team;
+    index: number;
+    championKey: string;
+    role: Role | undefined;
+};
+
+/**
+ * Provides a draft analysis of the current draft with `pick` placed in its slot,
+ * without modifying the actual draft.
+ */
+export function PreviewDraftAnalysisProvider(props: {
+    pick: PreviewPick;
+    children: JSXElement;
+}) {
+    const { allyTeam, opponentTeam } = useDraft();
+
+    const withPreview = (team: Team, picks: TeamPick[]) =>
+        team !== props.pick.team
+            ? picks
+            : picks.map((p, i) =>
+                  i === props.pick.index
+                      ? {
+                            championKey: props.pick.championKey,
+                            role: props.pick.role,
+                            hover: false,
+                        }
+                      : p,
+              );
+
+    const ctx = createDraftAnalysisContext({
+        allyTeam: () => withPreview("ally", allyTeam),
+        opponentTeam: () => withPreview("opponent", opponentTeam),
+        isPreview: true,
+    });
+
+    return (
+        <DraftAnalysisContext.Provider value={ctx}>
             {props.children}
         </DraftAnalysisContext.Provider>
     );
