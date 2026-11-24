@@ -25,7 +25,8 @@ export function createDraftAnalysisContext() {
     const { isLoaded, dataset, dataset30Days } = useDataset();
 
     // Stored in the user config so the setting persists between app launches.
-    const analyzeHovers = () => config.analyzeHovers;
+    // TEMP: force hover analysis on for testing hover UI
+    const analyzeHovers = () => true || config.analyzeHovers;
     const setAnalyzeHovers = (value: boolean) =>
         setConfig("analyzeHovers", value);
 

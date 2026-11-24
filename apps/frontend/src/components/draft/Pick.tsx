@@ -144,6 +144,9 @@ export function Pick(props: Props) {
                 <>
                     <div
                         class="absolute top-0 bottom-0 left-0 h-full w-full"
+                        classList={{
+                            "animate-pulse": !pick().championKey,
+                        }}
                         style={{
                             "background-image": `linear-gradient(to bottom, rgba(25, 25, 25, 0.8) 0%, rgba(0, 0, 0, 0) 50%, rgba(25, 25, 25, 0.8) 100%),
                                 url(https://ddragon.leagueoflegends.com/cdn/img/champion/centered/${
@@ -153,9 +156,6 @@ export function Pick(props: Props) {
                                 }_0.jpg)`,
                             "background-position": "center 20%",
                             "background-size": "cover",
-                            filter: pick().hoverKey
-                                ? "grayscale(1)"
-                                : undefined,
                         }}
                     />
 

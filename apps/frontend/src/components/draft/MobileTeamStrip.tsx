@@ -70,10 +70,8 @@ function MobilePickSlot(props: { team: Team; index: number }) {
                         }/img/champion/${champion()!.id}.png`}
                         alt={champion()!.name}
                         class="absolute inset-0 w-full h-full object-cover scale-110"
-                        style={{
-                            filter: pick().championKey
-                                ? undefined
-                                : "grayscale(1)",
+                        classList={{
+                            "animate-pulse": !pick().championKey,
                         }}
                     />
                     <Show when={role() !== undefined}>
