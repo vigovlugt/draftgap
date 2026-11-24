@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 import { Team } from "@draftgap/core/src/models/Team";
 import { ViewTabs } from "../../common/ViewTabs";
-import { useDraft } from "../../../contexts/DraftContext";
+import { getPickedChampionKey, useDraft } from "../../../contexts/DraftContext";
 import { overflowEllipsis } from "../../../utils/strings";
 import { BuildView } from "./BuildView";
 import { useBuild } from "../../../contexts/BuildContext";
@@ -21,7 +21,7 @@ export const BuildsViewTabs = (props: { team: Team }) => {
             tabs={new Array(5)
                 .fill(null)
                 .map((_, i) => i)
-                .filter((i) => team()[i].championKey !== undefined)
+                .filter((i) => getPickedChampionKey(team()[i]) !== undefined)
                 .map((i) => ({
                     value: { team: props.team, index: i },
                     label: overflowEllipsis(

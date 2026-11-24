@@ -13,11 +13,25 @@ import { useDraftView } from "./DraftViewContext";
 import { useDataset } from "./DatasetContext";
 import { useDraftFilters } from "./DraftFiltersContext";
 
-type TeamPick = {
+export type TeamPick = {
     championKey: string | undefined;
     role: Role | undefined;
-    hoverKey: string | undefined;
+    hover: boolean;
 };
+
+export const getPickedChampionKey = (pick: TeamPick) =>
+    pick.hover ? undefined : pick.championKey;
+
+export const getVisibleChampionKey = (
+    pick: TeamPick,
+    analyzeHovers: boolean,
+) => (pick.hover && !analyzeHovers ? undefined : pick.championKey);
+
+const emptyPick = (): TeamPick => ({
+    championKey: undefined,
+    role: undefined,
+    hover: false,
+});
 
 type TeamPicks = [TeamPick, TeamPick, TeamPick, TeamPick, TeamPick];
 
@@ -38,18 +52,18 @@ export function createDraftContext() {
     const { resetDraftFilters } = useDraftFilters();
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
-        { championKey: undefined, role: undefined, hoverKey: undefined },
-        { championKey: undefined, role: undefined, hoverKey: undefined },
-        { championKey: undefined, role: undefined, hoverKey: undefined },
-        { championKey: undefined, role: undefined, hoverKey: undefined },
-        { championKey: undefined, role: undefined, hoverKey: undefined },
+        emptyPick(),
+        emptyPick(),
+        emptyPick(),
+        emptyPick(),
+        emptyPick(),
     ]);
     const [opponentTeam, setOpponentTeam] = createStore<TeamPicks>([
-        { championKey: undefined, role: undefined, hoverKey: undefined },
-        { championKey: undefined, role: undefined, hoverKey: undefined },
-        { championKey: undefined, role: undefined, hoverKey: undefined },
-        { championKey: undefined, role: undefined, hoverKey: undefined },
-        { championKey: undefined, role: undefined, hoverKey: undefined },
+        emptyPick(),
+        emptyPick(),
+        emptyPick(),
+        emptyPick(),
+        emptyPick(),
     ]);
 
     const [bans, setBans] = createStore<Record<Team, (string | undefined)[]>>({
@@ -72,7 +86,9 @@ export function createDraftContext() {
     function getNextPick(team: Team) {
         const picks = team === "ally" ? allyTeam : opponentTeam;
 
-        return picks.findIndex((pick) => pick.championKey === undefined);
+        return picks.findIndex(
+            (pick) => getPickedChampionKey(pick) === undefined,
+        );
     }
 
     function getNextBan(team: Team) {
@@ -146,7 +162,7 @@ export function createDraftContext() {
             setTeam(index, {
                 championKey,
                 role,
-                hoverKey: undefined,
+                hover: false,
             });
 
             if (updateSelection) {
@@ -215,9 +231,9 @@ export function createDraftContext() {
             }
 
             setTeam(index, {
-                championKey: undefined,
+                championKey,
                 role,
-                hoverKey: championKey,
+                hover: championKey !== undefined,
             });
         });
     }
@@ -316,8 +332,9 @@ export function createDraftContext() {
             const isFilled =
                 type === "ban"
                     ? bans[team][index] !== undefined
-                    : (team === "ally" ? allyTeam : opponentTeam)[index]
-                          .championKey !== undefined;
+                    : getPickedChampionKey(
+                          (team === "ally" ? allyTeam : opponentTeam)[index],
+                      ) !== undefined;
             if (isFilled) {
                 return;
             }
@@ -339,7 +356,7 @@ export function createDraftContext() {
 
     const draftFinished = () =>
         [...allyTeam, ...opponentTeam].every(
-            (s) => s.championKey !== undefined,
+            (s) => getPickedChampionKey(s) !== undefined,
         );
 
     return {

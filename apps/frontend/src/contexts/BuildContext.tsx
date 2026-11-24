@@ -13,7 +13,7 @@ import {
     PartialBuildDataset,
     FullBuildDataset,
 } from "@draftgap/core/src/models/build/BuildDataset";
-import { useDraft } from "./DraftContext";
+import { getPickedChampionKey, useDraft } from "./DraftContext";
 import { Team } from "@draftgap/core/src/models/Team";
 import { BuildEntity } from "@draftgap/core/src/models/build/BuildEntity";
 import { useDraftAnalysis } from "./DraftAnalysisContext";
@@ -59,7 +59,7 @@ export function createBuildContext() {
         if (!buildPick()) return;
 
         const team = buildPick()!.team === "ally" ? allyTeam : opponentTeam;
-        const championKey = team[buildPick()!.index].championKey;
+        const championKey = getPickedChampionKey(team[buildPick()!.index]);
         if (championKey) return;
 
         _setBuildPick(undefined);
@@ -81,7 +81,9 @@ export function createBuildContext() {
 
     const team = () => (buildPick()?.team === "ally" ? allyTeam : opponentTeam);
     const championKey = () =>
-        buildPick() ? team()[buildPick()!.index].championKey : undefined;
+        buildPick()
+            ? getPickedChampionKey(team()[buildPick()!.index])
+            : undefined;
     const myTeamComp = () => {
         if (!buildPick()) return undefined;
         return buildPick()!.team === "ally"

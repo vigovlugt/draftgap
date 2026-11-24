@@ -1,7 +1,11 @@
 import { Icon } from "solid-heroicons";
 import { ellipsisVertical } from "solid-heroicons/outline";
 import { presentationChartLine, trash, user } from "solid-heroicons/solid-mini";
-import { useDraft } from "../../contexts/DraftContext";
+import {
+    getPickedChampionKey,
+    getVisibleChampionKey,
+    useDraft,
+} from "../../contexts/DraftContext";
 import { Team } from "@draftgap/core/src/models/Team";
 import { ROLES, Role } from "@draftgap/core/src/models/Role";
 import { linkByStatsSite } from "../../utils/sites";
@@ -78,16 +82,11 @@ function PickOptionsItems(props: { team: Team; index: number }) {
         props.team === "ally" ? allyTeamComp() : opponentTeamComp();
 
     const champion = () => {
-        const pick = teamPicks()[props.index];
-
-        if (pick.championKey) {
-            return dataset()?.championData[pick.championKey!];
-        }
-        if (pick.hoverKey && analyzeHovers()) {
-            return dataset()?.championData[pick.hoverKey!];
-        }
-
-        return undefined;
+        const key = getVisibleChampionKey(
+            teamPicks()[props.index],
+            analyzeHovers(),
+        );
+        return key ? dataset()?.championData[key] : undefined;
     };
 
     return (
@@ -166,7 +165,9 @@ function PickOptionsItems(props: { team: Team; index: number }) {
                                     pickChampion(
                                         props.team,
                                         props.index,
-                                        teamPicks()[props.index].championKey,
+                                        getPickedChampionKey(
+                                            teamPicks()[props.index],
+                                        ),
                                         role,
                                     )
                                 }

@@ -1,7 +1,11 @@
 import { For, Show, createSignal } from "solid-js";
 import { Team } from "@draftgap/core/src/models/Team";
 import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
-import { useDraft } from "../../contexts/DraftContext";
+import {
+    getPickedChampionKey,
+    getVisibleChampionKey,
+    useDraft,
+} from "../../contexts/DraftContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { getRatingClass } from "../../utils/rating";
@@ -28,8 +32,7 @@ function MobilePickSlot(props: { team: Team; index: number }) {
     const teamComp = () =>
         props.team === "ally" ? allyTeamComp() : opponentTeamComp();
 
-    const championKey = () =>
-        pick().championKey ?? (analyzeHovers() ? pick().hoverKey : undefined);
+    const championKey = () => getVisibleChampionKey(pick(), analyzeHovers());
     const champion = () =>
         championKey() ? dataset()?.championData[championKey()!] : undefined;
     const role = () =>
@@ -48,7 +51,9 @@ function MobilePickSlot(props: { team: Team; index: number }) {
                 <DropdownMenu
                     open={menuOpen()}
                     onOpenChange={(open) =>
-                        setMenuOpen(open && pick().championKey !== undefined)
+                        setMenuOpen(
+                            open && getPickedChampionKey(pick()) !== undefined,
+                        )
                     }
                 >
                     <DropdownMenuTrigger
@@ -59,7 +64,7 @@ function MobilePickSlot(props: { team: Team; index: number }) {
                             "border-white!": isSelected(),
                         }}
                         onClick={() => {
-                            if (!pick().championKey)
+                            if (!getPickedChampionKey(pick()))
                                 select(props.team, props.index);
                         }}
                     >
@@ -78,7 +83,7 @@ function MobilePickSlot(props: { team: Team; index: number }) {
                                 alt={champion()!.name}
                                 class="absolute inset-0 w-full h-full object-cover scale-110"
                                 classList={{
-                                    "animate-pulse": !pick().championKey,
+                                    "animate-pulse": pick().hover,
                                 }}
                             />
                             <Show when={role() !== undefined}>

@@ -6,7 +6,7 @@ import {
     createSignal,
     useContext,
 } from "solid-js";
-import { useDraft } from "./DraftContext";
+import { getVisibleChampionKey, useDraft } from "./DraftContext";
 import { useUser } from "./UserContext";
 import { getTeamDamageDistribution } from "@draftgap/core/src/damage-distribution/damage-distribution";
 import { analyzeDraft } from "@draftgap/core/src/draft/analysis";
@@ -34,12 +34,13 @@ export function createDraftAnalysisContext() {
         const picks = team === "ally" ? allyTeam : opponentTeam;
 
         const championData = picks
-            .filter(
-                (pick) =>
-                    pick.championKey || (pick.hoverKey && analyzeHovers()),
-            )
             .map((pick) => ({
-                ...dataset()!.championData[pick.championKey || pick.hoverKey!],
+                key: getVisibleChampionKey(pick, analyzeHovers()),
+                role: pick.role,
+            }))
+            .filter((pick) => pick.key !== undefined)
+            .map((pick) => ({
+                ...dataset()!.championData[pick.key!],
                 role: pick.role,
             }));
         return getTeamComps(championData);
@@ -109,10 +110,8 @@ export function createDraftAnalysisContext() {
         const teamData = new Map<string, PickData>();
 
         for (const pick of picks) {
-            if (!pick.championKey && (!pick.hoverKey || !analyzeHovers()))
-                continue;
-
-            const key = pick.championKey ?? pick.hoverKey!;
+            const key = getVisibleChampionKey(pick, analyzeHovers());
+            if (!key) continue;
 
             const championData = dataset()!.championData[key];
             const probabilityByRole = roles.get(key)!;

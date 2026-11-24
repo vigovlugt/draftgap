@@ -3,7 +3,7 @@ import { getSuggestions } from "@draftgap/core/src/draft/suggestions";
 import { getBanSuggestions } from "@draftgap/core/src/draft/bans";
 import { useDraftAnalysis } from "./DraftAnalysisContext";
 import { useDataset } from "./DatasetContext";
-import { useDraft } from "./DraftContext";
+import { getVisibleChampionKey, useDraft } from "./DraftContext";
 import { useDraftFilters } from "./DraftFiltersContext";
 
 export function createDraftSuggestionsContext() {
@@ -48,9 +48,8 @@ export function createDraftSuggestionsContext() {
 
         const unavailable = new Set(allBans());
         for (const pick of [...allyTeam, ...opponentTeam]) {
-            if (pick.championKey) unavailable.add(pick.championKey);
-            if (pick.hoverKey && analyzeHovers())
-                unavailable.add(pick.hoverKey);
+            const key = getVisibleChampionKey(pick, analyzeHovers());
+            if (key) unavailable.add(key);
         }
 
         return getBanSuggestions(

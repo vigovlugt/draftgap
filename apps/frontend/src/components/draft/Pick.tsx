@@ -1,7 +1,11 @@
 import { Icon } from "solid-heroicons";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { For, Show } from "solid-js";
-import { useDraft } from "../../contexts/DraftContext";
+import {
+    getPickedChampionKey,
+    getVisibleChampionKey,
+    useDraft,
+} from "../../contexts/DraftContext";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { PickOptions, PickOptionsContextMenuContent } from "./PickOptions";
 import { ContextMenu, ContextMenuTrigger } from "../common/ContextMenu";
@@ -60,19 +64,17 @@ export function Pick(props: Props) {
         selection.index === props.index;
 
     const champion = () => {
-        if (pick().championKey) {
-            return championData().get(pick().championKey!);
-        }
-
-        if (pick().hoverKey && analyzeHovers()) {
-            return championData().get(pick().hoverKey!);
-        }
-
-        return undefined;
+        const key = getVisibleChampionKey(pick(), analyzeHovers());
+        return key ? championData().get(key) : undefined;
     };
 
     function setRole(role: Role | undefined) {
-        pickChampion(props.team, props.index, pick().championKey, role);
+        pickChampion(
+            props.team,
+            props.index,
+            getPickedChampionKey(pick()),
+            role,
+        );
     }
 
     const keyDownListener = (e: KeyboardEvent) => {
@@ -148,7 +150,7 @@ export function Pick(props: Props) {
                         <div
                             class="absolute top-0 bottom-0 left-0 h-full w-full"
                             classList={{
-                                "animate-pulse": !pick().championKey,
+                                "animate-pulse": pick().hover,
                             }}
                             style={{
                                 "background-image": `linear-gradient(to bottom, rgba(25, 25, 25, 0.8) 0%, rgba(0, 0, 0, 0) 50%, rgba(25, 25, 25, 0.8) 100%),

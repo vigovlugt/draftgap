@@ -24,7 +24,7 @@ import {
     createImportFavouritePicksSuccessToast,
     createImportFavouritePicksToast,
 } from "../utils/toast";
-import { useDraft } from "./DraftContext";
+import { getPickedChampionKey, useDraft } from "./DraftContext";
 import { useMedia } from "../hooks/useMedia";
 import { useUser } from "./UserContext";
 import { LolalyticsRole } from "../../../dataset/src/lolalytics/roles";
@@ -173,7 +173,7 @@ export const createLolClientContext = () => {
 
             if (selection.championId) {
                 const championKey = selection.championId.toString();
-                if (teamPicks[index].championKey === championKey) {
+                if (getPickedChampionKey(teamPicks[index]) === championKey) {
                     return false;
                 }
                 const resetFilters =
@@ -193,7 +193,9 @@ export const createLolClientContext = () => {
                 ) {
                     championKey = selection.championPickIntent.toString();
                 }
-                if (teamPicks[index].hoverKey !== championKey) {
+                const pick = teamPicks[index];
+                const hoverKey = pick.hover ? pick.championKey : undefined;
+                if (hoverKey !== championKey) {
                     hoverChampion(team, index, championKey, role);
                 }
             }
