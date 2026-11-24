@@ -175,7 +175,7 @@ export default function BanTable() {
             id: "pickrate",
             header: () => (
                 <HeaderWithTooltip
-                    label="Pick %"
+                    label="Pickrate"
                     tooltip="Chance the enemy picks this champion in this role, based on pickrate"
                 />
             ),
@@ -190,7 +190,7 @@ export default function BanTable() {
             id: "delta",
             header: () => (
                 <HeaderWithTooltip
-                    label="Δ WR"
+                    label="Winrate"
                     tooltip="Enemy winrate with this champion compared to their expected winrate in this role"
                 />
             ),
