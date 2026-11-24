@@ -24,9 +24,7 @@ export function createDraftAnalysisContext() {
     const { roleFilter, setRoleFilter } = useDraftFilters();
     const { isLoaded, dataset, dataset30Days } = useDataset();
 
-    // Stored in the user config so the setting persists between app launches.
-    // TEMP: force hover analysis on for testing hover UI
-    const analyzeHovers = () => true || config.analyzeHovers;
+    const analyzeHovers = () => config.analyzeHovers;
     const setAnalyzeHovers = (value: boolean) =>
         setConfig("analyzeHovers", value);
 

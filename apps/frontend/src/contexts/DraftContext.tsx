@@ -264,6 +264,16 @@ export function createDraftContext() {
         });
     }
 
+    /** Bans a champion in the team's next empty ban slot, without changing the selection. */
+    function addBan(team: Team, championKey: string) {
+        batch(() => {
+            removeBan(championKey);
+            const index = getNextBan(team);
+            if (index === -1) return;
+            setBans(team, index, championKey);
+        });
+    }
+
     const resetBan = (team: Team, index: number) =>
         setBans(team, index, undefined);
 
@@ -338,6 +348,9 @@ export function createDraftContext() {
         bans,
         allBans,
         banChampion,
+        addBan,
+        getNextPick,
+        getNextBan,
         resetBan,
         setTeamBans,
         ownedChampions,

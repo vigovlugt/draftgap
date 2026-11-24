@@ -23,6 +23,7 @@ import { tooltip } from "../../directives/tooltip";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleIcon } from "../icons/roles/RoleIcon";
+import { ChampionContextMenuContent } from "./ChampionContextMenu";
 // eslint-disable-next-line
 tooltip;
 
@@ -267,5 +268,17 @@ export default function BanTable() {
         select(team, undefined, { type: "ban" }),
     );
 
-    return <Table table={table} onClickRow={ban} id="ban-table" />;
+    return (
+        <Table
+            table={table}
+            onClickRow={ban}
+            rowContextMenu={(row) => (
+                <ChampionContextMenuContent
+                    championKey={row.original.championKey}
+                    role={mainThreat(row.original).role}
+                />
+            )}
+            id="ban-table"
+        />
+    );
 }

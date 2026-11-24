@@ -16,6 +16,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../common/DropdownMenu";
+import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuTrigger,
+} from "../common/ContextMenu";
 
 type Props = {
     team: Team;
@@ -48,75 +53,97 @@ function BanSlot(props: { team: Team; index: number }) {
         selection.index === props.index;
 
     return (
-        <div class="w-11 min-w-0 shrink">
-            <DropdownMenu
-                open={menuOpen()}
-                onOpenChange={(open) =>
-                    setMenuOpen(open && championKey() !== undefined)
-                }
+        <ContextMenu>
+            <ContextMenuTrigger
+                as="div"
+                class="w-11 min-w-0 shrink"
+                disabled={!champion()}
             >
-                <DropdownMenuTrigger
-                    as="div"
-                    role="button"
-                    aria-label={
-                        champion()
-                            ? `Ban ${props.index + 1}: ${champion()!.name}`
-                            : `Ban ${props.index + 1}`
+                <DropdownMenu
+                    open={menuOpen()}
+                    onOpenChange={(open) =>
+                        setMenuOpen(open && championKey() !== undefined)
                     }
-                    class="relative w-full aspect-square rounded-sm overflow-hidden border-2 border-neutral-700 bg-neutral-900 flex items-center justify-center hover:border-neutral-500 transition-colors duration-150"
-                    classList={{
-                        "border-white! bg-neutral-700": isSelected(),
-                    }}
-                    onClick={() => {
-                        if (!championKey()) {
-                            select(props.team, props.index, { type: "ban" });
-                        }
-                    }}
                 >
-                    <Show
-                        when={champion()}
-                        fallback={
-                            <Icon
-                                path={noSymbol}
-                                class="w-1/2 text-neutral-600"
-                                classList={{
-                                    "text-neutral-300!": isSelected(),
+                    <DropdownMenuTrigger
+                        as="div"
+                        role="button"
+                        aria-label={
+                            champion()
+                                ? `Ban ${props.index + 1}: ${champion()!.name}`
+                                : `Ban ${props.index + 1}`
+                        }
+                        class="relative w-full aspect-square rounded-sm overflow-hidden border-2 border-neutral-700 bg-neutral-900 flex items-center justify-center hover:border-neutral-500 transition-colors duration-150"
+                        classList={{
+                            "border-white! bg-neutral-700": isSelected(),
+                        }}
+                        onClick={() => {
+                            if (!championKey()) {
+                                select(props.team, props.index, {
+                                    type: "ban",
+                                });
+                            }
+                        }}
+                    >
+                        <Show
+                            when={champion()}
+                            fallback={
+                                <Icon
+                                    path={noSymbol}
+                                    class="w-1/2 text-neutral-600"
+                                    classList={{
+                                        "text-neutral-300!": isSelected(),
+                                    }}
+                                />
+                            }
+                        >
+                            <img
+                                src={`https://ddragon.leagueoflegends.com/cdn/${
+                                    dataset()!.version
+                                }/img/champion/${champion()!.id}.png`}
+                                alt={champion()!.name}
+                                class="absolute inset-0 w-full h-full object-cover scale-110"
+                                style={{ filter: "grayscale(1)" }}
+                            />
+                            <div
+                                class="absolute inset-0"
+                                style={{
+                                    background:
+                                        "linear-gradient(to top right, transparent calc(50% - 1px), #dc2626 calc(50% - 1px), #dc2626 calc(50% + 1px), transparent calc(50% + 1px))",
                                 }}
                             />
-                        }
-                    >
-                        <img
-                            src={`https://ddragon.leagueoflegends.com/cdn/${
-                                dataset()!.version
-                            }/img/champion/${champion()!.id}.png`}
-                            alt={champion()!.name}
-                            class="absolute inset-0 w-full h-full object-cover scale-110"
-                            style={{ filter: "grayscale(1)" }}
-                        />
-                        <div
-                            class="absolute inset-0"
-                            style={{
-                                background:
-                                    "linear-gradient(to top right, transparent calc(50% - 1px), #dc2626 calc(50% - 1px), #dc2626 calc(50% + 1px), transparent calc(50% + 1px))",
-                            }}
-                        />
-                    </Show>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <Show when={champion()}>
-                        <DropdownMenuLabel>
-                            {championName(champion()!, config)}
-                        </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                    </Show>
-                    <DropdownMenuItem
-                        onSelect={() => resetBan(props.team, props.index)}
-                    >
-                        <DropdownMenuIcon path={trash} />
-                        <span>Remove ban</span>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </div>
+                        </Show>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <Show when={champion()}>
+                            <DropdownMenuLabel>
+                                {championName(champion()!, config)}
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                        </Show>
+                        <DropdownMenuItem
+                            onSelect={() => resetBan(props.team, props.index)}
+                        >
+                            <DropdownMenuIcon path={trash} />
+                            <span>Remove ban</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+                <Show when={champion()}>
+                    <DropdownMenuLabel>
+                        {championName(champion()!, config)}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                </Show>
+                <DropdownMenuItem
+                    onSelect={() => resetBan(props.team, props.index)}
+                >
+                    <DropdownMenuIcon path={trash} />
+                    <span>Remove ban</span>
+                </DropdownMenuItem>
+            </ContextMenuContent>
+        </ContextMenu>
     );
 }

@@ -93,7 +93,20 @@
 
     html,
     body {
-        scroll-behavior: smooth;
+        overscroll-behavior: none;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    input,
+    textarea,
+    [contenteditable="true"] {
+        user-select: text;
+        -webkit-user-select: text;
+    }
+
+    img {
+        -webkit-user-drag: none;
     }
 
     button,

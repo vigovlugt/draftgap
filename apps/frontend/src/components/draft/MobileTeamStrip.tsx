@@ -14,7 +14,7 @@ import {
     PickOptionsContent,
     PickOptionsContextMenuContent,
 } from "./PickOptions";
-import { TeamOptions } from "./TeamOptions";
+import { TeamOptions, TeamOptionsContextMenuContent } from "./TeamOptions";
 
 function MobilePickSlot(props: { team: Team; index: number }) {
     const { allyTeam, opponentTeam, selection, select } = useDraft();
@@ -117,19 +117,25 @@ function MobileTeamRow(props: { team: Team }) {
     return (
         <div class="relative flex items-center gap-1.5 pt-1.5 pb-1">
             <DamageDistributionBar team={props.team} />
-            <div class="flex flex-col w-12 shrink-0 leading-tight uppercase">
-                <span class="text-xs text-neutral-400">{props.team}</span>
-                <CountUp
-                    value={rating() ? ratingToWinrate(rating()!) : 0.5}
-                    formatFn={(value) => (value * 100).toFixed(1)}
-                    class={`${getRatingClass(
-                        rating() ?? 0,
-                    )} text-lg transition-colors duration-500`}
-                    style={{
-                        "font-variant-numeric": "tabular-nums",
-                    }}
-                />
-            </div>
+            <ContextMenu>
+                <ContextMenuTrigger
+                    as="div"
+                    class="flex flex-col w-12 shrink-0 leading-tight uppercase"
+                >
+                    <span class="text-xs text-neutral-400">{props.team}</span>
+                    <CountUp
+                        value={rating() ? ratingToWinrate(rating()!) : 0.5}
+                        formatFn={(value) => (value * 100).toFixed(1)}
+                        class={`${getRatingClass(
+                            rating() ?? 0,
+                        )} text-lg transition-colors duration-500`}
+                        style={{
+                            "font-variant-numeric": "tabular-nums",
+                        }}
+                    />
+                </ContextMenuTrigger>
+                <TeamOptionsContextMenuContent team={props.team} />
+            </ContextMenu>
             <div class="flex flex-1 gap-1 justify-between">
                 <For each={[0, 1, 2, 3, 4]}>
                     {(index) => (

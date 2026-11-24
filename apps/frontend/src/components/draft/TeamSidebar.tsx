@@ -3,7 +3,8 @@ import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
 import { CountUp } from "../CountUp";
 import { DamageDistributionBar } from "./DamageDistributionBar";
 import { Pick } from "./Pick";
-import { TeamOptions } from "./TeamOptions";
+import { TeamOptions, TeamOptionsContextMenuContent } from "./TeamOptions";
+import { ContextMenu, ContextMenuTrigger } from "../common/ContextMenu";
 import { BanRow } from "./BanRow";
 import { tooltip } from "../../directives/tooltip";
 import { capitalize } from "../../utils/strings";
@@ -30,30 +31,36 @@ export function TeamSidebar(props: IProps) {
     return (
         <div class="bg-primary flex flex-col h-full relative">
             <DamageDistributionBar team={props.team} />
-            <div class="flex-1 flex justify-center items-center bg-[#141414]">
-                <span
-                    class="text-[2.5rem] text-center leading-tight"
-                    // @ts-ignore
-                    use:tooltip={{
-                        content: (
-                            <>{capitalize(props.team)} estimated winrate</>
-                        ),
-                    }}
+            <ContextMenu>
+                <ContextMenuTrigger
+                    as="div"
+                    class="flex-1 flex justify-center items-center bg-[#141414]"
                 >
-                    {props.team.toUpperCase()}
-                    <br />
-                    <CountUp
-                        value={rating() ? ratingToWinrate(rating()!) : 0.5}
-                        formatFn={(value) => (value * 100).toFixed(2)}
-                        class={`${getRatingClass(
-                            rating() ?? 0,
-                        )} transition-colors duration-500`}
-                        style={{
-                            "font-variant-numeric": "tabular-nums",
+                    <span
+                        class="text-[2.5rem] text-center leading-tight"
+                        // @ts-ignore
+                        use:tooltip={{
+                            content: (
+                                <>{capitalize(props.team)} estimated winrate</>
+                            ),
                         }}
-                    />
-                </span>
-            </div>
+                    >
+                        {props.team.toUpperCase()}
+                        <br />
+                        <CountUp
+                            value={rating() ? ratingToWinrate(rating()!) : 0.5}
+                            formatFn={(value) => (value * 100).toFixed(2)}
+                            class={`${getRatingClass(
+                                rating() ?? 0,
+                            )} transition-colors duration-500`}
+                            style={{
+                                "font-variant-numeric": "tabular-nums",
+                            }}
+                        />
+                    </span>
+                </ContextMenuTrigger>
+                <TeamOptionsContextMenuContent team={props.team} />
+            </ContextMenu>
             <For each={[0, 1, 2, 3, 4]}>
                 {(index) => <Pick team={props.team} index={index} />}
             </For>

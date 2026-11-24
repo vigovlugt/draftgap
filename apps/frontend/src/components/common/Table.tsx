@@ -2,11 +2,14 @@ import { Table as TanstackTable, flexRender, Row } from "@tanstack/solid-table";
 import { createVirtualizer } from "@tanstack/solid-virtual";
 import { For, JSX, Show, createMemo } from "solid-js";
 import { cn } from "../../utils/style";
+import { ContextMenu, ContextMenuTrigger } from "./ContextMenu";
 
 interface Props<T> {
     table: TanstackTable<T>;
     onClickRow?: (row: Row<T>, e: MouseEvent | KeyboardEvent) => void;
     rowClassName?: (row: Row<T>) => string;
+    /** Context menu content (e.g. a `ContextMenuContent`) shown on right click of a row. */
+    rowContextMenu?: (row: Row<T>) => JSX.Element;
 }
 
 export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
@@ -121,66 +124,73 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                             .filter((r: any) => r)}
                     >
                         {(row) => (
-                            <tr
-                                class="transition duration-200 ease-out group/row"
-                                classList={{
-                                    "hover:bg-neutral-800": Boolean(
-                                        props.onClickRow,
-                                    ),
-                                    [props.rowClassName?.(row) ?? ""]: true,
-                                }}
-                                onClick={(e) => props.onClickRow?.(row, e)}
-                                tabindex={props.onClickRow ? 0 : undefined}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        props.onClickRow?.(row, e);
-                                    }
-                                }}
-                            >
-                                <For each={row.getVisibleCells()}>
-                                    {(cell, i) => (
-                                        <td
-                                            class={cn(
-                                                "whitespace-nowrap py-3 px-2 group/cell transition-colors",
-                                                {
-                                                    "pl-4": i() === 0,
-                                                    "pr-4":
-                                                        i() ===
-                                                        row.getVisibleCells()
-                                                            .length -
-                                                            1,
-                                                    "hover:bg-neutral-800 cursor-default":
-                                                        Boolean(
-                                                            (
-                                                                cell.column
-                                                                    .columnDef
-                                                                    .meta as any
-                                                            )?.onClickCell,
-                                                        ),
-                                                },
-                                                (
-                                                    cell.column.columnDef
-                                                        .meta as any
-                                                )?.cellClass,
-                                            )}
-                                            onClick={(e) =>
-                                                (
-                                                    cell.column.columnDef
-                                                        .meta as any
-                                                )?.onClickCell?.(
-                                                    e,
+                            <ContextMenu>
+                                <ContextMenuTrigger
+                                    as="tr"
+                                    disabled={!props.rowContextMenu}
+                                    class="transition duration-200 ease-out group/row"
+                                    classList={{
+                                        "hover:bg-neutral-800": Boolean(
+                                            props.onClickRow,
+                                        ),
+                                        [props.rowClassName?.(row) ?? ""]: true,
+                                    }}
+                                    onClick={(e) => props.onClickRow?.(row, e)}
+                                    tabindex={props.onClickRow ? 0 : undefined}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            props.onClickRow?.(row, e);
+                                        }
+                                    }}
+                                >
+                                    <For each={row.getVisibleCells()}>
+                                        {(cell, i) => (
+                                            <td
+                                                class={cn(
+                                                    "whitespace-nowrap py-3 px-2 group/cell transition-colors",
+                                                    {
+                                                        "pl-4": i() === 0,
+                                                        "pr-4":
+                                                            i() ===
+                                                            row.getVisibleCells()
+                                                                .length -
+                                                                1,
+                                                        "hover:bg-neutral-800 cursor-default":
+                                                            Boolean(
+                                                                (
+                                                                    cell.column
+                                                                        .columnDef
+                                                                        .meta as any
+                                                                )?.onClickCell,
+                                                            ),
+                                                    },
+                                                    (
+                                                        cell.column.columnDef
+                                                            .meta as any
+                                                    )?.cellClass,
+                                                )}
+                                                onClick={(e) =>
+                                                    (
+                                                        cell.column.columnDef
+                                                            .meta as any
+                                                    )?.onClickCell?.(
+                                                        e,
+                                                        cell.getContext(),
+                                                    )
+                                                }
+                                            >
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
                                                     cell.getContext(),
-                                                )
-                                            }
-                                        >
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext(),
-                                            )}
-                                        </td>
-                                    )}
-                                </For>
-                            </tr>
+                                                )}
+                                            </td>
+                                        )}
+                                    </For>
+                                </ContextMenuTrigger>
+                                <Show when={props.rowContextMenu}>
+                                    {props.rowContextMenu!(row)}
+                                </Show>
+                            </ContextMenu>
                         )}
                     </For>
                     <Show when={paddingBottom() > 0}>

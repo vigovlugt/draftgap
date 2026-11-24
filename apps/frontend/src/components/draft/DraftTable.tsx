@@ -30,6 +30,7 @@ import { Team } from "@draftgap/core/src/models/Team";
 import { championMatchesSearch } from "../../utils/search";
 import { focusSearch } from "./Search";
 import { createTableKeyboardNavigation } from "../../hooks/createTableKeyboardNavigation";
+import { ChampionContextMenuContent } from "./ChampionContextMenu";
 
 export default function DraftTable() {
     const { dataset } = useDataset();
@@ -379,6 +380,22 @@ export default function DraftTable() {
                         ? "opacity-30"
                         : ""
                 }
+                rowContextMenu={(row) => (
+                    <ChampionContextMenuContent
+                        championKey={row.original.championKey}
+                        role={row.original.role}
+                        onAnalysis={
+                            selection.team
+                                ? () =>
+                                      setAnalysisPick({
+                                          team: selection.team!,
+                                          championKey: row.original.championKey,
+                                          role: row.original.role,
+                                      })
+                                : undefined
+                        }
+                    />
+                )}
                 id="draft-table"
             />
             <Dialog
