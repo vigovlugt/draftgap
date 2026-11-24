@@ -34,6 +34,7 @@ import { ChampionContextMenuContent } from "./ChampionContextMenu";
 import {
     PreviewDraftAnalysisProvider,
     PreviewPick,
+    useDraftAnalysis,
 } from "../../contexts/DraftAnalysisContext";
 
 function PreviewDialogContent(props: { pick: PreviewPick }) {
@@ -62,8 +63,15 @@ function PreviewDialogContent(props: { pick: PreviewPick }) {
 
 export default function DraftTable() {
     const { dataset } = useDataset();
-    const { selection, pickChampion, select, allBans, ownedChampions } =
-        useDraft();
+    const {
+        selection,
+        selectedChampionKey,
+        pickChampion,
+        select,
+        allBans,
+        ownedChampions,
+    } = useDraft();
+    const { allyTeamComp, opponentTeamComp } = useDraftAnalysis();
     const { search, roleFilter, favouriteFilter, setFavouriteFilter } =
         useDraftFilters();
     const { allySuggestions, opponentSuggestions } = useDraftSuggestions();
@@ -152,6 +160,22 @@ export default function DraftTable() {
         }
 
         return filtered;
+    };
+
+    // Role the champion in the selected slot is currently played in, so only
+    // that row is highlighted instead of every role of the champion.
+    const selectedChampionRole = () => {
+        const key = selectedChampionKey();
+        if (!key) return undefined;
+        const comp =
+            selection.team === "opponent" ? opponentTeamComp() : allyTeamComp();
+        return [...comp.entries()].find(([, k]) => k === key)?.[0];
+    };
+
+    const isSelectedChampion = (suggestion: Suggestion) => {
+        if (suggestion.championKey !== selectedChampionKey()) return false;
+        const role = selectedChampionRole();
+        return role === undefined || suggestion.role === role;
     };
 
     const [previewPick, setPreviewPick] = createSignal<PreviewPick>();
@@ -360,10 +384,12 @@ export default function DraftTable() {
                 table={table}
                 onClickRow={pick}
                 rowClassName={(r) =>
-                    allBans().has(r.original.championKey) ||
-                    !ownsChampion(r.original.championKey)
-                        ? "opacity-30"
-                        : ""
+                    isSelectedChampion(r.original)
+                        ? "bg-neutral-800! shadow-[inset_3px_0_0_var(--color-neutral-300)]"
+                        : allBans().has(r.original.championKey) ||
+                            !ownsChampion(r.original.championKey)
+                          ? "opacity-30"
+                          : ""
                 }
                 rowContextMenu={(row) => (
                     <ChampionContextMenuContent

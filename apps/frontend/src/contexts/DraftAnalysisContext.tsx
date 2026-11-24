@@ -38,12 +38,13 @@ export function createDraftAnalysisContext(options: DraftAnalysisOptions = {}) {
     const setAnalyzeHovers = (value: boolean) =>
         setConfig("analyzeHovers", value);
 
-    function getTeamCompsForTeam(team: Team) {
+    function getTeamCompsForTeam(team: Team, excludeIndex?: number) {
         if (!isLoaded()) return [];
 
         const picks = team === "ally" ? allyTeam() : opponentTeam();
 
         const championData = picks
+            .filter((_, i) => i !== excludeIndex)
             .map((pick) => ({
                 key: getVisibleChampionKey(pick, analyzeHovers()),
                 role: pick.role,
@@ -67,6 +68,40 @@ export function createDraftAnalysisContext(options: DraftAnalysisOptions = {}) {
         () =>
             opponentTeamComps().at(0)?.[0] ??
             (new Map() as ReturnType<typeof opponentTeamComps>[number][0]),
+    );
+
+    /**
+     * Index of the selected pick slot of `team` when it already holds a
+     * champion, meaning that champion is being replaced.
+     */
+    const replacedIndex = (team: Team) => {
+        if (options.isPreview) return undefined;
+        if (selection.type !== "pick" || selection.team !== team) {
+            return undefined;
+        }
+        const picks = team === "ally" ? allyTeam() : opponentTeam();
+        return picks[selection.index]?.championKey !== undefined
+            ? selection.index
+            : undefined;
+    };
+
+    /** Team comp without the champion that is currently being replaced. */
+    function getSuggestionTeamComp(team: Team) {
+        const comp = team === "ally" ? allyTeamComp : opponentTeamComp;
+        const excludeIndex = replacedIndex(team);
+        if (excludeIndex === undefined) return comp();
+
+        return (
+            getTeamCompsForTeam(team, excludeIndex).at(0)?.[0] ??
+            (new Map() as ReturnType<typeof comp>)
+        );
+    }
+
+    const allySuggestionTeamComp = createMemo(() =>
+        getSuggestionTeamComp("ally"),
+    );
+    const opponentSuggestionTeamComp = createMemo(() =>
+        getSuggestionTeamComp("opponent"),
     );
 
     const allyRoles = createMemo(() => predictRoles(allyTeamComps()));
@@ -148,9 +183,8 @@ export function createDraftAnalysisContext(options: DraftAnalysisOptions = {}) {
 
         const teamComp =
             team === "ally"
-                ? allyTeamComps().at(0)?.[0]
-                : opponentTeamComps().at(0)?.[0];
-        if (!teamComp) return new Set();
+                ? allySuggestionTeamComp()
+                : opponentSuggestionTeamComp();
 
         return new Set(teamComp.keys());
     };
@@ -202,6 +236,8 @@ export function createDraftAnalysisContext(options: DraftAnalysisOptions = {}) {
         opponentTeamComps,
         allyTeamComp,
         opponentTeamComp,
+        allySuggestionTeamComp,
+        opponentSuggestionTeamComp,
         allyRoles,
         opponentRoles,
         getLockedRoles,

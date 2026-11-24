@@ -328,16 +328,14 @@ export function createDraftContext() {
             resetFilters = true,
         }: { type?: SelectionType; resetFilters?: boolean } = {},
     ) => {
-        if (team !== undefined && index !== undefined) {
-            const isFilled =
-                type === "ban"
-                    ? bans[team][index] !== undefined
-                    : getPickedChampionKey(
-                          (team === "ally" ? allyTeam : opponentTeam)[index],
-                      ) !== undefined;
-            if (isFilled) {
-                return;
-            }
+        // Filled pick slots can be selected to replace their champion.
+        if (
+            type === "ban" &&
+            team !== undefined &&
+            index !== undefined &&
+            bans[team][index] !== undefined
+        ) {
+            return;
         }
 
         if (index === undefined && team !== undefined) {
@@ -352,6 +350,13 @@ export function createDraftContext() {
         setCurrentDraftView({
             type: "draft",
         });
+    };
+
+    /** Champion in the selected pick slot, which a new pick would replace. */
+    const selectedChampionKey = () => {
+        if (selection.type !== "pick" || !selection.team) return undefined;
+        const picks = selection.team === "ally" ? allyTeam : opponentTeam;
+        return picks[selection.index]?.championKey;
     };
 
     const draftFinished = () =>
@@ -378,6 +383,7 @@ export function createDraftContext() {
         resetTeam,
         resetAll,
         selection,
+        selectedChampionKey,
         select,
         selectNextPick,
         draftFinished,

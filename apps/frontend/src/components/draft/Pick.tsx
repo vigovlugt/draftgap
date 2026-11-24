@@ -131,9 +131,9 @@ export function Pick(props: Props) {
         <ContextMenu>
             <ContextMenuTrigger
                 as="div"
-                class="flex-1 relative border-t-2 border-neutral-700 hover:bg-neutral-800 transition-colors duration-150 ease-in-out"
+                class="flex-1 relative border-t-2 border-neutral-700 hover:bg-neutral-800/50 transition-colors duration-150 ease-in-out"
                 classList={{
-                    "bg-neutral-700!": isSelected(),
+                    "bg-neutral-800!": isSelected(),
                 }}
                 onClick={() => select(props.team, props.index)}
                 onMouseOver={onMouseOver}
@@ -187,7 +187,9 @@ export function Pick(props: Props) {
                                 {([role, probability]) => (
                                     <div
                                         class="flex flex-col items-center relative group mx-[0.4rem]"
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            // Don't select the slot for replacement
+                                            e.stopPropagation();
                                             setPopoverVisible(false);
                                             setRole(
                                                 pick().role === undefined
@@ -264,6 +266,16 @@ export function Pick(props: Props) {
                             </For>
                         </div>
                     </>
+                </Show>
+
+                <Show when={isSelected()}>
+                    <div
+                        class="absolute top-0 bottom-0 w-[3px] bg-white pointer-events-none"
+                        classList={{
+                            "left-0": props.team === "ally",
+                            "right-0": props.team === "opponent",
+                        }}
+                    />
                 </Show>
 
                 <PickOptions team={props.team} index={props.index} />

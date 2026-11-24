@@ -10,8 +10,8 @@ export function createDraftSuggestionsContext() {
     const { isLoaded, dataset, dataset30Days } = useDataset();
     const {
         draftAnalysisConfig,
-        allyTeamComp,
-        opponentTeamComp,
+        allySuggestionTeamComp,
+        opponentSuggestionTeamComp,
         analyzeHovers,
     } = useDraftAnalysis();
     const { selection, allyTeam, opponentTeam, allBans } = useDraft();
@@ -23,8 +23,8 @@ export function createDraftSuggestionsContext() {
         return getSuggestions(
             dataset()!,
             dataset30Days()!,
-            allyTeamComp(),
-            opponentTeamComp(),
+            allySuggestionTeamComp(),
+            opponentSuggestionTeamComp(),
             draftAnalysisConfig(),
         );
     });
@@ -35,8 +35,8 @@ export function createDraftSuggestionsContext() {
         return getSuggestions(
             dataset()!,
             dataset30Days()!,
-            opponentTeamComp(),
-            allyTeamComp(),
+            opponentSuggestionTeamComp(),
+            allySuggestionTeamComp(),
             draftAnalysisConfig(),
         );
     });

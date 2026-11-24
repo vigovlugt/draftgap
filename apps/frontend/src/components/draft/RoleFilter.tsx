@@ -7,7 +7,7 @@ import { useDraftFilters } from "../../contexts/DraftFiltersContext";
 import { cn } from "../../utils/style";
 
 export function RoleFilter(props: ComponentProps<"span">) {
-    const { selection, draftFinished } = useDraft();
+    const { selection } = useDraft();
     const { roleFilter, setRoleFilter } = useDraftFilters();
     const { getFilledRoles, roleFilterTeam } = useDraftAnalysis();
 
@@ -35,10 +35,7 @@ export function RoleFilter(props: ComponentProps<"span">) {
                                 ? setRoleFilter(undefined)
                                 : setRoleFilter(role)
                         }
-                        disabled={
-                            filledRoles().has(role) ||
-                            (draftFinished() && selection.type === "pick")
-                        }
+                        disabled={filledRoles().has(role) || !selection.team}
                     >
                         <RoleIcon role={role} class="h-7" />
                     </button>
