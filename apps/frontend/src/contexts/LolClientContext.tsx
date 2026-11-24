@@ -94,6 +94,8 @@ export const createLolClientContext = () => {
         opponentTeam,
         setTeamBans,
         setOwnedChampions,
+        selection,
+        selectNextPick,
     } = useDraft();
     const { isFavourite, setFavourite } = useUser();
 
@@ -262,6 +264,14 @@ export const createLolClientContext = () => {
                         resetFilters: false,
                     });
                 }
+            } else if (
+                selection.type === "ban" &&
+                !session.actions
+                    .flat()
+                    .some((a) => a.type === "ban" && !a.completed)
+            ) {
+                // All bans are placed, move from banning to picking
+                selectNextPick("ally", { resetFilters: false });
             } else if (nextPick && draftChanged) {
                 // Set next pick if draft has changed
                 const nextPickTeamSelection = nextPick.isAllyAction

@@ -229,16 +229,25 @@ export function createDraftContext() {
         });
     };
 
+    function selectNextPick(
+        team: Team = "ally",
+        { resetFilters = true }: { resetFilters?: boolean } = {},
+    ) {
+        const otherTeam: Team = team === "ally" ? "opponent" : "ally";
+        for (const t of [team, otherTeam]) {
+            if (getNextPick(t) !== -1)
+                return select(t, undefined, { resetFilters });
+        }
+        select(undefined, 0, { resetFilters });
+    }
+
     function selectNextEmptySlot(team: Team) {
         const otherTeam: Team = team === "ally" ? "opponent" : "ally";
         for (const t of [team, otherTeam]) {
             if (getNextBan(t) !== -1)
                 return select(t, undefined, { type: "ban" });
         }
-        for (const t of ["ally", "opponent"] as const) {
-            if (getNextPick(t) !== -1) return select(t);
-        }
-        select(undefined, 0);
+        selectNextPick();
     }
 
     function banChampion(team: Team, index: number, championKey: string) {
@@ -340,6 +349,7 @@ export function createDraftContext() {
         resetAll,
         selection,
         select,
+        selectNextPick,
         draftFinished,
     };
 }
