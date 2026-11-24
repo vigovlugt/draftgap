@@ -8,8 +8,12 @@ import { getRatingClass } from "../../utils/rating";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { CountUp } from "../CountUp";
 import { DropdownMenu, DropdownMenuTrigger } from "../common/DropdownMenu";
+import { ContextMenu, ContextMenuTrigger } from "../common/ContextMenu";
 import { DamageDistributionBar } from "./DamageDistributionBar";
-import { PickOptionsContent } from "./PickOptions";
+import {
+    PickOptionsContent,
+    PickOptionsContextMenuContent,
+} from "./PickOptions";
 import { TeamOptions } from "./TeamOptions";
 
 function MobilePickSlot(props: { team: Team; index: number }) {
@@ -39,56 +43,66 @@ function MobilePickSlot(props: { team: Team; index: number }) {
         selection.index === props.index;
 
     return (
-        <DropdownMenu
-            open={menuOpen()}
-            onOpenChange={(open) =>
-                setMenuOpen(open && pick().championKey !== undefined)
-            }
-        >
-            <DropdownMenuTrigger
-                as="div"
-                role="button"
-                class="relative flex-1 aspect-square max-w-14 rounded-sm overflow-hidden border-2 border-neutral-700 bg-neutral-900 flex items-center justify-center"
-                classList={{
-                    "border-white!": isSelected(),
-                }}
-                onClick={() => {
-                    if (!pick().championKey) select(props.team, props.index);
-                }}
-            >
-                <Show
-                    when={champion()}
-                    fallback={
-                        <span class="text-neutral-600 text-lg">
-                            {props.index + 1}
-                        </span>
+        <ContextMenu>
+            <ContextMenuTrigger as="div" class="flex flex-1 max-w-14">
+                <DropdownMenu
+                    open={menuOpen()}
+                    onOpenChange={(open) =>
+                        setMenuOpen(open && pick().championKey !== undefined)
                     }
                 >
-                    <img
-                        src={`https://ddragon.leagueoflegends.com/cdn/${
-                            dataset()!.version
-                        }/img/champion/${champion()!.id}.png`}
-                        alt={champion()!.name}
-                        class="absolute inset-0 w-full h-full object-cover scale-110"
+                    <DropdownMenuTrigger
+                        as="div"
+                        role="button"
+                        class="relative w-full aspect-square rounded-sm overflow-hidden border-2 border-neutral-700 bg-neutral-900 flex items-center justify-center"
                         classList={{
-                            "animate-pulse": !pick().championKey,
+                            "border-white!": isSelected(),
                         }}
-                    />
-                    <Show when={role() !== undefined}>
-                        <div class="absolute bottom-0 right-0 bg-black/70 rounded-tl-sm p-px">
-                            <RoleIcon
-                                role={role()!}
-                                class="h-3.5 w-3.5"
+                        onClick={() => {
+                            if (!pick().championKey)
+                                select(props.team, props.index);
+                        }}
+                    >
+                        <Show
+                            when={champion()}
+                            fallback={
+                                <span class="text-neutral-600 text-lg">
+                                    {props.index + 1}
+                                </span>
+                            }
+                        >
+                            <img
+                                src={`https://ddragon.leagueoflegends.com/cdn/${
+                                    dataset()!.version
+                                }/img/champion/${champion()!.id}.png`}
+                                alt={champion()!.name}
+                                class="absolute inset-0 w-full h-full object-cover scale-110"
                                 classList={{
-                                    "opacity-60": pick().role === undefined,
+                                    "animate-pulse": !pick().championKey,
                                 }}
                             />
-                        </div>
-                    </Show>
-                </Show>
-            </DropdownMenuTrigger>
-            <PickOptionsContent team={props.team} index={props.index} />
-        </DropdownMenu>
+                            <Show when={role() !== undefined}>
+                                <div class="absolute bottom-0 right-0 bg-black/70 rounded-tl-sm p-px">
+                                    <RoleIcon
+                                        role={role()!}
+                                        class="h-3.5 w-3.5"
+                                        classList={{
+                                            "opacity-60":
+                                                pick().role === undefined,
+                                        }}
+                                    />
+                                </div>
+                            </Show>
+                        </Show>
+                    </DropdownMenuTrigger>
+                    <PickOptionsContent team={props.team} index={props.index} />
+                </DropdownMenu>
+            </ContextMenuTrigger>
+            <PickOptionsContextMenuContent
+                team={props.team}
+                index={props.index}
+            />
+        </ContextMenu>
     );
 }
 

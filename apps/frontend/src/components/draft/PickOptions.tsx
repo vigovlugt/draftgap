@@ -19,6 +19,7 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "../common/DropdownMenu";
+import { ContextMenuContent } from "../common/ContextMenu";
 import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
 import { For, Show } from "solid-js";
@@ -46,6 +47,25 @@ export function PickOptions(props: { team: Team; index: number }) {
 }
 
 export function PickOptionsContent(props: { team: Team; index: number }) {
+    return (
+        <DropdownMenuContent>
+            <PickOptionsItems team={props.team} index={props.index} />
+        </DropdownMenuContent>
+    );
+}
+
+export function PickOptionsContextMenuContent(props: {
+    team: Team;
+    index: number;
+}) {
+    return (
+        <ContextMenuContent>
+            <PickOptionsItems team={props.team} index={props.index} />
+        </ContextMenuContent>
+    );
+}
+
+function PickOptionsItems(props: { team: Team; index: number }) {
     const { config } = useUser();
     const { dataset } = useDataset();
     const { pickChampion, allyTeam, opponentTeam } = useDraft();
@@ -71,7 +91,7 @@ export function PickOptionsContent(props: { team: Team; index: number }) {
     };
 
     return (
-        <DropdownMenuContent>
+        <>
             <DropdownMenuLabel>
                 {champion()
                     ? championName(champion()!, config)
@@ -171,6 +191,6 @@ export function PickOptionsContent(props: { team: Team; index: number }) {
                     </For>
                 </div>
             </DropdownMenuGroup>
-        </DropdownMenuContent>
+        </>
     );
 }
