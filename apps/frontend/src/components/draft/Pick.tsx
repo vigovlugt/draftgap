@@ -140,7 +140,7 @@ export function Pick(props: Props) {
                 onMouseOut={onMouseOut}
             >
                 <Show when={!champion()}>
-                    <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
+                    <span class="absolute top-2 left-3 uppercase text-2xl leading-none">
                         PICK {props.index + 1}
                     </span>
                 </Show>
@@ -164,7 +164,7 @@ export function Pick(props: Props) {
                             }}
                         />
 
-                        <span class="absolute top-2 left-2 uppercase text-2xl leading-none">
+                        <span class="absolute top-2 left-3 uppercase text-2xl leading-none">
                             {championName(champion()!, config)}
                         </span>
 
