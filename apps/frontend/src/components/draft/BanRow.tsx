@@ -48,7 +48,7 @@ function BanSlot(props: { team: Team; index: number }) {
         selection.index === props.index;
 
     return (
-        <div class="flex-1 flex justify-center">
+        <div class="w-11 min-w-0 shrink">
             <DropdownMenu
                 open={menuOpen()}
                 onOpenChange={(open) =>
@@ -63,7 +63,7 @@ function BanSlot(props: { team: Team; index: number }) {
                             ? `Ban ${props.index + 1}: ${champion()!.name}`
                             : `Ban ${props.index + 1}`
                     }
-                    class="relative w-full max-w-11 aspect-square rounded-sm overflow-hidden border-2 border-neutral-700 bg-neutral-900 flex items-center justify-center hover:border-neutral-500 transition-colors duration-150"
+                    class="relative w-full aspect-square rounded-sm overflow-hidden border-2 border-neutral-700 bg-neutral-900 flex items-center justify-center hover:border-neutral-500 transition-colors duration-150"
                     classList={{
                         "border-white! bg-neutral-700": isSelected(),
                     }}
