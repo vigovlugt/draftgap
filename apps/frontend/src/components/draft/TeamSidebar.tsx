@@ -21,7 +21,20 @@ export function TeamSidebar(props: IProps) {
     const {
         allyDraftAnalysis: allyDraftResult,
         opponentDraftAnalysis: opponentDraftResult,
+        allyDamageDistribution,
+        opponentDamageDistribution,
     } = useDraftAnalysis();
+
+    const hasDamageDistribution = () => {
+        const distribution =
+            props.team === "ally"
+                ? allyDamageDistribution()
+                : opponentDamageDistribution();
+        return (
+            !!distribution &&
+            distribution.magic + distribution.physical + distribution.true > 0
+        );
+    };
 
     const rating = () =>
         props.team === "ally"
@@ -76,7 +89,10 @@ export function TeamSidebar(props: IProps) {
                 </span>
                 <BanRow team={props.team} class="min-w-0" />
             </div>
-            <TeamOptions team={props.team} />
+            <TeamOptions
+                team={props.team}
+                class={hasDamageDistribution() ? "top-1" : undefined}
+            />
         </div>
     );
 }

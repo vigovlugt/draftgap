@@ -23,7 +23,7 @@ type Props = {
 };
 export function TeamOptions(props: Props) {
     return (
-        <div class={cn("absolute right-1 top-0", props.class)}>
+        <div class={cn("absolute right-0 top-0", props.class)}>
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <button
