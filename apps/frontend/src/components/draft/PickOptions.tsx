@@ -32,7 +32,7 @@ import { championName } from "../../utils/i18n";
 
 export function PickOptions(props: { team: Team; index: number }) {
     return (
-        <div class="absolute right-0 top-0">
+        <div class="absolute right-0 top-0 transition-opacity [@media(hover:hover)]:opacity-40 group-hover/pick:opacity-100 has-focus-visible:opacity-100 has-data-expanded:opacity-100">
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <button

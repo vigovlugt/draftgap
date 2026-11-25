@@ -131,7 +131,7 @@ export function Pick(props: Props) {
         <ContextMenu>
             <ContextMenuTrigger
                 as="div"
-                class="flex-1 relative border-t border-neutral-700 hover:bg-neutral-800/50 transition-colors duration-150 ease-in-out"
+                class="group/pick flex-1 relative border-t border-neutral-700 hover:bg-neutral-800/50 transition-colors duration-150 ease-in-out"
                 classList={{
                     "bg-white/5!": isSelected(),
                 }}
