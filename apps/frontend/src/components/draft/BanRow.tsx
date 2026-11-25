@@ -73,7 +73,7 @@ function BanSlot(props: { team: Team; index: number }) {
                                 ? `Ban ${props.index + 1}: ${champion()!.name}`
                                 : `Ban ${props.index + 1}`
                         }
-                        class="relative w-full aspect-square rounded-sm overflow-hidden border-2 border-neutral-700 bg-neutral-900 flex items-center justify-center hover:border-neutral-500 transition-colors duration-150"
+                        class="relative w-full aspect-square rounded-sm overflow-hidden border border-neutral-700 bg-neutral-900 flex items-center justify-center hover:border-neutral-500 transition-colors duration-150"
                         classList={{
                             "border-white! bg-neutral-700": isSelected(),
                         }}

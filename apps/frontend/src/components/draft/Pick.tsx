@@ -131,16 +131,16 @@ export function Pick(props: Props) {
         <ContextMenu>
             <ContextMenuTrigger
                 as="div"
-                class="flex-1 relative border-t-2 border-neutral-700 hover:bg-neutral-800/50 transition-colors duration-150 ease-in-out"
+                class="flex-1 relative border-t border-neutral-700 hover:bg-neutral-800/50 transition-colors duration-150 ease-in-out"
                 classList={{
-                    "bg-neutral-800!": isSelected(),
+                    "bg-white/5!": isSelected(),
                 }}
                 onClick={() => select(props.team, props.index)}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
             >
                 <Show when={!champion()}>
-                    <span class="absolute top-2 left-3 uppercase text-2xl leading-none">
+                    <span class="absolute top-2 left-3 uppercase text-2xl leading-none text-neutral-500">
                         PICK {props.index + 1}
                     </span>
                 </Show>
@@ -164,7 +164,7 @@ export function Pick(props: Props) {
                             }}
                         />
 
-                        <span class="absolute top-2 left-3 uppercase text-2xl leading-none">
+                        <span class="absolute top-2 left-3 uppercase text-2xl leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
                             {championName(champion()!, config)}
                         </span>
 
@@ -208,7 +208,7 @@ export function Pick(props: Props) {
                                             ),
                                         }}
                                     >
-                                        <div class="text-md">
+                                        <div class="text-md drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
                                             <RoleIcon
                                                 role={role}
                                                 class="h-8 lg:h-10"
@@ -220,7 +220,7 @@ export function Pick(props: Props) {
                                         </div>
                                         <Show when={pick().role === undefined}>
                                             <div
-                                                class="text-md"
+                                                class="text-md drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
                                                 classList={{
                                                     "opacity-75":
                                                         teamCompRole() !== role,
@@ -270,7 +270,7 @@ export function Pick(props: Props) {
 
                 <Show when={isSelected()}>
                     <div
-                        class="absolute top-0 bottom-0 w-[3px] bg-white pointer-events-none"
+                        class="absolute top-0 bottom-0 w-[2px] bg-white pointer-events-none"
                         classList={{
                             "left-0": props.team === "ally",
                             "right-0": props.team === "opponent",

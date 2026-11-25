@@ -29,7 +29,13 @@ export function TeamSidebar(props: IProps) {
             : opponentDraftResult()?.totalRating;
 
     return (
-        <div class="bg-primary flex flex-col h-full relative">
+        <div
+            class="bg-primary flex flex-col h-full relative border-neutral-700"
+            classList={{
+                "border-r": props.team === "ally",
+                "border-l": props.team === "opponent",
+            }}
+        >
             <DamageDistributionBar team={props.team} />
             <ContextMenu>
                 <ContextMenuTrigger
@@ -64,7 +70,7 @@ export function TeamSidebar(props: IProps) {
             <For each={[0, 1, 2, 3, 4]}>
                 {(index) => <Pick team={props.team} index={index} />}
             </For>
-            <div class="shrink-0 flex items-center justify-center gap-2 px-2 py-2 border-t-2 border-neutral-700">
+            <div class="shrink-0 flex items-center justify-center gap-2 px-2 py-2 border-t border-neutral-700">
                 <span class="uppercase text-lg leading-none text-neutral-400">
                     Bans
                 </span>

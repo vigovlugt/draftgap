@@ -59,7 +59,7 @@ function MobilePickSlot(props: { team: Team; index: number }) {
                     <DropdownMenuTrigger
                         as="div"
                         role="button"
-                        class="relative w-full aspect-square rounded-sm overflow-hidden border-2 border-neutral-700 bg-neutral-900 flex items-center justify-center"
+                        class="relative w-full aspect-square rounded-sm overflow-hidden border border-neutral-700 bg-neutral-900 flex items-center justify-center"
                         classList={{
                             "border-white!": isSelected(),
                         }}

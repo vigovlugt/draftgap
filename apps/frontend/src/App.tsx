@@ -197,7 +197,7 @@ const App: Component = () => {
             <Dialog open={showFAQ()} onOpenChange={setShowFAQ}>
                 <FAQDialog />
             </Dialog>
-            <header class="bg-primary px-1 py-0 border-b-2 border-neutral-700 flex justify-between">
+            <header class="bg-primary px-1 py-0 border-b border-neutral-700 flex justify-between">
                 <h1 class="text-4xl sm:text-5xl mr-2 ml-1 mt-1 mb-[0.4rem] font-semibold tracking-wide">
                     DRAFTGAP
                 </h1>
@@ -261,7 +261,7 @@ const App: Component = () => {
                 <main class="h-full overflow-hidden">
                     <MainView />
                 </main>
-                <nav class="bg-primary border-t-2 border-neutral-700 flex">
+                <nav class="bg-primary border-t border-neutral-700 flex">
                     <For each={viewTabs()}>
                         {(tab) => (
                             <button
