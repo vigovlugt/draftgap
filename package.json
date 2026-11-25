@@ -1,6 +1,6 @@
 {
     "name": "draftgap",
-    "version": "3.2.2",
+    "version": "3.3.0",
     "workspaces": [
         "packages/*",
         "apps/*"
