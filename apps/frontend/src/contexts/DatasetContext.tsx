@@ -2,40 +2,65 @@ import {
     JSXElement,
     createContext,
     createEffect,
-    createResource,
     useContext,
 } from "solid-js";
 import {
     DATASET_VERSION,
     Dataset,
 } from "@draftgap/core/src/models/dataset/Dataset";
+import { createQuery } from "@tanstack/solid-query";
 
-const fetchDataset = async (name: "30-days" | "current-patch") => {
-    try {
-        const response = await fetch(
-            `https://bucket.draftgap.com/datasets/v${DATASET_VERSION}/${name}.json`,
-        );
-        const json = await response.json();
-        return json as Dataset;
-    } catch (err) {
-        console.error(err);
-        return undefined;
+type DatasetName = "30-days" | "current-patch";
+
+const fetchDataset = async (name: DatasetName) => {
+    const response = await fetch(
+        `https://bucket.draftgap.com/datasets/v${DATASET_VERSION}/${name}.json`,
+    );
+    if (!response.ok) {
+        throw new Error(`Failed to fetch dataset ${name}: ${response.status}`);
     }
+    return (await response.json()) as Dataset;
 };
 
-function createDatasetContext() {
-    const [dataset] = createResource("current-patch", fetchDataset);
+// Solid Query keeps query results in a Solid store, which deep-walks plain
+// objects with `unwrap` on every update. For the 30-days dataset that takes
+// ~600ms, so wrap the dataset in a class instance, which the store skips.
+class DatasetRef {
+    constructor(readonly value: Dataset) {}
+}
 
-    const [dataset30Days] = createResource("30-days", fetchDataset);
+// Module-level so the reference is stable and Solid Query memoizes the result.
+const selectDatasetRef = (dataset: Dataset) => new DatasetRef(dataset);
+
+function createDatasetQuery(name: DatasetName) {
+    return createQuery(() => ({
+        queryKey: ["dataset", DATASET_VERSION, name],
+        queryFn: () => fetchDataset(name),
+        select: selectDatasetRef,
+        // Persisted to IndexedDB (see index.tsx): the cached dataset is shown
+        // immediately and revalidated in the background on every app load.
+        gcTime: Infinity,
+        refetchOnWindowFocus: false,
+    }));
+}
+
+function createDatasetContext() {
+    const datasetQuery = createDatasetQuery("current-patch");
+    const dataset30DaysQuery = createDatasetQuery("30-days");
+
+    const dataset = () => datasetQuery.data?.value;
+    const dataset30Days = () => dataset30DaysQuery.data?.value;
+
+    const isError = () =>
+        (datasetQuery.isError && !datasetQuery.data) ||
+        (dataset30DaysQuery.isError && !dataset30DaysQuery.data);
 
     const isLoaded = () =>
         dataset() !== undefined && dataset30Days() !== undefined;
 
     createEffect(() => {
         (window as any).DRAFTGAP_DEBUG = (window as any).DRAFTGAP_DEBUG || {};
-        // eslint-disable-next-line solid/reactivity
         (window as any).DRAFTGAP_DEBUG.dataset = dataset;
-        // eslint-disable-next-line solid/reactivity
         (window as any).DRAFTGAP_DEBUG.dataset30Days = dataset30Days;
     });
 
@@ -43,6 +68,7 @@ function createDatasetContext() {
         dataset,
         dataset30Days,
         isLoaded,
+        isError,
     };
 }
 

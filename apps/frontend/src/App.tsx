@@ -46,7 +46,7 @@ import { LanguageDropdownMenu } from "./components/LanguageMenu";
 const App: Component = () => {
     const { config } = useUser();
     const { currentDraftView, setCurrentDraftView } = useDraftView();
-    const { dataset, isLoaded } = useDataset();
+    const { dataset, isLoaded, isError } = useDataset();
     const { analysisPick, setAnalysisPick, showAnalysisPick } =
         useDraftAnalysis();
     const { startLolClientIntegration, stopLolClientIntegration } =
@@ -83,11 +83,7 @@ const App: Component = () => {
                 }}
             >
                 <Switch>
-                    <Match
-                        when={
-                            dataset.state === "ready" && dataset() === undefined
-                        }
-                    >
+                    <Match when={isError()}>
                         <div class="flex justify-center items-center h-full text-2xl text-red-500">
                             An unexpected error occurred. Please try again
                             later.
